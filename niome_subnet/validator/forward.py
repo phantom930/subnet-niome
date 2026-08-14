@@ -43,11 +43,16 @@ async def query_miner(self, uid: int, axon_endpoint: str, synapse: GenomicsTaskS
     try:
         url = f"http://{axon_endpoint}/forward"
         body = synapse.model_dump_json().encode()
+        # receiver_ss58 is not optional in practice: BaseMinerNeuron verifies with
+        # bt.http_auth.verify's require_receiver default of True, so an unbound signature is
+        # rejected 401 by every miner. Binding to this uid's hotkey is also what stops a signed
+        # task being replayed against a different miner.
         headers = bt.http_auth.sign(
             self.wallet,
             method="POST",
             path="/forward",
             body=body,
+            receiver_ss58=self.metagraph.hotkeys[uid],
         )
         headers["Content-Type"] = "application/json"
         async with httpx.AsyncClient(timeout=config.FORWARD_TIMEOUT) as client:

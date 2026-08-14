@@ -16,34 +16,80 @@
 
 import asyncio
 import hashlib
+import json
 import logging
 import os
 import requests
 import sys
+import threading
 import time
+import traceback
 
-from niome_subnet.base.miner import BaseMinerNeuron
-from niome_subnet.genomics.model import Task
-from niome_subnet.protocol import GenomicsTaskSynapse
-from typing import Tuple
+from datetime import datetime, timezone
+from urllib.parse import parse_qs, urlparse
 
-logger = logging.getLogger(__name__)
-
-# Add project root to Python path
+# Add project root to Python path. This has to happen before the niome_subnet imports below —
+# running this file as a script puts neurons/ on sys.path, not the repo root — and settings has to
+# be the first of them, because it fixes BT_NO_PARSE_CLI_ARGS before bittensor is imported.
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
+
+import niome_subnet.utils.settings as settings  # noqa: E402
+
+from niome_subnet.base.miner import BaseMinerNeuron  # noqa: E402
+from niome_subnet.genomics import generation  # noqa: E402
+from niome_subnet.genomics.model import Task  # noqa: E402
+from niome_subnet.protocol import GenomicsTaskSynapse  # noqa: E402
+
+logger = logging.getLogger(__name__)
 
 
 class Miner(BaseMinerNeuron):
     """
     Miner neuron. Receives genomics tasks from validators via HTTP and processes them.
+
+    The reply to a validator is an empty ack; the dataset travels out of band as a PUT to the
+    presigned S3 URL that came with the task, and must land before that URL expires
+    (``SUBMISSION_TIMEOUT``, 300 s from the moment the validator minted it). Generation itself is a
+    second or so once the caches are warm, so the budget is not the constraint — see
+    :mod:`niome_subnet.genomics.generation` for what is built and why it scores.
     """
 
     MAX_RETRIES = 3
 
+    # Which construction every row's simulated outcome is forced to satisfy. "mh" is the HDR/NHEJ
+    # mix: microhomology rows repair by HDR, the rest are BLUNT_NHEJ pinned to a 1 bp indel. Stage 4
+    # recovers that mapping exactly (mh is a column in its feature matrix), so consistency_factor
+    # reaches 1.0 without the degenerate single-outcome dataset "hdr" would submit. See
+    # generation.CONSTRUCTIONS for the alternatives.
+    CONSTRUCTION = "mh"
+    # Guide variants searched per site. Each is a distinct stage-3 draw at an identical feature
+    # vector, so this is the budget for hitting the construction without paying anything in stage 2.
+    VARIANTS = 24
+    # Site-enumeration window either side of gene_region. Wider only helps if cells run short of
+    # coordinates, and costs a longer enumeration.
+    FLANK = 3000
+    # Predict the validator's score after each build (~5 s on top of a ~1 s build). Worth it:
+    # validators never report back, so this is the only signal a miner gets before the next task.
+    SCORE_LOCALLY = True
+
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
+
+        self.gen_config = generation.GenConfig(
+            construction=self.CONSTRUCTION,
+            variants=self.VARIANTS,
+            flank=self.FLANK,
+        )
+
+        # One build at a time, and at most one per task. Every validator broadcasts the same task id
+        # with its own presigned URL, and the rows are a deterministic function of the contract, so
+        # later broadcasts should reuse the first build and repeat only the upload.
+        self._build_lock = asyncio.Lock()
+        self._built: tuple[str, list[dict]] | None = None
+
+        threading.Thread(target=self._prewarm, name="niome-prewarm", daemon=True).start()
 
     async def forward(self, body: bytes, caller_hotkey: str) -> dict:
         """
@@ -58,8 +104,11 @@ class Miner(BaseMinerNeuron):
         """
         try:
             synapse = GenomicsTaskSynapse.model_validate_json(body)
-            task_data = synapse.task.model_dump()
-            logger.info(f"Received genomics task: {task_data}")
+            if synapse.task is None:
+                logger.error(f"Task missing from {caller_hotkey}'s request; ignoring")
+                return {}
+
+            logger.info(f"Received genomics task {synapse.task.id} from {caller_hotkey}")
 
             # Fire and forget - run process_task asynchronously without waiting
             asyncio.create_task(self.process_task(synapse.task, synapse.presigned_url))
@@ -70,15 +119,239 @@ class Miner(BaseMinerNeuron):
             return {"error": str(e)}
 
     async def process_task(self, task: Task, presigned_url: str) -> None:
-        # TODO: Implement the logic to generate a submission based on the task
-        # and upload to the validator's S3 bucket using presigned URL.
-        pass
+        """Build this task's dataset and upload it to the validator's presigned URL.
 
-    def _generate_signature(self, answer_str: str, confidence: float) -> str:
-        """Generate cryptographic signature for answer."""
-        data = f"{answer_str}:{confidence}:{time.time()}"
-        signature = hashlib.sha256(data.encode()).hexdigest()
-        return signature
+        Called fire-and-forget from ``forward``, so it must neither raise into the request path nor
+        block the event loop: the build and the HTTP calls are synchronous and CPU-bound, and go to
+        worker threads so ``/forward`` stays answerable while a build is in flight.
+        """
+        if task is None or not presigned_url:
+            logger.error("No task or no presigned URL — nothing to submit")
+            return
+
+        started = time.time()
+        deadline = self._upload_deadline(presigned_url, started)
+
+        try:
+            contract, reference = await asyncio.to_thread(self._fetch_artifacts, task)
+            cell_types = await asyncio.to_thread(self._fetch_cell_types)
+
+            async with self._build_lock:
+                key = self._build_key(task.id, contract)
+                if self._built is not None and self._built[0] == key:
+                    rows = self._built[1]
+                    logger.info(f"Reusing the {len(rows)}-row build for task {task.id}")
+                else:
+                    rows = await asyncio.to_thread(
+                        self._build, contract, reference, cell_types
+                    )
+                    # Only the current task's rows are worth keeping: a new task means a new
+                    # contract, and the old rows can never be submitted again.
+                    self._built = (key, rows)
+
+            if not rows:
+                logger.error(f"Built no rows for task {task.id} — nothing to upload")
+                return
+
+            await asyncio.to_thread(self._upload, presigned_url, rows, deadline)
+            logger.info(
+                f"Submitted {len(rows)} rows for task {task.id} in {time.time() - started:.1f}s "
+                f"({deadline - time.time():.0f}s of the URL's TTL to spare)"
+            )
+        except Exception as e:
+            # Nothing downstream reports a miner failure — a missed upload is indistinguishable from
+            # never having been contacted, and there is no retry within a task id. So this log line
+            # is the only evidence the round was lost.
+            logger.error(f"Failed to submit task {getattr(task, 'id', '?')}: {e}")
+            logger.debug(traceback.format_exc())
+
+    def _prewarm(self) -> None:
+        """Load the reference — and, if a previous task left its artifacts behind, the k-mer index
+        and PAM sites too — before the first task arrives.
+
+        All three caches are task-independent (every task issued so far shares one gene_region and
+        one rules block), so this is pure critical-path removal: a warm process only pays for the
+        build itself.
+        """
+        started = time.time()
+        try:
+            generation.load_sequence()
+            if os.path.exists(settings.CONTRACT_PATH) and os.path.exists(
+                settings.HBB_REFERENCE_PATH
+            ):
+                with open(settings.CONTRACT_PATH) as handle:
+                    contract = json.load(handle)
+                with open(settings.HBB_REFERENCE_PATH) as handle:
+                    reference = json.load(handle)
+                sites = generation.warm(contract, reference, cfg=self.gen_config)
+                logger.info(
+                    f"Prewarmed chr11 and {sites} PAM sites in {time.time() - started:.1f}s"
+                )
+            else:
+                logger.info(
+                    f"Prewarmed chr11 in {time.time() - started:.1f}s; PAM sites will be "
+                    "enumerated on the first task"
+                )
+        except Exception as e:
+            logger.error(f"Prewarm failed ({e}); the first task will pay the cold start")
+            logger.debug(traceback.format_exc())
+
+    def _build(self, contract: dict, reference: dict, cell_types: dict) -> list[dict]:
+        """Generate the submission and log what it should be worth."""
+        rows, meta = generation.build_submission(
+            contract,
+            reference,
+            cell_types,
+            cfg=self.gen_config,
+            score=self.SCORE_LOCALLY,
+        )
+
+        logger.info(
+            f"Built {meta['rows']}/{meta['max_experiments']} rows from {meta['sites']} sites "
+            f"| construction={meta['construction']} skew={meta['weight_skew']} "
+            f"outcomes={meta['outcome_counts']}"
+        )
+        for problem in meta["problems"]:
+            logger.warning(f"Submission invariant violated: {problem}")
+
+        expected = meta.get("expected")
+        if expected:
+            logger.info(
+                f"Predicted score {expected['final_score']:.3f} = "
+                f"weighted {expected['total_weighted_score']:.3f} "
+                f"x consistency {expected['consistency_factor']:.4f} "
+                f"x fidelity {expected['distribution_fidelity_factor']:.4f}"
+            )
+
+        # Keep a copy of exactly what was sent. This is also the path benchmark_submission reads, so
+        # an operator can re-score the upload against the persisted contract and reference.
+        self._persist(settings.MINER_SUBMISSION_PATH, rows)
+        return rows
+
+    def _fetch_artifacts(self, task: Task) -> tuple[dict, dict]:
+        """GET the contract and the HBB reference.
+
+        Plain unsigned GETs — the presigning is already in the URL. Both URLs are short-lived, so
+        they are fetched per task and never cached; the *contents* are persisted, which is what lets
+        a restart prewarm the site cache and an operator re-score a submission locally.
+        """
+        contract = self._get_json(task.contract_url, "contract")
+        reference = self._get_json(task.hbb_ref_url, "hbb_reference")
+        self._persist(settings.CONTRACT_PATH, contract)
+        self._persist(settings.HBB_REFERENCE_PATH, reference)
+        return contract, reference
+
+    def _fetch_cell_types(self) -> dict:
+        """The accessibility table, read unsigned from the backend.
+
+        Accessibility scales stage 3's energy, which drives the cut and repair draws, so falling back
+        to the default 1.0 risks simulating different outcomes than the validator and breaking the
+        construction. How much it costs depends on the clamp: energy saturates at 1.0 for
+        near-mutation rows at 50% GC, so a real 0.77 was measured to change nothing, while 0.5 drops
+        below the clamp and takes consistency_factor from 1.0 to 0.18. Rows stay valid either way —
+        it is term 2 of the score that is at risk.
+        """
+        try:
+            response = requests.get(settings.CELL_TYPES_URL, timeout=settings.TASK_REQUEST_TIMEOUT)
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            logger.warning(
+                f"Cell-types fetch failed ({e}); falling back to accessibility 1.0, which will "
+                "mis-predict stage 3 and likely cost the whole consistency factor"
+            )
+            return {}
+
+    def _get_json(self, url: str, what: str) -> dict:
+        last_error = None
+        for attempt in range(self.MAX_RETRIES):
+            try:
+                response = requests.get(url, timeout=settings.TASK_REQUEST_TIMEOUT)
+                response.raise_for_status()
+                return response.json()
+            except Exception as e:
+                last_error = e
+                logger.warning(
+                    f"Fetching {what} failed (attempt {attempt + 1}/{self.MAX_RETRIES}): {e}"
+                )
+                if attempt + 1 < self.MAX_RETRIES:
+                    time.sleep(settings.BASE_DELAY_SECONDS * (attempt + 1))
+        raise RuntimeError(f"could not fetch {what}: {last_error}")
+
+    def _upload(self, presigned_url: str, rows: list[dict], deadline: float) -> None:
+        """PUT the bare JSON array to the validator's bucket.
+
+        The URL must be sent exactly as received: only ``host`` is covered by the signature, so
+        extra headers are fine, but a re-encoded query string is a ``SignatureDoesNotMatch``.
+        """
+        payload = json.dumps(rows).encode()
+        last_error = None
+
+        for attempt in range(self.MAX_RETRIES):
+            remaining = deadline - time.time()
+            if remaining <= 0:
+                raise RuntimeError(
+                    "presigned URL expired before the upload went through "
+                    f"(last error: {last_error})"
+                )
+            try:
+                response = requests.put(
+                    presigned_url,
+                    data=payload,
+                    headers={"Content-Type": "application/json"},
+                    timeout=min(remaining, 60),
+                )
+                response.raise_for_status()
+                logger.info(f"Uploaded {len(rows)} rows ({len(payload) / 1024:.1f} KB)")
+                return
+            except Exception as e:
+                last_error = e
+                # S3 answers with XML, and the body is what separates an expired URL from an altered
+                # one — the status is 403 either way.
+                body = getattr(getattr(e, "response", None), "text", "") or ""
+                logger.warning(
+                    f"Upload attempt {attempt + 1}/{self.MAX_RETRIES} failed: {e} {body[:300]}"
+                )
+                if attempt + 1 < self.MAX_RETRIES:
+                    time.sleep(settings.BASE_DELAY_SECONDS * (attempt + 1))
+
+        raise RuntimeError(f"upload failed after {self.MAX_RETRIES} attempts: {last_error}")
+
+    @staticmethod
+    def _upload_deadline(presigned_url: str, now: float) -> float:
+        """When S3 stops accepting the PUT.
+
+        ``X-Amz-Date`` plus ``X-Amz-Expires`` in the URL are S3's own answer, which beats assuming
+        the URL was minted the instant it arrived. They come off the *validator's* clock though, so
+        the result is clamped to our own SUBMISSION_TIMEOUT budget: a slow local clock must not talk
+        us into a deadline that has in fact already passed.
+        """
+        fallback = now + settings.SUBMISSION_TIMEOUT
+        try:
+            query = parse_qs(urlparse(presigned_url).query)
+            signed_at = datetime.strptime(query["X-Amz-Date"][0], "%Y%m%dT%H%M%SZ").replace(
+                tzinfo=timezone.utc
+            )
+            return min(signed_at.timestamp() + int(query["X-Amz-Expires"][0]), fallback)
+        except Exception:
+            return fallback
+
+    @staticmethod
+    def _build_key(task_id: str, contract: dict) -> str:
+        """Memo key. The contract is hashed in as well, so a contract that changes under a task id
+        rebuilds instead of re-uploading rows designed against the old rules."""
+        canonical = json.dumps(contract, sort_keys=True, separators=(",", ":")).encode()
+        return f"{task_id}:{hashlib.sha256(canonical).hexdigest()[:16]}"
+
+    @staticmethod
+    def _persist(path: str, document) -> None:
+        """Write via a temp file and rename: the prewarm on the next restart reads these back, and a
+        task arriving mid-write must not leave half a JSON document behind."""
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        temporary = f"{path}.tmp"
+        with open(temporary, "w") as handle:
+            json.dump(document, handle)
+        os.replace(temporary, path)
 
     async def blacklist(self, caller_hotkey: str) -> bool:
         """
