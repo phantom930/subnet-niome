@@ -61,7 +61,10 @@ class BaseNeuron(ABC):
         return ttl_get_block(self)
 
     def __init__(self, config=None):
-        base_config = copy.deepcopy(config or BaseNeuron.config())
+        # self.config() and not BaseNeuron.config(): the base parser has only the args add_args
+        # registers, so parsing argv with it rejects every subclass flag (--axon.port, and the
+        # miner/validator --neuron.* ones) before the subclass parser below ever runs.
+        base_config = copy.deepcopy(config or self.config())
         self.config = self.config()
         # Merge any extra attrs from base_config into self.config
         for key, val in vars(base_config).items():
@@ -108,6 +111,10 @@ class BaseNeuron(ABC):
         except Exception:
             self.netuid = getattr(self.metagraph, "netuid", None)
 
+        # Block at which the metagraph now in hand was fetched. Seeded from this first fetch so
+        # the next one is a full epoch away rather than immediate.
+        self._last_sync_block: int = self.block
+
         self.uids: list[int] = []
         self.weights: list[int] = []
         self.task_id: str = ""
@@ -137,6 +144,9 @@ class BaseNeuron(ABC):
 
         if self.should_sync_metagraph():
             self.resync_metagraph()
+            # Recorded here rather than in each resync_metagraph override so the two cannot drift
+            # apart: a subclass that forgot to stamp it would resync on every single pass.
+            self._last_sync_block = self.block
 
     def check_registered(self):
         uid = self.subtensor.neurons.uid(self.wallet.hotkey.ss58_address, self.config.netuid)
@@ -148,12 +158,17 @@ class BaseNeuron(ABC):
             exit()
 
     def should_sync_metagraph(self):
+        """Whether epoch_length blocks have passed since the metagraph was last fetched.
+
+        The measurement has to be against our own last fetch. Gating on
+        ``metagraph.neurons[uid].last_update`` — the chain's record of when weights were last set
+        *on* this neuron — reads like the same quantity but is not: a miner's last_update only
+        moves when a validator weights it, so it sits permanently further behind than any sane
+        epoch_length and the check answers True on every pass. That turns each caller's loop into
+        an unthrottled stream of full metagraph fetches (measured at ~100/min against finney),
+        which is a good way to get an operator's IP rate-limited.
         """
-        Check if enough epoch blocks have elapsed since the last checkpoint to sync.
-        """
-        return (
-            self.block - self.metagraph.neurons[self.uid].last_update
-        ) > self.config.neuron.epoch_length
+        return (self.block - self._last_sync_block) > self.config.neuron.epoch_length
 
     def should_set_weights(self) -> bool:
         if self.neuron_type == "MinerNeuron":
