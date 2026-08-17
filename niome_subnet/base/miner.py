@@ -130,9 +130,14 @@ class BaseMinerNeuron(BaseNeuron):
 
         @app.post("/forward")
         async def handle_forward(request: Request):
+            # Every step of the request path is logged: a validator sees only the ack, so when a
+            # round is lost this log is the only place the reason exists.
+            peer = getattr(request.client, "host", "?")
+            started = time.time()
             try:
                 headers = dict(request.headers)
                 body = await request.body()
+                logger.info(f"[/forward] request from {peer}, {len(body)} bytes of body")
 
                 # Verify hotkey-signed request
                 try:
@@ -145,19 +150,28 @@ class BaseMinerNeuron(BaseNeuron):
                         require_receiver=False,
                         max_age=50.0,
                     )
-                except bt.http_auth.AuthError as e:                    
-                    logger.warning(f"Unauthorized request received: {e}")
+                except bt.http_auth.AuthError as e:
+                    logger.warning(f"Unauthorized request received from {peer}: {e}")
                     raise HTTPException(status_code=401, detail=str(e))
+
+                logger.info(f"[/forward] signature verified, caller hotkey {caller.hotkey_ss58}")
 
                 # Run blacklist check
                 if await miner.blacklist(caller.hotkey_ss58):
+                    logger.warning(f"[/forward] blacklisted {caller.hotkey_ss58} — returning 403")
                     raise HTTPException(status_code=403, detail="blacklisted")
 
-                return await miner.forward(body, caller.hotkey_ss58)
+                response = await miner.forward(body, caller.hotkey_ss58)
+                logger.info(
+                    f"[/forward] acked {caller.hotkey_ss58} in {time.time() - started:.2f}s "
+                    f"(payload {response})"
+                )
+                return response
             except HTTPException:
                 raise
             except Exception as e:
-                logger.error(f"Error handling /forward: {e}")
+                logger.error(f"Error handling /forward from {peer}: {e}")
+                logger.debug(traceback.format_exc())
                 raise HTTPException(status_code=500, detail=str(e))
 
     # Echo services used to discover the egress address. Plain-text bodies, queried in order.
@@ -283,6 +297,11 @@ class BaseMinerNeuron(BaseNeuron):
         server = uvicorn.Server(server_config)
         server_thread = threading.Thread(target=server.run, daemon=True)
         server_thread.start()
+        logger.info(
+            f"HTTP server listening on {self.axon_ip}:{self.axon_port} (POST /forward); "
+            f"validators are told to dial {self.axon_external_ip or 'autodiscovered'}:"
+            f"{self.axon_external_port}"
+        )
 
         # This loop maintains the miner's operations until intentionally stopped.
         try:
