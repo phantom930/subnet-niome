@@ -115,7 +115,17 @@ class Miner(BaseMinerNeuron):
         # later broadcasts should reuse the first build and repeat only the upload.
         self._build_lock = asyncio.Lock()
         self._built: tuple[str, list[dict]] | None = None
+        # asyncio holds only a weak reference to a running task, so a fire-and-forget
+        # ``create_task`` result can be collected mid-flight and the round vanishes with no log
+        # line at all. Keeping the handle here until it completes is what makes the submission
+        # survive — and what lets the done-callback below report a crash that nothing awaits.
+        self._inflight: set[asyncio.Task] = set()
 
+        logger.info(
+            f"Generation config: strategy={self.STRATEGY} selection={self.SELECTION} "
+            f"construction={self.CONSTRUCTION} variants={self.VARIANTS} flank={self.FLANK} "
+            f"lengths={self.LENGTHS} score_locally={self.SCORE_LOCALLY}"
+        )
         threading.Thread(target=self._prewarm, name="niome-prewarm", daemon=True).start()
 
     async def forward(self, body: bytes, caller_hotkey: str) -> dict:
@@ -135,15 +145,43 @@ class Miner(BaseMinerNeuron):
                 logger.error(f"Task missing from {caller_hotkey}'s request; ignoring")
                 return {}
 
-            logger.info(f"Received genomics task {synapse.task.id} from {caller_hotkey}")
+            task = synapse.task
+            logger.info(f"Received genomics task {task.id} from {caller_hotkey}")
+            logger.info(
+                f"[{task.id}] contract_url={task.contract_url} hbb_ref_url={task.hbb_ref_url}"
+            )
+            if not synapse.presigned_url:
+                logger.error(
+                    f"[{task.id}] no presigned URL in the request — there is nowhere to upload "
+                    "the submission, so this round cannot be scored"
+                )
+                return {}
+            logger.info(f"[{task.id}] upload target {self._url_summary(synapse.presigned_url)}")
 
             # Fire and forget - run process_task asynchronously without waiting
-            asyncio.create_task(self.process_task(synapse.task, synapse.presigned_url))
+            handle = asyncio.create_task(self.process_task(task, synapse.presigned_url))
+            self._inflight.add(handle)
+            handle.add_done_callback(self._on_task_done)
+            logger.info(f"[{task.id}] build+upload scheduled in the background; acking validator")
 
             return {}
         except Exception as e:
             logger.error(f"Forward error: {e}")
+            logger.debug(traceback.format_exc())
             return {"error": str(e)}
+
+    def _on_task_done(self, handle: asyncio.Task) -> None:
+        """Drop the strong reference and surface anything ``process_task`` failed to catch."""
+        self._inflight.discard(handle)
+        if handle.cancelled():
+            logger.error("Background submission task was cancelled before it finished")
+            return
+        error = handle.exception()
+        if error is not None:
+            logger.error(f"Background submission task crashed: {error!r}")
+            logger.debug(
+                "".join(traceback.format_exception(type(error), error, error.__traceback__))
+            )
 
     async def process_task(self, task: Task, presigned_url: str) -> None:
         """Build this task's dataset and upload it to the validator's presigned URL.
@@ -158,16 +196,34 @@ class Miner(BaseMinerNeuron):
 
         started = time.time()
         deadline = self._upload_deadline(presigned_url, started)
+        tag = f"[{task.id}]"
+        logger.info(
+            f"{tag} step 1/5 starting submission; upload deadline in "
+            f"{deadline - started:.0f}s"
+        )
 
         try:
+            logger.info(f"{tag} step 2/5 fetching contract and HBB reference")
+            fetch_started = time.time()
             contract, reference = await asyncio.to_thread(self._fetch_artifacts, task)
-            cell_types = await asyncio.to_thread(self._fetch_cell_types)
+            logger.info(
+                f"{tag} step 2/5 done in {time.time() - fetch_started:.1f}s "
+                f"| seed={contract.get('seed')} cell_type={contract.get('cell_type')} "
+                f"mutations={len(contract.get('active_mutations') or [])} "
+                f"rules={contract.get('rules')}"
+            )
 
+            logger.info(f"{tag} step 3/5 fetching cell-type accessibility table")
+            cell_types = await asyncio.to_thread(self._fetch_cell_types)
+            logger.info(f"{tag} step 3/5 done | {len(cell_types)} cell types")
+
+            logger.info(f"{tag} step 4/5 building the dataset")
+            build_started = time.time()
             async with self._build_lock:
                 key = self._build_key(task.id, contract)
                 if self._built is not None and self._built[0] == key:
                     rows = self._built[1]
-                    logger.info(f"Reusing the {len(rows)}-row build for task {task.id}")
+                    logger.info(f"{tag} reusing the {len(rows)}-row build for this task")
                 else:
                     rows = await asyncio.to_thread(
                         self._build, contract, reference, cell_types
@@ -175,11 +231,18 @@ class Miner(BaseMinerNeuron):
                     # Only the current task's rows are worth keeping: a new task means a new
                     # contract, and the old rows can never be submitted again.
                     self._built = (key, rows)
+            logger.info(
+                f"{tag} step 4/5 done in {time.time() - build_started:.1f}s | {len(rows)} rows"
+            )
 
             if not rows:
                 logger.error(f"Built no rows for task {task.id} — nothing to upload")
                 return
 
+            logger.info(
+                f"{tag} step 5/5 uploading {len(rows)} rows, "
+                f"{deadline - time.time():.0f}s of TTL left"
+            )
             await asyncio.to_thread(self._upload, presigned_url, rows, deadline)
             logger.info(
                 f"Submitted {len(rows)} rows for task {task.id} in {time.time() - started:.1f}s "
@@ -202,10 +265,13 @@ class Miner(BaseMinerNeuron):
         """
         started = time.time()
         try:
+            logger.info("Prewarm: loading chr11 reference sequence")
             self._load_sequence()
+            logger.info(f"Prewarm: chr11 loaded in {time.time() - started:.1f}s")
             if os.path.exists(settings.CONTRACT_PATH) and os.path.exists(
                 settings.HBB_REFERENCE_PATH
             ):
+                logger.info("Prewarm: replaying the last task's artifacts to warm the site cache")
                 with open(settings.CONTRACT_PATH) as handle:
                     contract = json.load(handle)
                 with open(settings.HBB_REFERENCE_PATH) as handle:
@@ -233,6 +299,7 @@ class Miner(BaseMinerNeuron):
         the one ``python submission.py --task-id <id>`` produces for the same contract — which is what
         makes an offline sweep a prediction of what the miner will actually send.
         """
+        logger.info("Build: loading chr11 (cached after the first call)")
         self._load_sequence()
         if not contract.get("seed"):
             # Stage 3 is seeded from contract.seed, so an unstamped task's construction stops holding
@@ -243,17 +310,28 @@ class Miner(BaseMinerNeuron):
                 "predicted consistency will not hold if the backend restamps the task"
             )
 
+        logger.info("Build: building context (k-mer index over gene_region +/- 50 kb)")
         context = G.build_context(contract, reference, cell_types)
+        logger.info(
+            f"Build: context ready | mutations={len(context.mutations)} "
+            f"cas={context.cas_systems} max_experiments={context.max_experiments}"
+        )
+
+        logger.info(f"Build: enumerating PAM sites in gene_region +/- {self.gen_config.flank}")
         sites = G.enumerate_sites(context, self.gen_config.flank, self._lengths())
+        logger.info(f"Build: {len(sites)} PAM sites enumerated")
 
         cfg = self.gen_config
         if cfg.strategy == "pure":
             # The optimal skew depends on this contract's mutation-weight ratio, which moves task to
             # task; fitting it costs a few ms of surrogate scoring against the selection alone.
             cfg = replace(cfg, weight_skew=G.choose_weight_skew(context, sites, cfg))
+            logger.info(f"Build: fitted weight_skew={cfg.weight_skew}")
 
+        logger.info(f"Build: generating rows (construction={cfg.construction}, {cfg.variants} variants/site)")
         rows, valid, results = G.generate(context, sites, cfg)
         rows = G.order_rows(rows, valid)
+        logger.info(f"Build: generated {len(rows)} rows, {len(valid)} of them stage-1 valid")
 
         logger.info(
             f"Built {len(rows)}/{context.max_experiments} rows from {len(sites)} sites "
@@ -265,6 +343,7 @@ class Miner(BaseMinerNeuron):
             logger.warning(f"Submission invariant violated: {problem}")
 
         if self.SCORE_LOCALLY and len(valid) >= 2:
+            logger.info("Build: scoring locally through the validator's own pipeline")
             report = G.score_rows(valid, results, context)
             logger.info(
                 f"Predicted score {report['final_score']:.3f} = "
@@ -276,6 +355,7 @@ class Miner(BaseMinerNeuron):
         # Keep a copy of exactly what was sent. This is also the path benchmark_submission reads, so
         # an operator can re-score the upload against the persisted contract and reference.
         self._persist(settings.MINER_SUBMISSION_PATH, rows)
+        logger.info(f"Build: wrote the submission to {settings.MINER_SUBMISSION_PATH}")
         return rows
 
     def _lengths(self) -> tuple[int, ...]:
@@ -307,6 +387,10 @@ class Miner(BaseMinerNeuron):
         reference = self._get_json(task.hbb_ref_url, "hbb_reference")
         self._persist(settings.CONTRACT_PATH, contract)
         self._persist(settings.HBB_REFERENCE_PATH, reference)
+        logger.info(
+            f"Persisted contract to {settings.CONTRACT_PATH} and reference to "
+            f"{settings.HBB_REFERENCE_PATH}"
+        )
         return contract, reference
 
     def _fetch_cell_types(self) -> dict:
@@ -320,6 +404,7 @@ class Miner(BaseMinerNeuron):
         it is term 2 of the score that is at risk.
         """
         try:
+            logger.info(f"Fetching cell types from {settings.CELL_TYPES_URL}")
             response = requests.get(settings.CELL_TYPES_URL, timeout=settings.TASK_REQUEST_TIMEOUT)
             response.raise_for_status()
             return response.json()
@@ -334,8 +419,12 @@ class Miner(BaseMinerNeuron):
         last_error = None
         for attempt in range(self.MAX_RETRIES):
             try:
+                logger.info(f"GET {what} ({self._url_summary(url)})")
                 response = requests.get(url, timeout=settings.TASK_REQUEST_TIMEOUT)
                 response.raise_for_status()
+                logger.info(
+                    f"GET {what} -> {response.status_code}, {len(response.content) / 1024:.1f} KB"
+                )
                 return response.json()
             except Exception as e:
                 last_error = e
@@ -354,6 +443,9 @@ class Miner(BaseMinerNeuron):
         """
         payload = json.dumps(rows).encode()
         last_error = None
+        logger.info(
+            f"PUT {len(payload) / 1024:.1f} KB to {self._url_summary(presigned_url)}"
+        )
 
         for attempt in range(self.MAX_RETRIES):
             remaining = deadline - time.time()
@@ -363,6 +455,9 @@ class Miner(BaseMinerNeuron):
                     f"(last error: {last_error})"
                 )
             try:
+                logger.info(
+                    f"Upload attempt {attempt + 1}/{self.MAX_RETRIES}, {remaining:.0f}s of TTL left"
+                )
                 response = requests.put(
                     presigned_url,
                     data=payload,
@@ -370,7 +465,10 @@ class Miner(BaseMinerNeuron):
                     timeout=min(remaining, 60),
                 )
                 response.raise_for_status()
-                logger.info(f"Uploaded {len(rows)} rows ({len(payload) / 1024:.1f} KB)")
+                logger.info(
+                    f"Uploaded {len(rows)} rows ({len(payload) / 1024:.1f} KB) -> "
+                    f"{response.status_code}, etag {response.headers.get('ETag', '?')}"
+                )
                 return
             except Exception as e:
                 last_error = e
@@ -400,9 +498,29 @@ class Miner(BaseMinerNeuron):
             signed_at = datetime.strptime(query["X-Amz-Date"][0], "%Y%m%dT%H%M%SZ").replace(
                 tzinfo=timezone.utc
             )
-            return min(signed_at.timestamp() + int(query["X-Amz-Expires"][0]), fallback)
-        except Exception:
+            expires_at = signed_at.timestamp() + int(query["X-Amz-Expires"][0])
+            logger.info(
+                f"Presigned URL signed at {signed_at.isoformat()} for "
+                f"{query['X-Amz-Expires'][0]}s; {expires_at - now:.0f}s of it left on our clock"
+            )
+            return min(expires_at, fallback)
+        except Exception as e:
+            logger.warning(
+                f"Could not read the URL's expiry ({e}); assuming the local "
+                f"SUBMISSION_TIMEOUT of {settings.SUBMISSION_TIMEOUT}s"
+            )
             return fallback
+
+    @staticmethod
+    def _url_summary(url: str) -> str:
+        """host + path of a presigned URL. The query carries the signature, so it stays out of the
+        log — the bucket and key are what identify a submission, and the expiry is logged
+        separately by ``_upload_deadline``."""
+        try:
+            parsed = urlparse(url)
+            return f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+        except Exception:
+            return "<unparseable url>"
 
     @staticmethod
     def _build_key(task_id: str, contract: dict) -> str:
@@ -443,7 +561,7 @@ class Miner(BaseMinerNeuron):
                 logger.warning(f"Blacklisting non-validator hotkey {caller_hotkey}")
                 return True
 
-        logger.debug(f"Allowing recognized hotkey {caller_hotkey}")
+        logger.info(f"Allowing recognized hotkey {caller_hotkey} (uid {uid})")
         return False
 
 
