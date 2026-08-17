@@ -25,6 +25,8 @@ import threading
 import time
 import traceback
 
+from collections import Counter
+from dataclasses import replace
 from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlparse
 
@@ -37,8 +39,16 @@ if PROJECT_ROOT not in sys.path:
 
 import niome_subnet.utils.settings as settings  # noqa: E402
 
+# genExp is the generator, and submission.py's per-task flow (build_context -> enumerate_sites ->
+# choose_weight_skew -> generate -> order_rows) is what _build mirrors. Importing it rather than
+# keeping a second copy in the package is deliberate: genExp is where the design is tuned and swept
+# against the whole task history, so anything measured there is what the miner submits, with no port
+# in between. Note the module chdir()s to the repo root on import — harmless here (every settings.py
+# path is relative to it and neurons must run from there anyway) but it is an import-time side
+# effect, so it stays below settings and above nothing that cares about cwd.
+import genExp as G  # noqa: E402
+
 from niome_subnet.base.miner import BaseMinerNeuron  # noqa: E402
-from niome_subnet.genomics import generation  # noqa: E402
 from niome_subnet.genomics.model import Task  # noqa: E402
 from niome_subnet.protocol import GenomicsTaskSynapse  # noqa: E402
 
@@ -52,17 +62,29 @@ class Miner(BaseMinerNeuron):
     The reply to a validator is an empty ack; the dataset travels out of band as a PUT to the
     presigned S3 URL that came with the task, and must land before that URL expires
     (``SUBMISSION_TIMEOUT``, 300 s from the moment the validator minted it). Generation itself is a
-    second or so once the caches are warm, so the budget is not the constraint — see
-    :mod:`niome_subnet.genomics.generation` for what is built and why it scores.
+    second or so once the caches are warm, so the budget is not the constraint — see :mod:`genExp`
+    for what is built and why it scores.
     """
 
     MAX_RETRIES = 3
 
+    # Generation knobs, the same ones submission.py builds every task's dataset with. They are
+    # class attributes rather than CLI flags because they are design decisions measured over the
+    # backend's whole task history, not per-run operator settings.
+    #
+    # "pure" forces every row's outcome to satisfy CONSTRUCTION and drops rows that will not; the
+    # "shaped" strategy instead fits outcomes to a distance ramp and takes whatever the draw gives.
+    # Pure is what reaches consistency_factor 1.0.
+    STRATEGY = "pure"
+    # "packed" ranks each cell's sites by the stage-2 score they can actually reach (proximity is
+    # pure total_weighted_score under the pure strategy); "stratified" spreads them over distance
+    # bands to give stage 4 a feature axis, which pure does not need.
+    SELECTION = "packed"
     # Which construction every row's simulated outcome is forced to satisfy. "mh" is the HDR/NHEJ
     # mix: microhomology rows repair by HDR, the rest are BLUNT_NHEJ pinned to a 1 bp indel. Stage 4
     # recovers that mapping exactly (mh is a column in its feature matrix), so consistency_factor
     # reaches 1.0 without the degenerate single-outcome dataset "hdr" would submit. See
-    # generation.CONSTRUCTIONS for the alternatives.
+    # G.CONSTRUCTIONS for the alternatives.
     CONSTRUCTION = "mh"
     # Guide variants searched per site. Each is a distinct stage-3 draw at an identical feature
     # vector, so this is the budget for hitting the construction without paying anything in stage 2.
@@ -70,6 +92,8 @@ class Miner(BaseMinerNeuron):
     # Site-enumeration window either side of gene_region. Wider only helps if cells run short of
     # coordinates, and costs a longer enumeration.
     FLANK = 3000
+    # Guide lengths enumerated. Stage 1 accepts 20 and 23 only.
+    LENGTHS = (20, 23)
     # Predict the validator's score after each build (~5 s on top of a ~1 s build). Worth it:
     # validators never report back, so this is the only signal a miner gets before the next task.
     SCORE_LOCALLY = True
@@ -77,10 +101,13 @@ class Miner(BaseMinerNeuron):
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
 
-        self.gen_config = generation.GenConfig(
+        self.gen_config = G.GenConfig(
+            strategy=self.STRATEGY,
+            selection=self.SELECTION,
             construction=self.CONSTRUCTION,
             variants=self.VARIANTS,
             flank=self.FLANK,
+            lengths=tuple(self.LENGTHS),
         )
 
         # One build at a time, and at most one per task. Every validator broadcasts the same task id
@@ -175,7 +202,7 @@ class Miner(BaseMinerNeuron):
         """
         started = time.time()
         try:
-            generation.load_sequence()
+            self._load_sequence()
             if os.path.exists(settings.CONTRACT_PATH) and os.path.exists(
                 settings.HBB_REFERENCE_PATH
             ):
@@ -183,9 +210,12 @@ class Miner(BaseMinerNeuron):
                     contract = json.load(handle)
                 with open(settings.HBB_REFERENCE_PATH) as handle:
                     reference = json.load(handle)
-                sites = generation.warm(contract, reference, cfg=self.gen_config)
+                # cell_types is left empty on purpose: it is carried on the Context but nothing
+                # cached here reads it, so warming does not need the backend to answer.
+                context = G.build_context(contract, reference, {})
+                sites = G.enumerate_sites(context, self.gen_config.flank, self._lengths())
                 logger.info(
-                    f"Prewarmed chr11 and {sites} PAM sites in {time.time() - started:.1f}s"
+                    f"Prewarmed chr11 and {len(sites)} PAM sites in {time.time() - started:.1f}s"
                 )
             else:
                 logger.info(
@@ -197,36 +227,74 @@ class Miner(BaseMinerNeuron):
             logger.debug(traceback.format_exc())
 
     def _build(self, contract: dict, reference: dict, cell_types: dict) -> list[dict]:
-        """Generate the submission and log what it should be worth."""
-        rows, meta = generation.build_submission(
-            contract,
-            reference,
-            cell_types,
-            cfg=self.gen_config,
-            score=self.SCORE_LOCALLY,
-        )
+        """Generate this task's submission and log what it should be worth.
+
+        The same sequence ``submission.build_for_task`` runs, so a row set built here is byte-for-byte
+        the one ``python submission.py --task-id <id>`` produces for the same contract — which is what
+        makes an offline sweep a prediction of what the miner will actually send.
+        """
+        self._load_sequence()
+        if not contract.get("seed"):
+            # Stage 3 is seeded from contract.seed, so an unstamped task's construction stops holding
+            # the moment the backend assigns a real one. The rows stay valid; consistency_factor does
+            # not survive.
+            logger.warning(
+                "Contract carries no seed — the outcome construction is provisional and the "
+                "predicted consistency will not hold if the backend restamps the task"
+            )
+
+        context = G.build_context(contract, reference, cell_types)
+        sites = G.enumerate_sites(context, self.gen_config.flank, self._lengths())
+
+        cfg = self.gen_config
+        if cfg.strategy == "pure":
+            # The optimal skew depends on this contract's mutation-weight ratio, which moves task to
+            # task; fitting it costs a few ms of surrogate scoring against the selection alone.
+            cfg = replace(cfg, weight_skew=G.choose_weight_skew(context, sites, cfg))
+
+        rows, valid, results = G.generate(context, sites, cfg)
+        rows = G.order_rows(rows, valid)
 
         logger.info(
-            f"Built {meta['rows']}/{meta['max_experiments']} rows from {meta['sites']} sites "
-            f"| construction={meta['construction']} skew={meta['weight_skew']} "
-            f"outcomes={meta['outcome_counts']}"
+            f"Built {len(rows)}/{context.max_experiments} rows from {len(sites)} sites "
+            f"| strategy={cfg.strategy} construction={cfg.construction} "
+            f"skew={cfg.weight_skew} outcomes={dict(Counter(r['outcome'] for r in results))}"
         )
-        for problem in meta["problems"]:
+        # G.generate prints these too, but only to stdout; a miner's evidence is its log.
+        for problem in G.check_invariants(rows, results, cfg, valid):
             logger.warning(f"Submission invariant violated: {problem}")
 
-        expected = meta.get("expected")
-        if expected:
+        if self.SCORE_LOCALLY and len(valid) >= 2:
+            report = G.score_rows(valid, results, context)
             logger.info(
-                f"Predicted score {expected['final_score']:.3f} = "
-                f"weighted {expected['total_weighted_score']:.3f} "
-                f"x consistency {expected['consistency_factor']:.4f} "
-                f"x fidelity {expected['distribution_fidelity_factor']:.4f}"
+                f"Predicted score {report['final_score']:.3f} = "
+                f"weighted {report['total_weighted_score']:.3f} "
+                f"x consistency {report['consistency_factor']:.4f} "
+                f"x fidelity {report['distribution_fidelity_factor']:.4f}"
             )
 
         # Keep a copy of exactly what was sent. This is also the path benchmark_submission reads, so
         # an operator can re-score the upload against the persisted contract and reference.
         self._persist(settings.MINER_SUBMISSION_PATH, rows)
         return rows
+
+    def _lengths(self) -> tuple[int, ...]:
+        """Guide lengths in the form the site cache is keyed on — sorted and deduped, so a prewarm
+        and a build hit the same entry."""
+        return tuple(sorted(set(self.gen_config.lengths)))
+
+    @staticmethod
+    def _load_sequence() -> None:
+        """Load chr11, turning a missing FASTA into an ordinary error.
+
+        ``G.load_sequence`` raises SystemExit when ``data/chr11.fa`` is absent — the right reflex for
+        a CLI, wrong for a long-lived miner, where it would escape both the prewarm thread's and
+        ``process_task``'s ``except Exception`` and take the round down without a log line.
+        """
+        try:
+            G.load_sequence()
+        except SystemExit as missing:
+            raise RuntimeError(str(missing)) from missing
 
     def _fetch_artifacts(self, task: Task) -> tuple[dict, dict]:
         """GET the contract and the HBB reference.
