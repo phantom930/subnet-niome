@@ -39,6 +39,9 @@ HBB_REFERENCE_PATH = "data/hbb_reference.json"
 CONTRACT_PATH = "data/contract.json"
 CHR11_PATH = "data/chr11.fa"
 MINER_SUBMISSION_PATH = "data/submission.json"
+# Where the miner records the task id, presigned URL and outcome of its most recent upload, so
+# scripts/resubmit.py can retry a failed one while the URL's TTL lasts.
+LAST_UPLOAD_PATH = "data/last_upload.json"
 VALID_EXPERIMENTS_PATH = "data/valid_experiments.json"
 INVALID_EXPERIMENTS_PATH = "data/invalid_experiments.json"
 STAGE3_DATASET = "data/stage3_dataset.json"
