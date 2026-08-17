@@ -201,6 +201,11 @@ class Miner(BaseMinerNeuron):
             f"{tag} step 1/5 starting submission; upload deadline in "
             f"{deadline - started:.0f}s"
         )
+        # The signed URL is the only way back to this key, and the log deliberately prints it
+        # without its signature. Recording it here is what makes scripts/resubmit.py possible at
+        # all: a failed upload can be retried by hand while the TTL lasts, which is the only
+        # recovery there is — the validator never asks twice within a task id.
+        self._record_upload(task.id, presigned_url, deadline, submitted=False)
 
         try:
             logger.info(f"{tag} step 2/5 fetching contract and HBB reference")
@@ -244,6 +249,7 @@ class Miner(BaseMinerNeuron):
                 f"{deadline - time.time():.0f}s of TTL left"
             )
             await asyncio.to_thread(self._upload, presigned_url, rows, deadline)
+            self._record_upload(task.id, presigned_url, deadline, submitted=True, rows=len(rows))
             logger.info(
                 f"Submitted {len(rows)} rows for task {task.id} in {time.time() - started:.1f}s "
                 f"({deadline - time.time():.0f}s of the URL's TTL to spare)"
@@ -254,6 +260,39 @@ class Miner(BaseMinerNeuron):
             # is the only evidence the round was lost.
             logger.error(f"Failed to submit task {getattr(task, 'id', '?')}: {e}")
             logger.debug(traceback.format_exc())
+            logger.error(
+                f"{deadline - time.time():.0f}s of the URL's TTL remain — retry by hand with "
+                "`python scripts/resubmit.py` while that is positive"
+            )
+
+    def _record_upload(
+        self,
+        task_id: str,
+        presigned_url: str,
+        deadline: float,
+        submitted: bool,
+        rows: int | None = None,
+    ) -> None:
+        """Note the current task's upload target and its outcome, for scripts/resubmit.py.
+
+        Best-effort: a failure to write this must not be what loses the round, so it is logged and
+        swallowed. The file holds a signed URL, which is a write capability on one bucket key until
+        it expires — ``data/`` is gitignored, and it is worthless a few minutes later.
+        """
+        try:
+            self._persist(
+                settings.LAST_UPLOAD_PATH,
+                {
+                    "task_id": task_id,
+                    "presigned_url": presigned_url,
+                    "expires_at": deadline,
+                    "submitted": submitted,
+                    "rows": rows,
+                },
+            )
+        except Exception as e:
+            logger.warning(f"Could not record the upload target ({e}); manual retry will need "
+                           "the URL from the validator")
 
     def _prewarm(self) -> None:
         """Load the reference — and, if a previous task left its artifacts behind, the k-mer index
@@ -438,13 +477,16 @@ class Miner(BaseMinerNeuron):
     def _upload(self, presigned_url: str, rows: list[dict], deadline: float) -> None:
         """PUT the bare JSON array to the validator's bucket.
 
-        The URL must be sent exactly as received: only ``host`` is covered by the signature, so
-        extra headers are fine, but a re-encoded query string is a ``SignatureDoesNotMatch``.
+        The URL must be sent exactly as received — a re-encoded query string is a
+        ``SignatureDoesNotMatch`` — and so must the header set, which is *not* free to vary: see
+        ``_upload_headers`` for why sending a Content-Type can break the signature outright.
         """
         payload = json.dumps(rows).encode()
+        headers = self._upload_headers(presigned_url)
         last_error = None
         logger.info(
-            f"PUT {len(payload) / 1024:.1f} KB to {self._url_summary(presigned_url)}"
+            f"PUT {len(payload) / 1024:.1f} KB to {self._url_summary(presigned_url)} "
+            f"with headers {headers or '{}'}"
         )
 
         for attempt in range(self.MAX_RETRIES):
@@ -461,7 +503,7 @@ class Miner(BaseMinerNeuron):
                 response = requests.put(
                     presigned_url,
                     data=payload,
-                    headers={"Content-Type": "application/json"},
+                    headers=headers,
                     timeout=min(remaining, 60),
                 )
                 response.raise_for_status()
@@ -484,24 +526,59 @@ class Miner(BaseMinerNeuron):
         raise RuntimeError(f"upload failed after {self.MAX_RETRIES} attempts: {last_error}")
 
     @staticmethod
+    def _upload_headers(presigned_url: str) -> dict:
+        """The headers this PUT may carry, decided by which signing scheme minted the URL.
+
+        The validator presigns ``put_object`` with no ``ContentType``, and botocore answers that
+        with a **SigV2** URL (``AWSAccessKeyId`` / ``Signature`` / ``Expires``). SigV2's
+        string-to-sign is ``VERB\\n Content-MD5\\n Content-Type\\n Expires\\n resource`` — the
+        Content-Type is *in the signature*, signed as the empty string. Sending
+        ``Content-Type: application/json`` therefore makes S3 hash a different string than the
+        validator did and reject the upload with ``SignatureDoesNotMatch``, which reads like a
+        credentials problem and is in fact this header. So V2 URLs get no headers at all.
+
+        SigV4 URLs (``X-Amz-SignedHeaders``) cover only the headers they name, so there a
+        Content-Type is required exactly when it was signed — and forbidden otherwise, for the
+        same reason. ``requests`` adds no Content-Type of its own for a bytes body, so an empty
+        dict really does send none.
+        """
+        try:
+            query = parse_qs(urlparse(presigned_url).query)
+        except Exception:
+            return {}
+
+        signed = query.get("X-Amz-SignedHeaders")
+        if signed:
+            names = [name.strip().lower() for name in signed[0].split(";")]
+            return {"Content-Type": "application/json"} if "content-type" in names else {}
+        return {}
+
+    @staticmethod
     def _upload_deadline(presigned_url: str, now: float) -> float:
         """When S3 stops accepting the PUT.
 
-        ``X-Amz-Date`` plus ``X-Amz-Expires`` in the URL are S3's own answer, which beats assuming
-        the URL was minted the instant it arrived. They come off the *validator's* clock though, so
-        the result is clamped to our own SUBMISSION_TIMEOUT budget: a slow local clock must not talk
-        us into a deadline that has in fact already passed.
+        The URL carries its own answer, which beats assuming it was minted the instant it arrived:
+        ``Expires`` (an absolute epoch) on the SigV2 URLs the validator currently mints, and
+        ``X-Amz-Date`` + ``X-Amz-Expires`` on SigV4 ones. Either comes off the *validator's* clock,
+        so the result is clamped to our own SUBMISSION_TIMEOUT budget: a slow local clock must not
+        talk us into a deadline that has in fact already passed.
         """
         fallback = now + settings.SUBMISSION_TIMEOUT
         try:
             query = parse_qs(urlparse(presigned_url).query)
-            signed_at = datetime.strptime(query["X-Amz-Date"][0], "%Y%m%dT%H%M%SZ").replace(
-                tzinfo=timezone.utc
-            )
-            expires_at = signed_at.timestamp() + int(query["X-Amz-Expires"][0])
+            if "Expires" in query:
+                expires_at = float(query["Expires"][0])
+                scheme = "SigV2"
+            else:
+                signed_at = datetime.strptime(query["X-Amz-Date"][0], "%Y%m%dT%H%M%SZ").replace(
+                    tzinfo=timezone.utc
+                )
+                expires_at = signed_at.timestamp() + int(query["X-Amz-Expires"][0])
+                scheme = "SigV4"
             logger.info(
-                f"Presigned URL signed at {signed_at.isoformat()} for "
-                f"{query['X-Amz-Expires'][0]}s; {expires_at - now:.0f}s of it left on our clock"
+                f"{scheme} presigned URL expires at "
+                f"{datetime.fromtimestamp(expires_at, timezone.utc).isoformat()}; "
+                f"{expires_at - now:.0f}s of it left on our clock"
             )
             return min(expires_at, fallback)
         except Exception as e:
