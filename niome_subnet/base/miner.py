@@ -142,8 +142,11 @@ class BaseMinerNeuron(BaseNeuron):
                         method="POST",
                         path="/forward",
                         self_hotkey_ss58=miner.wallet.hotkey.ss58_address,
+                        require_receiver=False,
+                        max_age=50.0,
                     )
-                except bt.http_auth.AuthError as e:
+                except bt.http_auth.AuthError as e:                    
+                    logger.warning(f"Unauthorized request received: {e}")
                     raise HTTPException(status_code=401, detail=str(e))
 
                 # Run blacklist check

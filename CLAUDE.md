@@ -106,19 +106,30 @@ each stage per-miner paths first.
 
 ### Miner generation mirrors the validator on purpose
 
-[genomics/generation.py](niome_subnet/genomics/generation.py) **imports and calls the validator's own
-stage functions** (`stage12.check_pam`, `stage12.load_or_build_kmer_index`, `stage3.simulate`, …)
-rather than reimplementing the scoring maths. Preserve that. It is what keeps the generator from
-drifting from the pipeline that judges it, and it means **editing a validation stage silently changes
-miner behaviour** — a formula tweak in stage12 or stage3 re-prices every site the generator ranks and
-can invalidate the outcome "construction" it searches for.
+[genExp.py](genExp.py) **imports and calls the validator's own stage functions**
+(`stage12.check_pam`, `stage12.load_or_build_kmer_index`, `stage3.simulate`, …) rather than
+reimplementing the scoring maths. Preserve that. It is what keeps the generator from drifting from the
+pipeline that judges it, and it means **editing a validation stage silently changes miner behaviour** —
+a formula tweak in stage12 or stage3 re-prices every site the generator ranks and can invalidate the
+outcome "construction" it searches for.
 
 The build enumerates PAM sites in `gene_region ± flank`, apportions rows across the full
 mutation × cas × strand support, tunes each guide toward 50% GC within the contract's mismatch budget,
 then searches guide variants for one whose deterministic stage-3 draw satisfies the configured
 construction (`CONSTRUCTIONS`, default `"mh"`) — that conformance is what drives `consistency_factor`
 to 1.0, and it is all-or-nothing: one stray row collapses stage 4's R². Sequence, k-mer index and PAM
-enumeration are process-global caches (`warm()` is called on a prewarm thread at miner startup).
+enumeration are process-global caches, warmed on a prewarm thread at miner startup.
+
+genExp.py is both the miner's engine and its research tool: `python genExp.py` builds and scores one
+task, `--all-tasks` sweeps the backend's whole history, and [submission.py](submission.py) writes the
+row sets themselves. [neurons/miner.py](neurons/miner.py) imports genExp directly and its `_build`
+mirrors `submission.build_for_task` step for step (`build_context` → `enumerate_sites` →
+`choose_weight_skew` → `generate` → `order_rows`), so an offline sweep predicts exactly what the miner
+will send — `submission.py --task-id <id>` and the miner produce identical arrays for one contract.
+Keep them in step: a knob that only exists on one side breaks that guarantee.
+
+[genomics/generation.py](niome_subnet/genomics/generation.py) is the superseded packaged port of
+genExp's pure path. Nothing imports it any more.
 
 ### Bittensor 11 specifics
 
