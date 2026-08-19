@@ -1,37 +1,50 @@
 #!/usr/bin/env python3
-"""run_task.py — build a submission for one task file and score it the way a validator does.
+"""run_task.py — build a submission the way a miner does, score it the way a validator does.
+
+The two halves of a round, in order, against one task file:
+
+    1. the miner builds against the task **with no seed** — the contract it designs on carries
+       ``seed: 0``, because that is what a broadcast task hands it
+    2. the validator scores those rows **under the seed stamped on the contract**, and that score
+       is the one that reaches the leaderboard
 
 Two files come out, beside the task file by default:
 
     submission.json   the miner's rows — the bare JSON array it PUTs to the presigned S3 URL
     score.json        the validator's score, and nothing the miner claims about itself
 
-The score has two independent sources, kept apart because they can disagree:
+``score.json`` is a summary, one screen long. ``score`` is the headline —  the validator's own code
+run here, contract and reference persisted to ``data/``, rows dropped where the S3 download would put
+them, then stages 1/2 -> 3 -> 4 -> 5 over those files via ``benchmark_submission`` — with
+``breakdown`` for the three factors it multiplies, ``stage4_r2`` and ``stage5_ratios`` for where a
+weak factor came from, and ``build`` for how the rows were made. Every stage's full output stays in
+``data/`` (``final_reward.json``, ``distribution_fidelity_summary.json``,
+``invalid_experiments.json``), so nothing summarised here is lost.
 
-``validator_pipeline`` runs the validator's own code here — contract and reference persisted to
-``data/``, rows dropped where the S3 download would put them, then stages 1/2 -> 3 -> 4 -> 5 over
-those files via ``benchmark_submission``. It is what a validator holding *this* contract would
-compute.
-
-``recorded_by_validators`` is what the real validators actually published for this task to
-``/api/v3/miners/scores`` — readable unsigned, so it is a score you can go and look at rather than
-one this script derived. If the task file matches a task the backend has issued, every miner's
-recorded breakdown for it is summarised, and ``--uid`` picks yours out.
+``recorded_by_validators`` is the second, independent source: what the real validators actually
+published for this task to ``/api/v3/miners/scores`` — readable unsigned, so a score you can go and
+look at rather than one this script derived. It carries the field (how many miners, best, median,
+top-10 cutoff) and, with ``--uid``, that uid's own recorded score and its delta against the one
+computed here. The two can disagree, which is the point of keeping both.
 
 The miner's own predicted score is deliberately absent. It is a self-report, it cannot see
 truncation or a stage-1 rejection, and it is computed under whatever seed the miner was handed —
 which in production is not the seed the validator scores with.
 
 **Seeds.** Validation always uses the seed in the task file: it is written to ``data/contract.json``,
-and both stage 3's outcome draws and stage 4's KFold shuffle read it from there. ``--build-seed``
-sets the seed the rows are *generated* under, and defaults to the same value. Passing a different one
-reproduces production, where the contract artifact arrives carrying ``seed: 0`` and is scored under
-the stamped seed — build under 0, validate under the real seed, and the ``mh`` construction no longer
-holds, which is the whole difference between a local score and a recorded one.
+and both stage 3's outcome draws and stage 4's KFold shuffle read it from there. Generation is
+seedless by default — the rows are built against a copy of the contract stamped ``seed: 0``, the
+placeholder a miner is actually handed — so the number printed at the end is the honest one, with no
+flag to remember. The ``mh`` construction the generator engineers cannot survive that gap, and that
+collapse *is* the difference between a miner's predicted score and a recorded one.
 
-    python scripts/run_task.py                             # build + score testing/task.json
+``--build-with-seed`` builds under the validation seed instead: an oracle run, an upper bound on what
+the construction is worth while it holds, and not a score any miner receives. ``--build-seed N``
+builds under some other stand-in.
+
+    python scripts/run_task.py                             # build seedless, score under the task's seed
     python scripts/run_task.py --uid 188                   # also pull uid 188's recorded score
-    python scripts/run_task.py --build-seed 0              # build as the miner really does, score honestly
+    python scripts/run_task.py --build-with-seed           # oracle: build under the scoring seed too
     python scripts/run_task.py --from-submission rows.json # score an existing array, build nothing
     python scripts/run_task.py --offline                   # no backend calls at all
 
@@ -75,6 +88,32 @@ from niome_subnet.genomics.validation import benchmark_submission  # noqa: E402
 from neurons.miner import Miner  # noqa: E402
 
 TASKS_URL = f"{settings.BASE_URL}/api/v3/tasks"
+
+# The six ratios stage 5 takes the geometric mean of, under names short enough to scan. The stage's
+# own diagnostics (per-cas shift, coverage counts) stay in data/distribution_fidelity_summary.json.
+STAGE5_RATIOS = (
+    ("mutation", "mutation_coverage_entropy_ratio"),
+    ("cas_system", "cas_system_coverage_entropy_ratio"),
+    ("strand", "strand_coverage_entropy_ratio"),
+    ("joint", "joint_coverage_entropy_ratio"),
+    ("kmer_diversity", "kmer_diversity_entropy_ratio"),
+    ("distinct_guide", "distinct_guide_ratio"),
+)
+
+
+def readable(value: object, places: int = 6) -> object:
+    """Round every float in a nested structure, so score.json can be read rather than parsed.
+
+    Six places is finer than any comparison this script makes — the recorded-score delta is judged
+    at 1e-6 — so nothing that matters is rounded away.
+    """
+    if isinstance(value, float):
+        return round(value, places)
+    if isinstance(value, dict):
+        return {key: readable(item, places) for key, item in value.items()}
+    if isinstance(value, list):
+        return [readable(item, places) for item in value]
+    return value
 
 
 def load_task(path: Path) -> dict:
@@ -180,11 +219,15 @@ def parse_args() -> argparse.Namespace:
                         help="the validator's score (default: score.json beside the task file)")
     parser.add_argument("--from-submission", default=None,
                         help="score this JSON array instead of building one (any miner's upload)")
-    parser.add_argument("--build-seed", type=int, default=None,
-                        help="seed to GENERATE the rows under (default: the task file's seed). "
-                             "Validation always uses the task file's seed, so setting this to 0 "
-                             "reproduces production, where the miner is handed an unstamped "
-                             "contract and scored under the stamped one")
+    # The seed the rows are GENERATED under. Validation is never affected by either of these: it
+    # always uses the seed in the task file.
+    seeding = parser.add_mutually_exclusive_group()
+    seeding.add_argument("--build-seed", type=int, default=0,
+                         help="stand-in seed to GENERATE the rows under (default: 0, the "
+                              "placeholder a miner is handed — it never sees the real one)")
+    seeding.add_argument("--build-with-seed", action="store_true",
+                         help="generate under the task file's seed instead of blind: an oracle run "
+                              "that no miner gets, useful as an upper bound")
     parser.add_argument("--uid", type=int, default=None,
                         help="miner uid: stamped on the local MinerScore and used to pick your "
                              "record out of the published ones (default: from data/last_upload.json)")
@@ -224,18 +267,27 @@ def main() -> int:
     # persisted to data/contract.json below, and stage 3 (outcome draws) and stage 4 (KFold shuffle)
     # both read it from there.
     validation_seed = contract.get("seed")
-    build_seed = args.build_seed if args.build_seed is not None else validation_seed
+    # The seed the rows are designed against. Blind by default — a broadcast task carries no seed,
+    # so the miner builds against 0 and only the validator ever holds the real one.
+    build_seed = validation_seed if args.build_with_seed else args.build_seed
     print(f"[1/5] task {task['id']} from {task_path}")
     print(f"  cell_type={contract.get('cell_type')} "
           f"mutations={len(contract.get('active_mutations', []))} "
           f"max_experiments={max_experiments} uid={uid}")
-    print(f"  validation seed={validation_seed} (from the task file)  build seed={build_seed}")
+    print(f"  validation seed={validation_seed} (from the task file, what the score is computed "
+          f"under)")
     if not validation_seed:
         print("  ! the task file's seed is 0/absent, so validation runs under seed 0 — a real "
               "validator scores under the stamped seed, which this file does not carry")
-    if build_seed != validation_seed:
-        print(f"  ! building under {build_seed} and validating under {validation_seed}: the outcome "
-              "construction cannot survive that, which is the production case")
+    if source_path:
+        pass  # nothing is generated, so no build seed applies
+    elif build_seed != validation_seed:
+        print(f"  build seed={build_seed} — the miner designs blind and is scored under "
+              f"{validation_seed}: the outcome construction cannot survive that, and this is the "
+              "production case")
+    else:
+        print(f"  build seed={build_seed} — same as the validation seed. This is an oracle run: no "
+              "miner is handed the seed it will be scored under")
 
     if cell_types_path:
         cell_types = json.load(open(cell_types_path))
@@ -266,25 +318,38 @@ def main() -> int:
             lengths=tuple(int(v) for v in args.lengths.split(",")),
             rows=args.rows,
         )
-        print(f"[3/5] building with strategy={cfg.strategy} selection={cfg.selection} "
-              f"construction={cfg.construction} variants={cfg.variants} flank={cfg.flank} "
-              f"lengths={list(cfg.lengths)}")
+        seeding = "under seed " + str(build_seed) if build_seed else "seedless"
+        print(f"[3/5] MINER: building {seeding} with strategy={cfg.strategy} "
+              f"selection={cfg.selection} construction={cfg.construction} "
+              f"variants={cfg.variants} flank={cfg.flank} lengths={list(cfg.lengths)}")
         print("  loading data/chr11.fa and the k-mer index (first call is the slow one)")
-        # Generate under build_seed. Only the copy handed to the generator is restamped; the task
-        # persisted for the pipeline below keeps the task file's seed.
+        # The task as a miner receives it: same rules, mutations and weights, seed replaced by the
+        # stand-in. genExp reads Context.seed off the contract unconditionally, so the field has to
+        # exist — 0 is the placeholder value a real broadcast carries. hbb_reference echoes the
+        # contract under 'challenge'; nothing reads its seed today, but it is blanked with the
+        # contract's so no path can recover the real one from the copy the generator holds.
+        # Only this copy is restamped: the task persisted for the pipeline below keeps the task
+        # file's seed, which is what the validator scores under.
         build_task = copy.deepcopy(task)
         build_task["content"]["contract"]["seed"] = build_seed
+        challenge = build_task["content"]["hbb_reference"].get("challenge")
+        if isinstance(challenge, dict) and "seed" in challenge:
+            challenge["seed"] = build_seed
         # score=False: the miner's own estimate is not wanted here, and skipping it saves ~5 s.
         meta, rows = S.build_for_task(build_task, cell_types, cfg, score=False)
         build = {
-            "seed": build_seed,
+            "blind": build_seed != validation_seed,
             "rows": meta["rows"],
             "weight_skew": meta["weight_skew"],
-            "construction": meta["construction"],
             "outcome_counts": meta["outcome_counts"],
-            "problems": meta["problems"],
-            "config": {k: (list(v) if isinstance(v, tuple) else v) for k, v in vars(cfg).items()},
+            # Only the knobs this script can move. The rest of GenConfig is genExp's scoring
+            # constants, which are the same on every run and readable there.
+            "config": {"strategy": cfg.strategy, "selection": cfg.selection,
+                       "construction": cfg.construction, "variants": cfg.variants,
+                       "flank": cfg.flank, "lengths": list(cfg.lengths), "rows": cfg.rows},
         }
+        if meta["problems"]:
+            build["problems"] = meta["problems"]
         print(f"  built {meta['rows']} rows, weight_skew={meta['weight_skew']}, "
               f"outcomes={meta['outcome_counts']}")
         for problem in meta["problems"]:
@@ -303,7 +368,7 @@ def main() -> int:
     with open(settings.MINER_SUBMISSION_PATH, "w") as handle:
         json.dump(rows, handle, indent=2)
 
-    print(f"[4/5] running the validator pipeline over {settings.MINER_SUBMISSION_PATH}")
+    print(f"[4/5] VALIDATOR: scoring {settings.MINER_SUBMISSION_PATH} under seed {validation_seed}")
     score = benchmark_submission(cell_types, uid=uid if uid is not None else 0).model_dump()
     breakdown = score["breakdown"]
 
@@ -328,7 +393,7 @@ def main() -> int:
     print(f"  stage 4    consistency_score={breakdown['consistency_score']:.4f} "
           f"-> factor {breakdown['consistency_factor']:.4f}")
     print(f"  stage 5    fidelity_factor={breakdown['distribution_fidelity_factor']:.4f}")
-    print(f"  LOCAL PIPELINE  final_score={score['final_score']:.6f} = "
+    print(f"  LEADERBOARD SCORE  final_score={score['final_score']:.6f} = "
           f"{breakdown['total_weighted_score']:.3f} x {breakdown['consistency_factor']:.4f} "
           f"x {breakdown['distribution_fidelity_factor']:.4f}")
 
@@ -347,15 +412,29 @@ def main() -> int:
                 summary = summarise_recorded(records)
                 mine = [r for r in records if r.get("miner_uid") == uid] if uid is not None else []
                 recorded = {
-                    "source": f"{settings.MINER_SCORE_URL}?task_id={backend_task['id']}",
-                    "matched_by": matched["match"],
                     "task_id": backend_task["id"],
-                    "task_created_at": backend_task.get("created_at"),
-                    "seed_published_in_task_list": backend_task["content"]["contract"].get("seed"),
-                    "field_summary": summary,
-                    "for_uid": uid,
-                    "records_for_uid": mine,
+                    "matched_by": matched["match"],
+                    "source": f"{settings.MINER_SCORE_URL}?task_id={backend_task['id']}",
+                    "miners_scored": summary["miners_scored"],
+                    "best": summary["final_score_max"],
+                    "median": summary["final_score_median"],
+                    "top10_cutoff": summary["top10_cutoff"],
+                    "scored_zero": summary["final_score_zero_count"],
                 }
+                if mine:
+                    # One record per validator; there is a single active validator today, and a
+                    # second would score the same rows under the same contract.
+                    record = mine[0]
+                    recorded |= {
+                        "uid": uid,
+                        "final_score": record["final_score"],
+                        "delta_vs_local": score["final_score"] - record["final_score"],
+                        "consistency_factor": record["breakdown"]["consistency_factor"],
+                        "weight": record.get("weight"),
+                        "at": (record.get("created_at") or "")[:19],
+                    }
+                    if len(mine) > 1:
+                        recorded["other_records_for_uid"] = len(mine) - 1
                 print(f"  task {backend_task['id']} (created {backend_task.get('created_at')})")
                 print(f"  {summary['miners_scored']} miners scored by validators "
                       f"{summary['validator_uids']} | best final={summary['final_score_max']:.3f} "
@@ -390,43 +469,44 @@ def main() -> int:
         except Exception as error:  # noqa: BLE001 - a lookup failure must not lose the local score
             print(f"  ! published-score lookup failed ({type(error).__name__}: {error})")
 
+    # A summary, not an archive: every stage's full output already sits in data/ (final_reward.json,
+    # distribution_fidelity_summary.json, invalid_experiments.json), so anything dropped here is one
+    # file away. Empty diagnostics are omitted rather than written as zeros, so what remains in the
+    # file is what actually happened.
     document = {
-        "generated_by": "scripts/run_task.py",
-        "task_file": str(task_path),
-        "task_id_in_file": task["id"],
-        "submission_file": str(rows_path),
-        "seed_in_task_file": validation_seed,
-        "seeds": {
-            "validation": validation_seed,
-            "build": build_seed,
-            "note": "validation is the seed in the task file, written to data/contract.json and "
-                    "read by stage 3 and stage 4; build is the seed the rows were generated under",
-        },
+        "task": task["id"],
         "cell_type": contract.get("cell_type"),
         "uid": uid,
-        "elapsed_seconds": time.time() - started,
-        # 1. The validator's own code, run here against this contract.
-        "validator_pipeline": {
-            "scored_by": "niome_subnet.genomics.validation.benchmark_submission "
-                         "(stages 1/2->3->4->5)",
-            "final_score": score["final_score"],
-            "breakdown": breakdown,
-            "rows_submitted": len(rows),
-            "rows_scored": len(scored_rows),
-            "rows_truncated": truncated,
-            "rows_invalid": len(invalid),
-            "invalid_reasons": dict(reasons),
-            "stage4_model_results": stage4.get("model_results"),
-            "stage5_summary": stage5,
+        "seed": {"build": None if build is None else build_seed, "validation": validation_seed},
+        # The one number this script exists to produce: what a validator holding this contract pays
+        # for these rows.
+        "score": score["final_score"],
+        "breakdown": {
+            "total_weighted_score": breakdown["total_weighted_score"],
+            "consistency_factor": breakdown["consistency_factor"],
+            "distribution_fidelity_factor": breakdown["distribution_fidelity_factor"],
         },
-        # 2. What real validators published for this contract — a score you can go and read.
+        "rows": {"submitted": len(rows), "scored": len(scored_rows),
+                 "valid": breakdown["n_valid_experiments"]},
+        # Per-target cross-validated R²: the whole of consistency_factor, and the first place a
+        # blind build shows up (negative R² where a seed-matched one reads 1.0).
+        "stage4_r2": {target: stats["r2_mean"]
+                      for target, stats in (stage4.get("model_results") or {}).items()},
+        "stage5_ratios": {short: stage5[key] for short, key in STAGE5_RATIOS if key in stage5},
         "recorded_by_validators": recorded,
-        # How the rows were made. Absent with --from-submission.
         "build": build,
+        "files": {"task": str(task_path), "submission": str(rows_path)},
+        "elapsed_seconds": time.time() - started,
     }
+    if truncated:
+        document["rows"]["truncated"] = truncated
+    if invalid:
+        document["rows"]["invalid"] = len(invalid)
+        document["rows"]["invalid_reasons"] = dict(reasons)
+
     score_path.parent.mkdir(parents=True, exist_ok=True)
     with open(score_path, "w") as handle:
-        json.dump(document, handle, indent=2)
+        json.dump(readable(document), handle, indent=2)
     print(f"\n  submission -> {rows_path}")
     print(f"  score      -> {score_path}")
     print(f"done in {time.time() - started:.1f}s")
