@@ -35,21 +35,35 @@ which in production is not the seed the validator scores with.
 and both stage 3's outcome draws and stage 4's KFold shuffle read it from there. Generation is
 seedless by default — the rows are built against a copy of the contract stamped ``seed: 0``, the
 placeholder a miner is actually handed — so the number printed at the end is the honest one, with no
-flag to remember. The ``mh`` construction the generator engineers cannot survive that gap, and that
-collapse *is* the difference between a miner's predicted score and a recorded one.
+flag to remember.
+
+That gap is the whole design problem. The ``pure`` and ``shaped`` strategies engineer stage-3 outcomes
+under the seed they are given and cannot survive it: their collapse *is* the difference between a
+miner's predicted score and a recorded one. The default ``robust`` strategy never reads the seed, so
+its rows are identical whatever is stamped here — but its score is not, because whether the run lands
+on a seed where every row cuts is exactly what the strategy is playing for. **One run of this script
+is one sample from that distribution, not the strategy's value.** Run several task files, or
+``genExp.py --all-tasks --limit N``, to see the mix.
 
 ``--build-with-seed`` builds under the validation seed instead: an oracle run, an upper bound on what
-the construction is worth while it holds, and not a score any miner receives. ``--build-seed N``
-builds under some other stand-in.
+a construction is worth while it holds, and not a score any miner receives. ``--build-seed N``
+builds under some other stand-in. Neither changes anything under ``--strategy robust``.
 
     python scripts/run_task.py                             # build seedless, score under the task's seed
     python scripts/run_task.py --uid 188                   # also pull uid 188's recorded score
+    python scripts/run_task.py --task-id e824bae7          # pick one task out of a task list
+    python scripts/run_task.py --task-index -1             # the oldest task in that list
     python scripts/run_task.py --build-with-seed           # oracle: build under the scoring seed too
     python scripts/run_task.py --from-submission rows.json # score an existing array, build nothing
     python scripts/run_task.py --offline                   # no backend calls at all
 
-The task file may be either shape: the backend's ``{"id": ..., "content": {"contract": ...,
-"hbb_reference": ...}}`` envelope, or the bare ``{"contract": ..., "hbb_reference": ...}`` pair.
+The task file may hold one task or many. One task is either the backend's ``{"id": ...,
+"content": {"contract": ..., "hbb_reference": ...}}`` envelope or the bare
+``{"contract": ..., "hbb_reference": ...}`` pair. Many is a JSON array of those, or a dict with them
+under ``tasks`` (what ``scripts/fetch_tasks.py`` writes) or ``items`` (the backend's own page shape) —
+newest first, selected with ``--task-index`` or ``--task-id``. ``testing/submission.json`` and
+``testing/score.json`` are overwritten every run whichever task is chosen, so use ``--score-out`` when
+comparing tasks.
 
 Like a validator, this **overwrites** ``data/contract.json``, ``data/hbb_reference.json``,
 ``data/submission.json`` and every stage artifact under ``data/`` — that is how the stages talk to
@@ -116,23 +130,61 @@ def readable(value: object, places: int = 6) -> object:
     return value
 
 
-def load_task(path: Path) -> dict:
-    """Read a task file in either the backend envelope or the bare contract/reference shape."""
+def select_task(path: Path, task_id: str | None, index: int) -> dict:
+    """Pick one task out of a task file, which may hold one task or the whole history.
+
+    Four shapes are accepted, because all four are things you end up with: the backend's own
+    ``{"items": [...]}`` page, the snapshot ``scripts/fetch_tasks.py`` writes (``{"tasks": [...]}``
+    with provenance), a bare JSON array of either, and a single task in envelope or bare form.
+    """
     document = json.load(open(path))
+    listing = None
+    if isinstance(document, list):
+        listing = document
+    elif isinstance(document, dict):
+        for key in ("tasks", "items"):
+            if isinstance(document.get(key), list):
+                listing = document[key]
+                break
+    if listing is None:
+        return _as_task(document, path, path.stem)
+
+    if not listing:
+        raise SystemExit(f"{path}: holds an empty task list")
+    if task_id:
+        matches = [t for t in listing if str(t.get("id", "")).startswith(task_id)]
+        if not matches:
+            raise SystemExit(f"{path}: no task id starts with '{task_id}' ({len(listing)} present)")
+        if len(matches) > 1:
+            raise SystemExit(f"'{task_id}' matches {len(matches)} tasks in {path}; use more of the id")
+        chosen = matches[0]
+    else:
+        if not -len(listing) <= index < len(listing):
+            raise SystemExit(f"{path}: --task-index {index} out of range (0..{len(listing) - 1})")
+        chosen = listing[index]
+    position = listing.index(chosen)
+    print(f"  {len(listing)} tasks in {path.name}; using #{position} "
+          f"({chosen.get('created_at', '?')[:19]})"
+          + ("" if task_id or index else ", the newest — --task-index N or --task-id <id> to pick"))
+    return _as_task(chosen, path, f"{path.stem}#{position}")
+
+
+def _as_task(document: dict, path: Path, fallback_id: str) -> dict:
+    """Normalise one task in either the backend envelope or the bare contract/reference shape."""
     if "content" in document:
         content = document["content"]
     elif "contract" in document and "hbb_reference" in document:
         content = document
     else:
         raise SystemExit(
-            f"{path}: expected either a 'content' envelope or top-level "
-            "'contract' and 'hbb_reference' keys"
+            f"{path}: expected either a 'content' envelope, top-level 'contract' and "
+            "'hbb_reference' keys, or a list of tasks under 'tasks'/'items'"
         )
     for key in ("contract", "hbb_reference"):
         if key not in content:
             raise SystemExit(f"{path}: missing '{key}'")
     return {
-        "id": document.get("id", path.stem),
+        "id": document.get("id", fallback_id),
         "created_at": document.get("created_at"),
         "content": content,
     }
@@ -213,6 +265,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--task", default=str(DEFAULT_TASK))
+    parser.add_argument("--task-index", type=int, default=0,
+                        help="which task to use when --task holds a list (0 = newest, negative "
+                             "indexes from the oldest)")
+    parser.add_argument("--task-id", default=None,
+                        help="pick a task out of that list by id, or any unique prefix of one")
     parser.add_argument("--submission-out", default=None,
                         help="the miner's rows (default: submission.json beside the task file)")
     parser.add_argument("--score-out", default=None,
@@ -237,7 +294,7 @@ def parse_args() -> argparse.Namespace:
                         help="no backend calls: accessibility defaults to 1.0 and no published "
                              "scores are looked up")
     # Generation knobs; each defaults to the miner's own value. Ignored with --from-submission.
-    parser.add_argument("--strategy", choices=("pure", "shaped"), default=Miner.STRATEGY)
+    parser.add_argument("--strategy", choices=("robust", "pure", "shaped"), default=Miner.STRATEGY)
     parser.add_argument("--selection", choices=("packed", "stratified"), default=Miner.SELECTION)
     parser.add_argument("--construction", choices=tuple(G.CONSTRUCTIONS), default=Miner.CONSTRUCTION)
     parser.add_argument("--variants", type=int, default=Miner.VARIANTS)
@@ -259,7 +316,8 @@ def main() -> int:
     uid = args.uid if args.uid is not None else uid_from_last_upload()
     started = time.time()
 
-    task = load_task(task_path)
+    print(f"[1/5] reading {task_path}")
+    task = select_task(task_path, args.task_id, args.task_index)
     contract = task["content"]["contract"]
     reference = task["content"]["hbb_reference"]
     max_experiments = contract.get("rules", {}).get("max_experiments")
@@ -270,7 +328,7 @@ def main() -> int:
     # The seed the rows are designed against. Blind by default — a broadcast task carries no seed,
     # so the miner builds against 0 and only the validator ever holds the real one.
     build_seed = validation_seed if args.build_with_seed else args.build_seed
-    print(f"[1/5] task {task['id']} from {task_path}")
+    print(f"  task {task['id']} created {task.get('created_at')}")
     print(f"  cell_type={contract.get('cell_type')} "
           f"mutations={len(contract.get('active_mutations', []))} "
           f"max_experiments={max_experiments} uid={uid}")
@@ -317,6 +375,10 @@ def main() -> int:
             flank=args.flank,
             lengths=tuple(int(v) for v in args.lengths.split(",")),
             rows=args.rows,
+            sites_per_cell=Miner.SITES_PER_CELL,
+            cas12a_share=Miner.CAS12A_SHARE,
+            variant_pool=Miner.VARIANT_POOL,
+            refine_passes=Miner.REFINE_PASSES,
         )
         seeding = "under seed " + str(build_seed) if build_seed else "seedless"
         print(f"[3/5] MINER: building {seeding} with strategy={cfg.strategy} "

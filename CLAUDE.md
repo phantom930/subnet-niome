@@ -91,10 +91,17 @@ data/submission.json  →  stage12 → valid_experiments.json / invalid_experime
   rewriting `data/submission.json` in place** — the cut file is what every later stage and the
   archived submission see.
 - **stage3** — biophysical simulation. Seeded from `contract.seed` + the design fields, so it is fully
-  deterministic and reproducible by anyone holding the contract.
+  deterministic and reproducible by anyone holding the contract — but **the miner is not holding it**:
+  see "The seed is not in the broadcast contract" below.
 - **stage4** — trains a RandomForest per target (`is_cut`, `is_hdr`, `indel_length`) under KFold and
   turns cross-validated R²/MAE into `consistency_factor`. Needs ≥2 valid rows and a non-empty
   `experiment_id` join, otherwise it writes a clean zero rather than raising.
+  `consistency_factor = 0.7·max(avg_r2, 0) + 0.3·(1 − avg_nmae)`, and the term that dominates it is a
+  degeneracy, not a fit: when no row draws `no_cut`, `is_cut` is a constant column, every fold's
+  `r2_score` hits its 0-numerator/0-denominator case and returns 1.0, and `normalized_mae`
+  short-circuits on `std < 1e-9`. That single event is the whole gap between the field's ~0.10 cluster
+  and its ~0.33 one. Nothing else in stage 4 is predictable from `X`, so a design's remaining job is
+  to keep the forest from overfitting the two targets that are not.
 - **stage5** — six-way *geometric* mean of coverage/diversity entropy ratios. An empty
   (mutation × cas × strand) cell costs roughly a 0.03× multiplier on the entire score.
 
@@ -113,12 +120,44 @@ pipeline that judges it, and it means **editing a validation stage silently chan
 a formula tweak in stage12 or stage3 re-prices every site the generator ranks and can invalidate the
 outcome "construction" it searches for.
 
-The build enumerates PAM sites in `gene_region ± flank`, apportions rows across the full
-mutation × cas × strand support, tunes each guide toward 50% GC within the contract's mismatch budget,
-then searches guide variants for one whose deterministic stage-3 draw satisfies the configured
-construction (`CONSTRUCTIONS`, default `"mh"`) — that conformance is what drives `consistency_factor`
-to 1.0, and it is all-or-nothing: one stray row collapses stage 4's R². Sequence, k-mer index and PAM
-enumeration are process-global caches, warmed on a prewarm thread at miner startup.
+Sequence, k-mer index and PAM enumeration are process-global caches, warmed on a prewarm thread at
+miner startup.
+
+### The seed is not in the broadcast contract
+
+The `Task` a validator sends is `{id, contract_url, hbb_ref_url}`; the miner downloads the contract
+from that presigned URL and it carries **`seed: 0`**. `run_validation` re-fetches the task at
+validation time, and *that* copy carries the seed the backend stamped in between. The public
+`/api/v3/tasks` list shows the same thing — the newest task reads `seed: 0` until its round closes.
+Checked for structure and there is none to exploit: no hash of the task id or timestamp reproduces it,
+no LCG fits the sequence, and the lag-92 repeat visible in the history is a single replayed block that
+stopped around index 199. What *is* knowable is the support — 243 of the 261 stamped seeds land in
+`[100, 999]` (`SEED_CANDIDATES`).
+
+So `genExp.CONSTRUCTIONS` and the `pure`/`shaped` strategies, which pick guides by their stage-3 draw
+under `ctx.seed`, are research tools only: on task e824bae7 the `mh` construction predicted
+`consistency_factor` 1.0 and was paid **0.1048**. They are kept because they still measure the
+pipeline honestly when you hand them a stamped task.
+
+`strategy="robust"` (the default, genExp section 7b) is the production build and never reads the seed:
+
+- **One coordinate per (mutation, cas, strand) cell.** Stage 1 dedups on `(cas, start, strand, guide)`
+  — the guide is in the key — so one coordinate carries many rows, and every guide within the mismatch
+  budget at an unchanged GC count is the *same row* to stages 1, 2 and 5. That makes `X` eight distinct
+  feature vectors instead of ~230, and the forest can only return group means: measured r2 on
+  is_hdr/indel_length goes from −0.29/−0.39 to −0.06/−0.06.
+- **Guides chosen for seed survival.** A row's cut draw is a pure function of
+  `(seed, mutation, cas, guide, start, strand)`, so `cut_failure_seeds` computes, for each candidate
+  guide, the exact set of `SEED_CANDIDATES` it would draw `no_cut` under. Rows are then assigned to
+  minimise the *union* of those sets (Cas12a cells first — `cut_p` caps at 0.96 against Cas9's 0.99 —
+  then block-coordinate refinement passes). Every seed outside the union is a seed where all 250 rows
+  cut and `is_cut` is constant. Measured ~460–540 of 900 survive on the high-accessibility cell types.
+
+The scan is the build's entire cost (~50 s on 12 cores) and `variant_pool` is trimmed by core count so
+the wall clock stays inside the 300 s presigned-URL TTL. Two things silently break it: a fixed
+failure-count `cap` (must follow `cut_p` — HEK293's accessibility of 0.35 keeps energy under the clamp
+and quadruples the failure rate), and a coordinate whose reference GC is off target, which spends
+mismatch budget on GC and collapses its variant pool from thousands to ~190.
 
 genExp.py is both the miner's engine and its research tool: `python genExp.py` builds and scores one
 task, `--all-tasks` sweeps the backend's whole history, and [submission.py](submission.py) writes the
