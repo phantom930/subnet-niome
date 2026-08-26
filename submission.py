@@ -30,17 +30,23 @@ from pathlib import Path
 import genExp as G
 
 
-def build_for_task(task: dict, cell_types: dict, cfg: G.GenConfig,
-                   score: bool) -> tuple[dict, list[dict]]:
-    """Generate one task's submission. Returns (metadata, rows)."""
+def build_for_task(task: dict, cell_types: dict, cfg: G.GenConfig, score: bool,
+                   cut_p_ceiling: bool = False,
+                   cas_mix: str | None = None) -> tuple[dict, list[dict]]:
+    """Generate one task's submission. Returns (metadata, rows).
+
+    The resolution order matters and must match ``Miner._build``: contract-dependent knobs first
+    (per-Cas cut_p floors, cas mix), then the weight skew — because the skew is fitted through
+    ``select_sites``, which reads both.
+    """
     contract = task["content"]["contract"]
     reference = task["content"]["hbb_reference"]
     ctx = G.build_context(contract, reference, cell_types)
     sites = G.enumerate_sites(ctx, cfg.flank, tuple(sorted(set(cfg.lengths))))
 
-    task_cfg = cfg
-    if cfg.strategy == "pure":
-        task_cfg = replace(cfg, weight_skew=G.choose_weight_skew(ctx, sites, cfg))
+    task_cfg = G.config_for_contract(cfg, contract, cut_p_ceiling=cut_p_ceiling, cas_mix=cas_mix)
+    if task_cfg.strategy == "pure":
+        task_cfg = replace(task_cfg, weight_skew=G.choose_weight_skew(ctx, sites, task_cfg))
 
     rows, valid, results = G.generate(ctx, sites, task_cfg)
     rows = G.order_rows(rows, valid)
@@ -59,6 +65,12 @@ def build_for_task(task: dict, cell_types: dict, cfg: G.GenConfig,
         "weight_skew": task_cfg.weight_skew,
         "rows": len(rows),
         "construction": task_cfg.construction,
+        "selection": task_cfg.selection,
+        "gc_tolerance": task_cfg.gc_tolerance,
+        "cut_p_floors": task_cfg.cut_p_floors,
+        "cas_share": task_cfg.cas_share,
+        "backfill_cas": task_cfg.backfill_cas,
+        "cas_counts": dict(Counter(r["cas"] for r in results)),
         "outcome_counts": dict(Counter(r["outcome"] for r in results)),
         "problems": G.check_invariants(rows, results, task_cfg, valid),
     }
@@ -101,6 +113,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--strategy", choices=("pure", "shaped"), default="pure")
     parser.add_argument("--construction", choices=tuple(G.CONSTRUCTIONS), default="mh",
                         help="rule every row's outcome must satisfy under the pure strategy")
+    parser.add_argument("--selection", choices=("packed", "stratified", "nearest"), default=None,
+                        help="site ranking; defaults to packed for pure, stratified for shaped")
+    parser.add_argument("--gc-tolerance", type=float, default=0.0,
+                        help="under --selection nearest, treat any guide within this much of 50%% "
+                             "GC as equally good so distance breaks the tie")
+    parser.add_argument("--cut-p-ceiling", action="store_true",
+                        help="hold every Cas system to its own cut_p ceiling (Cas9 0.99, "
+                             "Cas12a 0.96)")
+    parser.add_argument("--cas-mix", default=None,
+                        help="row share per Cas system in rules.cas_systems order, e.g. 70/30")
+    parser.add_argument("--backfill-cas", default="Cas9",
+                        help="top the submission up to max_experiments from this Cas system, "
+                             "highest cut_p first; empty string disables it")
+    parser.add_argument("--oversample", type=float, default=1.0,
+                        help="generate this multiple of the wanted rows, then keep the nearest")
     parser.add_argument("--flank", type=int, default=G.GenConfig.flank)
     parser.add_argument("--variants", type=int, default=G.GenConfig.variants)
     parser.add_argument("--lengths", default="20,23")
@@ -136,9 +163,12 @@ def main() -> int:
     cell_types = G.fetch_cell_types()
     lengths = tuple(int(v) for v in args.lengths.split(","))
     cfg = G.GenConfig(strategy=args.strategy,
-                      selection="packed" if args.strategy == "pure" else "stratified",
+                      selection=args.selection or
+                      ("packed" if args.strategy == "pure" else "stratified"),
                       flank=args.flank, variants=args.variants, lengths=lengths, rows=args.rows,
-                      construction=args.construction)
+                      construction=args.construction, gc_tolerance=args.gc_tolerance,
+                      oversample=args.oversample,
+                      backfill_cas=args.backfill_cas or None)
 
     print("[2/4] warming reference + site cache")
     warm = G.build_context(tasks[0]["content"]["contract"],
@@ -157,7 +187,8 @@ def main() -> int:
     drift: list[str] = []
 
     for index, task in enumerate(tasks):
-        meta, rows = build_for_task(task, cell_types, cfg, score=not args.no_score)
+        meta, rows = build_for_task(task, cell_types, cfg, score=not args.no_score,
+                                    cut_p_ceiling=args.cut_p_ceiling, cas_mix=args.cas_mix)
         entry = {**meta, "submission": rows}
         entries.append(entry)
 

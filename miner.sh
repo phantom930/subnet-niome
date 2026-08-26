@@ -1,1 +1,1 @@
-python neurons/miner.py  --netuid 55  --wallet my_coldkey  --wallet-hotkey my_hotkey  --axon.external_ip 184.144.255.144  --axon.external_port 52760 --axon.ip 0.0.0.0 --axon.port 8091
+/root/workspace/subnet-niome/.venv/bin/python neurons/miner.py  --netuid 55  --wallet niome_coldkey  --wallet-hotkey niome_hotkey  --axon.external_ip 184.144.255.144  --axon.external_port 52760 --axon.ip 0.0.0.0 --axon.port 8091

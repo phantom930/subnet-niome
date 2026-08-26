@@ -1,0 +1,72 @@
+{
+    "content": {
+        "contract": {
+            "active_mutations": [
+                "HBB:c.305A>G",
+                "HBB:c.349C>T"
+            ],
+            "cell_type": "K562",
+            "mutation_regions": {
+                "HBB:c.305A>G": "exon2",
+                "HBB:c.349C>T": "exon3"
+            },
+            "mutation_weights": {
+                "HBB:c.305A>G": 1.65,
+                "HBB:c.349C>T": 0.715
+            },
+            "rules": {
+                "base_padding": 400,
+                "cas_systems": [
+                    "Cas9",
+                    "Cas12a"
+                ],
+                "max_experiments": 250,
+                "max_mismatches": 3,
+                "proximity_gate": false
+            },
+            "seed": 739,
+            "version": "v1"
+        },
+        "hbb_reference": {
+            "challenge": {
+                "active_mutations": [
+                    "HBB:c.305A>G",
+                    "HBB:c.349C>T"
+                ],
+                "cell_type": "K562",
+                "mutation_regions": {
+                    "HBB:c.305A>G": "exon2",
+                    "HBB:c.349C>T": "exon3"
+                },
+                "mutation_weights": {
+                    "HBB:c.305A>G": 1.65,
+                    "HBB:c.349C>T": 0.715
+                },
+                "rules": {
+                    "base_padding": 400,
+                    "cas_systems": [
+                        "Cas9",
+                        "Cas12a"
+                    ],
+                    "max_experiments": 250,
+                    "max_mismatches": 3,
+                    "proximity_gate": false
+                },
+                "seed": 739,
+                "version": "v1"
+            },
+            "chromosome": "11",
+            "gene_region": {
+                "end": 5227064,
+                "start": 5225464
+            },
+            "mutation_map": {
+                "HBB:c.305A>G": 5226587,
+                "HBB:c.349C>T": 5225693
+            },
+            "window_id": "HBB_v1"
+        }
+    },
+    "created_at": "2026-08-18T02:06:13.726609",
+    "id": "e824bae7-12a6-473f-bc92-baef611bf3b5"
+}

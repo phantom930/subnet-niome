@@ -1,0 +1,777 @@
+{
+  "task_id": "4cb03dbc-00a3-4818-9684-deea85a42941",
+  "cell_type": "HEK293",
+  "accessibility": 0.35,
+  "build_seed": 0,
+  "real_seed": 825,
+  "note": "no_cut rows stay valid and keep their stage-2 weighted_score; what they cost is the construction, because is_cut drops to 0 and stage 4 cannot recover it",
+  "summary": {
+    "as_built": {
+      "seed": 0,
+      "rows": 250,
+      "no_cut": 0,
+      "expected_no_cut": 21.895063320666825,
+      "cut_rate": 1.0,
+      "by_cas": {},
+      "by_strand": {},
+      "by_mutation": {},
+      "by_cut_p": {},
+      "weighted_score_carried": 0,
+      "weighted_score_total": 311.2205051826991,
+      "nonconforming_rows": 0,
+      "no_cut_share_of_nonconforming": 0.0,
+      "closest_call": null,
+      "widest_miss": null
+    },
+    "as_scored": {
+      "seed": 825,
+      "rows": 250,
+      "no_cut": 18,
+      "expected_no_cut": 21.895063320666825,
+      "cut_rate": 0.928,
+      "by_cas": {
+        "Cas12a": 15,
+        "Cas9": 3
+      },
+      "by_strand": {
+        "+": 6,
+        "-": 12
+      },
+      "by_mutation": {
+        "HBB:c.440A>T": 13,
+        "NC_000011.10:g.5226860G>T": 5
+      },
+      "by_cut_p": {
+        "0.8753": 1,
+        "0.8736": 1,
+        "0.9518": 1,
+        "0.873": 2,
+        "0.8719": 2,
+        "0.8745": 1,
+        "0.8744": 1,
+        "0.8657": 1,
+        "0.9456": 1,
+        "0.8702": 1,
+        "0.8701": 1,
+        "0.8618": 1,
+        "0.8738": 1,
+        "0.8737": 1,
+        "0.9527": 1,
+        "0.874": 1
+      },
+      "weighted_score_carried": 20.866077192284443,
+      "weighted_score_total": 311.2205051826991,
+      "nonconforming_rows": 171,
+      "no_cut_share_of_nonconforming": 0.10526315789473684,
+      "closest_call": 0.0017979013723373738,
+      "widest_miss": 0.1208181475234934
+    }
+  },
+  "experiments": {
+    "as_built": [],
+    "as_scored": [
+      {
+        "experiment_id": "exp-00189",
+        "design": {
+          "experiment_id": "exp-00189",
+          "guideRNA": "TTATAAGCAGCCTGCACTGG",
+          "target_alignment_start": 5225646,
+          "target_alignment_end": 5225666,
+          "strand": "+",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 44,
+          "dist_score": 0.8958341352965282,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.9609378007361981,
+          "weighted_score": 1.5855473712147268
+        },
+        "stage3": {
+          "experiment_seed": 4022459546,
+          "energy": 0.5294294697174072,
+          "p_mh": 0.55,
+          "mh": true,
+          "mh_draw": 0.4036977390205435,
+          "cut_p": 0.8752973045491333,
+          "cut_draw": 0.8844892119108583,
+          "margin_over_cut_p": 0.009191907361724927,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00196",
+        "design": {
+          "experiment_id": "exp-00196",
+          "guideRNA": "GTTAGGCTGAATCCAGATGC",
+          "target_alignment_start": 5225487,
+          "target_alignment_end": 5225507,
+          "strand": "+",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 115,
+          "dist_score": 0.7501365667709818,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.9063012125391182,
+          "weighted_score": 1.495397000689545
+        },
+        "stage3": {
+          "experiment_seed": 1442495603,
+          "energy": 0.5200016923503651,
+          "p_mh": 0.55,
+          "mh": true,
+          "mh_draw": 0.06035031864409224,
+          "cut_p": 0.8736003046230657,
+          "cut_draw": 0.9944184521465591,
+          "margin_over_cut_p": 0.1208181475234934,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00094",
+        "design": {
+          "experiment_id": "exp-00094",
+          "guideRNA": "ACTAAACTGGGGGCGGTTATGAA",
+          "target_alignment_start": 5225516,
+          "target_alignment_end": 5225539,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas9",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.4782608695652174,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 86,
+          "dist_score": 0.8065414401773269,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.9002791270230193,
+          "weighted_score": 1.4854605595879817
+        },
+        "stage3": {
+          "experiment_seed": 1515822075,
+          "energy": 0.510102991827241,
+          "p_mh": 0.548960302457467,
+          "mh": false,
+          "mh_draw": 0.7398360768047391,
+          "cut_p": 0.9518185385289033,
+          "cut_draw": 0.9588940211479239,
+          "margin_over_cut_p": 0.007075482619020579,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00134",
+        "design": {
+          "experiment_id": "exp-00134",
+          "guideRNA": "GCCGATCATGTTCATACCTC",
+          "target_alignment_start": 5225743,
+          "target_alignment_end": 5225763,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 141,
+          "dist_score": 0.7029285698107182,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8885982136790194,
+          "weighted_score": 1.466187052570382
+        },
+        "stage3": {
+          "experiment_seed": 2495572623,
+          "energy": 0.5166593800705611,
+          "p_mh": 0.55,
+          "mh": true,
+          "mh_draw": 0.28975033627800684,
+          "cut_p": 0.872998688412701,
+          "cut_draw": 0.9023179430477818,
+          "margin_over_cut_p": 0.029319254635080783,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00139",
+        "design": {
+          "experiment_id": "exp-00139",
+          "guideRNA": "TTGGTTGGCATAAGGCTGGA",
+          "target_alignment_start": 5225791,
+          "target_alignment_end": 5225811,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 189,
+          "dist_score": 0.6234417141174892,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8587906427940584,
+          "weighted_score": 1.4170045606101962
+        },
+        "stage3": {
+          "experiment_seed": 3199241279,
+          "energy": 0.5106391178245173,
+          "p_mh": 0.55,
+          "mh": false,
+          "mh_draw": 0.8812809753537963,
+          "cut_p": 0.8719150412084131,
+          "cut_draw": 0.9255266031986069,
+          "margin_over_cut_p": 0.05361156199019379,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00140",
+        "design": {
+          "experiment_id": "exp-00140",
+          "guideRNA": "CGAAATAGGGAATGTGGGAG",
+          "target_alignment_start": 5225412,
+          "target_alignment_end": 5225432,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 190,
+          "dist_score": 0.6218850564650201,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8582068961743825,
+          "weighted_score": 1.416041378687731
+        },
+        "stage3": {
+          "experiment_seed": 1789545836,
+          "energy": 0.5105157328788527,
+          "p_mh": 0.55,
+          "mh": false,
+          "mh_draw": 0.7287129478895122,
+          "cut_p": 0.8718928319181936,
+          "cut_draw": 0.8840973758004023,
+          "margin_over_cut_p": 0.012204543882208707,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00143",
+        "design": {
+          "experiment_id": "exp-00143",
+          "guideRNA": "CGGCTGGGATAAGGCTGGATTAT",
+          "target_alignment_start": 5225787,
+          "target_alignment_end": 5225810,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 185,
+          "dist_score": 0.62970740751161,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8339663647733755,
+          "weighted_score": 1.3760445018760694
+        },
+        "stage3": {
+          "experiment_seed": 4072504163,
+          "energy": 0.5248291331705693,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.24879495071607804,
+          "cut_p": 0.8744692439707025,
+          "cut_draw": 0.9430237475070246,
+          "margin_over_cut_p": 0.06855450353632209,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00144",
+        "design": {
+          "experiment_id": "exp-00144",
+          "guideRNA": "CCGGTTGGGATAAGGCTGGATTA",
+          "target_alignment_start": 5225788,
+          "target_alignment_end": 5225811,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 186,
+          "dist_score": 0.6281351051896408,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.833376751402637,
+          "weighted_score": 1.375071639814351
+        },
+        "stage3": {
+          "experiment_seed": 3572856630,
+          "energy": 0.5247054187592908,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.2636497305285418,
+          "cut_p": 0.8744469753766724,
+          "cut_draw": 0.9715841641662336,
+          "margin_over_cut_p": 0.09713718878956124,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00150",
+        "design": {
+          "experiment_id": "exp-00150",
+          "guideRNA": "CCGCTCATGTTCATACCTCTTAT",
+          "target_alignment_start": 5225739,
+          "target_alignment_end": 5225762,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.43478260869565216,
+          "gc_score": 0.8695652173913043,
+          "distance_to_mutation": 137,
+          "dist_score": 0.7099931193855512,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8097256806391468,
+          "weighted_score": 1.3360473730545923
+        },
+        "stage3": {
+          "experiment_seed": 2966178467,
+          "energy": 0.47608286217803353,
+          "p_mh": 0.5406427221172023,
+          "mh": true,
+          "mh_draw": 0.3545677246829676,
+          "cut_p": 0.8656949151920461,
+          "cut_draw": 0.873093624773049,
+          "margin_over_cut_p": 0.00739870958100286,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00015",
+        "design": {
+          "experiment_id": "exp-00015",
+          "guideRNA": "AGGTATGAACACGGGTAGCAAAA",
+          "target_alignment_start": 5225744,
+          "target_alignment_end": 5225767,
+          "strand": "+",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas9",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.43478260869565216,
+          "gc_score": 0.8695652173913043,
+          "distance_to_mutation": 142,
+          "dist_score": 0.7011734432085724,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.8064183020727799,
+          "weighted_score": 1.3305901984200867
+        },
+        "stage3": {
+          "experiment_seed": 43327047,
+          "energy": 0.47544502643253206,
+          "p_mh": 0.5406427221172023,
+          "mh": false,
+          "mh_draw": 0.7149105356282452,
+          "cut_p": 0.9455801047578558,
+          "cut_draw": 0.9875169396075002,
+          "margin_over_cut_p": 0.04193683484964439,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00166",
+        "design": {
+          "experiment_id": "exp-00166",
+          "guideRNA": "CCGCATCTCATTCTTTCAGGGCA",
+          "target_alignment_start": 5225993,
+          "target_alignment_end": 5226016,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 391,
+          "dist_score": 0.37625055042369576,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.7389200433654076,
+          "weighted_score": 1.2192180715529226
+        },
+        "stage3": {
+          "experiment_seed": 1483303072,
+          "energy": 0.501008573945062,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.015343252058078738,
+          "cut_p": 0.8701815433101112,
+          "cut_draw": 0.8719794446824486,
+          "margin_over_cut_p": 0.0017979013723373738,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00167",
+        "design": {
+          "experiment_id": "exp-00167",
+          "guideRNA": "GCGGCCAAAGTTTTGCTATGCTG",
+          "target_alignment_start": 5225209,
+          "target_alignment_end": 5225232,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 393,
+          "dist_score": 0.3743739929746928,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.7382163343220316,
+          "weighted_score": 1.218056951631352
+        },
+        "stage3": {
+          "experiment_seed": 310486555,
+          "energy": 0.500792967152504,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.24213360656968685,
+          "cut_p": 0.8701427340874508,
+          "cut_draw": 0.9648449291697572,
+          "margin_over_cut_p": 0.09470219508230637,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00169",
+        "design": {
+          "experiment_id": "exp-00169",
+          "guideRNA": "GCGCGGCTGTATTTTACATT",
+          "target_alignment_start": 5225198,
+          "target_alignment_end": 5225218,
+          "strand": "-",
+          "mutation": "HBB:c.440A>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.45,
+          "gc_score": 0.9,
+          "distance_to_mutation": 404,
+          "dist_score": 0.3642189795715233,
+          "consistency": 0.3,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 1.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": "exon3",
+          "region_energy_offset": 0.03,
+          "structural_score": 0.6990821173393212,
+          "weighted_score": 1.15348549360988
+        },
+        "stage3": {
+          "experiment_seed": 251860613,
+          "energy": 0.4544166025722406,
+          "p_mh": 0.5445000000000001,
+          "mh": false,
+          "mh_draw": 0.6933613231255478,
+          "cut_p": 0.8617949884630033,
+          "cut_draw": 0.9264609953917765,
+          "margin_over_cut_p": 0.06466600692877322,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00238",
+        "design": {
+          "experiment_id": "exp-00238",
+          "guideRNA": "GGTTGGTCTCCTTAAACCTG",
+          "target_alignment_start": 5226888,
+          "target_alignment_end": 5226908,
+          "strand": "+",
+          "mutation": "NC_000011.10:g.5226860G>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 28,
+          "dist_score": 0.9323938199059483,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 0.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": null,
+          "region_energy_offset": 0.0,
+          "structural_score": 0.9746476824647305,
+          "weighted_score": 0.6335209936020749
+        },
+        "stage3": {
+          "experiment_seed": 3126471815,
+          "energy": 0.5211163600747108,
+          "p_mh": 0.55,
+          "mh": false,
+          "mh_draw": 0.7754165213629133,
+          "cut_p": 0.8738009448134479,
+          "cut_draw": 0.9151700550639845,
+          "margin_over_cut_p": 0.04136911025053658,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00177",
+        "design": {
+          "experiment_id": "exp-00177",
+          "guideRNA": "TCAAAGGCACTGACTCTCTC",
+          "target_alignment_start": 5226828,
+          "target_alignment_end": 5226848,
+          "strand": "-",
+          "mutation": "NC_000011.10:g.5226860G>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 32,
+          "dist_score": 0.9231163463866358,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 0.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": null,
+          "region_energy_offset": 0.0,
+          "structural_score": 0.9711686298949884,
+          "weighted_score": 0.6312596094317425
+        },
+        "stage3": {
+          "experiment_seed": 2081763682,
+          "energy": 0.5205674486550186,
+          "p_mh": 0.55,
+          "mh": false,
+          "mh_draw": 0.6676058742453101,
+          "cut_p": 0.8737021407579033,
+          "cut_draw": 0.9550720568824697,
+          "margin_over_cut_p": 0.08136991612456634,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00055",
+        "design": {
+          "experiment_id": "exp-00055",
+          "guideRNA": "ACCACCAGAAACCTAAGGGT",
+          "target_alignment_start": 5226787,
+          "target_alignment_end": 5226807,
+          "strand": "+",
+          "mutation": "NC_000011.10:g.5226860G>T",
+          "cas_system": "Cas9",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5,
+          "gc_score": 1.0,
+          "distance_to_mutation": 73,
+          "dist_score": 0.8331846439283305,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 0.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": null,
+          "region_energy_offset": 0.0,
+          "structural_score": 0.9374442414731239,
+          "weighted_score": 0.6093387569575306
+        },
+        "stage3": {
+          "experiment_seed": 1757493031,
+          "energy": 0.5150247010257791,
+          "p_mh": 0.55,
+          "mh": false,
+          "mh_draw": 0.7701469794152028,
+          "cut_p": 0.9527044461846402,
+          "cut_draw": 0.9912767434504366,
+          "margin_over_cut_p": 0.03857229726579636,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00186",
+        "design": {
+          "experiment_id": "exp-00186",
+          "guideRNA": "AGACCTTTGCGGATCTGTCCACT",
+          "target_alignment_start": 5226738,
+          "target_alignment_end": 5226761,
+          "strand": "-",
+          "mutation": "NC_000011.10:g.5226860G>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 122,
+          "dist_score": 0.7371233743916278,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 0.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": null,
+          "region_energy_offset": 0.0,
+          "structural_score": 0.8742473523533821,
+          "weighted_score": 0.5682607790296984
+        },
+        "stage3": {
+          "experiment_seed": 286318304,
+          "energy": 0.5222917845766106,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.21375481289676712,
+          "cut_p": 0.8740125212237899,
+          "cut_draw": 0.9405849963385451,
+          "margin_over_cut_p": 0.06657247511475517,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      },
+      {
+        "experiment_id": "exp-00242",
+        "design": {
+          "experiment_id": "exp-00242",
+          "guideRNA": "ATGCCATGACCCTTCACCTTAGG",
+          "target_alignment_start": 5226694,
+          "target_alignment_end": 5226717,
+          "strand": "+",
+          "mutation": "NC_000011.10:g.5226860G>T",
+          "cas_system": "Cas12a",
+          "cell_type": "HEK293"
+        },
+        "stage2": {
+          "gc": 0.5217391304347826,
+          "gc_score": 0.9565217391304348,
+          "distance_to_mutation": 166,
+          "dist_score": 0.6603402807049829,
+          "consistency": 1.0,
+          "offtarget_factor": 1.0,
+          "mutation_weight": 0.65,
+          "cell_type_accessibility": 0.35,
+          "mutation_region": null,
+          "region_energy_offset": 0.0,
+          "structural_score": 0.8454536922208903,
+          "weighted_score": 0.5495448999435787
+        },
+        "stage3": {
+          "experiment_seed": 111975825,
+          "energy": 0.5166954456035469,
+          "p_mh": 0.548960302457467,
+          "mh": true,
+          "mh_draw": 0.49147121595352783,
+          "cut_p": 0.8730051802086385,
+          "cut_draw": 0.9266053654123784,
+          "margin_over_cut_p": 0.05360018520373988,
+          "outcome": "no_cut",
+          "indel_length": 0
+        }
+      }
+    ]
+  }
+}

@@ -39,7 +39,10 @@
       "Read(//root/.pm2/logs/**)",
       "Bash(awk -F'[ ,]' '{print $2}')",
       "Bash(:)",
-      "Bash(pm2 restart *)"
+      "Bash(pm2 restart *)",
+      "Bash(.venv/bin/python search_guides.py)",
+      "Bash(modprobe)",
+      "Bash(sudo modprobe)"
     ]
   }
 }

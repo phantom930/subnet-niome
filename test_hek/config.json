@@ -1,0 +1,72 @@
+{
+  "task_id": "4cb03dbc-00a3-4818-9684-deea85a42941",
+  "build_seed": 0,
+  "real_seed": 825,
+  "accessibility": 0.35,
+  "miner_constants": {
+    "STRATEGY": "pure",
+    "SELECTION": "packed",
+    "GC_TOLERANCE": 0.0,
+    "CONSTRUCTION": "mh",
+    "CUT_P_CEILING": false,
+    "CAS_MIX": null,
+    "BACKFILL_CAS": "Cas9",
+    "VARIANTS": 24,
+    "FLANK": 3000,
+    "LENGTHS": [
+      20,
+      23
+    ]
+  },
+  "cell_type_override": {
+    "SELECTION": "packed",
+    "GC_TOLERANCE": 0.0,
+    "CONSTRUCTION": "mh",
+    "CUT_P_CEILING": false,
+    "CAS_MIX": null
+  },
+  "resolved_config": {
+    "strategy": "pure",
+    "selection": "packed",
+    "flank": 3000,
+    "max_distance": 2000,
+    "lengths": [
+      20,
+      23
+    ],
+    "variants": 24,
+    "rows": null,
+    "construction": "mh",
+    "weight_skew": 2.0,
+    "oversample": 1.0,
+    "gc_tolerance": 0.0,
+    "min_cut_p": 0.0,
+    "cut_p_floors": null,
+    "cut_p_relax": true,
+    "backfill_cas": "Cas9",
+    "cas_share": null,
+    "cut_frac": 0.75,
+    "hdr_frac": 0.5,
+    "indel_lo": 1.0,
+    "indel_hi": 9.0,
+    "indel_levels": 4,
+    "mh_frac": 0.5,
+    "w_cut": 4.0,
+    "w_hdr": 2.0,
+    "w_indel": 0.35,
+    "w_mh": 0.8,
+    "gc_spread": 0.0
+  },
+  "redirected_paths": {
+    "CONTRACT_PATH": "test_hek/contract.json",
+    "HBB_REFERENCE_PATH": "test_hek/hbb_reference.json",
+    "MINER_SUBMISSION_PATH": "test_hek/submission.json",
+    "LAST_UPLOAD_PATH": "test_hek/last_upload.json",
+    "VALID_EXPERIMENTS_PATH": "test_hek/valid_experiments.json",
+    "INVALID_EXPERIMENTS_PATH": "test_hek/invalid_experiments.json",
+    "STAGE3_DATASET": "test_hek/stage3_dataset.json",
+    "STAGE3_SUMMARY_PATH": "test_hek/stage3_summary.json",
+    "FINAL_REWARD_PATH": "test_hek/final_reward.json",
+    "DISTRIBUTION_FIDELITY_PATH": "test_hek/distribution_fidelity_summary.json"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "active_mutations": [
+    "HBB:c.440A>T",
+    "NC_000011.10:g.5226860G>T"
+  ],
+  "cell_type": "HEK293",
+  "mutation_regions": {
+    "HBB:c.440A>T": "exon3",
+    "NC_000011.10:g.5226860G>T": null
+  },
+  "mutation_weights": {
+    "HBB:c.440A>T": 1.65,
+    "NC_000011.10:g.5226860G>T": 0.65
+  },
+  "rules": {
+    "base_padding": 400,
+    "cas_systems": [
+      "Cas9",
+      "Cas12a"
+    ],
+    "max_experiments": 250,
+    "max_mismatches": 3,
+    "proximity_gate": false
+  },
+  "seed": 825,
+  "version": "v1"
+}

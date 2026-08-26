@@ -1,0 +1,210 @@
+{
+  "seed": 825,
+  "stage1": {
+    "submitted": 250,
+    "passed": 250,
+    "rejected": 0,
+    "reasons": {},
+    "unique_ids": 250,
+    "unique_designs": 250
+  },
+  "stage2": {
+    "gc": {
+      "min": 0.34782608695652173,
+      "mean": 0.5000260869565217,
+      "median": 0.5,
+      "max": 0.5652173913043478
+    },
+    "gc_score": {
+      "min": 0.6956521739130435,
+      "mean": 0.9674956521739131,
+      "median": 1.0,
+      "max": 1.0
+    },
+    "distance": {
+      "min": 4.0,
+      "mean": 172.28,
+      "median": 115.0,
+      "max": 784.0
+    },
+    "dist_score": {
+      "min": 0.140858420921045,
+      "mean": 0.6955832537832567,
+      "median": 0.7501365667709818,
+      "max": 0.9900498337491681
+    },
+    "consistency": {
+      "min": 0.3,
+      "mean": 0.9328,
+      "median": 1.0,
+      "max": 1.0
+    },
+    "offtarget_factor": {
+      "1.0": 250
+    },
+    "structural_score": {
+      "min": 0.6778219078453919,
+      "mean": 0.865528502777417,
+      "median": 0.8862254644705057,
+      "max": 0.996268687655938
+    },
+    "weighted_score": {
+      "min": 0.4681885713909951,
+      "mean": 1.2448820207307965,
+      "median": 1.3687047373170398,
+      "max": 1.6423137640555892
+    },
+    "total_weighted_score": 311.2205051826991,
+    "guide_lengths": {
+      "20": 144,
+      "23": 106
+    },
+    "accessibility": 0.35
+  },
+  "stage3": {
+    "outcomes": {
+      "HDR": 110,
+      "MH_NHEJ": 37,
+      "BLUNT_NHEJ": 85,
+      "no_cut": 18
+    },
+    "cut_rate": 0.928,
+    "cut_p": {
+      "min": 0.8555819668845519,
+      "mean": 0.9124197467173327,
+      "median": 0.9434031515071027,
+      "max": 0.9611597200355766
+    },
+    "cut_p_by_cas": {
+      "Cas12a": {
+        "min": 0.8555819668845519,
+        "mean": 0.8699142154129303,
+        "median": 0.8710388551496634,
+        "max": 0.8774215142758732
+      },
+      "Cas9": {
+        "min": 0.9428734618460719,
+        "mean": 0.9542505870486493,
+        "median": 0.9546304706412985,
+        "max": 0.9611597200355766
+      }
+    },
+    "expected_no_cut": 21.895063320666825,
+    "below_cut_p_floor": 0,
+    "cas_mix": {
+      "Cas9": 126,
+      "Cas12a": 124
+    },
+    "energy": {
+      "min": 0.41989981602528803,
+      "mean": 0.5116652595407373,
+      "median": 0.5188090753839196,
+      "max": 0.5619984446420923
+    },
+    "mh_true": 134,
+    "indel_length": {
+      "min": 0.0,
+      "mean": 1.176,
+      "median": 0.0,
+      "max": 17.0
+    },
+    "indel_histogram": {
+      "0": 128,
+      "1": 68,
+      "2": 15,
+      "3": 18,
+      "4": 8,
+      "5": 3,
+      "6": 2,
+      "7": 1,
+      "8": 2,
+      "9": 1,
+      "10": 1,
+      "12": 2,
+      "17": 1
+    },
+    "mh_by_outcome": {
+      "mh=False|BLUNT_NHEJ": 39,
+      "mh=False|HDR": 57,
+      "mh=False|MH_NHEJ": 12,
+      "mh=False|no_cut": 8,
+      "mh=True|BLUNT_NHEJ": 46,
+      "mh=True|HDR": 53,
+      "mh=True|MH_NHEJ": 25,
+      "mh=True|no_cut": 10
+    },
+    "conforming_rows": 79,
+    "mutation_breakdown": {
+      "HBB:c.440A>T": {
+        "mutation_weight": 1.65,
+        "n": 200,
+        "cut_rate": 0.935,
+        "mean_energy": 0.5102614761639981,
+        "mean_indel_length": 1.22
+      },
+      "NC_000011.10:g.5226860G>T": {
+        "mutation_weight": 0.65,
+        "n": 50,
+        "cut_rate": 0.9,
+        "mean_energy": 0.5172803930476938,
+        "mean_indel_length": 1.0
+      }
+    }
+  },
+  "stage4": {
+    "n_joined": 250,
+    "per_target": {
+      "is_cut": {
+        "r2": -0.13727355947492853,
+        "nmae": 0.4335736422262876
+      },
+      "is_hdr": {
+        "r2": -0.35118397762816234,
+        "nmae": 1.0006430827470685
+      },
+      "indel_length": {
+        "r2": -0.49327322401400925,
+        "nmae": 0.7087107167165123
+      }
+    },
+    "avg_r2": -0.3272435870390334,
+    "avg_nmae": 0.7143091472299562,
+    "consistency_score": 8.570725583101314,
+    "consistency_factor": 0.08570725583101314,
+    "total_weighted_score": 311.2205051826991
+  },
+  "stage5": {
+    "mutation_coverage_entropy_ratio": 0.7219280948873623,
+    "cas_system_coverage_entropy_ratio": 0.999953833266239,
+    "strand_coverage_entropy_ratio": 1.0,
+    "joint_coverage_entropy_ratio": 0.9072324006954675,
+    "kmer_diversity_entropy_ratio": 0.9754093611417448,
+    "distinct_guide_ratio": 1.0,
+    "distribution_fidelity_score": 0.9280325892481117,
+    "distribution_fidelity_factor": 0.9280325892481117,
+    "coverage_detail": {
+      "mutation_counts": {
+        "HBB:c.440A>T": 200,
+        "NC_000011.10:g.5226860G>T": 50
+      },
+      "cas_system_counts": {
+        "Cas9": 126,
+        "Cas12a": 124
+      },
+      "strand_counts": {
+        "+": 125,
+        "-": 125
+      }
+    },
+    "cas_specific_shift_diagnostic": {
+      "insufficient_data": false,
+      "compared": [
+        "Cas9",
+        "Cas12a"
+      ],
+      "repair_mode_jensen_shannon_divergence": 0.042342228349968536,
+      "indel_length_wasserstein_distance": 0.415
+    }
+  },
+  "final_score": 24.754207145500697
+}

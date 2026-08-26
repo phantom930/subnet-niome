@@ -487,7 +487,7 @@ def score_rows(valid: list[dict], results: list[dict], ctx: Context) -> dict:
 class GenConfig:
     """Knobs the config search turns. Defaults are the starting point of the coordinate descent."""
     strategy: str = "pure"         # "pure" | "shaped" — see generate()
-    selection: str = "packed"      # "packed" (nearest sites) | "stratified" (spread over distance)
+    selection: str = "packed"      # "packed" | "stratified" | "nearest" — see select_sites()
     flank: int = 3000              # site-enumeration window beyond gene_region
     max_distance: int = 2000       # widest |start - mutation_pos| a selected row may have
     lengths: tuple[int, ...] = (20, 23)
@@ -495,6 +495,50 @@ class GenConfig:
     rows: int | None = None        # defaults to contract max_experiments
     construction: str = "mh"       # key into CONSTRUCTIONS; the rule every row must satisfy
     weight_skew: float = 2.0       # exponent on mutation_weight when apportioning rows
+
+    # Generate this multiple of every cell's quota, then keep only the rows whose *realised*
+    # (gc, distance) land closest to the ideal. 1.0 disables the extra work. Costs build time
+    # linearly and nothing else: the surplus rows are discarded before scoring, so the submission
+    # is still exactly max_experiments rows — just drawn from a wider pool of candidates.
+    oversample: float = 1.0
+
+    # Treat any guide within this much of 50% GC as equally good, so the ranking falls through to
+    # distance instead of chasing the last thousandth of gc_score. 0.0 makes the "nearest" ranking
+    # strictly lexicographic, which reaches for a gc-perfect site however far out it sits.
+    gc_tolerance: float = 0.0
+
+    # Admit only sites whose stage-3 cut probability will reach this. 0.0 disables the filter.
+    # cut_p = min(0.99, max(0.4, base + 0.18*energy)) with base 0.86 for Cas9 and 0.78 for Cas12a,
+    # so the two systems have different ceilings: 0.99 and 0.96. A single threshold above 0.96 is
+    # therefore satisfiable by Cas9 alone and silently empties every Cas12a cell — see
+    # cut_p_ceiling(). Use cut_p_floors to hold each system to its own ceiling instead.
+    min_cut_p: float = 0.0
+
+    # Per-Cas floors, e.g. {"Cas9": 0.99, "Cas12a": 0.96}. Overrides min_cut_p for the systems
+    # named. This is the only way to demand a maximal cut probability from both systems at once,
+    # because their ceilings differ by 0.03.
+    cut_p_floors: dict | None = None
+
+    # What to do when a floor is unreachable. cut_p depends on energy, and energy scales with the
+    # cell type's accessibility: at 0.87 it saturates the clamp and every Cas9 site sits at 0.99,
+    # but HEK293's 0.35 caps energy near 0.52, so the best Cas9 site reaches 0.9545 and the best
+    # Cas12a site 0.8745. A strict floor there matches nothing, empties every cell and submits zero
+    # rows — 23% of the backend's tasks are HEK293. Relaxing keeps the floor wherever it is
+    # satisfiable and falls back to the best available cut_p where it is not. False restores the
+    # strict gate, which is what a deliberate "Cas9 only" experiment wants.
+    cut_p_relax: bool = True
+
+    # When a filter leaves the submission under max_experiments, top it up with rows from this Cas
+    # system, taking the highest cut_p still available. Named rather than boolean because only Cas9
+    # can reach 0.99, so it is the only system with spare high-cut_p sites to give.
+    backfill_cas: str | None = "Cas9"
+
+    # Row share per Cas system, e.g. {"Cas9": 0.8, "Cas12a": 0.2}. None splits evenly across the
+    # (cas x strand) product, which is what maximises stage 5's cas and joint coverage entropies.
+    # Skewing trades that entropy for the freedom to draw more rows from whichever system has the
+    # sites — worth it exactly when a filter has made one system's eligible pool too small to fill
+    # an even quota.
+    cas_share: dict | None = None
 
     # Outcome shaping. Stage 4 asks whether a RandomForest can learn design -> outcome under CV;
     # a dataset whose outcomes are a smooth function of `distance` is exactly that. Rows are ranked
@@ -521,8 +565,15 @@ def _quota(total: int, cells: int) -> list[int]:
     return [base + (1 if i < extra else 0) for i in range(cells)]
 
 
-def _cell_quotas(ctx: Context, rows_wanted: int, skew: float) -> tuple[list[tuple], list[int]]:
+def _cell_quotas(ctx: Context, rows_wanted: int, skew: float,
+                 groups: list[tuple[str, str]] | None = None,
+                 group_weights: list[float] | None = None) -> tuple[list[tuple], list[int]]:
     """Rows per (mutation, cas, strand) cell.
+
+    ``groups`` narrows the (cas, strand) product to those that can actually be filled. Passing it
+    keeps the submission at the row cap when a filter has emptied some cells: without it those
+    cells keep their quota, nothing fills them, and the submission silently lands under
+    max_experiments — losing rows on top of whatever coverage the filter already cost.
 
     Even quotas maximise stage 5's coverage entropies. Skewing toward the heavier mutations trades
     some of that entropy for total_weighted_score, which multiplies every row by mutation_weight.
@@ -533,7 +584,11 @@ def _cell_quotas(ctx: Context, rows_wanted: int, skew: float) -> tuple[list[tupl
     weights = ctx.contract.get("mutation_weights", {})
     shares = {m: max(weights.get(m, 1.0), 1e-9) ** skew for m in ctx.mutations}
     total = sum(shares.values())
-    per_group = max(1, len(ctx.cas_systems) * len(ctx.strands))
+    if groups is None:
+        groups = [(cas, strand) for cas in ctx.cas_systems for strand in ctx.strands]
+    if group_weights is None:
+        group_weights = [1.0] * len(groups)
+    weight_total = sum(group_weights) or 1.0
 
     exact = {m: rows_wanted * shares[m] / total for m in ctx.mutations}
     counts = {m: int(exact[m]) for m in ctx.mutations}
@@ -544,13 +599,19 @@ def _cell_quotas(ctx: Context, rows_wanted: int, skew: float) -> tuple[list[tupl
     cells: list[tuple] = []
     quotas: list[int] = []
     for mutation in ctx.mutations:
-        split = _quota(counts[mutation], per_group)
-        index = 0
-        for cas in ctx.cas_systems:
-            for strand in ctx.strands:
-                cells.append((mutation, cas, strand))
-                quotas.append(split[index])
-                index += 1
+        # Largest-remainder apportionment over the groups. With uniform weights this reproduces
+        # _quota exactly — floor everywhere, then +1 to the leading groups — so the default path is
+        # untouched.
+        want = counts[mutation]
+        exact = [want * weight / weight_total for weight in group_weights]
+        split = [int(value) for value in exact]
+        remainder = want - sum(split)
+        for index in sorted(range(len(groups)),
+                            key=lambda i: -(exact[i] - split[i]))[:max(0, remainder)]:
+            split[index] += 1
+        for index, (cas, strand) in enumerate(groups):
+            cells.append((mutation, cas, strand))
+            quotas.append(split[index])
     return cells, quotas
 
 
@@ -576,6 +637,77 @@ def _gc_reach_penalty(site: Site, budget: int) -> int:
     """GC-count units still separating this site from 50% after the whole mismatch budget is spent."""
     ref_gc = sum(base in "GC" for base in site.ref_guide)
     return max(0, abs(ref_gc - round(site.length / 2)) - budget)
+
+
+def gc_miss(site: Site, budget: int) -> float:
+    """How far this site's guide will still sit from 50% GC once the mismatch budget is spent.
+
+    Zero is reachable only at even lengths: at L=20 the target is 10 GC bases and gc_score peaks
+    at exactly 1.0, while at L=23 the closest attainable count is 12/23, an unavoidable 0.0217
+    residual worth 0.625 * 0.0435 = 0.027 of structural score. Ranking on this therefore prefers
+    20-mers over 23-mers on its own, without the length ever being named.
+    """
+    ref_gc = sum(base in "GC" for base in site.ref_guide)
+    target = round(site.length / 2)
+    reached = ref_gc + max(-budget, min(budget, target - ref_gc))
+    return abs(reached / site.length - 0.5)
+
+
+def predicted_energy(site: Site, mutation: str, ctx: Context) -> float:
+    """The energy stage 3 will compute for this site once its guide is tuned.
+
+    Exact rather than approximate: ``tune_variants`` guarantees every variant it returns carries the
+    same GC count, so the gc that reaches stage 3 is known before a single guide is built. Mirrors
+    ``stage3.sequence_energy`` term for term, including the 1500 bp decay length that differs from
+    stage 2's base_padding.
+    """
+    budget = ctx.max_mismatches
+    ref_gc = sum(base in "GC" for base in site.ref_guide)
+    target = round(site.length / 2)
+    gc = (ref_gc + max(-budget, min(budget, target - ref_gc))) / site.length
+    distance = abs(site.start - ctx.mutation_map[mutation])
+    accessibility = ctx.cell_types.get(ctx.contract.get("cell_type"), {}).get("accessibility", 1.0)
+    offset = stage3.REGION_ENERGY_OFFSETS.get(
+        (ctx.contract.get("mutation_regions") or {}).get(mutation), 0.0
+    )
+    return max(0.0, min(1.0, accessibility * (
+        1.8 * gc + 0.6 * math.exp(-distance / 1500) + offset
+    )))
+
+
+def predicted_cut_p(site: Site, mutation: str, ctx: Context) -> float:
+    """Stage 3's own cut_probability, evaluated on the energy this site will reach."""
+    return stage3.cut_probability(site.cas, predicted_energy(site, mutation, ctx))
+
+
+def cut_p_floor(cas: str, cfg: "GenConfig") -> float:
+    """The cut_p a row of this Cas system must reach. Per-system floors win over the global one."""
+    if cfg.cut_p_floors and cas in cfg.cut_p_floors:
+        return float(cfg.cut_p_floors[cas])
+    return cfg.min_cut_p
+
+
+def cut_p_filtering(cfg: "GenConfig") -> bool:
+    return cfg.min_cut_p > 0.0 or bool(cfg.cut_p_floors)
+
+
+def cut_p_ceiling_for(cas: str) -> float:
+    """The highest cut_p this Cas system can ever reach, i.e. at the energy clamp."""
+    return stage3.cut_probability(cas, 1.0)
+
+
+# Kept as the historical spelling used in reports and the stage printer.
+cut_p_ceiling = cut_p_ceiling_for
+
+
+def gc_rank(miss: float, tolerance: float) -> float:
+    """Collapse every near-enough GC into one tier so distance decides between them.
+
+    gc_score is flat to first order around 50%: the whole span from a perfect 20-mer to the best a
+    23-mer can do is 0.027 of structural score, while 200 bp of extra distance at base_padding 400
+    costs about ten times that. Without a tier the ranking spends distance it cannot afford.
+    """
+    return 0.0 if miss <= tolerance else miss
 
 
 def _stratified_pick(pool: list[Site], take: int, budget: int) -> list[Site]:
@@ -622,17 +754,6 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
     the pure strategy uses to replace rows whose outcome could not be forced.
     """
     rows_wanted = cfg.rows or ctx.max_experiments
-    cells, quotas = _cell_quotas(ctx, rows_wanted, cfg.weight_skew)
-    if quota_override is not None:
-        quotas = [quota_override.get(cell, 0) for cell in cells]
-        # A negative quota silently empties its cell while the others keep their inflated counts,
-        # so the submission overshoots max_experiments and the in-memory score (which never
-        # truncates) reports a total the validator would never pay. Fail loudly instead.
-        if any(q < 0 for q in quotas) or sum(quotas) != rows_wanted:
-            raise ValueError(
-                f"quota_override must be non-negative and sum to {rows_wanted}, "
-                f"got sum={sum(quotas)} min={min(quotas)}"
-            )
 
     # With the proximity gate on, stage 1 rejects anything beyond base_padding outright, so a wider
     # max_distance would not widen the search — it would just feed the generator rows that get
@@ -646,6 +767,51 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
         if site.length in cfg.lengths:
             by_group[(site.cas, site.strand)].append(site)
 
+    groups = [(cas, strand) for cas in ctx.cas_systems for strand in ctx.strands]
+    if cut_p_filtering(cfg):
+        # Which groups can satisfy their own floor at all. Tested against real sites rather than
+        # against the per-Cas ceiling alone, because a group can clear the ceiling and still have
+        # no coordinate near enough to reach the energy the threshold needs.
+        eligible = {
+            group for group in groups
+            if any(predicted_cut_p(site, mutation, ctx) >= cut_p_floor(group[0], cfg) - 1e-9
+                   for mutation in ctx.mutations
+                   for site in by_group[group]
+                   if abs(site.start - ctx.mutation_map[mutation]) <= max_distance)
+        }
+        dropped = [g for g in groups if g not in eligible]
+        if dropped and not quiet:
+            print(f"  ! no site can reach the cut_p floor for {dropped} "
+                  f"(floors { {g[0]: cut_p_floor(g[0], cfg) for g in dropped} } vs ceilings "
+                  f"{ {g[0]: cut_p_ceiling(g[0]) for g in dropped} })"
+                  + (", relaxing to the best available" if cfg.cut_p_relax
+                     else " — those cells stay empty"))
+        # Only prune groups under the strict gate. Relaxed, an unreachable floor must not cost the
+        # category: losing a whole Cas system takes its coverage ratio to 0, and the 1e-9 clip in
+        # the geometric mean turns that into a 0.0316x multiplier on the entire score.
+        if eligible and not cfg.cut_p_relax:
+            groups = [g for g in groups if g in eligible]
+
+    group_weights = None
+    if cfg.cas_share:
+        strands_per_cas = max(1, len({strand for _cas, strand in groups}))
+        group_weights = [float(cfg.cas_share.get(cas, 0.0)) / strands_per_cas
+                         for cas, _strand in groups]
+        if not any(weight > 0 for weight in group_weights):
+            raise ValueError(f"cas_share {cfg.cas_share} leaves every group at zero rows")
+
+    cells, quotas = _cell_quotas(ctx, rows_wanted, cfg.weight_skew, groups, group_weights)
+    if quota_override is not None:
+        quotas = [quota_override.get(cell, 0) for cell in cells]
+        # A negative quota silently empties its cell while the others keep their inflated counts,
+        # so the submission overshoots max_experiments and the in-memory score (which never
+        # truncates) reports a total the validator would never pay. Fail loudly instead.
+        if any(q < 0 for q in quotas) or sum(quotas) != rows_wanted:
+            raise ValueError(
+                f"quota_override must be non-negative and sum to {rows_wanted}, "
+                f"got sum={sum(quotas)} min={min(quotas)}"
+            )
+
     # Scarcest (cas, strand) group first so Cas12a — roughly 4x rarer than Cas9 — is not starved
     # of coordinates by an earlier Cas9 cell.
     order = sorted(range(len(cells)),
@@ -654,6 +820,7 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
     used: set[tuple] = set()
     selected: list[tuple[Site, str]] = []
     reserve: dict[tuple, list[Site]] = {}
+    relaxed: dict[str, float] = {}
     shortfall = 0
 
     for index in order:
@@ -665,6 +832,18 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
             site for site in by_group[(cas, strand)]
             if site.key not in used and abs(site.start - position) <= max_distance
         ]
+        if cut_p_filtering(cfg):
+            floor = cut_p_floor(cas, cfg)
+            eligible_pool = [site for site in pool
+                             if predicted_cut_p(site, mutation, ctx) >= floor - 1e-9]
+            if eligible_pool or not cfg.cut_p_relax:
+                pool = eligible_pool
+            elif pool:
+                # Unreachable here: keep the cell and take the best cut_p on offer instead of
+                # submitting nothing. Recorded so the build reports the relaxation rather than
+                # quietly scoring under a floor it never met.
+                best = max(predicted_cut_p(site, mutation, ctx) for site in pool)
+                relaxed[cas] = min(relaxed.get(cas, best), best)
         pool.sort(key=lambda site: abs(site.start - position))
         if not pool:
             reserve[cell] = []
@@ -677,6 +856,15 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
             # 40 bp further out but tunable to 50% GC beats a nearer one stuck at gc_score 0.5.
             ranked = sorted(pool,
                             key=lambda s: -achievable_structural(s, abs(s.start - position), ctx))
+        elif cfg.selection == "nearest":
+            # Lexicographic: closest to gc 0.5 first, then closest to the mutation. Unlike
+            # "packed" this does not trade the two off against each other — a site that can reach
+            # exactly 50% GC outranks every site that cannot, however near the latter sits. The
+            # two rankings therefore disagree only over sites whose GC is unreachable, which is
+            # where "packed" is the score-optimal choice and this one is the literal one.
+            ranked = sorted(pool, key=lambda s: (
+                gc_rank(gc_miss(s, ctx.max_mismatches), cfg.gc_tolerance),
+                abs(s.start - position)))
         else:
             # Stratified picks first, then the rest of the pool as filler for any short cell.
             ranked = _stratified_pick(pool, take, ctx.max_mismatches) + pool
@@ -697,6 +885,35 @@ def select_sites(ctx: Context, sites: list[Site], cfg: GenConfig, quiet: bool = 
         # next-nearest one.
         reserve[cell] = spare
         shortfall += want - len(deduped)
+
+    if relaxed and not quiet:
+        print(f"  ! cut_p floor relaxed to the best available: "
+              f"{ {cas: round(value, 4) for cas, value in relaxed.items()} } "
+              f"(configured { {cas: cut_p_floor(cas, cfg) for cas in relaxed} })")
+
+    if shortfall > 0 and cfg.backfill_cas:
+        # A cut_p floor bites unevenly: Cas12a tops out at 0.96 and has few sites that reach it, so
+        # its cells run dry while Cas9 still has hundreds of unused sites sitting at its own 0.99
+        # ceiling. Leaving the gap costs whole rows off term 1, which is a sum — strictly worse than
+        # the coverage those extra Cas9 rows dilute. Fill it with the highest cut_p left, breaking
+        # ties on weighted_score, which is the quantity term 1 actually accumulates.
+        cas = cfg.backfill_cas
+        candidates = backfill_candidates(ctx, sites, cfg, used)
+        filled = 0
+        for _cut_p, _value, site, mutation in candidates:
+            if filled >= shortfall:
+                break
+            if site.key in used:      # the same coordinate is a candidate once per mutation
+                continue
+            used.add(site.key)
+            selected.append((site, mutation))
+            filled += 1
+
+        if filled and not quiet:
+            best = -candidates[0][0] if candidates else 0.0
+            print(f"  + backfilled {filled} {cas} row(s) to reach the {rows_wanted} cap "
+                  f"(highest available cut_p {best:.4f})")
+        shortfall -= filled
 
     if shortfall and not quiet:
         print(f"  ! {shortfall} row(s) short of the {rows_wanted} cap — widen --flank/max_distance")
@@ -862,6 +1079,16 @@ def _rule_mhnhej(result: dict, entry: dict) -> bool:
     return result["outcome"] == "MH_NHEJ" and result["indel_length"] == 1
 
 
+def _rule_mh_any(result: dict, entry: dict) -> bool:
+    # "mh" without the indel pin. The repair *mode* still tracks the microhomology coin, so is_hdr
+    # stays an exact function of a feature the validator itself computes; indel_length is left to
+    # its draw and stops being learnable. Far cheaper per row than "mh" (no 0.70 pin to hit), so it
+    # buys candidate count with one of stage 4's three targets.
+    if result["mh"]:
+        return result["outcome"] == "HDR"
+    return result["outcome"] == "BLUNT_NHEJ"
+
+
 def _rule_blunt_any(result: dict, entry: dict) -> bool:
     return result["outcome"] == "BLUNT_NHEJ"
 
@@ -872,6 +1099,7 @@ def _rule_mhnhej_any(result: dict, entry: dict) -> bool:
 
 CONSTRUCTIONS = {
     "mh": _rule_mh,
+    "mh_any": _rule_mh_any,
     "hdr": _rule_hdr,
     "nocut": _rule_nocut,
     "blunt": _rule_blunt,
@@ -920,6 +1148,88 @@ def _best_variant(site: Site, mutation: str, ctx: Context, cfg: GenConfig, index
     if best is None:
         return None
     return best[1], best[2], best[3]
+
+
+def _realised_miss(entry: dict, tolerance: float = 0.0) -> tuple[float, int]:
+    """The nearness of a row that actually exists: |gc - 0.5| tier, then distance to the mutation.
+
+    Measured off the stage-2 features rather than predicted from the site, because guide tuning
+    does not always reach the GC target — the mismatch budget is shared with the off-target seed,
+    and the seed wins when the two compete.
+    """
+    features = entry["features"]
+    return gc_rank(abs(features["gc"] - 0.5), tolerance), features["distance_to_mutation"]
+
+
+def generate_oversampled(ctx: Context, sites: list[Site], cfg: GenConfig) -> tuple[list, list, list]:
+    """Build oversample x the wanted rows, then keep the nearest quota of each cell.
+
+    Generating wide and filtering afterwards is not the same as ranking sites better up front.
+    Two things are only knowable after the row exists: whether any of the site's variants could be
+    made to satisfy the construction at all, and what GC the tuner actually reached. Both are
+    resolved here, and the surplus is dropped before anything is scored.
+    """
+    rows_wanted = cfg.rows or ctx.max_experiments
+    cells, quotas = _cell_quotas(ctx, rows_wanted, cfg.weight_skew)
+    target = {cell: quota for cell, quota in zip(cells, quotas)}
+
+    wide = replace(cfg, rows=max(rows_wanted, int(round(rows_wanted * cfg.oversample))),
+                   oversample=1.0)
+    rows, valid, results = generate_pure(ctx, sites, wide)
+    if not rows:
+        return rows, valid, results
+
+    by_cell: dict[tuple, list[int]] = defaultdict(list)
+    for index, entry in enumerate(valid):
+        experiment = entry["experiment"]
+        by_cell[(experiment["mutation"], experiment["cas_system"], experiment["strand"])].append(index)
+
+    keep: list[int] = []
+    for cell, indices in by_cell.items():
+        indices.sort(key=lambda i: _realised_miss(valid[i], cfg.gc_tolerance))
+        keep.extend(indices[:target.get(cell, 0)])
+    keep.sort()
+
+    print(f"    oversample {cfg.oversample:g}x: {len(rows)} candidates -> {len(keep)} kept "
+          f"({len(rows) - len(keep)} dropped as further from the ideal)")
+    return ([rows[i] for i in keep], [valid[i] for i in keep], [results[i] for i in keep])
+
+
+def backfill_candidates(ctx: Context, sites: list[Site], cfg: GenConfig,
+                        claimed: set[tuple]) -> list[tuple]:
+    """Unused sites of ``cfg.backfill_cas``, best first: highest cut_p, then highest weighted score.
+
+    cut_p leads because that is the property being topped up; weighted_score
+    (achievable_structural x mutation_weight) breaks the ties, and on Cas9 the ties are the whole
+    field — every site near the mutation sits at the 0.99 clamp, so the second key is what actually
+    orders them.
+    """
+    cas = cfg.backfill_cas
+    max_distance = cfg.max_distance
+    if ctx.contract["rules"].get("proximity_gate", False):
+        max_distance = min(max_distance, ctx.base_padding)
+    weights = ctx.contract.get("mutation_weights", {})
+    floor = cut_p_floor(cas, cfg) if cut_p_filtering(cfg) else 0.0
+    if cfg.cut_p_relax and floor > cut_p_ceiling_for(cas):
+        floor = 0.0     # unreachable for this system; rank by cut_p instead of gating on it
+
+    candidates: list[tuple] = []
+    for mutation in ctx.mutations:
+        position = ctx.mutation_map[mutation]
+        weight = weights.get(mutation, 1.0)
+        for site in sites:
+            if site.cas != cas or site.length not in cfg.lengths or site.key in claimed:
+                continue
+            distance = abs(site.start - position)
+            if distance > max_distance:
+                continue
+            cut_p = predicted_cut_p(site, mutation, ctx)
+            if cut_p < floor - 1e-9:
+                continue
+            candidates.append((-cut_p, -achievable_structural(site, distance, ctx) * weight,
+                               site, mutation))
+    candidates.sort(key=lambda item: (item[0], item[1]))
+    return candidates
 
 
 def generate_pure(ctx: Context, sites: list[Site], cfg: GenConfig) -> tuple[list, list, list]:
@@ -976,6 +1286,34 @@ def generate_pure(ctx: Context, sites: list[Site], cfg: GenConfig) -> tuple[list
 
     if replaced or dropped:
         print(f"    {cfg.construction}: {replaced} site(s) replaced, {dropped} row(s) dropped")
+
+    # Selection filled its quota, but the construction may still have dropped rows whose sites and
+    # reserves both ran out of conforming variants — so the shortfall is only knowable here, after
+    # the fact. Top up with the highest cut_p sites left, and hold them to the same rule: a
+    # non-conforming row would take stage 4 down with it, which costs far more than the row adds.
+    rows_wanted = cfg.rows or ctx.max_experiments
+    if cfg.backfill_cas and len(rows) < rows_wanted:
+        short = rows_wanted - len(rows)
+        added = 0
+        for _cut_p, _value, site, mutation in backfill_candidates(ctx, sites, cfg, claimed):
+            if len(rows) >= rows_wanted:
+                break
+            if site.key in claimed:
+                continue
+            claimed.add(site.key)
+            found = _best_variant(site, mutation, ctx, cfg, index, rng, None, rule, seen_designs)
+            if found is None:
+                continue
+            experiment, entry, result = found
+            seen_designs.add(design_key(experiment))
+            rows.append(experiment)
+            valid.append(entry)
+            results.append(result)
+            index += 1
+            added += 1
+        print(f"    backfill: {short} row(s) short after the construction, "
+              f"{added} {cfg.backfill_cas} row(s) added -> {len(rows)}/{rows_wanted}")
+
     return rows, valid, results
 
 
@@ -1017,6 +1355,8 @@ def generate(ctx: Context, sites: list[Site], cfg: GenConfig) -> tuple[list[dict
 
 def _generate(ctx: Context, sites: list[Site], cfg: GenConfig) -> tuple[list[dict], list[dict], list[dict]]:
     if cfg.strategy == "pure":
+        if cfg.oversample > 1.0:
+            return generate_oversampled(ctx, sites, cfg)
         return generate_pure(ctx, sites, cfg)
 
     rng = random.Random(ctx.seed ^ 0x5EED)
@@ -1211,6 +1551,303 @@ def summarise(rows: list[dict], valid: list[dict], results: list[dict], report: 
               f"joint={detail.get('joint_coverage_entropy_ratio', 0):.4f} "
               f"kmer={detail.get('kmer_diversity_entropy_ratio', 0):.4f} "
               f"guide={detail.get('distinct_guide_ratio', 0):.4f}")
+
+
+def stage_report(rows: list[dict], valid: list[dict], results: list[dict],
+                 ctx: Context, cfg: GenConfig | None = None) -> dict:
+    """Every quantity the five stages measure, for one (submission, contract) pair.
+
+    Stage 1 is re-run here rather than trusted, because this is also used to score a row set built
+    against a *different* seed: designs are seed-independent, so the gate must come out identical,
+    and it is worth proving rather than assuming.
+    """
+    reasons: Counter = Counter()
+    seen_designs: set[tuple] = set()
+    n_pass = 0
+    for row in rows:
+        passed, reason = stage12.stage1(row, ctx.seq, ctx.mutation_map, ctx.contract)
+        if passed == 1.0 and design_key(row) in seen_designs:
+            passed, reason = 0.0, "duplicate_experiment"
+        if passed == 1.0:
+            seen_designs.add(design_key(row))
+            n_pass += 1
+        else:
+            reasons[reason] += 1
+
+    def spread(values: list[float]) -> dict:
+        if not values:
+            return {"n": 0}
+        arr = np.array(values, dtype=float)
+        return {"min": float(arr.min()), "mean": float(arr.mean()),
+                "median": float(np.median(arr)), "max": float(arr.max())}
+
+    features = [entry["features"] for entry in valid]
+    structural = [entry["stage2"]["structural_score"] for entry in valid]
+    weighted = [entry["stage2"]["weighted_score"] for entry in valid]
+    cut_ps = [stage3.cut_probability(r["cas"], r["energy"]) for r in results]
+
+    s4 = stage4_in_memory(valid, results, fold_seed=ctx.seed)
+    fidelity = stage5.compute_distribution_fidelity(valid, results, ctx.contract, k=12)
+    factor = max(0.0, min(1.0, fidelity.get("distribution_fidelity_score", 0.0)))
+
+    conforming = None
+    if cfg is not None and cfg.construction in CONSTRUCTIONS:
+        rule = CONSTRUCTIONS[cfg.construction]
+        conforming = sum(1 for result, entry in zip(results, valid) if rule(result, entry))
+
+    return {
+        "seed": ctx.seed,
+        "stage1": {
+            "submitted": len(rows),
+            "passed": n_pass,
+            "rejected": len(rows) - n_pass,
+            "reasons": dict(reasons),
+            "unique_ids": len({row["experiment_id"] for row in rows}),
+            "unique_designs": len({design_key(row) for row in rows}),
+        },
+        "stage2": {
+            "gc": spread([f["gc"] for f in features]),
+            "gc_score": spread([f["gc_score"] for f in features]),
+            "distance": spread([f["distance_to_mutation"] for f in features]),
+            "dist_score": spread([f["dist_score"] for f in features]),
+            "consistency": spread([f["consistency"] for f in features]),
+            "offtarget_factor": dict(Counter(f["offtarget_factor"] for f in features)),
+            "structural_score": spread(structural),
+            "weighted_score": spread(weighted),
+            "total_weighted_score": float(sum(weighted)),
+            "guide_lengths": dict(Counter(len(row["guideRNA"]) for row in rows)),
+            "accessibility": features[0]["cell_type_accessibility"] if features else None,
+        },
+        "stage3": {
+            "outcomes": dict(Counter(r["outcome"] for r in results)),
+            "cut_rate": (sum(1 for r in results if r["outcome"] != "no_cut") / len(results)
+                         if results else 0.0),
+            "cut_p": spread(cut_ps),
+            "cut_p_by_cas": {
+                cas: spread([p for p, r in zip(cut_ps, results) if r["cas"] == cas])
+                for cas in sorted({r["cas"] for r in results})
+            },
+            # Rows that would fail to cut under an arbitrary seed. Every one of them breaks the
+            # construction, so this is the seed-independent floor on how much consistency is at
+            # risk — the only term a cut_p filter can actually protect.
+            "expected_no_cut": float(sum(1.0 - p for p in cut_ps)),
+            "below_cut_p_floor": (
+                sum(1 for p, r in zip(cut_ps, results)
+                    if p < cut_p_floor(r["cas"], cfg) - 1e-9) if cfg is not None else None
+            ),
+            "cas_mix": dict(Counter(r["cas"] for r in results)),
+            "energy": spread([r["energy"] for r in results]),
+            "mh_true": sum(1 for r in results if r["mh"]),
+            "indel_length": spread([r["indel_length"] for r in results]),
+            "indel_histogram": dict(sorted(Counter(r["indel_length"] for r in results).items())),
+            "mh_by_outcome": {f"mh={m}|{o}": c for (m, o), c in
+                              sorted(Counter((r["mh"], r["outcome"]) for r in results).items(),
+                                     key=lambda kv: str(kv[0]))},
+            "conforming_rows": conforming,
+            "mutation_breakdown": stage3.group_by_mutation(results) if results else {},
+        },
+        "stage4": {
+            "n_joined": s4.get("n_valid_experiments", 0),
+            "per_target": s4.get("per_target", {}),
+            "avg_r2": s4.get("avg_r2"),
+            "avg_nmae": s4.get("avg_nmae"),
+            "consistency_score": s4.get("consistency_score", 0.0),
+            "consistency_factor": s4.get("consistency_factor", 0.0),
+            "total_weighted_score": s4.get("total_weighted_score", 0.0),
+        },
+        "stage5": {
+            "mutation_coverage_entropy_ratio": fidelity.get("mutation_coverage_entropy_ratio"),
+            "cas_system_coverage_entropy_ratio": fidelity.get("cas_system_coverage_entropy_ratio"),
+            "strand_coverage_entropy_ratio": fidelity.get("strand_coverage_entropy_ratio"),
+            "joint_coverage_entropy_ratio": fidelity.get("joint_coverage_entropy_ratio"),
+            "kmer_diversity_entropy_ratio": fidelity.get("kmer_diversity_entropy_ratio"),
+            "distinct_guide_ratio": fidelity.get("distinct_guide_ratio"),
+            "distribution_fidelity_score": fidelity.get("distribution_fidelity_score"),
+            "distribution_fidelity_factor": factor,
+            "coverage_detail": fidelity.get("coverage_detail", {}),
+            "cas_specific_shift_diagnostic": fidelity.get("cas_specific_shift_diagnostic", {}),
+        },
+        "final_score": s4.get("total_weighted_score", 0.0) * s4.get("consistency_factor", 0.0) * factor,
+    }
+
+
+def print_stage_report(report: dict, title: str) -> None:
+    """The five stages, every measured value, in the order the validator computes them."""
+    def line(label: str, value: str) -> None:
+        print(f"    {label:<26} {value}")
+
+    def show(label: str, stats: dict) -> None:
+        if stats.get("n") == 0:
+            line(label, "-")
+            return
+        line(label, f"min={stats['min']:<10.4f} mean={stats['mean']:<10.4f} "
+                    f"median={stats['median']:<10.4f} max={stats['max']:.4f}")
+
+    print(f"\n{'=' * 100}")
+    print(f"  {title}   (stage-3 / stage-4 seed = {report['seed']})")
+    print("=" * 100)
+
+    s1 = report["stage1"]
+    print("\n  STAGE 1 — structural gate")
+    line("submitted", str(s1["submitted"]))
+    line("passed", str(s1["passed"]))
+    line("rejected", str(s1["rejected"]))
+    line("reasons", str(s1["reasons"] or "none"))
+    line("unique experiment_ids", f"{s1['unique_ids']} / {s1['submitted']}")
+    line("unique designs", f"{s1['unique_designs']} / {s1['submitted']}")
+
+    s2 = report["stage2"]
+    print("\n  STAGE 2 — structural score")
+    line("accessibility", str(s2["accessibility"]))
+    line("guide lengths", str(s2["guide_lengths"]))
+    show("gc", s2["gc"])
+    show("gc_score", s2["gc_score"])
+    show("distance_to_mutation", s2["distance"])
+    show("dist_score", s2["dist_score"])
+    show("consistency", s2["consistency"])
+    line("offtarget_factor", str(s2["offtarget_factor"]))
+    show("structural_score", s2["structural_score"])
+    show("weighted_score", s2["weighted_score"])
+    line("TOTAL_WEIGHTED_SCORE", f"{s2['total_weighted_score']:.6f}")
+
+    s3 = report["stage3"]
+    print("\n  STAGE 3 — simulated outcomes")
+    line("outcomes", str(s3["outcomes"]))
+    line("cut_rate", f"{s3['cut_rate']:.4f}")
+    show("cut_p", s3["cut_p"])
+    line("cas mix", str(s3["cas_mix"]))
+    for cas, stats in s3["cut_p_by_cas"].items():
+        line(f"  cut_p {cas}", f"min={stats['min']:.4f}  mean={stats['mean']:.4f}  "
+                               f"max={stats['max']:.4f}  (ceiling {cut_p_ceiling(cas)})")
+    line("expected no_cut rows", f"{s3['expected_no_cut']:.2f}  "
+                                 f"(sum of 1 - cut_p, any seed)")
+    if s3["below_cut_p_floor"] is not None:
+        line("below the cut_p floor", str(s3["below_cut_p_floor"]))
+    show("energy", s3["energy"])
+    line("mh = True", str(s3["mh_true"]))
+    line("mh x outcome", str(s3["mh_by_outcome"]))
+    show("indel_length", s3["indel_length"])
+    line("indel histogram", str(s3["indel_histogram"]))
+    if s3["conforming_rows"] is not None:
+        total = report["stage1"]["passed"] or 1
+        line("construction conformance", f"{s3['conforming_rows']} / {total} "
+                                         f"({100.0 * s3['conforming_rows'] / total:.1f}%)")
+    for mutation, stats in s3["mutation_breakdown"].items():
+        line(f"  {mutation[:22]}", f"n={stats['n']:<4} w={stats['mutation_weight']:<5} "
+                                   f"cut={stats['cut_rate']:.3f} "
+                                   f"energy={stats['mean_energy']:.3f} "
+                                   f"indel={stats['mean_indel_length']:.3f}")
+
+    s4 = report["stage4"]
+    print("\n  STAGE 4 — consistency (RandomForest under KFold)")
+    line("rows joined on id", str(s4["n_joined"]))
+    for target, stats in s4["per_target"].items():
+        line(f"  {target}", f"r2={stats['r2']:+.6f}   nmae={stats['nmae']:.6f}")
+    if s4["avg_r2"] is not None:
+        line("avg_r2", f"{s4['avg_r2']:+.6f}")
+        line("avg_nmae", f"{s4['avg_nmae']:.6f}")
+    line("consistency_score", f"{s4['consistency_score']:.6f}")
+    line("CONSISTENCY_FACTOR", f"{s4['consistency_factor']:.6f}")
+
+    s5 = report["stage5"]
+    print("\n  STAGE 5 — distribution fidelity")
+    for key in ("mutation_coverage_entropy_ratio", "cas_system_coverage_entropy_ratio",
+                "strand_coverage_entropy_ratio", "joint_coverage_entropy_ratio",
+                "kmer_diversity_entropy_ratio", "distinct_guide_ratio"):
+        value = s5.get(key)
+        line(f"  {key.replace('_entropy_ratio', '').replace('_ratio', '')}",
+             f"{value:.6f}" if value is not None else "-")
+    line("counts", str(s5["coverage_detail"]))
+    # A report with no valid rows carries no diagnostic at all — compute_distribution_fidelity
+    # returns early on n == 0 — so a missing "insufficient_data" is not evidence there is data to
+    # print. Both metrics are also None-able in their own right (an empty sample either side).
+    diagnostic = s5["cas_specific_shift_diagnostic"]
+    jsd = diagnostic.get("repair_mode_jensen_shannon_divergence")
+    wasserstein = diagnostic.get("indel_length_wasserstein_distance")
+    if jsd is not None:
+        line("JSD (not scored)", f"{jsd:.6f}")
+    if wasserstein is not None:
+        line("Wasserstein (not scored)", f"{wasserstein:.6f}")
+    line("DISTRIBUTION_FIDELITY", f"{s5['distribution_fidelity_factor']:.6f}")
+
+    print("\n  FINAL")
+    line("final_score", f"{report['final_score']:.6f}  =  "
+                        f"{s4['total_weighted_score']:.4f} x {s4['consistency_factor']:.6f} "
+                        f"x {s5['distribution_fidelity_factor']:.6f}")
+
+
+def run_seed_split(task: dict, cell_types: dict, cfg: GenConfig, build_seed: int,
+                   auto_skew: bool = True, verify: bool = True) -> int:
+    """Build against one seed, score against another, and report all five stages under both.
+
+    This is the unstamped-contract case made measurable. Stages 1, 2 and 5 never read the seed, so
+    they must come out identical either way; stage 3 is keyed on it, so the whole construction the
+    generator engineered is expected to evaporate. What the two reports isolate is exactly how much
+    of the score was resting on it.
+    """
+    contract = task["content"]["contract"]
+    reference = task["content"]["hbb_reference"]
+    real_seed = contract.get("seed")
+
+    ctx = build_context(contract, reference, cell_types)
+    stand_in = copy.deepcopy(contract)
+    stand_in["seed"] = build_seed
+    build_ctx = build_context(stand_in, reference, cell_types)
+
+    sites = enumerate_sites(build_ctx, cfg.flank, tuple(sorted(set(cfg.lengths))))
+    print(f"  {len(sites)} PAM sites  {dict(Counter((s.cas, s.strand) for s in sites))}")
+
+    if auto_skew and cfg.strategy == "pure":
+        cfg = replace(cfg, weight_skew=choose_weight_skew(build_ctx, sites, cfg))
+        print(f"  weight_skew fitted to this contract: {cfg.weight_skew}")
+
+    print(f"  building against seed {build_seed} "
+          f"(selection={cfg.selection}, oversample={cfg.oversample:g}, variants={cfg.variants}, "
+          f"lengths={cfg.lengths})")
+    rows, valid, results = generate(build_ctx, sites, cfg)
+    rows = order_rows(rows, valid)
+    if not rows:
+        print("no rows generated", file=sys.stderr)
+        return 1
+
+    predicted = stage_report(rows, valid, results, build_ctx, cfg)
+    print_stage_report(predicted, f"AS BUILT — seed {build_seed}")
+
+    if real_seed == build_seed:
+        print("\n  build seed and contract seed match; nothing to re-score.")
+        return 0
+
+    _report, real_valid, real_results = rescore_under(rows, ctx)
+    actual = stage_report(rows, real_valid, real_results, ctx, cfg)
+    print_stage_report(actual, f"AS SCORED — real contract seed {real_seed}")
+
+    print(f"\n{'=' * 100}")
+    print("  WHAT THE SEED COST")
+    print("=" * 100)
+    for label, key, path in (
+        ("total_weighted_score", "total_weighted_score", ("stage4",)),
+        ("consistency_factor", "consistency_factor", ("stage4",)),
+        ("distribution_fidelity_factor", "distribution_fidelity_factor", ("stage5",)),
+    ):
+        before = predicted[path[0]][key]
+        after = actual[path[0]][key]
+        print(f"    {label:<30} {before:>12.6f}  ->  {after:>12.6f}   "
+              f"({'unchanged' if abs(before - after) < 1e-9 else f'{after - before:+.6f}'})")
+    before, after = predicted["final_score"], actual["final_score"]
+    ratio = after / before if before else 0.0
+    print(f"    {'final_score':<30} {before:>12.6f}  ->  {after:>12.6f}   "
+          f"({ratio:.4f}x, {100 * (ratio - 1):+.1f}%)")
+
+    if verify:
+        print("\n  cross-checking the real-seed report against the validator's own file pipeline")
+        persist_task(task)
+        with open(settings.MINER_SUBMISSION_PATH, "w") as handle:
+            json.dump(rows, handle, indent=2)
+        official = verify_with_validator(ctx)
+        print(f"    benchmark_submission final_score = {official['final_score']:.6f}")
+        print(f"    in-memory replica                = {actual['final_score']:.6f}")
+        print(f"    delta                            = {abs(official['final_score'] - actual['final_score']):.9f}")
+    return 0
 
 
 # --------------------------------------------------------------------------------------------
@@ -1471,6 +2108,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--task-id", default=None, help="pin a task instead of the latest")
+    parser.add_argument("--oldest", action="store_true",
+                        help="use the oldest task the backend still lists")
     parser.add_argument("--rows", type=int, default=None, help="override contract max_experiments")
     parser.add_argument("--flank", type=int, default=GenConfig.flank,
                         help="site-enumeration window beyond gene_region (bp)")
@@ -1482,6 +2121,32 @@ def parse_args() -> argparse.Namespace:
                         help="outcome strategy; auto searches both and keeps the better")
     parser.add_argument("--construction", choices=tuple(CONSTRUCTIONS), default="mh",
                         help="rule every row's outcome must satisfy under the pure strategy")
+    parser.add_argument("--selection", choices=("packed", "stratified", "nearest"), default=None,
+                        help="site ranking; 'nearest' sorts by |gc-0.5| then distance, "
+                             "defaults to packed for pure and stratified for shaped")
+    parser.add_argument("--gc-tolerance", type=float, default=0.0,
+                        help="under --selection nearest, treat any guide within this much of 50%% "
+                             "GC as equally good so distance breaks the tie (try 0.03)")
+    parser.add_argument("--min-cut-p", type=float, default=0.0,
+                        help="admit only sites whose stage-3 cut_p reaches this. Ceilings are 0.99 "
+                             "for Cas9 and 0.96 for Cas12a, so anything above 0.96 keeps Cas9 only")
+    parser.add_argument("--cut-p-ceiling", action="store_true",
+                        help="hold every Cas system to its own cut_p ceiling (Cas9 0.99, "
+                             "Cas12a 0.96) instead of one shared floor")
+    parser.add_argument("--no-cut-p-relax", action="store_true",
+                        help="keep the cut_p floor strict even where no site can reach it, which "
+                             "empties those cells instead of falling back to the best available")
+    parser.add_argument("--cut-p-floors", default=None,
+                        help="explicit per-system floors, e.g. Cas9=0.99,Cas12a=0.96")
+    parser.add_argument("--backfill-cas", default=None,
+                        help="when a filter leaves the submission short of max_experiments, top it "
+                             "up with rows from this Cas system, highest cut_p first (e.g. Cas9)")
+    parser.add_argument("--cas-mix", default=None,
+                        help="row share per Cas system in rules.cas_systems order, e.g. 80/20 "
+                             "for 80%% Cas9 and 20%% Cas12a; default is an even split")
+    parser.add_argument("--oversample", type=float, default=1.0,
+                        help="generate this multiple of the wanted rows, then keep only the ones "
+                             "whose realised gc and distance land nearest the ideal")
     parser.add_argument("--no-search", action="store_true", help="single build with default knobs")
     parser.add_argument("--search-passes", type=int, default=2)
     parser.add_argument("--baseline", action="store_true",
@@ -1495,8 +2160,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--verify-count", type=int, default=3,
                         help="sweep mode: tasks to re-score through benchmark_submission")
     parser.add_argument("--build-seed", type=int, default=None,
-                        help="sweep mode: generate against this seed but score against the task's "
-                             "real one — models building before the contract is known")
+                        help="generate against this seed but score against the task's real one — "
+                             "models building before the contract is stamped. In single-task mode "
+                             "this prints all five stages under both seeds")
     parser.add_argument("--no-auto-skew", action="store_true",
                         help="keep the fixed weight_skew instead of fitting it per contract")
     parser.add_argument("--sweep-out", default="result.json",
@@ -1505,6 +2171,43 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-verify", action="store_true",
                         help="skip the benchmark_submission re-run")
     return parser.parse_args()
+
+
+def config_for_contract(cfg: GenConfig, contract: dict, cut_p_ceiling: bool = False,
+                        cas_mix: str | None = None) -> GenConfig:
+    """Fill in the knobs that can only be resolved once the contract is known.
+
+    ``cut_p_floors`` and ``cas_share`` are keyed by Cas system name, and the roster comes from
+    ``rules.cas_systems`` — so neither can be baked into a static config. Both the miner and
+    submission.py route through here, which is what keeps an offline sweep predicting exactly what
+    the miner will send.
+    """
+    cas_systems = list(contract["rules"].get("cas_systems", ["Cas9", "Cas12a"]))
+    if cut_p_ceiling:
+        cfg = replace(cfg, cut_p_floors={cas: cut_p_ceiling_for(cas) for cas in cas_systems})
+    if cas_mix:
+        cfg = replace(cfg, cas_share=parse_cas_mix(cas_mix, cas_systems))
+    return cfg
+
+
+def parse_cut_p_floors(args, cas_systems: list[str]) -> dict | None:
+    if args.cut_p_floors:
+        return {part.split("=")[0]: float(part.split("=")[1])
+                for part in args.cut_p_floors.split(",") if part}
+    if args.cut_p_ceiling:
+        return {cas: cut_p_ceiling_for(cas) for cas in cas_systems}
+    return None
+
+
+def parse_cas_mix(spec: str | None, cas_systems: list[str]) -> dict | None:
+    """'80/20' -> {"Cas9": 0.8, "Cas12a": 0.2}, positional in rules.cas_systems order."""
+    if not spec:
+        return None
+    parts = [float(value) for value in spec.replace(":", "/").replace(",", "/").split("/")]
+    if len(parts) != len(cas_systems):
+        raise SystemExit(f"--cas-mix needs {len(cas_systems)} values for {cas_systems}")
+    total = sum(parts) or 1.0
+    return {cas: value / total for cas, value in zip(cas_systems, parts)}
 
 
 def main() -> int:
@@ -1529,8 +2232,10 @@ def main() -> int:
             tasks = tasks[:args.limit]
         cell_types = fetch_cell_types()
         cfg = GenConfig(strategy="pure" if args.strategy == "auto" else args.strategy,
-                        selection="packed", flank=args.flank, variants=args.variants,
-                        lengths=lengths, rows=args.rows, construction=args.construction)
+                        selection=args.selection or "packed", flank=args.flank,
+                        variants=args.variants, lengths=lengths, rows=args.rows,
+                        construction=args.construction, oversample=args.oversample,
+                        gc_tolerance=args.gc_tolerance, min_cut_p=args.min_cut_p)
         print(f"[2/3] warming reference + site cache")
         warm = build_context(tasks[0]["content"]["contract"],
                              tasks[0]["content"]["hbb_reference"], cell_types)
@@ -1549,7 +2254,10 @@ def main() -> int:
         return code
 
     print("[1/6] fetching task")
-    task = fetch_task(args.task_id)
+    if args.oldest:
+        task = fetch_all_tasks()[-1]
+    else:
+        task = fetch_task(args.task_id)
     contract, reference = persist_task(task)
     print(f"  task {task['id']}  created {task['created_at']}  seed {contract['seed']}")
     print(f"  cell_type {contract.get('cell_type')}  mutations {contract['active_mutations']}")
@@ -1559,11 +2267,30 @@ def main() -> int:
     accessibility = cell_types.get(contract.get("cell_type"), {}).get("accessibility", 1.0)
     print(f"  accessibility {accessibility}")
 
+    if args.build_seed is not None:
+        print("[2/2] loading chr11, then building against a stand-in seed")
+        cas_systems = list(contract["rules"].get("cas_systems", ["Cas9", "Cas12a"]))
+        split_cfg = GenConfig(strategy="pure" if args.strategy == "auto" else args.strategy,
+                              selection=args.selection or "packed", flank=args.flank,
+                              variants=args.variants, lengths=lengths, rows=args.rows,
+                              construction=args.construction, oversample=args.oversample,
+                              gc_tolerance=args.gc_tolerance, min_cut_p=args.min_cut_p,
+                              cut_p_floors=parse_cut_p_floors(args, cas_systems),
+                              cut_p_relax=not args.no_cut_p_relax,
+                              cas_share=parse_cas_mix(args.cas_mix, cas_systems),
+                              backfill_cas=args.backfill_cas)
+        code = run_seed_split(task, cell_types, split_cfg, args.build_seed,
+                              auto_skew=not args.no_auto_skew, verify=not args.no_verify)
+        print(f"\ndone in {time.time() - started:.1f}s")
+        return code
+
     print("[2/6] loading chr11 + k-mer index")
     ctx = build_context(contract, reference, cell_types)
 
     base_cfg = GenConfig(flank=args.flank, variants=args.variants, lengths=lengths,
-                         rows=args.rows, construction=args.construction)
+                         rows=args.rows, construction=args.construction,
+                         oversample=args.oversample, gc_tolerance=args.gc_tolerance,
+                         min_cut_p=args.min_cut_p)
     strategies = ("pure", "shaped") if args.strategy == "auto" else (args.strategy,)
 
     # Enumerate the union of every length the search may ask for; select_sites filters per config.
@@ -1585,7 +2312,8 @@ def main() -> int:
     best: tuple[float, GenConfig, dict, tuple] | None = None
     for strategy in strategies:
         start_cfg = replace(base_cfg, strategy=strategy,
-                            selection="packed" if strategy == "pure" else "stratified")
+                            selection=args.selection or
+                            ("packed" if strategy == "pure" else "stratified"))
         if strategy == "pure" and not args.no_auto_skew:
             fitted = choose_weight_skew(ctx, sites, start_cfg)
             print(f"  weight_skew fitted to this contract: {fitted}")
