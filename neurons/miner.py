@@ -15,6 +15,7 @@
 
 
 import asyncio
+import contextlib
 import hashlib
 import json
 import logging
@@ -28,7 +29,7 @@ import time
 import traceback
 
 from collections import Counter
-from dataclasses import replace
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -54,11 +55,41 @@ from niome_subnet.base.miner import BaseMinerNeuron  # noqa: E402
 from niome_subnet.genomics.hek293_generation import (  # noqa: E402
     generate_seed_agnostic_clustered,
 )
+from niome_subnet.genomics import all_cut as AC  # noqa: E402
 from niome_subnet.genomics import seed_agnostic as SA  # noqa: E402
 from niome_subnet.genomics.model import Task  # noqa: E402
 from niome_subnet.protocol import GenomicsTaskSynapse  # noqa: E402
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class PreparedRound:
+    """One round's submission, built when its task appeared rather than when a validator asked.
+
+    Published to ``Miner._prepared`` *before* the build starts, so a validator arriving mid-build
+    finds the round and can wait on it. ``done`` is set exactly once, on success or failure, and
+    which it was is then readable from ``rows`` / ``error``.
+    """
+
+    task_id: str
+    key: str
+    contract: dict
+    reference: dict
+    created_at: str
+    done: threading.Event = field(default_factory=threading.Event)
+    rows: list[dict] | None = None
+    error: str | None = None
+    started: float = field(default_factory=time.time)
+    elapsed: float | None = None
+    attempt: int = 1
+
+    def summary(self) -> str:
+        if not self.done.is_set():
+            return f"still building ({time.time() - self.started:.0f}s so far)"
+        if self.rows:
+            return f"{len(self.rows)} rows in {self.elapsed:.0f}s"
+        return f"failed after {self.elapsed:.0f}s: {self.error}"
 
 
 class Miner(BaseMinerNeuron):
@@ -196,6 +227,89 @@ class Miner(BaseMinerNeuron):
     # ~1% (Cas9) to ~4% (Cas12a) of window seeds, so a few cost a little clean fraction while dozens
     # cost all of it.
     SEED_AGNOSTIC_MAX_BACKFILL = 8
+    # Ceiling on the scan even when a prepared round could afford more. Every number this hedge was
+    # tuned against was measured at ~210 s, and its scans stop on "time" rather than exhaustion, so
+    # a prefetch budget would silently change what the pool contains on the ~half of rounds
+    # (CD34+_HSPC, HUDEP-2) that reach it. Raising this should be a measurement, not a side effect
+    # of building earlier — a longer scan should only ever help, but that has not been shown.
+    SEED_AGNOSTIC_MAX_BUDGET_S = 210.0
+
+    # all-cut: the conditional hedge in genomics/all_cut.py. Tried ahead of the seed-agnostic
+    # builder for HEK293, and only when its Cas12a bank is already cached — that scan is ~10 min
+    # against a 300 s TTL, so a cache miss must fall through rather than miss the upload window.
+    # Prebuild with: python -m niome_subnet.genomics.all_cut
+    ALL_CUT = True
+    # Cell types with a measured all-cut config (genomics/all_cut.CELL_CONFIG). The gain is
+    # largest where the method replaces the seed-agnostic hedge outright rather than replacing an
+    # earlier all-cut config: HUDEP-2 +17.92 (t=4.9 clustered, 5/5 contracts) and K562's original
+    # +23.45 (t=8.4) are both against the hedge, while HEK293 gains ~+4 over its clustered builder.
+    # Relaxing Cas9 from "strict over all 900 seeds" to "strict over the Cas12a-clean set" is what
+    # frees the rows that were over-constrained.
+    #
+    # All four cell types now have a measured config, so all-cut covers every task the backend
+    # issues. CD34+_HSPC is the weakest at +8.56/round — not because the method works less well
+    # there (+14.27 where it builds) but because 2 of 5 contracts cannot fill stage 5's eight
+    # cells at any group size that scores well. See all_cut.CELL_CONFIG for that sweep.
+    ALL_CUT_CELL_TYPES = ("HEK293", "K562", "HUDEP-2", "CD34+_HSPC")
+    # Least budget worth starting an all-cut build with, per cell type. The bank is built per task
+    # (contract shapes never repeat, so a cache cannot be relied on) and its cost differs by an
+    # order of magnitude between the two: HEK293 measured ~127 s cold, K562 271-407 s (median ~350)
+    # over six cold builds at the mf100/d400 bank it moved to once the prefetch made that
+    # affordable — 1.9M candidates over ~230 targets, against a few thousand at mf22/d200.
+    #
+    # Starting a build that cannot finish is worse than not starting one: build_bank returns []
+    # on its deadline rather than a partial bank, so the whole scan is spent and all-cut declines
+    # anyway, having eaten the seed-agnostic hedge's window. Per cell type rather than one number
+    # because a single 400 s gate would lock HEK293 out of the ~225 s in-TTL fallback path it
+    # currently completes inside.
+    ALL_CUT_MIN_BUDGET_S = {"HEK293": 190.0, "K562": 480.0, "HUDEP-2": 480.0,
+                            "CD34+_HSPC": 480.0}
+
+    # --- round prefetch -------------------------------------------------------------------------
+    # The presigned URL's 300 s TTL bounds the *upload*, not the build — provided the rows are
+    # already in hand when the validator calls. A round's task is published on /api/v3/tasks the
+    # moment the round opens, hours before this miner is contacted, and the contract there is the
+    # same one the validator later hands over: checked across all 41 archived rounds, contract and
+    # hbb_reference match field for field, the only difference being `seed`, which is 0 on both
+    # sides until the round closes. So the miner watches for its own task and builds ahead of the
+    # request; ``process_task`` then only has to PUT.
+    #
+    # Measured over 72 rounds — task created_at against this miner's "Received genomics task" log
+    # line — the lead time is: min 198 s, p10 395 s, median 1794 s, max 4404 s. 86% of rounds leave
+    # 10 minutes or more, against the ~225 s the in-TTL path gets.
+    PREFETCH = True
+    # Public and unsigned, unlike settings.TASK_URL (/tasks/current, which 400s without the signed
+    # headers a validator sends). Returns the whole task history in one page, contract and
+    # hbb_reference inline, so a prepared round needs no further fetch.
+    TASKS_URL = f"{settings.BASE_URL}/api/v3/tasks"
+    # One round, from settings. Only used to predict when the next task is due so the poll can idle
+    # in between; a schedule change costs a slower pickup, never a missed task, because
+    # PREFETCH_IDLE_POLL_S keeps checking regardless.
+    ROUND_SECONDS = settings.INTERVAL_BLOCKS * 12
+    # Poll cadence around the expected task time, and the floor elsewhere. 15 s costs ~4 requests
+    # per round on a 380 KB endpoint.
+    PREFETCH_POLL_S = 15.0
+    PREFETCH_IDLE_POLL_S = 300.0
+    # Start polling fast this long before the next task is due, to absorb backend jitter.
+    PREFETCH_LEAD_S = 180.0
+    # Build budget for a prepared round. Deliberately *not* spent by anything today: all-cut
+    # finishes in 30-130 s and _build_seed_agnostic keeps its own 210 s cap, so shipping the
+    # prefetch changes only *when* the submission is built, never what it contains. Raising what
+    # the builders do with it — a d1500 all-cut bank is ~10 min — is the next step, and this is the
+    # ceiling for it. The cost of that ceiling: if a builder ever did spend the full 900 s, the 19%
+    # of rounds contacted sooner than that would fall to the wait, then the emergency build below.
+    PREPARE_BUDGET_S = 900.0
+    # Held back from the upload deadline for the PUT itself. The upload is a ~200 KB body.
+    UPLOAD_RESERVE_S = 45.0
+    # And held back on top of that for one ordinary-construction build, in case a validator arrives
+    # while the prepare is still running and the wait runs out. That build is ~1-5 s with the caches
+    # warm; the margin is for doing it while the prepare still has the GPU and its worker pool.
+    EMERGENCY_BUILD_S = 60.0
+    # A failed prepare is retried rather than written off: the round still has hours left, and the
+    # usual causes (a backend blip, the GPU busy, a transient CUDA error) clear on their own.
+    # Spaced and capped so a contract that genuinely cannot be built does not spin all round.
+    PREPARE_RETRY_S = 120.0
+    PREPARE_MAX_ATTEMPTS = 3
 
     # The constants a contract may override. Anything absent from this tuple is global.
     TUNABLE = ("STRATEGY", "SELECTION", "GC_TOLERANCE", "CONSTRUCTION", "CUT_P_CEILING",
@@ -219,6 +333,17 @@ class Miner(BaseMinerNeuron):
         # Every validator broadcasts the same task, so process_task can run several times per
         # round. One archive/scoring pass at a time, and the losers skip rather than queue.
         self._archive_lock = threading.Lock()
+        # The round the prefetch thread is working on, or has finished. Written by that thread and
+        # read by process_task on the event loop; a single attribute rebind is atomic, and every
+        # field of a PreparedRound is either set before publication or guarded by ``done``.
+        self._prepared: PreparedRound | None = None
+        # Serialises the hedge builders across the prefetch thread and process_task's worker
+        # thread. They own the GPU and a worker pool, so two at once is slower than either alone —
+        # and _build_lock cannot cover it, being an asyncio lock the prefetch thread cannot take.
+        self._hedge_lock = threading.Lock()
+        # chr11 is loaded through an unguarded module global, so the prefetch waits for the prewarm
+        # rather than racing it into a second 130 MB read.
+        self._prewarmed = threading.Event()
 
         logger.info(
             f"Generation config: strategy={self.STRATEGY} selection={self.SELECTION} "
@@ -226,6 +351,11 @@ class Miner(BaseMinerNeuron):
             f"lengths={self.LENGTHS} score_locally={self.SCORE_LOCALLY}"
         )
         threading.Thread(target=self._prewarm, name="niome-prewarm", daemon=True).start()
+        if self.PREFETCH:
+            threading.Thread(target=self._prefetch_loop, name="niome-prefetch",
+                             daemon=True).start()
+        else:
+            logger.info("Prefetch disabled; submissions will be built inside the upload TTL")
 
     @classmethod
     def settings_for(cls, contract: dict) -> dict:
@@ -373,20 +503,9 @@ class Miner(BaseMinerNeuron):
             cell_types = await asyncio.to_thread(self._fetch_cell_types)
             logger.info(f"{tag} step 3/5 done | {len(cell_types)} cell types")
 
-            logger.info(f"{tag} step 4/5 building the dataset")
+            logger.info(f"{tag} step 4/5 obtaining the dataset")
             build_started = time.time()
-            async with self._build_lock:
-                key = self._build_key(task.id, contract)
-                if self._built is not None and self._built[0] == key:
-                    rows = self._built[1]
-                    logger.info(f"{tag} reusing the {len(rows)}-row build for this task")
-                else:
-                    rows = await asyncio.to_thread(
-                        self._build, contract, reference, cell_types, deadline
-                    )
-                    # Only the current task's rows are worth keeping: a new task means a new
-                    # contract, and the old rows can never be submitted again.
-                    self._built = (key, rows)
+            rows = await self._rows_for_task(task, contract, reference, cell_types, deadline, tag)
             logger.info(
                 f"{tag} step 4/5 done in {time.time() - build_started:.1f}s | {len(rows)} rows"
             )
@@ -409,6 +528,10 @@ class Miner(BaseMinerNeuron):
             # Housekeeping, not submission: score the previous round now that its seed exists,
             # then archive this one. The PUT has landed and the URL is spent, so nothing below
             # here can cost the round — but it is minutes of CPU, so it goes to a worker thread.
+            #
+            # Re-persist first: _build writes this file, but a prepared round and a fallback build
+            # can both have written it since, and the archive must hold what was actually sent.
+            self._persist(settings.MINER_SUBMISSION_PATH, rows)
             await asyncio.to_thread(self._post_upload, task.id)
         except Exception as e:
             # Nothing downstream reports a miner failure — a missed upload is indistinguishable from
@@ -648,6 +771,230 @@ class Miner(BaseMinerNeuron):
         except Exception as e:
             logger.error(f"Prewarm failed ({e}); the first task will pay the cold start")
             logger.debug(traceback.format_exc())
+        finally:
+            # Released on failure too: the prefetch has its own error handling, and blocking it
+            # forever on a bad prewarm would silently disable the whole path.
+            self._prewarmed.set()
+
+    # ---- Round prefetch ------------------------------------------------------------------------
+
+    def _prefetch_loop(self) -> None:
+        """Watch /api/v3/tasks for each round's task and build its submission on sight.
+
+        Runs for the life of the process in its own thread. Every failure is caught and retried on
+        the next poll: this path is an optimisation, and ``process_task`` still builds in-TTL when
+        it finds nothing prepared, so a backend outage must cost latency and not the round.
+        """
+        logger.info(
+            f"Prefetch: watching {self.TASKS_URL} for seed-0 tasks; build budget "
+            f"{self.PREPARE_BUDGET_S:.0f}s (against ~{settings.SUBMISSION_TIMEOUT}s in-TTL)"
+        )
+        self._prewarmed.wait()
+        while not self.should_exit:
+            try:
+                item = self._newest_unstamped_task()
+                prepared = self._prepared
+                if item is None:
+                    logger.debug("Prefetch: newest task already carries a seed; nothing to prepare")
+                elif prepared is None or prepared.task_id != item["id"]:
+                    self._prepare(item)
+                elif (prepared.done.is_set() and not prepared.rows
+                        and prepared.attempt < self.PREPARE_MAX_ATTEMPTS
+                        and time.time() - prepared.started >= self.PREPARE_RETRY_S):
+                    logger.info(
+                        f"Prefetch: retrying {item['id']} (attempt {prepared.attempt + 1} of "
+                        f"{self.PREPARE_MAX_ATTEMPTS}) after: {prepared.error}"
+                    )
+                    self._prepare(item, attempt=prepared.attempt + 1)
+            except Exception as e:
+                logger.warning(f"Prefetch poll failed ({e}); retrying")
+                logger.debug(traceback.format_exc())
+            self._sleep(self._next_poll_delay())
+
+    def _sleep(self, seconds: float) -> None:
+        """Sleep in slices so shutdown stays responsive across a five-minute idle poll."""
+        until = time.time() + seconds
+        while not self.should_exit and time.time() < until:
+            time.sleep(min(5.0, until - time.time()))
+
+    def _next_poll_delay(self) -> float:
+        """How long until the next poll: fast around the time a task is due, slow in between.
+
+        The due time is the current task's ``created_at`` plus one round, which is where the
+        backend has put every task so far. It is only a hint — an idle poll runs regardless, so a
+        schedule that moves costs a slower pickup rather than a missed round.
+        """
+        prepared = self._prepared
+        if prepared is None or not prepared.created_at:
+            return self.PREFETCH_POLL_S
+        if (prepared.done.is_set() and not prepared.rows
+                and prepared.attempt < self.PREPARE_MAX_ATTEMPTS):
+            # A retry is outstanding. Come back for it on the retry interval instead of idling
+            # until the next round is due, which would delay it by up to PREFETCH_IDLE_POLL_S.
+            return max(self.PREFETCH_POLL_S,
+                       self.PREPARE_RETRY_S - (time.time() - prepared.started))
+        try:
+            created = datetime.fromisoformat(prepared.created_at).replace(tzinfo=timezone.utc)
+        except ValueError:
+            return self.PREFETCH_IDLE_POLL_S
+        due = created.timestamp() + self.ROUND_SECONDS
+        until_window = due - self.PREFETCH_LEAD_S - time.time()
+        if until_window <= 0:
+            return self.PREFETCH_POLL_S             # inside the window the next task is due in
+        return min(self.PREFETCH_IDLE_POLL_S, until_window)
+
+    def _newest_unstamped_task(self) -> dict | None:
+        """The current round's task, or None when the newest one has already been stamped.
+
+        Only the newest item is considered. The backend stamps a task's seed when its round closes,
+        so exactly one unstamped task exists at a time and it is always the newest — an older
+        unstamped one would be a task whose round is over and whose upload window is long gone.
+        """
+        response = requests.get(self.TASKS_URL, timeout=settings.TASK_REQUEST_TIMEOUT)
+        response.raise_for_status()
+        items = response.json().get("items") or []
+        if not items:
+            raise RuntimeError("backend returned no tasks")
+        newest = max(items, key=lambda item: item.get("created_at") or "")
+        contract = (newest.get("content") or {}).get("contract") or {}
+        return newest if self._is_unstamped(contract.get("seed")) else None
+
+    @staticmethod
+    def _is_unstamped(seed) -> bool:
+        """Whether a contract seed is the broadcast placeholder rather than a scoring seed.
+
+        ``seed`` is a comma-joined list of round seeds once stamped ("130,507,441"); before that it
+        is 0. Parsed rather than compared literally because the placeholder has been seen as int 0,
+        "0" and absent, and a build keyed to the wrong one of those is a lost round either way.
+        """
+        if seed is None or seed == "":
+            return True
+        try:
+            return all(int(part) == 0 for part in str(seed).split(","))
+        except ValueError:
+            return False
+
+    def _prepare(self, item: dict, attempt: int = 1) -> None:
+        """Build the submission for a task that no validator has asked for yet.
+
+        Publishes the round before building, so a validator arriving mid-build waits on this rather
+        than starting a second one.
+        """
+        task_id = item["id"]
+        content = item.get("content") or {}
+        contract, reference = content.get("contract"), content.get("hbb_reference")
+        if not contract or not reference:
+            logger.warning(f"Prefetch: task {task_id} carries no contract/reference; skipping")
+            return
+
+        prepared = PreparedRound(
+            task_id=task_id,
+            key=self._build_key(task_id, contract),
+            contract=contract,
+            reference=reference,
+            created_at=item.get("created_at") or "",
+            attempt=attempt,
+        )
+        self._prepared = prepared
+        logger.info(
+            f"Prefetch: preparing task {task_id} (created {prepared.created_at}) | "
+            f"cell_type={contract.get('cell_type')} "
+            f"mutations={len(contract.get('active_mutations') or [])} "
+            f"budget={self.PREPARE_BUDGET_S:.0f}s"
+            + (f" | attempt {attempt}" if attempt > 1 else "")
+        )
+        try:
+            # Same files _fetch_artifacts writes, so a restart's prewarm and any offline re-score
+            # see this round's artifacts whether or not a validator has been in touch yet.
+            self._persist(settings.CONTRACT_PATH, contract)
+            self._persist(settings.HBB_REFERENCE_PATH, reference)
+            cell_types = self._fetch_cell_types()
+            prepared.rows = self._build(contract, reference, cell_types,
+                                        budget_s=self.PREPARE_BUDGET_S)
+        except Exception as e:
+            prepared.error = str(e)
+            logger.error(f"Prefetch: build for {task_id} failed ({e}); the validator's request "
+                         "will fall back to an in-TTL build")
+            logger.debug(traceback.format_exc())
+        finally:
+            prepared.elapsed = time.time() - prepared.started
+            prepared.done.set()
+        if prepared.rows:
+            logger.info(
+                f"Prefetch: task {task_id} ready — {len(prepared.rows)} rows in "
+                f"{prepared.elapsed:.0f}s, waiting for a validator to ask for it"
+            )
+
+    async def _rows_for_task(self, task: Task, contract: dict, reference: dict, cell_types: dict,
+                             deadline: float, tag: str) -> list[dict]:
+        """The rows to upload for this task: the prepared ones where possible, built ones if not.
+
+        Three paths, in descending order of how much time the build got:
+        prepared (hours), prepared-but-still-running (wait for it), and in-TTL (what the miner did
+        before the prefetch existed, and still the fallback whenever the other two miss).
+        """
+        key = self._build_key(task.id, contract)
+        prepared = self._prepared
+        if prepared is not None and prepared.key == key:
+            if not prepared.done.is_set():
+                # Leave room for the PUT and for one ordinary build, so a prepare that overruns
+                # costs quality rather than the round.
+                patience = deadline - self.UPLOAD_RESERVE_S - self.EMERGENCY_BUILD_S - time.time()
+                logger.info(
+                    f"{tag} prepared build is still running ({time.time() - prepared.started:.0f}s "
+                    f"in); waiting up to {patience:.0f}s for it"
+                )
+                if patience > 0:
+                    await asyncio.to_thread(prepared.done.wait, patience)
+            # ``done`` is the only thing that makes ``rows`` trustworthy: it is set in the
+            # builder's finally, after the rows are complete. Reading rows without it would be
+            # right only by accident of assignment order.
+            if prepared.done.is_set() and prepared.rows:
+                logger.info(
+                    f"{tag} using the prepared submission ({prepared.summary()}) — no build needed"
+                )
+                return prepared.rows
+            logger.warning(f"{tag} prepared round unusable ({prepared.summary()}); building now")
+        elif prepared is not None:
+            # Same round, different contract, or a round we never saw. Either way the prepared rows
+            # were designed against different rules and must not be sent.
+            logger.warning(
+                f"{tag} prepared round is for task {prepared.task_id} under a different contract "
+                f"key; building this one instead"
+            )
+        else:
+            logger.info(f"{tag} nothing prepared for this task; building inside the upload TTL")
+
+        # Hedges are skipped when a prepare is still holding the GPU and its worker pool: the
+        # ordinary construction is the build that reliably finishes in what is left of the TTL.
+        still_preparing = prepared is not None and not prepared.done.is_set()
+        async with self._build_lock:
+            if self._built is not None and self._built[0] == key:
+                logger.info(f"{tag} reusing the {len(self._built[1])}-row build for this task")
+                return self._built[1]
+            rows = await asyncio.to_thread(
+                self._build, contract, reference, cell_types, deadline,
+                None, not still_preparing,
+            )
+            # Only the current task's rows are worth keeping: a new task means a new contract, and
+            # the old rows can never be submitted again.
+            self._built = (key, rows)
+        return rows
+
+    @contextlib.contextmanager
+    def _hedge_slot(self, timeout: float):
+        """Serialise the hedge builders, yielding False rather than queueing past ``timeout``.
+
+        A prepared round can hold this for the whole of ``PREPARE_BUDGET_S``. An in-TTL build that
+        cannot get in must say so and use the ordinary construction: waiting its turn would spend
+        the upload window, and a late submission scores nothing at all.
+        """
+        acquired = self._hedge_lock.acquire(timeout=timeout)
+        try:
+            yield acquired
+        finally:
+            if acquired:
+                self._hedge_lock.release()
 
     def _seed_agnostic_applies(self, contract: dict, budget_s: float) -> tuple[bool, str]:
         """Whether the bank builder should run for this contract, and why not when it should not."""
@@ -671,6 +1018,7 @@ class Miner(BaseMinerNeuron):
                              budget_s: float) -> list[dict] | None:
         """Build from the strict-Cas9 / min-union-Cas12a banks. None means fall back."""
         task = {"content": {"contract": contract, "hbb_reference": reference}}
+        budget_s = min(budget_s, self.SEED_AGNOSTIC_MAX_BUDGET_S)
         cfg = replace(
             SA.SeedAgnosticConfig(),
             time_budget_s=budget_s,
@@ -708,22 +1056,85 @@ class Miner(BaseMinerNeuron):
         return rows
 
     def _build(self, contract: dict, reference: dict, cell_types: dict,
-               deadline: float | None = None) -> list[dict]:
+               deadline: float | None = None, budget_s: float | None = None,
+               allow_hedges: bool = True) -> list[dict]:
         """Generate this task's submission and log what it should be worth.
 
         Most cell types follow the same sequence as ``submission.build_for_task``. HEK293 instead
         uses the dedicated clustered builder because its provisional seed can be replaced before
         scoring; that builder does not inspect simulated outcomes while choosing designs.
+
+        ``budget_s`` states the time the hedge builders may take outright, for a prepared round
+        that is not racing an upload TTL; without it the budget is derived from ``deadline`` as
+        before. ``allow_hedges=False`` skips them entirely — the emergency path, for when a
+        prepare already holds the GPU and only the ordinary construction will finish in time.
         """
         logger.info("Build: loading chr11 (cached after the first call)")
         self._load_sequence()
 
-        budget = (deadline - time.time() - self.SEED_AGNOSTIC_RESERVE_S
-                  if deadline else float(self.SEED_AGNOSTIC_MIN_BUDGET_S))
-        applies, why_not = self._seed_agnostic_applies(contract, budget)
+        def remaining() -> float:
+            if budget_s is not None:
+                return budget_s
+            if deadline:
+                return deadline - time.time() - self.SEED_AGNOSTIC_RESERVE_S
+            return float(self.SEED_AGNOSTIC_MIN_BUDGET_S)
+
+        budget = remaining()
+        # How long to queue for the hedge slot. A prepared round can afford to wait out a
+        # straggler; a build racing the upload TTL cannot, and takes the ordinary construction
+        # instead of spending its window in a queue.
+        hedge_wait = 60.0 if budget_s is not None else 10.0
+        if not allow_hedges:
+            logger.info("Build: hedges skipped (a prepared build is still holding the GPU); "
+                        "using the ordinary construction")
+
+        # All-cut goes first, ahead of the seed-agnostic hedge: it *is* that hedge with the Cas9
+        # constraint relaxed from "strict over all 900 seeds" to "strict over the Cas12a-clean
+        # set", and it measured +23.45 (t=8.4) over it on K562. Placed after, it was dead code —
+        # _build_seed_agnostic returns, so K562 never reached it.
+        min_budget = self.ALL_CUT_MIN_BUDGET_S.get(contract.get("cell_type"), 0.0)
+        if (allow_hedges and self.ALL_CUT
+                and contract.get("cell_type") in self.ALL_CUT_CELL_TYPES
+                and budget >= min_budget):
+            try:
+                with self._hedge_slot(hedge_wait) as slot:
+                    if slot:
+                        allcut_rows, allcut_meta = AC.build_for_cell(
+                            contract, reference, cell_types, budget_s=budget,
+                            reserve_s=float(self.SEED_AGNOSTIC_MIN_BUDGET_S))
+                    else:
+                        allcut_rows = None
+                        allcut_meta = {"reason": "another build holds the hedge slot"}
+            except Exception as exc:
+                logger.warning(f"Build: all-cut failed ({exc}); falling through")
+                logger.debug(traceback.format_exc())
+                allcut_rows, allcut_meta = None, {"reason": str(exc)}
+            if allcut_rows:
+                logger.info(
+                    f"Build: all-cut ({contract.get('cell_type')}) | "
+                    f"group {allcut_meta['group_size']} "
+                    f"clean {allcut_meta['clean']}/900 ({100*allcut_meta['clean_fraction']:.1f}%) "
+                    f"| cas9 pool {allcut_meta['cas9_pool']} | rows {allcut_meta['rows']} "
+                    f"cells {allcut_meta['cells']}/8 | {allcut_meta['elapsed_s']}s"
+                    + ("  (retried)" if allcut_meta.get("retried") else "")
+                )
+                self._persist(settings.MINER_SUBMISSION_PATH, allcut_rows)
+                return allcut_rows
+            logger.info("Build: all-cut declined (%s); falling through",
+                        allcut_meta.get("reason", "unknown"))
+            budget = remaining()
+
+        applies, why_not = self._seed_agnostic_applies(contract, budget) if allow_hedges else (
+            False, "hedges skipped")
         if applies:
             try:
-                rows = self._build_seed_agnostic(contract, reference, cell_types, budget)
+                with self._hedge_slot(hedge_wait) as slot:
+                    if slot:
+                        rows = self._build_seed_agnostic(contract, reference, cell_types, budget)
+                    else:
+                        logger.warning("Build: another build holds the hedge slot; using the "
+                                       "ordinary construction")
+                        rows = None
             except Exception as exc:
                 logger.warning(f"Build: seed-agnostic builder failed ({exc}); using the "
                                "ordinary construction")

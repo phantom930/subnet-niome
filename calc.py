@@ -9,6 +9,11 @@ it, so an archived folder cannot be scored from its own contents alone. This too
 with its task from the public ``/api/v3/tasks`` endpoint, runs the validator's own five stages
 against the **real** seed, and writes each stage's working out back into the folder.
 
+A stamped contract carries a comma-joined *list* of round seeds (``"122,321,431"``). Stage 12 is
+seed-independent and runs once; stages 3-5 are re-derived per seed and the reported score is their
+mean, exactly as ``benchmark_submission`` does it. Per-seed reports and the spread are printed
+alongside the mean, and each seed gets its own ``stage{3,4,5}_detail.seed<N>.json``.
+
     python calc.py                                  # newest folder under data/result/
     python calc.py --folder data/result/2026-08-21T11:42:21
     python calc.py --task-id <uuid>                  # pin the contract, skip fingerprint matching
@@ -73,6 +78,55 @@ from niome_subnet.genomics.validation import stage12, stage3, stage4, stage5  # 
 # than scoring zero, and run_validation swallows the exception and `continue`s — so the miner gets
 # no score at all, not even a zero. Worth refusing to run rather than reproducing the crash.
 HARD_FIELDS = ("guideRNA", "target_alignment_start", "mutation", "cas_system")
+
+def parse_seeds(raw) -> list[int]:
+    """Split a contract seed field into round seeds.
+
+    The validator stopped scoring at one seed: ``contract["seed"]`` is a comma-joined list
+    (``"122,321,431"``), stage 12 runs once because it is seed-independent, and stages 3-5 re-run
+    per seed with every breakdown field and ``final_score`` averaged over them
+    (``genomics/validation/__init__.py``). Mirrors ``_parse_seeds`` there, and tolerates a bare int
+    so archived single-seed contracts still work.
+    """
+    return [int(part) for part in str(raw).split(",") if part.strip() != ""]
+
+
+def mean_reports(reports: list[dict]) -> dict:
+    """Average the per-seed stage reports the way benchmark_submission averages its breakdown.
+
+    ``stage_report`` nests (``stage4.consistency_factor``, ``stage5.*``), so this recurses and
+    averages the numeric leaves. Anything non-numeric — counters, histograms, the seed itself —
+    is taken from the first seed so the shape still matches a single-seed report and the existing
+    printer keeps working. ``None`` leaves stay ``None``: stage 4 writes them when it cannot fit.
+    """
+    if not reports:
+        return {}
+    if len(reports) == 1:
+        return reports[0]      # untouched: averaging a single report would float-ify every count
+
+    def merge(values):
+        head = values[0]
+        if isinstance(head, dict):
+            return {k: merge([v.get(k) for v in values if isinstance(v, dict)])
+                    for k in head}
+        nums = [v for v in values if isinstance(v, (int, float)) and not isinstance(v, bool)]
+        if nums and len(nums) == len(values):
+            return sum(nums) / len(nums)
+        return head
+
+    return merge(reports)
+
+
+def seed_spread(per_seed: list[tuple], path: tuple[str, ...]):
+    """The per-seed values at a dotted path, for showing how much the seed alone moves a number."""
+    out = []
+    for item in per_seed:
+        node = item[3]
+        for key in path:
+            node = (node or {}).get(key) if isinstance(node, dict) else None
+        out.append(node if isinstance(node, (int, float)) else 0.0)
+    return out
+
 
 # Contract fields that must agree between the archived broadcast copy and the task the seed is
 # taken from. Everything except the seed itself: the seed is precisely what the archive lacks.
@@ -1101,8 +1155,9 @@ def parse_args() -> argparse.Namespace:
                         help="pin the contract to this task instead of matching the folder")
     parser.add_argument("--task", default=None,
                         help="read the task from a local file instead of the backend")
-    parser.add_argument("--seed", type=int, default=None,
-                        help="override the contract seed (for an unstamped task)")
+    parser.add_argument("--seed", default=None,
+                        help="override the contract seed; accepts a comma-joined list "
+                             "(\"122,321,431\") exactly as the stamped contract carries it")
     parser.add_argument("--cell-types", default=None,
                         help="cell-type accessibility JSON; fetched from the backend if omitted")
     parser.add_argument("--construction", default="hdr",
@@ -1190,7 +1245,8 @@ def main() -> int:
     real_seed = contract.get("seed")
     if args.seed is not None:
         contract["seed"] = args.seed
-    seed = contract["seed"]
+    seeds = parse_seeds(contract["seed"])
+    seed = seeds[0]                       # the one stages 1/2/5 do not care about anyway
     pairing = verify_pairing(task, folder_contract)
     pairing["compared_against"] = contract_source if folder_contract else None
 
@@ -1200,8 +1256,11 @@ def main() -> int:
         print(f"  folder      {folder}")
     print(f"  task        {task.get('id')}   created {task.get('created_at')}")
     print(f"  matched by  {origin}")
-    print(f"  real seed   {real_seed}" + (f"   scored at {seed} (--seed)" if args.seed is not None
-                                          else ""))
+    seed_note = (f"   scored at {contract['seed']} (--seed)" if args.seed is not None else "")
+    print(f"  real seed   {real_seed}{seed_note}")
+    if len(seeds) > 1:
+        print(f"  round seeds {seeds}   ({len(seeds)} of them — stages 3-5 run per seed and the "
+              f"final score is their mean)")
     print(f"  cell_type   {contract.get('cell_type')}")
     print(f"  mutations   {contract['active_mutations']}")
     print(f"  weights     {contract.get('mutation_weights')}")
@@ -1218,10 +1277,10 @@ def main() -> int:
             raise SystemExit("refusing to apply this task's seed to a submission built against a "
                              "different contract — pass --task-id to override")
     elif pairing.get("verified"):
-        seeds = (f"broadcast seed {pairing['archived_seed']}, task seed {pairing['task_seed']}"
-                 if pairing["archived_seed"] != pairing["task_seed"]
-                 else f"both carry seed {pairing['task_seed']}")
-        print(f"\n  contract verified field by field against {contract_source} ({seeds})")
+        seed_pair = (f"broadcast seed {pairing['archived_seed']}, task seed {pairing['task_seed']}"
+                     if pairing["archived_seed"] != pairing["task_seed"]
+                     else f"both carry seed {pairing['task_seed']}")
+        print(f"\n  contract verified field by field against {contract_source} ({seed_pair})")
 
     if not real_seed and args.seed is None:
         print("\n  ! this task carries seed 0 — the backend has not stamped it yet, so stages 3 "
@@ -1261,7 +1320,8 @@ def main() -> int:
     print("\n[1/4] loading chr11 and the k-mer index")
     ctx = G.build_context(contract, reference, cell_types)
 
-    print(f"[2/4] running the validator's five stages over {stage_dir}/ at seed {seed}")
+    seed_label = f"seed {seed}" if len(seeds) == 1 else f"{len(seeds)} seeds {seeds}"
+    print(f"[2/4] running the validator's five stages over {stage_dir}/ at {seed_label}")
     official_score = G.verify_with_validator(ctx)
 
     scored_rows = read_json(settings.MINER_SUBMISSION_PATH)
@@ -1279,25 +1339,78 @@ def main() -> int:
     # ------------------------------------------------------ the same numbers, stage by stage
     print("[3/4] measuring every stage quantity from the artifacts it just wrote")
     cfg = None if args.construction == "none" else G.GenConfig(construction=args.construction)
-    report = G.stage_report(scored_rows, valid, results, ctx, cfg)
-    report_text = captured(report, f"{submission_path.name} — task {task.get('id')} — seed {seed}")
-    print(report_text)
+
+    # Stages 3-5 are re-derived per round seed and averaged, matching benchmark_submission. Stage
+    # 12 is seed-independent so the artifacts on disk serve every seed; the per-seed stage-3 results
+    # are recomputed in memory rather than read back, because the pipeline leaves only the *last*
+    # seed's dataset in data/ and reading that would silently report one seed as if it were the mean.
+    per_seed = []
+    for sd in seeds:
+        sctx = replace(ctx, contract={**contract, "seed": sd})
+        sresults = [stage3.simulate(entry, sd) for entry in valid]
+        per_seed.append((sd, sctx, sresults, G.stage_report(scored_rows, valid, sresults, sctx, cfg)))
+
+    report = mean_reports([item[3] for item in per_seed])
+    if len(seeds) == 1:
+        results = per_seed[0][2]
+        report_text = captured(report,
+                               f"{submission_path.name} — task {task.get('id')} — seed {seed}")
+        print(report_text)
+    else:
+        chunks = []
+        for sd, _sctx, _res, rep in per_seed:
+            chunks.append(captured(rep, f"{submission_path.name} — task {task.get('id')} — "
+                                        f"seed {sd}"))
+        header = (f"\n  MEAN OVER {len(seeds)} ROUND SEEDS {seeds} — this is what the validator "
+                  f"scores\n" + "  " + "-" * 76 + "\n")
+        for label, path in (("total_weighted_score", ("stage4", "total_weighted_score")),
+                            ("consistency_factor", ("stage4", "consistency_factor")),
+                            ("distribution_fidelity_factor",
+                             ("stage5", "distribution_fidelity_factor")),
+                            ("final_score", ("final_score",))):
+            spread = seed_spread(per_seed, path)
+            node = report
+            for key in path:
+                node = (node or {}).get(key) if isinstance(node, dict) else None
+            mean_value = node if isinstance(node, (int, float)) else 0.0
+            header += (f"  {label:<32}{mean_value:>12.4f}"
+                       f"   per-seed {min(spread):.4f} .. {max(spread):.4f}\n")
+        report_text = "\n".join(chunks) + header
+        print(report_text)
+        results = per_seed[0][2]
 
     print_rejections(invalid, len(scored_rows), args.examples)
 
     delta = abs(official_score["final_score"] - report["final_score"])
-    print(f"\n  benchmark_submission final_score = {official_score['final_score']:.6f}")
-    print(f"  in-memory replica                = {report['final_score']:.6f}")
+    mean_note = "" if len(seeds) == 1 else f" (mean of {len(seeds)} seeds)"
+    print(f"\n  benchmark_submission final_score = {official_score['final_score']:.6f}{mean_note}")
+    print(f"  in-memory replica                = {report['final_score']:.6f}{mean_note}")
     print(f"  delta                            = {delta:.9f}")
+    if delta > 1e-6:
+        print("  ! the replica and the validator disagree — if this task has several round seeds, "
+              "check\n    that both averaged the same set")
 
     # -------------------------------------------------------------------- per-stage detail files
     print(f"\n[4/4] writing per-stage detail into {out_dir}/")
     detail12 = stage12_detail(scored_rows, valid, invalid, ctx, submitted, checks)
-    detail3 = stage3_detail(valid, results, stage3_summary, ctx)
-    detail4 = stage4_detail(valid, results, ctx, stage4_output)
-    detail5 = stage5_detail(valid, results, ctx, stage5_output,
-                            total_weighted=detail4.get("total_weighted_score", 0.0),
-                            consistency_factor=detail4.get("consistency_factor", 0.0))
+
+    # Stage 12 is seed-independent, so one file covers every seed. Stages 3-5 are not: with several
+    # round seeds each gets its own detail file, and the flat names keep pointing at the first seed
+    # so a single-seed run is unchanged.
+    extra_detail = {}
+    detail3 = detail4 = detail5 = None
+    for position, (sd, sctx, sresults, _rep) in enumerate(per_seed):
+        d3 = stage3_detail(valid, sresults, stage3_summary if len(seeds) == 1 else {}, sctx)
+        d4 = stage4_detail(valid, sresults, sctx, stage4_output if len(seeds) == 1 else {})
+        d5 = stage5_detail(valid, sresults, sctx, stage5_output if len(seeds) == 1 else {},
+                           total_weighted=d4.get("total_weighted_score", 0.0),
+                           consistency_factor=d4.get("consistency_factor", 0.0))
+        if position == 0:
+            detail3, detail4, detail5 = d3, d4, d5
+        if len(seeds) > 1:
+            extra_detail[f"stage3_detail.seed{sd}.json"] = d3
+            extra_detail[f"stage4_detail.seed{sd}.json"] = d4
+            extra_detail[f"stage5_detail.seed{sd}.json"] = d5
 
     stage4_text = print_stage4_detail(detail4)
     stage5_text = print_stage5_detail(detail5)
@@ -1331,6 +1444,9 @@ def main() -> int:
         "stage3_detail.json": "per-row RNG replay of the simulation",
         "stage4_detail.json": "per-target, per-fold consistency detail",
         "stage5_detail.json": "distribution fidelity, term by term",
+        **({} if len(seeds) == 1 else
+           {"stage{3,4,5}_detail.seed<N>.json": f"the same, per round seed ({len(seeds)} of them); "
+                                                "the flat files above are the first seed"}),
         "validation.json": "headline numbers and the task pairing",
         "validation.txt": "the printed five-stage report",
         "validation/": "the validator's own inputs and outputs",
@@ -1344,6 +1460,10 @@ def main() -> int:
         "contract_pairing": pairing,
         "real_seed": real_seed,
         "scored_seed": seed,
+        "scored_seeds": seeds,
+        "per_seed_final_score": {str(sd): rep.get("final_score")
+                                 for sd, _c, _r, rep in per_seed},
+        "final_score_is_mean_of": len(seeds),
         "compare_seed": compare_seed if alt_report else None,
         "cell_type": contract.get("cell_type"),
         "accessibility": accessibility,
@@ -1411,6 +1531,8 @@ def main() -> int:
     write_json(out_dir / "stage3_detail.json", detail3)
     write_json(out_dir / "stage4_detail.json", detail4)
     write_json(out_dir / "stage5_detail.json", detail5)
+    for name, payload in extra_detail.items():        # one set per round seed, when there are many
+        write_json(out_dir / name, payload)
     write_json(out_dir / "validation.json", summary)
     write_json(stage_dir / "task.json", task)
     write_json(stage_dir / "cell_types.json", cell_types)

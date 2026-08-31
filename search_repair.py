@@ -108,6 +108,18 @@ def draw(guide: str, gc: float, energy: float, cut_p: float, mutation: str, cas:
 RULES = {
     "mh_any": lambda mh, outcome: outcome == ("HDR" if mh else "BLUNT_NHEJ"),
     "hdr": lambda mh, outcome: outcome == "HDR",
+    # The complement of the rarest mode. Much the easiest rule per seed (78.4% for Cas12a at the
+    # clamp) because it only has to dodge MH_NHEJ, whose weight is 0.30 with mh and 0.12 without.
+    # Note it pins *nothing* that the cut-only hedge does not already pin: outcome still varies
+    # between HDR and BLUNT_NHEJ per seed, so is_hdr stays a coin and only indel_length's spread
+    # narrows (the gamma mode drops out, leaving 0 and an exponential).
+    "not_mhnhej": lambda mh, outcome: outcome in ("HDR", "BLUNT_NHEJ"),
+    # The complement of "hdr", and dominated by it on both axes: harder per seed (0.468 vs 0.534 at
+    # each rule's best GC) and it pins less, because sample_indel_length returns 0 for HDR — so
+    # "hdr" fixes all three stage-4 targets while this one leaves indel_length a gamma/exponential
+    # mixture. Its GC optimum is also 0.50, not 1.0, since the mh branch is the favourable one here.
+    "not_hdr": lambda mh, outcome: outcome in ("MH_NHEJ", "BLUNT_NHEJ"),
+    "cut": lambda mh, outcome: outcome != "no_cut",
 }
 
 
@@ -377,6 +389,9 @@ def main() -> None:
                 task.get("id", args.task), contract.get("cell_type"), args.seed,
                 len(jobs), args.cas, len(sites))
     rule_text = {"hdr": "outcome == HDR",
+                 "not_mhnhej": "outcome in (HDR, BLUNT_NHEJ)",
+                 "not_hdr": "outcome in (MH_NHEJ, BLUNT_NHEJ)",
+                 "cut": "outcome != no_cut",
                  "mh_any": "mh -> HDR, else BLUNT_NHEJ"}[args.rule]
     logger.info("conditions: cut_p >= %.3f and (%s) | GC %.2f-%.2f, <= %d variants/target",
                 args.cut_p_floor, rule_text, args.gc_min, args.gc_max, args.variants)

@@ -119,6 +119,32 @@ def pack(strings: list[bytes]) -> tuple[np.ndarray, np.ndarray]:
     return out, np.array([len(s) for s in strings], dtype=np.int32)
 
 
+def experiment_seeds_gpu_packed(seed_digits: list[bytes], d_sufb, d_ulen, xp,
+                                block: int = 256):
+    """``experiment_seeds_gpu`` with the suffix table already packed and resident on the device.
+
+    The suffix table is constant for a target while the seed slice moves, so packing and
+    re-uploading it per slice is pure waste — and it dominated a large screen (37k suffixes x ~23
+    slices x 915 targets). The caller packs once and slices the device array to pick survivors,
+    which is a device-side gather rather than host work plus a PCIe copy.
+    """
+    seed_bytes, seed_lens = pack(seed_digits)
+    longest = int(seed_bytes.shape[1]) + int(d_sufb.shape[1])
+    if longest > MAX_MSG:
+        raise ValueError(f"key of {longest} bytes exceeds the kernel's {MAX_MSG}-byte buffer")
+    d_seed = xp.asarray(seed_bytes)
+    d_slen = xp.asarray(seed_lens)
+    n_seeds = len(seed_digits)
+    total = int(d_sufb.shape[0]) * n_seeds
+    out = xp.empty(total, dtype=xp.uint32)
+    grid = (total + block - 1) // block
+    _kernel(xp)((grid,), (block,), (
+        d_seed, d_slen, np.int32(seed_bytes.shape[1]),
+        d_sufb, d_ulen, np.int32(d_sufb.shape[1]),
+        np.int32(n_seeds), np.int64(total), out))
+    return out
+
+
 def experiment_seeds_gpu(seed_digits: list[bytes], suffixes: list[bytes], xp,
                          block: int = 256):
     """Low 32 bits of sha256(seed_digits[s] + suffixes[g]) for every (g, s), on the device.

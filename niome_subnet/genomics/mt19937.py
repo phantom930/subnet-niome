@@ -95,22 +95,131 @@ def free_gpu_memory() -> int:
 GPU_CHUNK = 1_500_000        # ~3.7 GB of state, comfortable on an 8 GB card
 
 
-def first_two_draws_gpu(seeds, xp, chunk: int = GPU_CHUNK) -> tuple:
-    """``first_two_draws`` on the GPU. Same algorithm, same order, ``xp`` is cupy.
+# One thread per seed, the whole init_by_array in that thread's local memory, one launch. The
+# cupy-array version below does the same arithmetic but as ~1,247 device-wide kernel launches, which
+# is latency-bound: it reaches ~5M pairs/s against this kernel's ~40M. Kept side by side because the
+# array version is readable and is what `verify_kernel` checks this against.
+_MT_SOURCE = r"""
+extern "C" __global__
+void mt_first_draws(const unsigned int* __restrict__ seeds, int n, int n_draws, double* out)
+{
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid >= n) return;
 
-    Kept as a separate function rather than a branch inside the numpy version so the CPU path stays
-    the reference implementation that ``verify()`` pins down: the GPU result is checked against it,
-    not the other way round.
+    unsigned int mt[624];                       // 2,496 B of local memory per thread
+    // init_genrand(19650218): the fixed state init_by_array starts from.
+    mt[0] = 19650218u;
+    for (int i = 1; i < 624; ++i) {
+        unsigned int prev = mt[i - 1];
+        mt[i] = 1812433253u * (prev ^ (prev >> 30)) + (unsigned int)i;
+    }
+
+    unsigned int seed = seeds[tid];
+    int i = 1;
+    // Pass 1, 624 mixes. CPython's key array for an int < 2**32 is one word, so j is 0 whenever it
+    // is read and `init_key[j] + j` collapses to the seed.
+    for (int k = 0; k < 624; ++k) {
+        unsigned int prev = mt[i - 1];
+        mt[i] = (mt[i] ^ ((prev ^ (prev >> 30)) * 1664525u)) + seed;
+        ++i;
+        if (i >= 624) { mt[0] = mt[623]; i = 1; }
+    }
+    // Pass 2, 623 further mixes, subtracting the index.
+    for (int k = 0; k < 623; ++k) {
+        unsigned int prev = mt[i - 1];
+        mt[i] = (mt[i] ^ ((prev ^ (prev >> 30)) * 1566083941u)) - (unsigned int)i;
+        ++i;
+        if (i >= 624) { mt[0] = mt[623]; i = 1; }
+    }
+    mt[0] = 0x80000000u;
+
+    // The first 2*n_draws tempered words. Word kk reads mt[kk + 397]; with n_draws <= 3 that is at
+    // most mt[402], still the *pre-generate* value, so no regeneration pass is needed.
+    unsigned int w[6];
+    int n_words = 2 * n_draws;
+    for (int kk = 0; kk < n_words; ++kk) {
+        unsigned int y = (mt[kk] & 0x80000000u) | (mt[kk + 1] & 0x7FFFFFFFu);
+        unsigned int v = mt[kk + 397] ^ (y >> 1) ^ ((y & 1u) ? 0x9908B0DFu : 0u);
+        v ^= (v >> 11);
+        v ^= (v << 7) & 0x9D2C5680u;
+        v ^= (v << 15) & 0xEFC60000u;
+        v ^= (v >> 18);
+        w[kk] = v;
+    }
+    for (int k = 0; k < n_draws; ++k) {
+        double a = (double)(w[2 * k] >> 5);
+        double b = (double)(w[2 * k + 1] >> 6);
+        out[(long long)k * n + tid] = (a * 67108864.0 + b) / 9007199254740992.0;
+    }
+}
+"""
+
+_MT_KERNEL = None
+KERNEL_CHUNK = 4_000_000     # 4M threads x 2,496 B local = ~10 GB of backing store, streamed
+
+
+def _mt_kernel(xp):
+    global _MT_KERNEL
+    if _MT_KERNEL is None:
+        _MT_KERNEL = xp.RawKernel(_MT_SOURCE, "mt_first_draws")
+    return _MT_KERNEL
+
+
+def first_n_draws_kernel(seeds, xp, n_draws: int = 2, chunk: int = KERNEL_CHUNK) -> tuple:
+    """``first_n_draws_gpu`` via the single-launch CUDA kernel. Same values, ~8x the throughput."""
+    if not 1 <= n_draws <= 3:
+        raise ValueError("n_draws must be 1..3")
+    seeds = xp.asarray(seeds, dtype=xp.uint32)
+    n = int(seeds.shape[0])
+    if n == 0:
+        return tuple(xp.empty(0, dtype=xp.float64) for _ in range(n_draws))
+    if n > chunk:
+        parts = [[] for _ in range(n_draws)]
+        for begin in range(0, n, chunk):
+            got = first_n_draws_kernel(seeds[begin:begin + chunk], xp, n_draws, chunk)
+            for k, arr in enumerate(got):
+                parts[k].append(arr)
+        return tuple(xp.concatenate(part) for part in parts)
+    out = xp.empty((n_draws, n), dtype=xp.float64)
+    block = 128
+    grid = (n + block - 1) // block
+    _mt_kernel(xp)((grid,), (block,), (seeds, np.int32(n), np.int32(n_draws), out))
+    return tuple(out[k] for k in range(n_draws))
+
+
+def first_two_draws_gpu(seeds, xp, chunk: int = GPU_CHUNK) -> tuple:
+    """The first two ``random()`` values on the GPU. Thin wrapper over ``first_n_draws_gpu``."""
+    return first_n_draws_gpu(seeds, xp, 2, chunk)
+
+
+def first_n_draws_gpu(seeds, xp, n_draws: int = 2, chunk: int = GPU_CHUNK,
+                      use_kernel: bool = True) -> tuple:
+    """The first ``n_draws`` ``random()`` values for each seed, on the GPU.
+
+    Each ``random()`` consumes two tempered words, so ``n_draws`` needs ``2 * n_draws`` of them.
+    Stage 3 takes three: the microhomology coin, the cut coin, then the repair-mode draw. Three is
+    the practical ceiling here and it costs nothing extra — word ``k`` reads ``mt[k + M]`` with
+    M = 397, so six words stay inside the 624-word state and no regeneration step is needed.
+    (A fourth draw, the indel length, would be gamma/exponential variates rather than a plain
+    ``random()``, so it is deliberately not covered.)
+
+    Kept separate from the numpy version so the CPU path stays the reference implementation that
+    ``verify()`` pins down: the GPU result is checked against it, not the other way round.
     """
+    if not 1 <= n_draws <= 3:
+        raise ValueError("n_draws must be 1..3 (see the docstring on why 3 is the ceiling)")
+    if use_kernel:
+        return first_n_draws_kernel(seeds, xp, n_draws)
     seeds = xp.asarray(seeds, dtype=xp.uint32)
     if seeds.shape[0] > chunk:
         # Split rather than fail: a caller should not have to know the device's memory budget.
-        firsts, seconds = [], []
+        parts = [[] for _ in range(n_draws)]
         for begin in range(0, int(seeds.shape[0]), chunk):
-            a, b = first_two_draws_gpu(seeds[begin:begin + chunk], xp, chunk)
-            firsts.append(a)
-            seconds.append(b)
-        return xp.concatenate(firsts), xp.concatenate(seconds)
+            got = first_n_draws_gpu(seeds[begin:begin + chunk], xp, n_draws, chunk)
+            for k, arr in enumerate(got):
+                parts[k].append(arr)
+        return tuple(xp.concatenate(part) for part in parts)
+    n_words = 2 * n_draws
     batch = int(seeds.shape[0])
     mt = xp.repeat(xp.asarray(_INIT_CONST)[:, None], batch, axis=1)
 
@@ -133,23 +242,154 @@ def first_two_draws_gpu(seeds, xp, chunk: int = GPU_CHUNK) -> tuple:
             i = 1
     mt[0] = xp.uint32(0x80000000)
 
-    out = xp.empty((4, batch), dtype=xp.uint32)
-    for kk in range(4):
+    out = xp.empty((n_words, batch), dtype=xp.uint32)
+    for kk in range(n_words):
         y = (mt[kk] & xp.uint32(0x80000000)) | (mt[kk + 1] & xp.uint32(0x7FFFFFFF))
         out[kk] = mt[kk + M] ^ (y >> u1) ^ xp.where(
             (y & u1).astype(bool), xp.uint32(0x9908B0DF), xp.uint32(0)).astype(xp.uint32)
-    for kk in range(4):
+    for kk in range(n_words):
         y = out[kk]
         y = y ^ (y >> xp.uint32(11))
         y = y ^ ((y << xp.uint32(7)) & xp.uint32(0x9D2C5680))
         y = y ^ ((y << xp.uint32(15)) & xp.uint32(0xEFC60000))
         out[kk] = y ^ (y >> xp.uint32(18))
 
-    first = ((out[0] >> xp.uint32(5)).astype(xp.float64) * _TWO26
-             + (out[1] >> xp.uint32(6)).astype(xp.float64)) / _TWO53
-    second = ((out[2] >> xp.uint32(5)).astype(xp.float64) * _TWO26
-              + (out[3] >> xp.uint32(6)).astype(xp.float64)) / _TWO53
-    return first, second
+    return tuple(
+        ((out[2 * k] >> xp.uint32(5)).astype(xp.float64) * _TWO26
+         + (out[2 * k + 1] >> xp.uint32(6)).astype(xp.float64)) / _TWO53
+        for k in range(n_draws)
+    )
+
+
+# The repair-mode weights, mirroring stage3.repair_mode. Duplicated rather than imported because
+# this runs on device arrays, not scalars — but the numbers must track stage 3, and verify_rule()
+# is what catches it if they drift.
+_HDR_BASE = {"Cas9": 0.32, "Cas12a": 0.24}
+_BLUNT_W = 0.35
+
+# rule -> (mh_branch_target, no_mh_branch_target) over {"HDR","MH_NHEJ","BLUNT_NHEJ"}, or a set of
+# acceptable outcomes when the rule does not depend on the mh coin.
+RULE_SPECS = {
+    "hdr": {"any": ("HDR",)},
+    "not_mhnhej": {"any": ("HDR", "BLUNT_NHEJ")},
+    "not_hdr": {"any": ("MH_NHEJ", "BLUNT_NHEJ")},
+    # No repair condition at all — the row only has to cut. This is the production hedge's
+    # criterion, expressed as a rule so the 3-draw screen can bank it with its failed-seed sets.
+    "cut": {"any": ("HDR", "MH_NHEJ", "BLUNT_NHEJ")},
+    "mh_any": {"mh": ("HDR",), "no_mh": ("BLUNT_NHEJ",)},
+}
+
+
+def outcomes_gpu(d1, d2, d3, gc, energy, cut_p, cas: str, xp):
+    """Stage 3's per-row outcome for a batch, from the three draws. Returns (mh, code).
+
+    ``code`` is 0 no_cut, 1 HDR, 2 MH_NHEJ, 3 BLUNT_NHEJ. ``gc``/``energy``/``cut_p`` broadcast
+    against the draws, so they may be scalars or per-guide columns. Every comparison matches stage
+    3's exactly: ``mh`` is ``draw < p_mh`` (strict), a row cuts iff ``draw <= cut_p`` (stage 3 tests
+    ``> cut_p`` for the no-cut branch), and the mode is picked by ``r = draw * total`` against the
+    cumulative weights in the order HDR, MH_NHEJ, BLUNT_NHEJ.
+    """
+    p_mh = xp.minimum(0.6, 2.2 * gc * (1.0 - gc))
+    mh = d1 < p_mh
+    cut = d2 <= cut_p
+    hdr_w = _HDR_BASE[cas] + 0.35 * energy
+    mh_nhej = xp.where(mh, 0.30, 0.12)
+    r = d3 * (hdr_w + mh_nhej + _BLUNT_W)
+    code = xp.where(r < hdr_w, 1, xp.where(r < hdr_w + mh_nhej, 2, 3))
+    return mh, xp.where(cut, code, 0)
+
+
+def rule_fails_gpu(d1, d2, d3, gc, energy, cut_p, cas: str, rule: str, xp):
+    """Boolean mask of rows that BREAK ``rule``. A no_cut always breaks it (it is not an outcome)."""
+    spec = RULE_SPECS[rule]
+    mh, code = outcomes_gpu(d1, d2, d3, gc, energy, cut_p, cas, xp)
+    ids = {"HDR": 1, "MH_NHEJ": 2, "BLUNT_NHEJ": 3}
+    if "any" in spec:
+        ok = xp.zeros(code.shape, dtype=bool)
+        for name in spec["any"]:
+            ok |= code == ids[name]
+    else:
+        ok_mh = xp.zeros(code.shape, dtype=bool)
+        for name in spec["mh"]:
+            ok_mh |= code == ids[name]
+        ok_no = xp.zeros(code.shape, dtype=bool)
+        for name in spec["no_mh"]:
+            ok_no |= code == ids[name]
+        ok = xp.where(mh, ok_mh, ok_no)
+    return ~ok
+
+
+def screen_guides_rule_gpu(guides: list[str], round_seeds: np.ndarray, mutation: str, cas: str,
+                           start: int, strand: str, params_of, rule: str, max_fail: int,
+                           target_pairs: int = 1_200_000) -> dict[str, np.ndarray]:
+    """``screen_guides_gpu`` for a repair-mode rule instead of the cut gate alone.
+
+    ``params_of(guide) -> (gc, energy, cut_p)``. Returns {guide: sorted failed seeds} for guides
+    breaking the rule under at most ``max_fail`` seeds.
+
+    Two passes rather than one, because the host work dominated otherwise. Pass 1 keeps everything
+    on the device and brings back only a per-guide failure *count* per slice (a few KB), which is
+    all the early-out needs. Pass 2 recovers the actual failed seeds for the survivors alone — a
+    small set by definition, since anything with more than ``max_fail`` failures was dropped.
+    Measured on one slice: draws 78%, the old per-guide python loop 16%, sha256 4.5%. ``params_of``
+    used to be called once per guide *per slice*, rescanning every guide string; it is hoisted.
+    End to end after both changes: 23.9M pairs/s at target_pairs 1.2M (17.3M at 2.4M — past the
+    peak the state stops fitting), against 7.2M before and 1.87M for the 13-core CPU path.
+    """
+    from niome_subnet.genomics import sha256_gpu as SH
+
+    xp = _gpu()
+    if xp is None:
+        raise RuntimeError("screen_guides_rule_gpu needs a GPU; no CPU fallback is implemented")
+    if not guides:
+        return {}
+
+    suffix_of = {g: f"|{mutation}|{cas}|{g}|{start}|{strand}".encode() for g in guides}
+    all_params = np.asarray([params_of(g) for g in guides], dtype=np.float64)   # once, not per slice
+    index_of = {g: i for i, g in enumerate(guides)}
+    window = int(round_seeds.size)
+
+    # Pack the suffix table once per call: it is constant while the seed slice moves, and
+    # re-packing it per slice was the dominant host cost (46% GPU utilisation on a 915-target run).
+    suf_bytes, suf_lens = SH.pack([suffix_of[g] for g in guides])
+    d_sufb_all = xp.asarray(suf_bytes)
+    d_ulen_all = xp.asarray(suf_lens)
+    d_params = xp.asarray(all_params)
+
+    def sweep(subset_rows, collect):
+        """Run the window over row indices; count failures, and collect seeds when asked."""
+        alive = np.asarray(subset_rows, dtype=np.int64)
+        counts = np.zeros(len(guides), dtype=np.int64)
+        seeds_hit: dict[int, list[int]] = {int(i): [] for i in alive}
+        begin = 0
+        while begin < window and alive.size:
+            span = max(32, min(window - begin, target_pairs // max(1, int(alive.size))))
+            slice_seeds = round_seeds[begin:begin + span]
+            digits = [str(int(sd)).encode() for sd in slice_seeds]
+            rows_dev = xp.asarray(alive)
+            values = SH.experiment_seeds_gpu_packed(
+                digits, d_sufb_all[rows_dev], d_ulen_all[rows_dev], xp)
+            d1, d2, d3 = first_n_draws_gpu(values, xp, 3)
+            shape = (int(alive.size), slice_seeds.size)
+            prm = d_params[rows_dev]
+            bad = rule_fails_gpu(d1.reshape(shape), d2.reshape(shape), d3.reshape(shape),
+                                 prm[:, 0:1], prm[:, 1:2], prm[:, 2:3], cas, rule, xp)
+            per_guide = xp.asnumpy(bad.sum(axis=1))          # the only transfer in pass 1
+            if collect:
+                host = xp.asnumpy(bad)
+                for i, row in enumerate(alive):
+                    if per_guide[i]:
+                        seeds_hit[int(row)].extend(int(x) for x in slice_seeds[host[i]])
+            counts[alive] += per_guide
+            alive = alive[counts[alive] <= max_fail]
+            begin += span
+        return alive, seeds_hit
+
+    survivors, _ = sweep(np.arange(len(guides)), collect=False)
+    if survivors.size == 0:
+        return {}
+    _, hits = sweep(survivors, collect=True)
+    return {guides[int(i)]: np.array(sorted(hits[int(i)]), dtype=np.int64) for i in survivors}
 
 
 def screen_guides_gpu(guides: list[str], round_seeds: np.ndarray, mutation: str, cas: str,
