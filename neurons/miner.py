@@ -56,6 +56,7 @@ from niome_subnet.genomics.hek293_generation import (  # noqa: E402
     generate_seed_agnostic_clustered,
 )
 from niome_subnet.genomics import all_cut as AC  # noqa: E402
+from niome_subnet.genomics import all_hdr as AH  # noqa: E402
 from niome_subnet.genomics import seed_agnostic as SA  # noqa: E402
 from niome_subnet.genomics.model import Task  # noqa: E402
 from niome_subnet.protocol import GenomicsTaskSynapse  # noqa: E402
@@ -264,6 +265,30 @@ class Miner(BaseMinerNeuron):
     # currently completes inside.
     ALL_CUT_MIN_BUDGET_S = {"HEK293": 190.0, "K562": 480.0, "HUDEP-2": 480.0,
                             "CD34+_HSPC": 480.0}
+
+    # --- all-HDR: the tail bet ------------------------------------------------------------------
+    # Tried ahead of all-cut for the three clamped cell types. It pins the *repair mode* over a
+    # narrow seed band rather than the cut over the whole window, so on a band seed every row is
+    # HDR, stage 4's three targets go constant and consistency_factor is exactly 1.0.
+    #
+    # **This loses to all-cut on the mean and is shipped deliberately.** Measured head to head,
+    # clean/dirty legs through all five stages: CD34+ 34.26 vs 56.55, K562 31.25 vs 61.12,
+    # HUDEP-2 22.92 vs 41.67 — 51-61% of all-cut's expected score, about -24/round across three
+    # quarters of task volume. The band is ~1.8% of the seed space, so the 95% of rounds that miss
+    # it pay for the 5% that hit.
+    #
+    # The bet is on rank, not mean: SCORING_SYSTEM = "top" pays only the top 10 on a fixed curve,
+    # so a build worth 111-194 on ~5% of rounds may out-rank a flat 56 that never spikes. No rank
+    # measurement supports that here — it is the operator's call, recorded as such. Set ALL_HDR
+    # False to revert to all-cut everywhere.
+    ALL_HDR = True
+    # HEK293 is excluded on measurement, not oversight: at accessibility 0.35 energy never clamps,
+    # P(HDR) falls to ~0.37 where the guides actually sit, and the bank collapses to 1,206
+    # candidates from 2.9M guides (0.041% against ~14.5%) with a 7-seed band at group 20.
+    ALL_HDR_CELL_TYPES = ("CD34+_HSPC", "K562", "HUDEP-2")
+    # Cheaper than all-cut despite the same target count — the band is 100 seeds, not 900.
+    # Measured 31-41s for the Cas12a bank plus 59-80s for the conditional Cas9 scan.
+    ALL_HDR_MIN_BUDGET_S = 190.0
 
     # --- round prefetch -------------------------------------------------------------------------
     # The presigned URL's 300 s TTL bounds the *upload*, not the build — provided the rows are
@@ -1092,6 +1117,37 @@ class Miner(BaseMinerNeuron):
         # constraint relaxed from "strict over all 900 seeds" to "strict over the Cas12a-clean
         # set", and it measured +23.45 (t=8.4) over it on K562. Placed after, it was dead code —
         # _build_seed_agnostic returns, so K562 never reached it.
+        # All-HDR goes ahead of all-cut for the cell types it is configured for. It declines to
+        # None on an unmeasured cell type or a short pool, and all-cut below is then the fallback —
+        # so HEK293, and any failure on the other three, still gets the build it had before.
+        cell_type = contract.get("cell_type")
+        if (allow_hedges and self.ALL_HDR and cell_type in self.ALL_HDR_CELL_TYPES
+                and budget >= self.ALL_HDR_MIN_BUDGET_S):
+            try:
+                with self._hedge_slot(hedge_wait) as slot:
+                    if slot:
+                        hdr_rows, hdr_meta = AH.build_for_cell(
+                            contract, reference, cell_types, budget_s=budget)
+                    else:
+                        hdr_rows, hdr_meta = None, {"reason": "another build holds the hedge slot"}
+            except Exception as exc:
+                logger.warning(f"Build: all-HDR failed ({exc}); falling through to all-cut")
+                logger.debug(traceback.format_exc())
+                hdr_rows, hdr_meta = None, {"reason": str(exc)}
+            if hdr_rows:
+                logger.info(
+                    f"Build: all-HDR ({cell_type}) | band {hdr_meta['band']} "
+                    f"group {hdr_meta['group_size']} "
+                    f"clean {hdr_meta['clean']}/{hdr_meta['clean'] + hdr_meta['union']} "
+                    f"| cas9 pool {hdr_meta['cas9_pool']} | rows {hdr_meta['rows']} "
+                    f"cells {hdr_meta['cells']}/8 | {hdr_meta['elapsed_s']}s"
+                )
+                self._persist(settings.MINER_SUBMISSION_PATH, hdr_rows)
+                return hdr_rows
+            logger.info("Build: all-HDR declined (%s); falling through to all-cut",
+                        hdr_meta.get("reason", "unknown"))
+            budget = remaining()
+
         min_budget = self.ALL_CUT_MIN_BUDGET_S.get(contract.get("cell_type"), 0.0)
         if (allow_hedges and self.ALL_CUT
                 and contract.get("cell_type") in self.ALL_CUT_CELL_TYPES
