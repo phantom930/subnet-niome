@@ -276,10 +276,20 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
 
 
 def build_for_cell(contract: dict, reference: dict, cell_types: dict,
-                   budget_s: float | None = None) -> tuple[list[dict] | None, dict]:
-    """Build for whichever cell type this contract names, or decline where it is unmeasured."""
+                   budget_s: float | None = None,
+                   hdr_range: tuple[int, int] | None = None) -> tuple[list[dict] | None, dict]:
+    """Build for whichever cell type this contract names, or decline where it is unmeasured.
+
+    ``hdr_range`` overrides the cell type's default band. It is the per-hotkey decorrelation lever:
+    the clean band lands inside this window, so running several hotkeys on disjoint windows makes
+    their bands disjoint and multiplies the coldkey's round coverage (3 disjoint windows measured
+    15.2% against 5.2% for the same window three times). The seeds are independent hashes, so band
+    *position* is otherwise free — see the module docstring.
+    """
     cell = contract.get("cell_type")
     cfg = config_for(cell)
     if cfg is None:
         return None, {"reason": f"no measured all-HDR config for {cell}"}
+    if hdr_range is not None:
+        cfg = dataclasses.replace(cfg, hdr_range=hdr_range)
     return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)

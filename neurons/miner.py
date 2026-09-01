@@ -289,6 +289,14 @@ class Miner(BaseMinerNeuron):
     # Cheaper than all-cut despite the same target count — the band is 100 seeds, not 900.
     # Measured 31-41s for the Cas12a bank plus 59-80s for the conditional Cas9 scan.
     ALL_HDR_MIN_BUDGET_S = 190.0
+    # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
+    # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
+    # 1-(1-union/900)^3, so the win comes from making sibling hotkeys' bands DISJOINT. Measured: 3
+    # hotkeys on 200-299/500-599/800-899 cover 15.2% of rounds against 5.2% for the same window
+    # thrice (2.9x). Set NIOME_HDR_WINDOW="200-299" (or a bare "200" for 200-299) per hotkey
+    # process; unset keeps the cell-type default in all_hdr.CELL_CONFIG. Applies across all cell
+    # types, since one hotkey owns one seed window regardless of the round's cell type.
+    HDR_WINDOW = os.getenv("NIOME_HDR_WINDOW")
 
     # --- round prefetch -------------------------------------------------------------------------
     # The presigned URL's 300 s TTL bounds the *upload*, not the build — provided the rows are
@@ -340,6 +348,30 @@ class Miner(BaseMinerNeuron):
     TUNABLE = ("STRATEGY", "SELECTION", "GC_TOLERANCE", "CONSTRUCTION", "CUT_P_CEILING",
                "CAS_MIX", "BACKFILL_CAS", "VARIANTS", "FLANK", "LENGTHS")
 
+    @staticmethod
+    def _parse_hdr_window(raw: str | None) -> tuple[int, int] | None:
+        """Parse NIOME_HDR_WINDOW into a (lo, hi) seed band, or None to keep the cell default.
+
+        Accepts "200-299" or a bare "200" (taken as 200-299, a 100-wide window). Any malformed or
+        out-of-range value returns None with a warning: a bad env var must not stop the miner, only
+        cost this hotkey its decorrelation.
+        """
+        if not raw:
+            return None
+        try:
+            if "-" in raw:
+                lo, hi = (int(x) for x in raw.split("-", 1))
+            else:
+                lo = int(raw)
+                hi = lo + 99
+            if not (100 <= lo < hi <= 999):
+                raise ValueError(f"window {lo}-{hi} outside 100-999 or non-increasing")
+            return lo, hi
+        except (ValueError, TypeError) as exc:
+            logger.warning(f"NIOME_HDR_WINDOW={raw!r} is not a valid seed window ({exc}); "
+                           "using the cell-type default band")
+            return None
+
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
 
@@ -369,6 +401,14 @@ class Miner(BaseMinerNeuron):
         # chr11 is loaded through an unguarded module global, so the prefetch waits for the prewarm
         # rather than racing it into a second 130 MB read.
         self._prewarmed = threading.Event()
+
+        # This hotkey's all-HDR clean-band window, parsed once. A bad value logs and falls back to
+        # the cell-type default rather than taking the process down — a misconfigured window should
+        # cost decorrelation, not the miner.
+        self.hdr_window = self._parse_hdr_window(self.HDR_WINDOW)
+        if self.hdr_window:
+            logger.info(f"all-HDR clean-band window pinned to {self.hdr_window[0]}-"
+                        f"{self.hdr_window[1]} for this hotkey (NIOME_HDR_WINDOW)")
 
         logger.info(
             f"Generation config: strategy={self.STRATEGY} selection={self.SELECTION} "
@@ -1127,7 +1167,8 @@ class Miner(BaseMinerNeuron):
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
                         hdr_rows, hdr_meta = AH.build_for_cell(
-                            contract, reference, cell_types, budget_s=budget)
+                            contract, reference, cell_types, budget_s=budget,
+                            hdr_range=self.hdr_window)
                     else:
                         hdr_rows, hdr_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:
