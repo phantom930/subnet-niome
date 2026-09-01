@@ -35,20 +35,32 @@ CELL_TYPES_URL = f"{BASE_URL}/api/v3/data/cell-types?format=json"
 
 
 # ---- Data -----
-HBB_REFERENCE_PATH = "data/hbb_reference.json"
-CONTRACT_PATH = "data/contract.json"
-CHR11_PATH = "data/chr11.fa"
-MINER_SUBMISSION_PATH = "data/submission.json"
+# Per-process instance namespace for the miner's own read/write files. Several hotkeys run as
+# separate pm2 apps in one working directory; without this they overwrite each other's submission,
+# task artifacts, upload record and local scoring — the *uploads* stay correct (each holds its rows
+# in memory and PUTs to its own per-uid S3 key), but the on-disk diagnostics collide. Set
+# NIOME_INSTANCE per process (miner.sh sets it to the hotkey name); unset keeps the flat data/ paths
+# so standalone tools and single-miner runs are unchanged.
+#
+# chr11.fa and the bank / k-mer caches deliberately stay shared under data/: they are large,
+# read-only or content-keyed (the bank filename already folds in every input, the window included),
+# so sharing is correct and avoids duplicating a 130 MB reference seven times.
+DATA_DIR = f"data/inst/{os.environ['NIOME_INSTANCE']}" if os.getenv("NIOME_INSTANCE") else "data"
+
+HBB_REFERENCE_PATH = f"{DATA_DIR}/hbb_reference.json"
+CONTRACT_PATH = f"{DATA_DIR}/contract.json"
+CHR11_PATH = "data/chr11.fa"                                    # shared: large, read-only
+MINER_SUBMISSION_PATH = f"{DATA_DIR}/submission.json"
 # Where the miner records the task id, presigned URL and outcome of its most recent upload, so
 # scripts/resubmit.py can retry a failed one while the URL's TTL lasts.
-LAST_UPLOAD_PATH = "data/last_upload.json"
-VALID_EXPERIMENTS_PATH = "data/valid_experiments.json"
-INVALID_EXPERIMENTS_PATH = "data/invalid_experiments.json"
-STAGE3_DATASET = "data/stage3_dataset.json"
-STAGE3_SUMMARY_PATH = "data/stage3_summary.json"
-FINAL_REWARD_PATH = "data/final_reward.json"
-DISTRIBUTION_FIDELITY_PATH = "data/distribution_fidelity_summary.json"
-KMER_CACHE_DIR = "data/kmer_cache"
+LAST_UPLOAD_PATH = f"{DATA_DIR}/last_upload.json"
+VALID_EXPERIMENTS_PATH = f"{DATA_DIR}/valid_experiments.json"
+INVALID_EXPERIMENTS_PATH = f"{DATA_DIR}/invalid_experiments.json"
+STAGE3_DATASET = f"{DATA_DIR}/stage3_dataset.json"
+STAGE3_SUMMARY_PATH = f"{DATA_DIR}/stage3_summary.json"
+FINAL_REWARD_PATH = f"{DATA_DIR}/final_reward.json"
+DISTRIBUTION_FIDELITY_PATH = f"{DATA_DIR}/distribution_fidelity_summary.json"
+KMER_CACHE_DIR = "data/kmer_cache"                             # shared: content-keyed
 
 
 # ---- Timeout Values -----

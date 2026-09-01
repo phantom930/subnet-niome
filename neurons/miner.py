@@ -165,7 +165,9 @@ class Miner(BaseMinerNeuron):
     # the real seed once the task closes, so stages 3 and 4 have nothing to run against until
     # then. Each folder is therefore scored one round later, when calc.py can fetch that seed
     # from /api/v3/tasks — which is what makes the archive worth keeping at all.
-    ARCHIVE_ROOT = "data/result"
+    # Under the per-instance data dir so several hotkeys sharing this working directory each archive
+    # (and locally re-score) their own rounds instead of interleaving into one data/result.
+    ARCHIVE_ROOT = f"{settings.DATA_DIR}/result"
     # Copied out of data/ into the round's folder, in this order. The settings names rather than
     # literal paths, so a relocated data/ directory takes the archive with it. last_upload.json is
     # the important one: it records the task id, which is how the folder is paired back to its

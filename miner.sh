@@ -46,7 +46,9 @@ run_one() {
   # supervises the python directly.
   local name=$1 port=$2 ext=$3 win=$4
   echo "starting $name on :$port (ext :$ext) with NIOME_HDR_WINDOW=$win"
-  NIOME_HDR_WINDOW="$win" exec "$PY" neurons/miner.py \
+  # NIOME_INSTANCE namespaces this hotkey's own read/write files under data/inst/<name>/ so the
+  # siblings' submission, task artifacts, upload record and local scoring don't collide (settings.py).
+  NIOME_INSTANCE="$name" NIOME_HDR_WINDOW="$win" exec "$PY" neurons/miner.py \
     --netuid 55 \
     --wallet niome_coldkey \
     --wallet-hotkey "$name" \
