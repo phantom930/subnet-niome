@@ -37,10 +37,31 @@ Two structural limits, both measured, that no parameter reaches:
   800-899 all screen alike — candidate yields 14.0-14.9% and clean bands 15-16 across three cell
   types. Distinct ranges per cell type are a convention here, not a tuning result.
 
-HEK293 is deliberately excluded. At accessibility 0.35 energy never clamps, so P(HDR) falls to
-~0.37-0.39 where the enumeration's mass sits: the bank collapses to 1,206 candidates from 2.9M
-guides (0.041%, against ~14.5%), ``hdr_fails`` bottoms out at 37 rather than 26, and the clean band
-at group 20 is 7 seeds against the erythroid types' 18. It keeps :mod:`all_cut`.
+**HEK293 is included, at a larger group.** At accessibility 0.35 energy never clamps, so P(HDR)
+falls to ~0.37-0.39 where the enumeration's mass sits: the bank collapses to 1,206 candidates from
+2.9M guides (0.041% against ~14.5%) and the clean band is 6-10 seeds against the erythroid types'
+15-16. None of that stops the construction — a *narrower* band is easier for the conditional Cas9
+half to fill (``0.37**6`` against ``0.37**10``), and every group 20-100 builds 8/8 cells with the
+band seed at ``consistency_factor`` exactly 1.0. What HEK293 needs is a bigger group, because the
+cas mix is what stage 5 sees:
+
+    group  cas12a/cas9  band  cells  spike cons  fidelity  weighted  spike final
+       20       20/230    10    8/8       1.000     0.786       326          256
+       40       40/210     8    8/8       1.000     0.854       330          282
+       60       60/190     8    8/8       1.000     0.886       326          289
+       80       80/170     7    8/8       1.000     0.924       318          294
+      100      100/150     6    8/8       1.000     0.939       308          289
+
+Group 80 is shipped: fidelity 0.924 is level with the leaders' 0.947 median on their placing HEK293
+rounds (weighted 288, consistency 0.552), and its 7-seed band is hit ~17% more often than group
+100's 6 for +0.015 fidelity given up. The weighted score drifts 326 -> 308 across the sweep because
+the added Cas12a rows score below the Cas9 rows they displace; that is the whole cost, and 308 still
+clears the leaders' 288.
+
+An earlier claim here that HEK293 fidelity was capped near 0.78 was an artefact of only ever
+building groups 8-24, where 20 Cas12a rows of 250 drive stage 5's cas-coverage entropy to ~0.65.
+Balancing the mix is the same lever that lifted the other three cell types; nothing about
+accessibility 0.35 bounds fidelity.
 """
 
 from __future__ import annotations
@@ -72,6 +93,12 @@ CELL_CONFIG: dict[str, dict] = {
     "CD34+_HSPC": {"hdr_range": (500, 599), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "K562": {"hdr_range": (700, 799), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "HUDEP-2": {"hdr_range": (800, 899), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
+    # HEK293 carries its own group and screen. group_size 80 rather than 100 is the fidelity/band
+    # trade in the docstring table; main_max_fail 48 of 100 rather than 45 is what the sweep
+    # measured at, and the bank is thin enough here (0.041% of guides) that tightening it further
+    # starves the min-union step.
+    "HEK293": {"hdr_range": (300, 399), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95),
+               "group_size": 80, "main_max_fail": 48},
 }
 
 

@@ -284,12 +284,18 @@ class Miner(BaseMinerNeuron):
     # measurement supports that here — it is the operator's call, recorded as such. Set ALL_HDR
     # False to revert to all-cut everywhere.
     ALL_HDR = True
-    # HEK293 is excluded on measurement, not oversight: at accessibility 0.35 energy never clamps,
-    # P(HDR) falls to ~0.37 where the guides actually sit, and the bank collapses to 1,206
-    # candidates from 2.9M guides (0.041% against ~14.5%) with a 7-seed band at group 20.
-    ALL_HDR_CELL_TYPES = ("CD34+_HSPC", "K562", "HUDEP-2")
+    # All four cell types the backend issues. HEK293 was excluded while the only groups measured
+    # were 8-24, where 20 Cas12a rows of 250 skew the cas mix and stage 5 caps fidelity near 0.78 —
+    # not a property of accessibility 0.35, as the comment here used to claim. At group 80 (its
+    # all_hdr.CELL_CONFIG entry) HEK293 reaches fidelity 0.924 with the band seed still at
+    # consistency exactly 1.000 and 8/8 stage-5 cells, against the leaders' 0.947 median on their
+    # placing HEK293 rounds. all-cut below stays the fallback if the build declines.
+    ALL_HDR_CELL_TYPES = ("CD34+_HSPC", "K562", "HUDEP-2", "HEK293")
     # Cheaper than all-cut despite the same target count — the band is 100 seeds, not 900.
-    # Measured 31-41s for the Cas12a bank plus 59-80s for the conditional Cas9 scan.
+    # Measured 31-41s for the Cas12a bank plus 59-80s for the conditional Cas9 scan; K562 logs
+    # 116s cold / 24s warm end to end, and HEK293 32s cold / 3s warm (its bank is thin, so the scan
+    # is cheap). All four therefore fit the ~225s in-TTL path, and this gate stays a single number —
+    # unlike ALL_CUT_MIN_BUDGET_S, which had to go per cell type.
     ALL_HDR_MIN_BUDGET_S = 190.0
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is

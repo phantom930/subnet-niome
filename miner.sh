@@ -33,12 +33,14 @@ EXTERNAL_IP=184.144.255.144
 # non-overlapping 100-seed windows in 100-999 are equivalent, since band position is otherwise free.
 HOTKEYS=(
   "niome_hotkey   8091 52760 100-199"
-  "niome_hotkey1  8092 52096 300-399"
-  "niome_hotkey2  8093 52424 500-599"
-  "niome_hotkey3  8094 52069 600-699"
-  "niome_hotkey4  8095 52011 700-799"
-  "niome_hotkey5  8096 52079 800-899"
-  "niome_hotkey6  8097 52799 900-999"
+  "niome_hotkey1  8092 52096 200-299"
+  "niome_hotkey2  8093 52424 300-399"
+  "niome_hotkey3  8094 52069 400-499"
+  "niome_hotkey4  8095 52011 500-599"
+  "niome_hotkey5  8096 52079 600-699"
+  "niome_hotkey6  8097 52799 700-799"
+  "niome_hotkey7  8098 52240 800-899"
+  "niome_hotkey8  9001 52504 900-999"
 )
 
 run_one() {
