@@ -173,6 +173,158 @@ Two things this is *not* a licence to forget: the prefetch thread waits on `_pre
 by `_hedge_lock` through the bounded `_hedge_slot`, so an in-TTL build never queues behind a
 prepared one past its window.
 
+**All-cut is now the fallback, not the shipped path.** Every gain in that table is still the right
+number for all-cut, and all-cut is still what runs when the builder above it declines — but on all
+four cell types the builder above it is all-HDR.
+
+`Miner._build` tries the builders in this order, each falling through to the next on a decline, a
+short pool, a missing GPU or too little budget — so a failure anywhere lands on the build the miner
+had before that rung existed:
+
+```
+all-HDR  →  all-cut  →  seed-agnostic hedge  →  ordinary construction
+                                                (HEK293: clustered builder)
+```
+
+`allow_hedges=False` (the emergency in-TTL path, when a prepare ran out of time) skips straight to
+the last rung rather than queueing behind the GPU.
+
+### All-HDR — the spike construction, and the fleet that plays it
+
+[genomics/all_hdr.py](niome_subnet/genomics/all_hdr.py) is all-cut with the pinned outcome moved
+from *cut* to *HDR*: min-union a Cas12a group on the `hdr` rule over a narrow 100-seed band, then
+require HDR of the Cas9 half only over the resulting clean band. On a clean-band seed **every** row
+repairs by HDR, so stage 4's three targets (`is_cut`, `is_hdr`, `indel_length`) are all constant and
+`consistency_factor` is **exactly 1.0** — against all-cut's ~0.20-0.26, which pins `is_cut` alone.
+
+**It loses on the mean and is shipped anyway.** Scored head to head through all five stages, five
+contracts, clean and dirty legs:
+
+| cell | band | clean | clean leg | dirty leg | expected | all-cut | delta |
+|---|---|---|---|---|---|---|---|
+| CD34+_HSPC | 500-599 | 16 | 275.38 | 29.89 | 34.26 | 56.55 | -22.29 |
+| K562 | 700-799 | 16 | 254.30 | 27.22 | 31.25 | 61.12 | -29.87 |
+| HUDEP-2 | 800-899 | 15 | 191.31 | 20.07 | 22.92 | 41.67 | -18.75 |
+
+(That head-to-head predates the group 42 → 100 balance change below, so its bands are the wider
+15-16 rather than today's 12-13; the ratio it establishes is what matters, not the absolute legs.)
+
+That is 51-61% of all-cut's expected score, ~-24/round. **The justification is `SCORING_SYSTEM =
+"top"`, which pays only the top 10 on a fixed curve** ([settings.py](niome_subnet/utils/settings.py)
+`SCORE_DISTRIBUTION`, rank 1 = 29.4% and rank 11 = 0%): a build worth ~290 on a few percent of
+rounds can out-*rank* a flat 56 that never places. **No rank measurement in this repo supports
+that** — it is an operator decision, recorded as one. `Miner.ALL_HDR = False` reverts to all-cut
+everywhere, and that is the switch to reach for if the bet is judged wrong.
+
+Three regimes, and the reason there is no middle:
+
+| regime | condition | `consistency_factor` |
+|---|---|---|
+| 1 | HDR-clean seed (in the band) | exactly 1.0 |
+| 2 | cut-clean, HDR-dirty | ~0.26 |
+| 3 | cut-dirty | ~0.10 |
+
+HDR-clean ⊂ cut-clean, so all-HDR gives up all-cut's wide regime-2 floor to buy regime 1. **Two
+attempts to have both were falsified, don't repeat them:** a *combined* construction cannot, because
+cut-min-union and HDR-min-union compete for the same guides and a build optimises exactly one; and
+the *hybrid split* (part of the rows on each rule) does not produce an elevated "regime 1.5" — its
+spike consistency measured *below* the pure floor. Also beware the measurement itself: dirty-leg
+consistency swung 0.10↔0.25 across configs that should have matched, so re-verify any consistency
+delta on a fresh sample before believing it.
+
+**Two structural limits, both measured, that no parameter reaches:**
+
+- **The band cannot be widened.** Each seed added multiplies the conditional Cas9 requirement by
+  P(HDR) ≈ 0.57 (≈0.37 on HEK293). A 12-16 seed band leaves 484-1559 Cas9 candidates against the
+  ~170-208 needed; a 29-31 seed band (group 6) yielded **zero** on all three erythroid types.
+- **The band's position is free.** Seeds are independent draws. Verified on HEK293 across all nine
+  fleet windows: band 7 and 8/8 stage-5 cells at every one, fidelity 0.904-0.934, spike final
+  287-294. This is what makes the fleet below possible.
+
+Per-cell tuning lives in `all_hdr.CELL_CONFIG`; `AllHdrConfig` holds the shared defaults:
+
+| cell type | band default | group | `main_max_fail` | band width | build (cold/warm) |
+|---|---|---|---|---|---|
+| K562 / HUDEP-2 / CD34+_HSPC | 700-799 / 800-899 / 500-599 | 100 | 45 | 12-13 | ~116 s / ~24 s |
+| HEK293 | 300-399 | 80 | 48 | 7 | ~32 s / ~3 s |
+
+`group_size` is the **fidelity** lever, not a score lever. It sets the cas mix directly (group 100 →
+100/150 rows), and stage 5's cas-coverage entropy term is what moves: group 42 → 100 on the
+erythroid types took the spike round 117.1 → 121.8 (+4.7). On HEK293 the same sweep is much larger,
+because it started from a worse mix:
+
+| group | cas12a/cas9 | band | cells | spike cons | fidelity | weighted | spike final |
+|---|---|---|---|---|---|---|---|
+| 20 | 20/230 | 10 | 8/8 | 1.000 | 0.786 | 326 | 256 |
+| 40 | 40/210 | 8 | 8/8 | 1.000 | 0.854 | 330 | 282 |
+| 60 | 60/190 | 8 | 8/8 | 1.000 | 0.886 | 326 | 289 |
+| 80 | 80/170 | 7 | 8/8 | 1.000 | 0.924 | 318 | 294 |
+| 100 | 100/150 | 6 | 8/8 | 1.000 | 0.939 | 308 | 289 |
+
+Group 80 ships: fidelity 0.924 against the leaders' 0.947 median on their placing HEK293 rounds
+(weighted 288, consistency 0.552), and its 7-seed band is hit ~17% more often than group 100's 6 for
+the 0.015 fidelity given up. **A larger group is not free but is cheap:** weighted drifts 326 → 308
+because the added Cas12a rows score below the Cas9 rows they displace, and the band narrows — which
+*helps* the Cas9 fill, since `0.37**6` is an easier target than `0.37**10`.
+
+An earlier note here claimed HEK293 fidelity was capped near 0.78 by its accessibility 0.35. **That
+was wrong** — it was an artefact of only ever building groups 8-24, where 20 Cas12a rows of 250 drive
+the cas entropy to ~0.65. Nothing about accessibility bounds fidelity.
+
+`ALL_HDR_MIN_BUDGET_S` stays a single flat 190 s, unlike `ALL_CUT_MIN_BUDGET_S`: all four cell types
+build well inside the ~225 s in-TTL path.
+
+#### The fleet — one coldkey, nine hotkeys, disjoint bands
+
+The band is ~1-2% of the 100-999 seed space and a round draws three seeds, so one hotkey spikes on
+`1-(1-band/900)**3` of rounds — 2.3% at HEK293's band 7. A coldkey's payout is that expression over
+the **union** of its hotkeys' bands, so the whole win is making the bands **disjoint**. Measured:
+three hotkeys on disjoint windows covered 15.2% of rounds against 5.2% for the same window three
+times (2.9x). At nine disjoint windows the union is 63/900 on HEK293 (~19.6% of rounds) and ~108/900
+on the erythroid types (~32%).
+
+Two environment variables carry this, both read at process start:
+
+- **`NIOME_HDR_WINDOW`** — the hotkey's band window, `"200-299"` or a bare `"200"`. Parsed by
+  `Miner._parse_hdr_window` (rejects anything outside 100-999 or non-increasing, with a warning, and
+  falls back to the cell default). It overrides `CELL_CONFIG`'s `hdr_range` for **every** cell type,
+  since one hotkey owns one seed window regardless of what the round asks for.
+- **`NIOME_INSTANCE`** — namespaces that process's read/write files under `data/inst/<name>/`
+  ([settings.py](niome_subnet/utils/settings.py) `DATA_DIR`). Without it, siblings sharing a working
+  directory overwrite each other's submission, task artifacts, upload record and local scoring. The
+  *uploads* stay correct either way (rows are held in memory and PUT to a per-uid S3 key) — it is the
+  on-disk diagnostics that collide. `chr11.fa`, the k-mer cache and the banks deliberately stay
+  shared: large, read-only or content-keyed (`bank_key` folds in the window).
+
+[miner.sh](miner.sh) is the launcher: a `HOTKEYS` table of `<hotkey> <port> <external-port>
+<window>`, tiling 100-999 across nine hotkeys. `assert_disjoint_windows` parses the ranges and
+**exits** on an overlap or a malformed range rather than warning — `600-899` vs `800-899` overlap
+without matching as strings, and a silently-rejected window re-correlates the sibling, which costs
+the entire decorrelation. Run one hotkey per pm2 app —
+`pm2 start ./miner.sh --name miner-h1 -- niome_hotkey1` — because the no-argument form launches all
+nine under one wrapper, where pm2 cannot restart an individual crash-looping child. `PY` is an absolute venv path on purpose: `pm2 restart
+--update-env` has rewritten `PATH` and sent the miner into a crash loop before.
+
+[fleet_status.py](fleet_status.py) tallies the latest task across `/root/.pm2/logs/miner-h*`:
+prefetch-ready, build time, whether a validator called, whether the rows were served from the
+prepare or an in-TTL fallback, submitted rows, and OOM. It is the check for GPU contention — nine
+processes sharing one GPU is the failure mode the `_hedge_slot` bound exists for. Note the
+`KeyboardInterrupt` tracebacks in those logs are pm2's SIGINT at shutdown, not failures.
+
+#### One shared-config hazard
+
+`all_hdr` imports `assemble`, `bank_key`, `_params_fn`, `load_bank` and `save_bank` from
+[all_cut.py](niome_subnet/genomics/all_cut.py) so the two builders cannot drift on what invalidates a
+cache. That means **`AllCutConfig` and `AllHdrConfig` are both passed to the same `assemble`** while
+having different fields. Reach for a field only one of them defines and every live hotkey crash-loops
+on restart — which is why `assemble` reads `getattr(cfg, "cas9_cell_floor", 6)`. `AllHdrConfig`
+likewise aliases `cas12a_max_fail` to its own `main_max_fail` as a property, so the borrowed
+`bank_key` keeps working. Add a field to one config and check `assemble` before shipping it.
+
+`assemble` also scores Cas9 candidates **per cell** (`score_cap // len(by_cell)`, plus a per-cell
+floor) rather than globally: a global cap dropped whole stage-5 cells once the mix was balanced, and
+an empty (mutation × cas × strand) cell costs roughly a 0.03x multiplier on the entire score.
+
 ### Validation pipeline — stages talk through files, not return values
 
 [genomics/validation/](niome_subnet/genomics/validation/) runs stages in order, each reading the
@@ -267,6 +419,10 @@ touching either, since a one-bit divergence silently invalidates every bank.
 is a fresh ~0.5 coin per seed with no design lever, so every repair-mode rule tested tops out at
 349-491 failed seeds of 900 (`hdr` on Cas9 is the best at 349) against the 12-22 that make the
 cut-only hedge work. Raising `max_fail`, `max_distance` or pool size does not move it.
+
+This is a ceiling on the **900-seed window**, and all-HDR above does not contradict it: it pins
+repair mode over a 12-16 seed *band*, not a window, and pays for it by scoring ~0.10 on every seed
+outside the band. Those 349 failed seeds are the same measurement seen from the other side.
 
 The repo root also holds research tools that are **not** imported by the neurons: `search_repair.py`
 (window/single-seed construction frontiers), `search_guides.py`, `search_group.py`, `search_seed.py`,
