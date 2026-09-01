@@ -79,7 +79,14 @@ CELL_CONFIG: dict[str, dict] = {
 class AllHdrConfig:
     """Every value here is measured; see the module docstring for the sweep it came from."""
 
-    group_size: int = 42               # 42 -> 15-16 clean seeds; smaller bands starve the Cas9 half
+    # 100/150 (40% Cas12a) rather than 42/208: balances the cas mix so stage 5's cas-coverage
+    # entropy term reaches ~1.0 instead of 0.65, lifting fidelity on the spike seed from 0.88 to
+    # 0.97 — the leaders hold 0.93 on their placing rounds, and the spike round is what places under
+    # SCORING_SYSTEM="top". The HDR spike is unchanged (consistency stays exactly 1.0 on the band).
+    # Measured over a clean 40-seed sample: spike-round score 121.8 vs 117.1 at group 42 (+4.7); the
+    # non-band floor is unchanged (~30), so the gain rides entirely on the placing rounds. A bigger
+    # group narrows the HDR band (~10 seeds at 100), which the Cas9 half still fills.
+    group_size: int = 100
     hdr_range: tuple[int, int] = (500, 599)
     # Fails tolerated in the band when banking a Cas12a candidate. 45 of 100 is deliberately loose:
     # the min-union step is what produces the clean band, and a tighter screen shrinks the pool it
