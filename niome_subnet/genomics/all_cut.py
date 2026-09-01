@@ -307,6 +307,9 @@ class AllCutConfig:
     score_cap: int = 2500              # exact stage-2 scoring is only worth it on the ranked head
     bank_keep: int = 300_000
     pool_target: int = 8               # stop the Cas9 scan at this multiple of the rows needed
+    cas9_cell_floor: int = 6           # min Cas9 rows per (mutation, strand) cell, so a skewed
+                                       # mutation weight or a narrow clean band cannot empty a
+                                       # stage-5 cell at a balanced mix (clamped to an even share)
 
     @property
     def seeds(self) -> np.ndarray:
@@ -470,10 +473,22 @@ def assemble(group: list[dict], cas9: list[dict], contract: dict, ctx, cfg: AllC
              n_rows: int) -> list[dict]:
     """Cas12a group + mutation-weighted Cas9, mirroring ``seed_agnostic._assemble``'s apportionment."""
     need = n_rows - len(group)
-    cas9.sort(key=lambda r: (r["distance"], abs(r["gc"] - 0.50)))
-    head = cas9[:cfg.score_cap]
     by_site = {(s.start, s.strand, s.cas, s.length): s for s in
                G.enumerate_sites(ctx, 3000, (20, 23))}
+
+    # Score candidates PER (mutation, strand) cell, not from a global nearest-N head. A global
+    # ``cas9[:score_cap]`` keeps only the nearest score_cap by distance, which drops a whole cell
+    # when the pool skews to one strand and the clean band is narrow — measured: a 125/125 mix left
+    # both + strands unscored and empty (6/8 cells). Capping per cell guarantees every populated
+    # cell can contribute the quota below, at the same total scoring budget.
+    by_cell: dict[tuple, list[dict]] = {}
+    for rec in cas9:
+        by_cell.setdefault((rec["mutation"], rec["strand"]), []).append(rec)
+    per_cell_cap = max(1, cfg.score_cap // max(1, len(by_cell)))
+    head = []
+    for cell_recs in by_cell.values():
+        cell_recs.sort(key=lambda r: (r["distance"], abs(r["gc"] - 0.50)))
+        head.extend(cell_recs[:per_cell_cap])
     for rec in head:
         site = by_site.get((rec["start"], rec["strand"], "Cas9", rec["length"]))
         entry = None if site is None else G.build_valid_entry(
@@ -481,7 +496,7 @@ def assemble(group: list[dict], cas9: list[dict], contract: dict, ctx, cfg: AllC
         rec["weighted_score"] = entry["stage2"]["weighted_score"] if entry else -1.0
     head = [r for r in head if r["weighted_score"] >= 0]
 
-    by_cell: dict[tuple, list[dict]] = {}
+    by_cell = {}
     for rec in head:
         by_cell.setdefault((rec["mutation"], rec["strand"]), []).append(rec)
     for rows in by_cell.values():
@@ -489,13 +504,24 @@ def assemble(group: list[dict], cas9: list[dict], contract: dict, ctx, cfg: AllC
     weights = contract.get("mutation_weights", {})
     shares = {m: max(weights.get(m, 1.0), 1e-9) ** 1.25 for m in ctx.mutations}
     total = sum(shares.values())
+    # Floor per cell so the mutation-weight apportionment cannot starve a stage-5 cell to zero: an
+    # empty (mutation, cas, strand) cell zeroes one of stage 5's six ratios (~0.03x on the whole
+    # score), which is worse than trading a few rows off the heavier mutation. Capped at an even
+    # quarter share so the floors stay jointly satisfiable at any mix.
+    # getattr, not cfg.cas9_cell_floor: assemble is shared with all_hdr, whose AllHdrConfig has no
+    # such field. A hard attribute access broke every all-HDR build (and would have taken the live
+    # hotkeys down on their next restart). 6 matches AllCutConfig's default.
+    floor = min(getattr(cfg, "cas9_cell_floor", 6), max(1, need // max(1, len(by_cell))))
     chosen, used = list(group), set()
     for mutation in ctx.mutations:
         per = round(need * shares[mutation] / total)
         for strand, take in (("+", per // 2), ("-", per - per // 2)):
-            for rec in by_cell.get((mutation, strand), [])[:take]:
-                chosen.append(rec)
-                used.add(id(rec))
+            avail = by_cell.get((mutation, strand), [])
+            take = max(take, min(floor, len(avail)))
+            for rec in avail[:take]:
+                if id(rec) not in used:
+                    chosen.append(rec)
+                    used.add(id(rec))
     # Top up from whatever is left. The per-cell quota can run dry, and a short submission loses
     # term 1 linearly — that silently produced a 137-row build during development.
     if len(chosen) < n_rows:
