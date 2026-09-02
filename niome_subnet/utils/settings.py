@@ -48,6 +48,25 @@ DISTRIBUTION_FIDELITY_PATH = "data/distribution_fidelity_summary.json"
 KMER_CACHE_DIR = "data/kmer_cache"
 
 
+# ---- Miner workspace -----
+# The miner keeps its own artifacts out of data/, which belongs to the validation pipeline: every
+# stage there communicates through these fixed filenames, and truncate_submission rewrites
+# data/submission.json in place. A miner writing data/contract.json would silently replace the
+# contract a co-located validator is scoring against — the miner receives an unstamped contract
+# (seed 0), so the validator would then score every submission under seed 0.
+#
+# Only the reference genome is shared, read-only: it is ~130 MB, identical for both roles, and
+# downloaded once by scripts/run_validator.sh. Point MINER_GENOME_PATH elsewhere to keep it
+# outside data/ as well.
+MINER_DIR = os.getenv("NIOME_MINER_DIR", "miner_data")
+MINER_CONTRACT_PATH = f"{MINER_DIR}/contract.json"
+MINER_HBB_REFERENCE_PATH = f"{MINER_DIR}/hbb_reference.json"
+MINER_CELL_TYPES_PATH = f"{MINER_DIR}/cell_types.json"
+MINER_LAST_UPLOAD_PATH = f"{MINER_DIR}/last_upload.json"
+MINER_OUTPUT_PATH = f"{MINER_DIR}/submission.json"
+MINER_GENOME_PATH = os.getenv("NIOME_GENOME_PATH", CHR11_PATH)
+
+
 # ---- Timeout Values -----
 TASK_REQUEST_TIMEOUT = 60  # seconds
 BASE_DELAY_SECONDS = 2  # seconds
