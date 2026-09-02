@@ -307,6 +307,11 @@ class AllCutConfig:
     score_cap: int = 2500              # exact stage-2 scoring is only worth it on the ranked head
     bank_keep: int = 300_000
     pool_target: int = 8               # stop the Cas9 scan at this multiple of the rows needed
+    # Mutation apportionment for the Cas9 half. ``weight_exponent`` skews the smooth path;
+    # ``light_cell_rows`` (when set) replaces it with a hard per-light-cell quota. Both are measured
+    # and deliberately left at the shipped behaviour — see assemble() and AllHdrConfig.
+    weight_exponent: float = 1.25
+    light_cell_rows: int | None = None
     cas9_cell_floor: int = 6           # min Cas9 rows per (mutation, strand) cell, so a skewed
                                        # mutation weight or a narrow clean band cannot empty a
                                        # stage-5 cell at a balanced mix (clamped to an even share)
@@ -502,7 +507,23 @@ def assemble(group: list[dict], cas9: list[dict], contract: dict, ctx, cfg: AllC
     for rows in by_cell.values():
         rows.sort(key=lambda r: -r["weighted_score"])
     weights = contract.get("mutation_weights", {})
-    shares = {m: max(weights.get(m, 1.0), 1e-9) ** 1.25 for m in ctx.mutations}
+    # ``light_cell_rows`` replaces the smooth weight apportionment with a hard split: every mutation
+    # but the heaviest gets exactly this many rows per (mutation, strand) cell, and the heaviest
+    # takes the rest. The exponent form below only ever reaches a modest skew — at mutation_weights
+    # 1.2/0.65 the shipped 1.25 gives 102/48 of the Cas9 half — and stage 5 needs nothing from a
+    # light cell beyond being non-empty, so every light row above the floor looks like
+    # (w_heavy - w_light) of total_weighted_score given away.
+    #
+    # It is not, and this is **measured off**: the rows are given away to stage 5's
+    # mutation-coverage entropy instead. Every backend contract has exactly 2 mutations, so capping
+    # the light one drives that term to its floor and fidelity falls faster than weighted rises.
+    # Swept over 4 cell types x 5 settings, no rank moved in any of 20 builds. The full table and
+    # the reason to revisit it (only after the base structural score is fixed) are on
+    # ``AllHdrConfig.light_cell_rows`` in all_hdr.py. None keeps the exponent path.
+    # getattr because assemble is shared with all_hdr's AllHdrConfig (see cas9_cell_floor).
+    light_cell_rows = getattr(cfg, "light_cell_rows", None)
+    exponent = getattr(cfg, "weight_exponent", 1.25)
+    shares = {m: max(weights.get(m, 1.0), 1e-9) ** exponent for m in ctx.mutations}
     total = sum(shares.values())
     # Floor per cell so the mutation-weight apportionment cannot starve a stage-5 cell to zero: an
     # empty (mutation, cas, strand) cell zeroes one of stage 5's six ratios (~0.03x on the whole
@@ -513,8 +534,15 @@ def assemble(group: list[dict], cas9: list[dict], contract: dict, ctx, cfg: AllC
     # hotkeys down on their next restart). 6 matches AllCutConfig's default.
     floor = min(getattr(cfg, "cas9_cell_floor", 6), max(1, need // max(1, len(by_cell))))
     chosen, used = list(group), set()
+    if light_cell_rows is None:
+        quota = {m: round(need * shares[m] / total) for m in ctx.mutations}
+    else:
+        heavy = max(ctx.mutations, key=lambda m: weights.get(m, 1.0))
+        light = [m for m in ctx.mutations if m != heavy]
+        quota = {m: 2 * light_cell_rows for m in light}
+        quota[heavy] = max(0, need - sum(quota.values()))
     for mutation in ctx.mutations:
-        per = round(need * shares[mutation] / total)
+        per = quota[mutation]
         for strand, take in (("+", per // 2), ("-", per - per // 2)):
             avail = by_cell.get((mutation, strand), [])
             take = max(take, min(floor, len(avail)))

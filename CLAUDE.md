@@ -218,11 +218,16 @@ everywhere, and that is the switch to reach for if the bet is judged wrong.
 
 Three regimes, and the reason there is no middle:
 
-| regime | condition | `consistency_factor` |
-|---|---|---|
-| 1 | HDR-clean seed (in the band) | exactly 1.0 |
-| 2 | cut-clean, HDR-dirty | ~0.26 |
-| 3 | cut-dirty | ~0.10 |
+| regime | condition | `consistency_factor` | seeds of 900 (measured, group 80) |
+|---|---|---|---|
+| 1 | HDR-clean seed (in the band) | exactly 1.0 | 13 (K562/HUDEP-2/CD34+), 7 (HEK293) |
+| 2 | cut-clean, HDR-dirty | **0.123-0.138** | **5-6** (HEK293: **0**) |
+| 3 | cut-dirty | ~0.10 | 881-882 |
+
+Regime 2 was written here as ~0.26 and is measured at 0.123-0.138 — and it is economically dead
+either way: it covers 5-6 seeds of 900 for all-HDR (cut-clean is 18-19 total, and 13 of those *are*
+the band), against all-cut's ~560. At 0.138 a full all-cut-style floor scores ~57, below the
+current-regime rank-10 cutoff of 62-86, which is why all-cut never places (see the fleet section).
 
 HDR-clean ⊂ cut-clean, so all-HDR gives up all-cut's wide regime-2 floor to buy regime 1. **Two
 attempts to have both were falsified, don't repeat them:** a *combined* construction cannot, because
@@ -245,13 +250,39 @@ Per-cell tuning lives in `all_hdr.CELL_CONFIG`; `AllHdrConfig` holds the shared 
 
 | cell type | band default | group | `main_max_fail` | band width | build (cold/warm) |
 |---|---|---|---|---|---|
-| K562 / HUDEP-2 / CD34+_HSPC | 700-799 / 800-899 / 500-599 | 100 | 45 | 12-13 | ~116 s / ~24 s |
+| K562 / HUDEP-2 / CD34+_HSPC | 700-799 / 800-899 / 500-599 | 80 | 45 | 13 | ~27 s warm |
 | HEK293 | 300-399 | 80 | 48 | 7 | ~32 s / ~3 s |
 
-`group_size` is the **fidelity** lever, not a score lever. It sets the cas mix directly (group 100 →
-100/150 rows), and stage 5's cas-coverage entropy term is what moves: group 42 → 100 on the
-erythroid types took the spike round 117.1 → 121.8 (+4.7). On HEK293 the same sweep is much larger,
-because it started from a worse mix:
+**`group_size` is 80 on a payout measurement that overrides an earlier score measurement.** It sets
+the cas mix directly, and trades two things that pull opposite ways — band width (spike *frequency*)
+against stage 5's cas-coverage entropy (spike *score*):
+
+| | g42 | g60 | g80 | g100 |
+|---|---|---|---|---|
+| band, erythroid mean (56/56 pairs, monotone) | 14.6 | 13.7 | **13.0** | 12.1 |
+| band, HEK293 | 8.3 | 7.3 | **7.2** | 6.5 |
+| fidelity | 0.89 | 0.93 | **0.96** | 0.976 |
+| **E[pay] aggregate** | 0.0490 | 0.0583 | **0.0598** | 0.0524 |
+
+Priced over 54 current-regime fields × 25 contracts at the k=1 case, group 80 is **+14.2%** on
+expected payout over group 100, and best on K562, HUDEP-2 and CD34+_HSPC (HEK293's g42 edge is +2%,
+inside noise). `total_weighted_score` moves slightly the *other* way (K562 258 at g42 vs 250 at
+g100) because a smaller group means more Cas9 rows and those score better structurally — so 80
+gains a little on band and weighted and gives up only fidelity.
+
+**Two sampling traps this went through; don't repeat them.** Scoring against a handful of single
+fields says group 42 wins by +32% — but those fields were all above their cell type's median cutoff,
+and on a hard field the k=1 hit doesn't place, so payout rides on the k=2 term which scales as
+`band²` and favours wide bands. Sampling fields across *all* backend history then says the opposite,
+because the subnet ran at 29-44 miners/task historically against **248 today**, and those low cutoffs
+make every config look like it places. Only current-regime fields decide anything.
+
+The superseded note, kept because the number is still true: group 42 → 100 was taken on spike-round
+*score*, 117.1 → 121.8 (+4.7). It is the wrong objective — `SCORE_DISTRIBUTION` is a step function,
+so a score gain crossing no rank threshold pays nothing while the narrower band costs frequency
+every round.
+
+On HEK293 the group sweep by fidelity is much larger, because it started from a worse mix:
 
 | group | cas12a/cas9 | band | cells | spike cons | fidelity | weighted | spike final |
 |---|---|---|---|---|---|---|---|
@@ -261,9 +292,10 @@ because it started from a worse mix:
 | 80 | 80/170 | 7 | 8/8 | 1.000 | 0.924 | 318 | 294 |
 | 100 | 100/150 | 6 | 8/8 | 1.000 | 0.939 | 308 | 289 |
 
-Group 80 ships: fidelity 0.924 against the leaders' 0.947 median on their placing HEK293 rounds
-(weighted 288, consistency 0.552), and its 7-seed band is hit ~17% more often than group 100's 6 for
-the 0.015 fidelity given up. **A larger group is not free but is cheap:** weighted drifts 326 → 308
+Group 80 ships (and is now the shared default): fidelity 0.924 against the leaders' 0.947 median on
+their placing HEK293 rounds (weighted 288, consistency 0.552), and its 7-seed band is hit ~17% more
+often than group 100's 6 for the 0.015 fidelity given up — the same frequency-over-score trade the
+payout table above makes for every cell type. **A larger group is not free but is cheap:** weighted drifts 326 → 308
 because the added Cas12a rows score below the Cas9 rows they displace, and the band narrows — which
 *helps* the Cas9 fill, since `0.37**6` is an easier target than `0.37**10`.
 
@@ -324,6 +356,81 @@ likewise aliases `cas12a_max_fail` to its own `main_max_fail` as a property, so 
 `assemble` also scores Cas9 candidates **per cell** (`score_cap // len(by_cell)`, plus a per-cell
 floor) rather than globally: a global cap dropped whole stage-5 cells once the mix was balanced, and
 an empty (mutation × cas × strand) cell costs roughly a 0.03x multiplier on the entire score.
+
+#### What the competition actually does, and the floor nobody escapes
+
+Read this before designing a new construction. A long session of hypotheses died here, and the
+falsified ones are listed at the end so they are not re-run.
+
+**There are two scoring regimes and they are not comparable.** Join any score row to its task's
+seed count before using it:
+
+| regime | tasks | rows | max `consistency_factor` ever | #≥0.90 | #≥0.70 |
+|---|---|---|---|---|---|
+| 1 seed (to 2026-08-24) | 291 | 19,591 | **1.000** | 246 | 290 |
+| 3 seeds (current) | 52 | 13,158 | **0.875** | **0** | **6** |
+
+In the single-seed era the seed was knowable, so the whole field converged on it: rank-1..8 medians
+climbed 0.33 → 0.40 → 0.65 → 0.99 over ten days, ending with almost everyone at 1.000. Splitting
+into three seeds stamped after broadcast is what broke that. **Any analysis that mixes the two eras
+will invent a mechanism that does not exist** — filtering on the *score row's* `created_at` is not
+enough, because single-seed tasks were still being scored after the switch.
+
+**The ~0.10 floor is arithmetic, not a design failure.**
+`cons = 0.7·max(avg_r2, 0) + 0.3·(1 - avg_nmae)`. Off a band seed the three targets are
+constant-probability Bernoulli noise, the forest overfits to *negative* R² (measured -0.12, -0.21,
+-0.44 → avg -0.26, clipped to 0), and the nmae term is pinned by `is_hdr`: `P(HDR)` can only span
+[0.33, 0.59] because `hdr_w = HDR_BASE + 0.35·energy` with energy clamped at 1.0, so that target is
+always near a fair coin and its nmae is ~0.94. That forces `avg_nmae ≈ 0.63` and a floor of
+`0.3 × 0.37 ≈ 0.11`. Measured 0.092-0.101 for *every* 250-row submission tried — all-HDR, `mh`,
+`mh_any`, `shaped` at any `gc_spread`, and the naive baseline. The population median for 250-row
+submissions in the 3-seed regime is **0.101**, i.e. identical to ours. **Nobody has a better floor.**
+
+Round score averages the three seeds, so with a floor of 0.10 the only reachable values are:
+
+| seeds in band | round `consistency_factor` | round final (weighted 230, fid 0.95) |
+|---|---|---|
+| 0 | 0.10 | ~22 |
+| 1 | **0.40** | ~87 |
+| 2 | 0.70 | ~153 |
+| 3 | 1.00 | ~219 |
+
+h0 hit one seed on task 9ed335da and scored exactly 0.397 / 86.58, confirming the model. **Never
+quote the single-seed band score (~290) as a round score** — the k=1 value is what places.
+
+**The leaders run our design with more hotkeys.** Grouping current-regime placements by coldkey:
+eight coldkeys hold ~50% of the payout curve (top three alone 40.7%), each running **11-14 hotkeys**,
+and `placed ≈ hotkeys` (12 of 13, 11 of 11, 14 of 14) — the signature of disjoint band windows, the
+same construction shape as [miner.sh](miner.sh). Their placers' median `total_weighted_score` is
+**263** against our 230. All **520** top-10 finishers in the 3-seed regime submit exactly **250
+rows**; small submissions do not exploit stage 4's KFold degeneracy and score *lower* (0.064-0.093).
+
+So the two real gaps are exposure and term 1, not the construction: 11-14 hotkeys covers ~46% of
+rounds against 9 hotkeys' 34%, and h0's rank-12 miss needed weighted 255.7 where it had 223.9. The
+weighted gap is the `base structural` half (`gc_score` 0.938, `dist_score` 0.840,
+`offtarget_factor` already a perfect 1.0) — the mutation-skew route to it is measured and dead, the
+distance/GC route is untested and does not trade against fidelity.
+
+**Seeds are uniform random.** Min-gap between the closest two of the three seeds: median 94 observed
+against 93 simulated, and `<=150` at 66% against 70% expected. 66% of rounds do have two seeds within
+150 — but that is chance, and it does not help, because the band is ~13 *scattered* seeds however
+wide the window it was searched in.
+
+**Falsified — do not re-run these:**
+
+| hypothesis | result |
+|---|---|
+| wider screening window → wider band | clean count is 13/12/11/9 at widths 100/150/200/300, and **11-16 over the full 900**. Band size is set by how many rows must agree, not the window. Wider costs hotkeys (only 6 tile 900 at width 150) and coverage falls 117 → 72 seeds. |
+| graceful predictability (`mh` rule degrades smoothly) | collapses to median **0.097** across 40 seeds, same as `hdr`. The `mh` coin is redrawn per seed, so compliance is not a property of the design. |
+| feature variance (`gc_spread`, `shaped` strategy) | floor unchanged (0.095 → 0.099 → 0.098 → 0.096 at `gc_spread` 0 → 0.45) while weighted drops 230 → 206. `shaped` reaches 0.49-0.53 on its *build* seed only. |
+| small submissions → degenerate R² = 1.0 | every one of 520 top-10 finishers has 250 rows; the few sub-250 submissions score 0.064-0.093. |
+| recover cut-clean seeds inside all-HDR's pools | ceiling **34 of 900** (against all-cut's ~560). Only **82 of 60,000** bank guides are HDR-clean on the band and 80 are needed, so the Cas12a min-union has no freedom. Cas9 min-union on cut does work (union 498 → 394) and is swamped. |
+| no-MH_NHEJ (`not_mhnhej`) for a wider band | band **45** (3.5x, real — the rule holds on all 45) but only one pinned target → cons **0.123**. Even all three seeds in band scores 25.7, under every cutoff. E[pay] exactly 0. |
+| the rule ladder generally | `hdr` 3 targets → 1.000 / band 13; `not_hdr` 2 targets → 0.577 / band 12; `not_mhnhej` 1 target → 0.123 / band 45. Frequency×value is a wash and `hdr` is the best point. |
+
+`not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
+range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round
+is one band hit plus two floor seeds — not a flat construction.
 
 ### Validation pipeline — stages talk through files, not return values
 

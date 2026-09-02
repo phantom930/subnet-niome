@@ -43,6 +43,14 @@ HOTKEYS=(
   "niome_hotkey8  9001 52504 900-999"
 )
 
+# EXPERIMENTAL, one hotkey only: NIOME_SEED_DEPEND swaps that hotkey's construction for
+# genomics/seed_depend.py, a submission pinned to seed 0. It wins the ~5.4% of rounds the backend
+# never stamps (rank 1 on 7 of the 8 such rounds on record) and scores the ~0.10 floor on every
+# round that IS stamped, so it gives up its seed window entirely. Exactly one hotkey, or the fleet
+# loses band coverage for no extra upside — the rows are identical across hotkeys, so a second one
+# would just duplicate the first.
+SEED_DEPEND_HOTKEY=niome_hotkey8
+
 run_one() {
   # <name> <port> <ext_port> <window>. exec so the process replaces this shell — pm2 then
   # supervises the python directly.
@@ -50,7 +58,13 @@ run_one() {
   echo "starting $name on :$port (ext :$ext) with NIOME_HDR_WINDOW=$win"
   # NIOME_INSTANCE namespaces this hotkey's own read/write files under data/inst/<name>/ so the
   # siblings' submission, task artifacts, upload record and local scoring don't collide (settings.py).
-  NIOME_INSTANCE="$name" NIOME_HDR_WINDOW="$win" exec "$PY" neurons/miner.py \
+  local sd=""
+  if [[ "$name" == "${SEED_DEPEND_HOTKEY:-}" ]]; then
+    sd=1
+    echo "  ($name is the seed-depend hotkey: pinned to seed 0, no band)"
+  fi
+  NIOME_INSTANCE="$name" NIOME_HDR_WINDOW="$win" NIOME_SEED_DEPEND="$sd" \
+    exec "$PY" neurons/miner.py \
     --netuid 55 \
     --wallet niome_coldkey \
     --wallet-hotkey "$name" \

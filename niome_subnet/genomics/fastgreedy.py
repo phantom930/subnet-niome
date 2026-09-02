@@ -33,10 +33,20 @@ except Exception:
 
 
 class FastGreedy:
-    def __init__(self, candidates, window_lo=100, window_hi=999, per_cell_min=8):
+    def __init__(self, candidates, window_lo=100, window_hi=999, per_cell_min=8, caps=None):
+        """``caps`` optionally bounds how many picks a (mutation, cas_system, strand) cell may take.
+
+        The min-union objective is blind to ``mutation_weight``, so on a contract with a heavy and a
+        light mutation it lands near a 50/50 split — and every light row costs
+        ``weight_heavy - weight_light`` of ``total_weighted_score`` for nothing stage 5 needs beyond
+        a non-empty cell. Capping the light cells pushes the remainder onto the heavy mutation.
+        Floors still win: a cap below a cell's floor is raised to it, so a cap can never empty a
+        stage-5 cell. Passing None keeps the unconstrained selection.
+        """
         self.n = len(candidates)
         self.span = window_hi - window_lo + 1
         self.per_cell_min = per_cell_min
+        self.caps_by_key = dict(caps) if caps else None
         maxf = max(1, max(len(c["fails"]) for c in candidates))
         # Padding points at the sentinel slot `span`, which is held covered forever, so a short
         # fail list contributes exactly its real length and nothing more.
@@ -51,13 +61,28 @@ class FastGreedy:
         self.n_cells = len(order)
         self.available = Counter(order[c] for c in cells)
         self.fail_lists = [np.asarray(c["fails"], dtype=np.int32) - window_lo for c in candidates]
+        self.caps = ({order[k]: v for k, v in self.caps_by_key.items() if k in order}
+                     if self.caps_by_key else None)
 
     def _floors(self, group_size):
         per = min(self.per_cell_min, max(1, group_size // max(1, self.n_cells)))
         return {k: min(per, self.available[k]) for k in self.available}
 
+    def _caps(self, group_size, floor):
+        """Effective per-cell ceilings: never below the cell's floor, and never so tight in total
+        that ``group_size`` becomes unreachable — an under-filled group would change the
+        construction silently rather than decline."""
+        if not self.caps:
+            return None
+        caps = {c: min(self.available[c], max(self.caps.get(c, self.available[c]), floor.get(c, 0)))
+                for c in self.available}
+        if sum(caps.values()) < group_size:
+            return None
+        return caps
+
     def build(self, group_size, rng=None):
         floor = self._floors(group_size)
+        caps = self._caps(group_size, floor)
         uncovered = xp.ones(self.span + 1, dtype=xp.bool_)
         uncovered[self.span] = False                      # the sentinel: padding costs nothing
         chosen = []
@@ -79,6 +104,10 @@ class FastGreedy:
                 for c in need:
                     allowed |= (self.cell_id == c)
                 cost = xp.where(allowed, cost, BIG)
+            if caps is not None:
+                full = [c for c, k in caps.items() if cell_count[c] >= k]
+                for c in full:
+                    cost = xp.where(self.cell_id == c, BIG, cost)
             if bool((cost >= BIG).all()):
                 break
             if rng is None:

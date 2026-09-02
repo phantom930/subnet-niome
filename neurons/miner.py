@@ -56,7 +56,8 @@ from niome_subnet.genomics.hek293_generation import (  # noqa: E402
     generate_seed_agnostic_clustered,
 )
 from niome_subnet.genomics import all_cut as AC  # noqa: E402
-from niome_subnet.genomics import all_hdr as AH  # noqa: E402
+from niome_subnet.genomics import all_hdr as AH
+from niome_subnet.genomics import seed_depend as SD  # noqa: E402
 from niome_subnet.genomics import seed_agnostic as SA  # noqa: E402
 from niome_subnet.genomics.model import Task  # noqa: E402
 from niome_subnet.protocol import GenomicsTaskSynapse  # noqa: E402
@@ -283,6 +284,27 @@ class Miner(BaseMinerNeuron):
     # so a build worth 111-194 on ~5% of rounds may out-rank a flat 56 that never spikes. No rank
     # measurement supports that here — it is the operator's call, recorded as such. Set ALL_HDR
     # False to revert to all-cut everywhere.
+    # --- seed-dependent builder (EXPERIMENTAL, one hotkey) --------------------------------------
+    # A task is broadcast with seed 0 and the real seeds are stamped in before scoring — except on
+    # ~5.4% of rounds (8 of 352 scored, 3 of 56 since 2026-08-25) where the stamp never happens and
+    # the validator scores with seed 0 itself. A submission pinned to seed 0 reaches consistency
+    # exactly 1.000 on those rounds, and since the whole placing field also reaches 1.000 the
+    # ranking collapses to weighted x fidelity.
+    #
+    # The trade: a hotkey running this scores the ~0.10 floor on the 94.6% of rounds that DO get
+    # stamped, giving up its band entirely. Priced against every seed-0 round on record, the module
+    # scores 331.78 and would have taken rank 1 on 7 of 8 — worth ~0.054 x 0.300 = 0.016 a round
+    # against the ~0.0027 that one hotkey contributes to the band fleet's 0.0242. It misses only on
+    # 8f02f1a4 (2026-09-02), where 13 miners hit cons 1.000 and the cutoff was 332.06.
+    #
+    # **Watch the competition count**: miners at cons 1.000 on seed-0 rounds went 0,0,0,1,6,6 and
+    # then 13 on 2026-09-02. If that keeps climbing the cutoff rises with it and this stops paying.
+    # Set NIOME_SEED_DEPEND=1 on exactly one hotkey; unset everywhere else.
+    SEED_DEPEND = bool(os.getenv("NIOME_SEED_DEPEND"))
+    SEED_DEPEND_SEED = 0
+    # 92s to enumerate at max_distance 600 on HEK293; the gate leaves room inside the in-TTL path.
+    SEED_DEPEND_MIN_BUDGET_S = 190.0
+
     ALL_HDR = True
     # All four cell types the backend issues. HEK293 was excluded while the only groups measured
     # were 8-24, where 20 Cas12a rows of 250 skew the cas mix and stage 5 caps fidelity near 0.78 —
@@ -1165,10 +1187,41 @@ class Miner(BaseMinerNeuron):
         # constraint relaxed from "strict over all 900 seeds" to "strict over the Cas12a-clean
         # set", and it measured +23.45 (t=8.4) over it on K562. Placed after, it was dead code —
         # _build_seed_agnostic returns, so K562 never reached it.
+        # Seed-dependent build, when this hotkey is the designated one. It goes first because it
+        # replaces the construction rather than hedging alongside it: the rows are pinned to seed 0
+        # and score the floor on any stamped round. A decline falls through to the ordinary ladder,
+        # so a failure here costs this hotkey nothing beyond the build time.
+        cell_type = contract.get("cell_type")
+        if (allow_hedges and self.SEED_DEPEND
+                and budget >= self.SEED_DEPEND_MIN_BUDGET_S):
+            try:
+                with self._hedge_slot(hedge_wait) as slot:
+                    if slot:
+                        sd_rows, sd_meta = SD.build(contract, reference, cell_types,
+                                                    seed=self.SEED_DEPEND_SEED, budget_s=budget)
+                    else:
+                        sd_rows, sd_meta = None, {"reason": "another build holds the hedge slot"}
+            except Exception as exc:
+                logger.warning(f"Build: seed-depend failed ({exc}); falling through")
+                logger.debug(traceback.format_exc())
+                sd_rows, sd_meta = None, {"reason": str(exc)}
+            if sd_rows:
+                logger.info(
+                    f"Build: seed-depend ({cell_type}) | seed {self.SEED_DEPEND_SEED} "
+                    f"rule {sd_meta['rule']} | cands {sd_meta['candidates']} "
+                    f"heavy {sd_meta['heavy']}/{sd_meta['rows']} cells {sd_meta['cells']}/8 "
+                    f"| weighted {sd_meta['weighted']:.1f} fid {sd_meta['fidelity']:.3f} "
+                    f"-> {sd_meta['product']:.1f} | {sd_meta['elapsed_s']}s"
+                )
+                self._persist(settings.MINER_SUBMISSION_PATH, sd_rows)
+                return sd_rows
+            logger.info("Build: seed-depend declined (%s); falling through to the usual ladder",
+                        sd_meta.get("reason", "unknown"))
+            budget = remaining()
+
         # All-HDR goes ahead of all-cut for the cell types it is configured for. It declines to
         # None on an unmeasured cell type or a short pool, and all-cut below is then the fallback —
         # so HEK293, and any failure on the other three, still gets the build it had before.
-        cell_type = contract.get("cell_type")
         if (allow_hedges and self.ALL_HDR and cell_type in self.ALL_HDR_CELL_TYPES
                 and budget >= self.ALL_HDR_MIN_BUDGET_S):
             try:

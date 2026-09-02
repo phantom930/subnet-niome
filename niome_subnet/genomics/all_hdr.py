@@ -93,12 +93,11 @@ CELL_CONFIG: dict[str, dict] = {
     "CD34+_HSPC": {"hdr_range": (500, 599), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "K562": {"hdr_range": (700, 799), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "HUDEP-2": {"hdr_range": (800, 899), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
-    # HEK293 carries its own group and screen. group_size 80 rather than 100 is the fidelity/band
-    # trade in the docstring table; main_max_fail 48 of 100 rather than 45 is what the sweep
+    # HEK293 carries its own screen: main_max_fail 48 of 100 rather than 45 is what its sweep
     # measured at, and the bank is thin enough here (0.041% of guides) that tightening it further
-    # starves the min-union step.
+    # starves the min-union step. Its group_size is the shared 80.
     "HEK293": {"hdr_range": (300, 399), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95),
-               "group_size": 80, "main_max_fail": 48},
+               "main_max_fail": 48},
 }
 
 
@@ -106,14 +105,44 @@ CELL_CONFIG: dict[str, dict] = {
 class AllHdrConfig:
     """Every value here is measured; see the module docstring for the sweep it came from."""
 
-    # 100/150 (40% Cas12a) rather than 42/208: balances the cas mix so stage 5's cas-coverage
-    # entropy term reaches ~1.0 instead of 0.65, lifting fidelity on the spike seed from 0.88 to
-    # 0.97 — the leaders hold 0.93 on their placing rounds, and the spike round is what places under
-    # SCORING_SYSTEM="top". The HDR spike is unchanged (consistency stays exactly 1.0 on the band).
-    # Measured over a clean 40-seed sample: spike-round score 121.8 vs 117.1 at group 42 (+4.7); the
-    # non-band floor is unchanged (~30), so the gain rides entirely on the placing rounds. A bigger
-    # group narrows the HDR band (~10 seeds at 100), which the Cas9 half still fills.
-    group_size: int = 100
+    # 80/170. This is a *payout* optimum, and it deliberately overrides an earlier *score* optimum
+    # — the two disagree, which is the whole reason this comment is long.
+    #
+    # group_size trades two things against each other, both measured:
+    #   band width  (spike frequency)  42:14.6  60:13.7  80:13.0  100:12.1   erythroid means
+    #                                  42: 8.3  60: 7.3  80: 7.2  100: 6.5   HEK293
+    #     — monotone, 56/56 (contract, window) pairs, no exceptions.
+    #   fidelity    (spike score)      42:0.89  60:0.93  80:0.96  100:0.976
+    #     — the cas mix: 42/208 drives stage 5's cas-coverage entropy to ~0.65, 100/150 to ~1.0.
+    # weighted moves slightly the *other* way (K562 258 at 42 vs 250 at 100), because a smaller
+    # group means more Cas9 rows and Cas9 rows score better structurally. So 80 gains a little on
+    # band and weighted and gives up only fidelity.
+    #
+    # Priced as expected payout over 9 disjoint hotkeys — 54 current-regime fields x 25 contracts,
+    # each round scored at its k=1 case (one of three seeds in the band, the case that decides
+    # placement):
+    #
+    #   cell            g42      g60      g80     g100    best
+    #   K562         0.0079   0.0135   0.0137   0.0116     g80
+    #   HUDEP-2      0.0104   0.0122   0.0126   0.0111     g80
+    #   CD34+_HSPC   0.0106   0.0126   0.0138   0.0123     g80
+    #   HEK293       0.0201   0.0200   0.0197   0.0173     g42 (+2%, inside noise)
+    #   AGGREGATE    0.0490   0.0583   0.0598   0.0524     g80  (+14.2% over 100)
+    #
+    # **Two traps this measurement fell into; do not repeat either.**
+    #  1. Scoring against a handful of single fields said group 42 wins by +32%. Those five fields
+    #     were all above their cell type's median cutoff. On a hard field the k=1 hit does not
+    #     place, so payout rides on the k=2 term, which scales as band**2 and favours wide bands.
+    #     Sample many fields, not one.
+    #  2. Sampling fields across all backend history says the opposite again, because the subnet
+    #     ran at 29-44 miners/task historically against 248 today, and those low cutoffs make every
+    #     config look like it places. Only current-regime fields are decision-relevant.
+    #
+    # The superseded note: group 42 -> 100 was taken on spike-round *score*, 117.1 -> 121.8 (+4.7),
+    # which is real and still true. It is the wrong objective — SCORE_DISTRIBUTION is a step
+    # function, so a score gain that crosses no rank threshold pays nothing while the narrower band
+    # costs frequency on every round.
+    group_size: int = 80
     hdr_range: tuple[int, int] = (500, 599)
     # Fails tolerated in the band when banking a Cas12a candidate. 45 of 100 is deliberately loose:
     # the min-union step is what produces the clean band, and a tighter screen shrinks the pool it
@@ -128,6 +157,70 @@ class AllHdrConfig:
     pool_target: int = 8
     restarts: int = 12
     per_cell_min: int = 2
+    # Mutation apportionment. ``light_cell_rows = 6`` is **on**, on a 210-config measurement that
+    # supersedes the earlier sweep recorded below; ``light_group_cells`` stays off (group caps were
+    # harmful at every setting).
+    #   light_group_cells — cap per light (mutation, Cas12a, strand) cell in the min-union group
+    #   light_cell_rows   — rows per light (mutation, Cas9, strand) cell in assemble
+    #   weight_exponent   — the exponent in assemble's smooth mutation_weight apportionment
+    #
+    # The motivation was real: the min-union group is blind to mutation_weight and lands near
+    # 50/50, so on 9ed335da we shipped 158 of 250 rows on the heavy mutation while the miners
+    # taking ranks 8-11 — identical consistency 0.405, *worse* fidelity 0.940 — held ~239, and that
+    # 39-point total_weighted_score gap was the whole distance between rank 8 and our rank 12 on
+    # the fleet's only spike to date.
+    #
+    # **The knobs close the gap and it does not help.** Sweep over 4 cell types x 5 settings,
+    # ranked on each task's own real field, scoring the k=1 round (one of three seeds in the band —
+    # the case that actually decides payout):
+    #
+    #   cell / task          setting     heavy    fid  weighted  k=1 final   d      rank
+    #   K562 9ed335da        None/None     158  0.973     223.9       87.2   -        11
+    #                        None/6        194  0.921     242.3       89.3  +2.1      11
+    #                        2/4           238  0.764     263.7       80.6  -6.6      11
+    #   K562 37737cb7        None/6        185  0.933     214.2       79.9  +1.9      10
+    #   CD34+_HSPC           None/6        188  0.932     293.7      109.5  +4.7      11
+    #   HUDEP-2              None/6        191  0.928     243.4       90.4  +2.2      10
+    #   HEK293               None/6        208  0.871     253.6       88.3  -0.4      11
+    #
+    # weighted does climb to 263-326 as intended, but stage 5's mutation-coverage entropy falls
+    # faster: every backend contract carries exactly 2 mutations, so capping the light one drives
+    # that term to its floor. **No rank moved in any of the 20 builds.** Group caps are strictly
+    # harmful everywhere; the best setting is light_cell_rows=6 with no group cap, worth +2 to +4.7
+    # on three cell types and -0.4 on HEK293 (already skewed to 182/250 at its group 80, because
+    # its 170-row Cas9 half is what the exponent governs).
+    #
+    # **Superseded.** That first sweep held group size and contract sample fixed and priced the k=1
+    # final rather than expected payout. Re-measured over 210 configs — 12 contracts across all four
+    # cell types x max_distance {400,150,100} x group {42,60,80} x light {None,6} — and priced as
+    # E[pay] against each cell type's own current-regime fields, with builds that DECLINE charged as
+    # zero (a decline drops to all-cut, which never places):
+    #
+    #   maxd  grp  light  built  E|built  E[eff]   vs shipped
+    #    400   80      6     12   0.0242  0.0242      +15.7%   <- shipped
+    #    150   80      6     12   0.0237  0.0237      +13.4%
+    #    100   80      6     11   0.0257  0.0235      +12.7%   declines on HEK293/16710fdc
+    #    100   80   None     11   0.0239  0.0219       +4.7%
+    #    400   80   None     12   0.0209  0.0209          --
+    #
+    # Two traps in that table. max_distance 100 has the best score *among builds* and is worse
+    # overall, because it fails to build on 1 of 12 contracts — always charge declines. And the
+    # effect is spread-dependent: paired over 105 configs, light=6 is -0.0008 E[pay] at weight
+    # spread <= 2.0 but +0.0026 at 2.0-2.6 and +0.0023 above 2.6. The original rejection was
+    # measured on K562 at spread 1.85, the one bucket where it genuinely loses. Gating on spread
+    # > 2.0 measured 0.0240, no better than applying it unconditionally, so it is not gated.
+    #
+    # The cost is real: fidelity falls 0.948 -> 0.889, giving up the one term where this fleet led
+    # the field. E[pay] says take it anyway. Solving their row backwards, ranks 8-11 reach
+    # weighted 262.8 at fidelity 0.940 with only ~180 heavy rows, which needs base structural
+    # ~1.005 against our 0.894 — they have near-perfect gc_score and dist_score, not a heavier
+    # skew. dist_score is the lever that does not trade: stage 5 measures mutation/cas/strand/joint
+    # coverage plus k-mer and guide diversity, and neither distance nor GC appears in it. With
+    # base at 1.0, light_cell_rows=6 then reaches 99.2 on 9ed335da — rank 10 — so these knobs are
+    # worth revisiting in that order, and only in that order.
+    light_group_cells: int | None = None
+    light_cell_rows: int = 6
+    weight_exponent: float = 1.25
 
     @property
     def cas12a_max_fail(self) -> int:
@@ -241,6 +334,21 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
     return found
 
 
+def _group_caps(contract: dict, ctx, cfg: AllHdrConfig) -> dict | None:
+    """Per-cell ceilings for the min-union group: light mutations capped, the heaviest left free.
+
+    Returns None when unset, which is the unconstrained selection the group had before. FastGreedy
+    raises any cap below that cell's floor and ignores the whole cap set if it would make the group
+    size unreachable, so this can narrow the mutation mix but never empty a stage-5 cell.
+    """
+    if cfg.light_group_cells is None:
+        return None
+    weights = contract.get("mutation_weights", {})
+    heavy = max(ctx.mutations, key=lambda m: weights.get(m, 1.0))
+    return {(m, "Cas12a", strand): cfg.light_group_cells
+            for m in ctx.mutations if m != heavy for strand in ("+", "-")}
+
+
 def build_submission(contract: dict, reference: dict, cell_types: dict,
                      cfg: AllHdrConfig | None = None,
                      budget_s: float | None = None) -> tuple[list[dict] | None, dict]:
@@ -273,7 +381,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         return None, meta
 
     selector = FG.FastGreedy(records, window_lo=cfg.start_seed, window_hi=cfg.end_seed,
-                             per_cell_min=cfg.per_cell_min)
+                             per_cell_min=cfg.per_cell_min,
+                             caps=_group_caps(contract, ctx, cfg))
     index, union = selector.best(cfg.group_size, restarts=cfg.restarts)
     group = [records[i] for i in index]
     bad: set[int] = set()
