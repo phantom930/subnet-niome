@@ -1,0 +1,59 @@
+[
+ {
+  "limit": 60000,
+  "band": [
+   307,
+   317,
+   323,
+   327,
+   335,
+   344,
+   350,
+   358,
+   363,
+   371,
+   375,
+   377,
+   379
+  ],
+  "clean": 13,
+  "cas9_pool": 1361,
+  "rows": 250,
+  "cells": 8,
+  "k": 0,
+  "build_s": 25.9,
+  "total_weighted_score": 322.9874744835744,
+  "consistency_factor": 0.099870749885461,
+  "distribution_fidelity_factor": 0.9088173910338847,
+  "final_score": 29.315723746125993
+ },
+ {
+  "limit": 150000,
+  "band": [
+   303,
+   307,
+   342,
+   344,
+   351,
+   354,
+   358,
+   363,
+   364,
+   374,
+   391,
+   393,
+   395,
+   399
+  ],
+  "clean": 14,
+  "cas9_pool": 1369,
+  "rows": 250,
+  "cells": 8,
+  "k": 0,
+  "build_s": 51.6,
+  "total_weighted_score": 314.49143461945346,
+  "consistency_factor": 0.09726974740522497,
+  "distribution_fidelity_factor": 0.9081994239488774,
+  "final_score": 27.782276663927338
+ }
+]

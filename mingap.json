@@ -1,0 +1,403 @@
+[
+ {
+  "task_id": "4d385215-547a-46a1-84da-78d63af4e04a",
+  "seeds": [
+   111,
+   518,
+   589
+  ],
+  "min_gap": 71,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-04T04:31:23.813872",
+  "miners": 248,
+  "n_high": 2,
+  "n_mid": 7,
+  "max_cons": 0.610107,
+  "coldkeys_high": {
+   "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW": 2
+  },
+  "multi_coldkeys": 1,
+  "max_same_coldkey": 2
+ },
+ {
+  "task_id": "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+  "seeds": [
+   343,
+   567,
+   845
+  ],
+  "min_gap": 224,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-04T02:08:26.508478",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 6,
+  "max_cons": 0.584081,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ },
+ {
+  "task_id": "29488fed-3d55-4b9b-af2e-11708d126306",
+  "seeds": [
+   172,
+   518,
+   906
+  ],
+  "min_gap": 346,
+  "cell_type": "HEK293",
+  "created_at": "2026-09-03T23:43:24.763910",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 4,
+  "max_cons": 0.567213,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ },
+ {
+  "task_id": "999dc89d-7896-4666-a19d-e695047044f2",
+  "seeds": [
+   246,
+   323,
+   546
+  ],
+  "min_gap": 77,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-03T21:19:11.171429",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.659888,
+  "coldkeys_high": {
+   "5Hb2qTU5pnWR4KxceMmaUtvQaFBb9oVFsLxFP8Y5ug2v7Kjf": 1,
+   "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW": 1,
+   "?": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "59e1c168-f11d-4caf-95fa-52d82d347a49",
+  "seeds": [
+   372,
+   496,
+   923
+  ],
+  "min_gap": 124,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-03T18:55:10.784320",
+  "miners": 248,
+  "n_high": 2,
+  "n_mid": 7,
+  "max_cons": 0.656885,
+  "coldkeys_high": {
+   "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU": 1,
+   "5G8nEKEW881E7e64fgcDcTqy7aXaaLPUm5DhXiPtsSW7FUjf": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+  "seeds": [
+   253,
+   453,
+   661
+  ],
+  "min_gap": 200,
+  "cell_type": "K562",
+  "created_at": "2026-09-03T16:31:10.988229",
+  "miners": 248,
+  "n_high": 1,
+  "n_mid": 6,
+  "max_cons": 0.60378,
+  "coldkeys_high": {
+   "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "b9322a5a-1579-492c-bc94-04aded62e54d",
+  "seeds": [
+   157,
+   445,
+   495
+  ],
+  "min_gap": 50,
+  "cell_type": "HEK293",
+  "created_at": "2026-09-03T14:07:12.323670",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 5,
+  "max_cons": 0.586835,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ },
+ {
+  "task_id": "10a08d2c-7772-4780-80be-badaf73d9622",
+  "seeds": [
+   100,
+   491,
+   572
+  ],
+  "min_gap": 81,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-03T11:43:12.501088",
+  "miners": 248,
+  "n_high": 2,
+  "n_mid": 7,
+  "max_cons": 0.664288,
+  "coldkeys_high": {
+   "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR": 1,
+   "?": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "05071346-8862-4a4d-a1be-780c1983e304",
+  "seeds": [
+   429,
+   711,
+   846
+  ],
+  "min_gap": 135,
+  "cell_type": "HUDEP-2",
+  "created_at": "2026-09-03T09:19:13.202904",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.62944,
+  "coldkeys_high": {
+   "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU": 2,
+   "5DfAz4Z6CuB8FE562wkC22RxVMuso3Bshh9j24MLZ4KcAetm": 1
+  },
+  "multi_coldkeys": 1,
+  "max_same_coldkey": 2
+ },
+ {
+  "task_id": "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+  "seeds": [
+   363,
+   674,
+   768
+  ],
+  "min_gap": 94,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-03T06:55:13.677106",
+  "miners": 248,
+  "n_high": 1,
+  "n_mid": 7,
+  "max_cons": 0.604217,
+  "coldkeys_high": {
+   "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "9cf0def4-1e37-4d39-acce-533f54310d23",
+  "seeds": [
+   108,
+   457,
+   666
+  ],
+  "min_gap": 209,
+  "cell_type": "HEK293",
+  "created_at": "2026-09-03T04:31:35.896753",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 6,
+  "max_cons": 0.558287,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ },
+ {
+  "task_id": "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+  "seeds": [
+   159,
+   324,
+   539
+  ],
+  "min_gap": 165,
+  "cell_type": "HUDEP-2",
+  "created_at": "2026-09-03T02:07:12.799666",
+  "miners": 248,
+  "n_high": 1,
+  "n_mid": 6,
+  "max_cons": 0.604206,
+  "coldkeys_high": {
+   "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "9c29702c-68e8-4dae-b9df-c765e108429d",
+  "seeds": [
+   383,
+   431,
+   648
+  ],
+  "min_gap": 48,
+  "cell_type": "HUDEP-2",
+  "created_at": "2026-09-02T23:43:10.015752",
+  "miners": 248,
+  "n_high": 5,
+  "n_mid": 7,
+  "max_cons": 0.679185,
+  "coldkeys_high": {
+   "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW": 2,
+   "?": 2,
+   "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR": 1
+  },
+  "multi_coldkeys": 2,
+  "max_same_coldkey": 2
+ },
+ {
+  "task_id": "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+  "seeds": [
+   100,
+   225,
+   597
+  ],
+  "min_gap": 125,
+  "cell_type": "HUDEP-2",
+  "created_at": "2026-09-02T21:19:11.315494",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.656019,
+  "coldkeys_high": {
+   "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR": 2,
+   "5G8nEKEW881E7e64fgcDcTqy7aXaaLPUm5DhXiPtsSW7FUjf": 1
+  },
+  "multi_coldkeys": 1,
+  "max_same_coldkey": 2
+ },
+ {
+  "task_id": "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+  "seeds": [
+   308,
+   815,
+   845
+  ],
+  "min_gap": 30,
+  "cell_type": "CD34+_HSPC",
+  "created_at": "2026-09-02T14:06:56.355824",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.664993,
+  "coldkeys_high": {
+   "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1": 1,
+   "5DfAz4Z6CuB8FE562wkC22RxVMuso3Bshh9j24MLZ4KcAetm": 1,
+   "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "92280006-3fe8-4d80-ba26-57380770eb54",
+  "seeds": [
+   255,
+   780,
+   934
+  ],
+  "min_gap": 154,
+  "cell_type": "K562",
+  "created_at": "2026-09-01T18:54:56.076173",
+  "miners": 248,
+  "n_high": 1,
+  "n_mid": 5,
+  "max_cons": 0.600803,
+  "coldkeys_high": {
+   "5FqeFF2B7ZQ4sNnSRiKFE3QqAMoVDqwXEgUqY4L3w7bVFDC1": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "9ed335da-2667-4119-9a8b-8bd190b60709",
+  "seeds": [
+   177,
+   710,
+   809
+  ],
+  "min_gap": 99,
+  "cell_type": "K562",
+  "created_at": "2026-09-01T16:30:56.758125",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.648748,
+  "coldkeys_high": {
+   "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1": 1,
+   "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR": 2
+  },
+  "multi_coldkeys": 1,
+  "max_same_coldkey": 2
+ },
+ {
+  "task_id": "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+  "seeds": [
+   265,
+   448,
+   490
+  ],
+  "min_gap": 42,
+  "cell_type": "K562",
+  "created_at": "2026-09-01T14:06:48.706929",
+  "miners": 248,
+  "n_high": 3,
+  "n_mid": 7,
+  "max_cons": 0.663879,
+  "coldkeys_high": {
+   "5G8nEKEW881E7e64fgcDcTqy7aXaaLPUm5DhXiPtsSW7FUjf": 1,
+   "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1": 1,
+   "5FqeFF2B7ZQ4sNnSRiKFE3QqAMoVDqwXEgUqY4L3w7bVFDC1": 1
+  },
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 1
+ },
+ {
+  "task_id": "16710fdc-3529-4b44-9fae-dc22672a141a",
+  "seeds": [
+   391,
+   776,
+   968
+  ],
+  "min_gap": 192,
+  "cell_type": "HEK293",
+  "created_at": "2026-09-01T11:42:44.100055",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 4,
+  "max_cons": 0.590333,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ },
+ {
+  "task_id": "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+  "seeds": [
+   174,
+   718,
+   741
+  ],
+  "min_gap": 23,
+  "cell_type": "HEK293",
+  "created_at": "2026-09-01T09:18:44.038142",
+  "miners": 248,
+  "n_high": 0,
+  "n_mid": 6,
+  "max_cons": 0.570893,
+  "coldkeys_high": {},
+  "multi_coldkeys": 0,
+  "max_same_coldkey": 0
+ }
+]

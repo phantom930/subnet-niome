@@ -1,0 +1,154 @@
+{
+ "spans": [
+  {
+   "hotkey": "5ERJtkrUDLUz5176rcMheB69kcRe8fKwuBaH9eFvPAAURaJk",
+   "coldkey": "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW",
+   "k2": 4,
+   "interval": [
+    428,
+    670
+   ],
+   "span": 242
+  },
+  {
+   "hotkey": "5FR45xkhbHSKUKnW16dNa2B79zNb8zXpJrUx6QSgHNUJS65r",
+   "coldkey": "5G8nEKEW881E7e64fgcDcTqy7aXaaLPUm5DhXiPtsSW7FUjf",
+   "k2": 3,
+   "interval": [
+    396,
+    890
+   ],
+   "span": 494
+  },
+  {
+   "hotkey": "5D2eh5DntQv2od6Max2ERn3hjd18CWv5LBT5YBzdqyZQdf5d",
+   "coldkey": "5G8nEKEW881E7e64fgcDcTqy7aXaaLPUm5DhXiPtsSW7FUjf",
+   "k2": 3,
+   "interval": [
+    225,
+    597
+   ],
+   "span": 372
+  },
+  {
+   "hotkey": "5HZF9AbirCfZhE9R4KH8fy2HQKoMkiYnMWdFYuAztdWYxMBH",
+   "coldkey": "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU",
+   "k2": 2,
+   "interval": [
+    324,
+    619
+   ],
+   "span": 295
+  },
+  {
+   "hotkey": "5G3bTVRofa3vib2U6idTDWXFFyMc9GPo5jxpjECxZMZtHNG4",
+   "coldkey": "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1",
+   "k2": 2,
+   "interval": [
+    448,
+    845
+   ],
+   "span": 397
+  },
+  {
+   "hotkey": "5FFSpiQ57mnqC2p1ENyjo5TfYXdFrapcST38hHXQ4VJam59N",
+   "coldkey": "5FZ6vTigbNcqrt8DYccKwMqeVkAmJKXH7owSeL7M4fGNRQz1",
+   "k2": 2,
+   "interval": [
+    543,
+    809
+   ],
+   "span": 266
+  },
+  {
+   "hotkey": "5EycE4i597voZ7dxwUmJUvnWCD7jm9iCpKv1gb82sojrxCXa",
+   "coldkey": "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW",
+   "k2": 2,
+   "interval": [
+    446,
+    640
+   ],
+   "span": 194
+  },
+  {
+   "hotkey": "5EwDnbEue3WjP4vbjcgNqGYwaHtKWNL8BRpoydYkjiwCaQTq",
+   "coldkey": "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR",
+   "k2": 2,
+   "interval": [
+    225,
+    673
+   ],
+   "span": 448
+  },
+  {
+   "hotkey": "5Evbs15hbfUZNLMeuJfVZbvmDc8ErDvYsavasZAUhJsURzwj",
+   "coldkey": null,
+   "k2": 2,
+   "interval": [
+    383,
+    515
+   ],
+   "span": 132
+  },
+  {
+   "hotkey": "5DkDdLMvYdts4ADidWhTvAWqjZeMXnS3kqcPByobU4XbvFz6",
+   "coldkey": "5Hb2R37SAuK9yvBbnf6M1LqXT8Gvh3ZxJ3i5cRVWnku2F7EU",
+   "k2": 2,
+   "interval": [
+    711,
+    846
+   ],
+   "span": 135
+  },
+  {
+   "hotkey": "5DezB5Svq5FtCztF5KFKMeUjZkuYZWRCC6kLDn2XiyNLsBMz",
+   "coldkey": null,
+   "k2": 2,
+   "interval": [
+    383,
+    572
+   ],
+   "span": 189
+  },
+  {
+   "hotkey": "5D8BoDbxrpRkkZruLxxvwFqtbfJJQoTBjTT1juUGxqFQsnJV",
+   "coldkey": "5Hb2qTU5pnWR4KxceMmaUtvQaFBb9oVFsLxFP8Y5ug2v7Kjf",
+   "k2": 2,
+   "interval": [
+    455,
+    637
+   ],
+   "span": 182
+  },
+  {
+   "hotkey": "5D2TBQgkMJH8ggUYbCUnkPWkfzW6SZD2bFGJbfNMPXkLn5Dv",
+   "coldkey": "5FqeFF2B7ZQ4sNnSRiKFE3QqAMoVDqwXEgUqY4L3w7bVFDC1",
+   "k2": 2,
+   "interval": [
+    380,
+    536
+   ],
+   "span": 156
+  },
+  {
+   "hotkey": "5C7uTFSMK2KqmWvHuAa11H5SENZ9mhptYNg2ZAZGSsCVDPdo",
+   "coldkey": "5GNmDovK6pSxzUReRLvP2utt71SuKRG6wNkaa6tZeAGpaboR",
+   "k2": 2,
+   "interval": [
+    431,
+    809
+   ],
+   "span": 378
+  },
+  {
+   "hotkey": "5C7MudipJizhsDn7bVNCSXkf26diw4VEZZ7v4G71SEMcSoG4",
+   "coldkey": "5EA3vw3uYt252U4paWk7kkTmizQLyEDDNYsQPZQTtZCefwvW",
+   "k2": 2,
+   "interval": [
+    383,
+    462
+   ],
+   "span": 79
+  }
+ ]
+}

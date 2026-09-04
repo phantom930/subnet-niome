@@ -37,6 +37,7 @@ validator's own stage 1-2 code path (see the note in CLAUDE.md about why that ma
 
 from __future__ import annotations
 
+import hashlib
 import logging
 import time
 from collections import defaultdict
@@ -66,13 +67,20 @@ RULES = {
 class SeedDependConfig:
     """Deliberately *not* derived from any seed-agnostic config — see the module docstring."""
 
-    rule: str = "hdr"
+    # "mh" over "hdr": measured 331.70 vs 330.40 on 8f02f1a4 before the k-mer fix, and it is the
+    # rule every validation run used. Both reach consistency 1.000; they differ only in which guide
+    # population qualifies, hence in the weighted_score available.
+    rule: str = "mh"
     # Site enumeration. flank is genExp's default; max_distance is wide because dist_score decays
     # as exp(-d/base_padding) rather than cutting off, so a distant row still contributes — the
     # allocator will simply rank it below a near one.
     flank: int = 3000
     lengths: tuple[int, ...] = (20, 23)
-    max_distance: int = 2000
+    # 600, not 2000: the allocator ranks by weighted_score and dist_score decays as exp(-d/400),
+    # so candidates past ~600bp are never selected. Measured identical final score at a third of the
+    # scan cost (91s vs 315s) — the wide scan is pure waste, and at 2000 the build overruns the
+    # in-TTL path (324s observed live).
+    max_distance: int = 600
     # GC band for variant enumeration. Wide on purpose: gc_score peaks at GC 0.50 and the allocator
     # ranks by weighted_score, so narrowing here only removes candidates it would not have picked.
     gc_band: tuple[float, float] = (0.30, 0.70)
@@ -101,6 +109,14 @@ class SeedDependConfig:
     # Candidates considered per cell by the greedy. The greedy is O(take x window), so this bounds
     # build time; the pool is sorted by weighted_score, so the tail it ignores would not be picked.
     greedy_window: int = 400
+    # Decorrelates sibling hotkeys. The build is fully deterministic — same contract, same seed,
+    # same rows — so several hotkeys running this would submit byte-identical files and score
+    # identically. ``variant`` breaks ties among candidates whose greedy score is within
+    # ``variant_epsilon`` by hashing (guide, variant), which changes WHICH of several near-equal
+    # guides is taken without changing what is being optimised. Scores land within a fraction of a
+    # point of each other; the row sets differ substantially.
+    variant: int = 0
+    variant_epsilon: float = 0.02
 
 
 def enumerate_candidates(ctx, sites, cfg: SeedDependConfig,
@@ -152,6 +168,12 @@ def _fidelity(chosen: list[dict], contract: dict) -> float:
     return max(0.0, min(1.0, detail.get("distribution_fidelity_score", 0.0)))
 
 
+def _variant_key(guide: str, variant: int) -> int:
+    """Stable per-variant ordering over tied candidates. sha256 so two variants share no structure —
+    a simple offset would make sibling submissions overlap heavily on the same tie groups."""
+    return int.from_bytes(hashlib.sha256(f"{variant}|{guide}".encode()).digest()[:8], "big")
+
+
 def _pick_cell(recs: list[dict], take: int, cfg: SeedDependConfig,
                pool: set) -> list[dict]:
     """Greedy selection within one cell on ``weighted_score + kmer_price * new 12-mers``.
@@ -166,18 +188,21 @@ def _pick_cell(recs: list[dict], take: int, cfg: SeedDependConfig,
     taken = [False] * len(window)
     out: list[dict] = []
     for _ in range(take):
-        best_i, best_s = None, None
+        scored = []
         for i, rec in enumerate(window):
             if taken[i]:
                 continue
-            score = rec["weighted_score"] + cfg.kmer_price * len(rec["kmers"] - used)
-            if best_s is None or score > best_s:
-                best_i, best_s = i, score
-        if best_i is None:
+            scored.append((rec["weighted_score"] + cfg.kmer_price * len(rec["kmers"] - used), i))
+        if not scored:
             break
-        taken[best_i] = True
-        out.append(window[best_i])
-        used |= window[best_i]["kmers"]
+        top = max(s for s, _i in scored)
+        # Every candidate within epsilon of the best is equally good for the objective; pick among
+        # them by a hash of (guide, variant) so sibling hotkeys diverge deterministically.
+        ties = [i for s, i in scored if s >= top - cfg.variant_epsilon]
+        pick_i = min(ties, key=lambda i: _variant_key(window[i]["guide"], cfg.variant))
+        taken[pick_i] = True
+        out.append(window[pick_i])
+        used |= window[pick_i]["kmers"]
     return out
 
 

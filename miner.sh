@@ -43,13 +43,32 @@ HOTKEYS=(
   "niome_hotkey8  9001 52504 900-999"
 )
 
-# EXPERIMENTAL, one hotkey only: NIOME_SEED_DEPEND swaps that hotkey's construction for
-# genomics/seed_depend.py, a submission pinned to seed 0. It wins the ~5.4% of rounds the backend
-# never stamps (rank 1 on 7 of the 8 such rounds on record) and scores the ~0.10 floor on every
-# round that IS stamped, so it gives up its seed window entirely. Exactly one hotkey, or the fleet
-# loses band coverage for no extra upside — the rows are identical across hotkeys, so a second one
-# would just duplicate the first.
-SEED_DEPEND_HOTKEY=niome_hotkey8
+# EXPERIMENTAL: NIOME_SEED_DEPEND swaps a hotkey's construction for genomics/seed_depend.py, a
+# submission pinned to seed 0. It wins the rounds the backend never stamps and scores the ~0.10
+# floor on every round that IS stamped, so each listed hotkey gives up its seed window entirely.
+#
+# The value is NOT read off the task listing: /api/v3/tasks reports `seed: 0` for rounds that were
+# in fact stamped (9 list that way, only 4 were scored on it). The reliable test is miners reaching
+# cons 1.000 in the score rows. By that test the rate is 2 of 57 rounds since 2026-08-25 = 3.5%.
+#
+# Siblings compete for the same slots: n hotkeys take ranks 1..n, not n x rank 1. So 1 hotkey is
+# worth 0.035 x 0.30 = 0.0105/round against the ~0.0027 a band hotkey contributes, and 3 hotkeys
+# 0.035 x 0.70 = 0.0245 against ~0.0081 — each one added is worth less than the last, and the
+# fleet's band coverage falls from 9 windows to 6 (117 -> 78 seeds of 900).
+#
+# The VALUE is the variant index, not a flag. The build is deterministic, so without distinct
+# variants siblings would submit byte-identical rows. Measured at variants 0-3: finals spanned
+# 338.29-338.39 (0.10 points) while row sets shared only 28-36% of their guides.
+# TEMPORARY: all nine on seed-depend. This is -14.7% on the model and taken deliberately —
+# siblings 4-9 land in ranks 4..9, worth 0.290 of the curve between them and only on 3.5% of
+# rounds (0.0102/round), against the six bands they replace at 0.0161/round on every round:
+#   9 band / 0 sd  0.0242    6 band / 3 sd  0.0406    3 band / 6 sd  0.0406    0 band / 9 sd  0.0347
+# 3 band / 6 sd is the break-even point if a hedge is wanted back. To revert, shorten this list —
+# the hotkeys dropped from it return to their NIOME_HDR_WINDOW bands with no other change.
+# Empty = the whole fleet runs the seed-agnostic band construction. Re-enable by listing
+# "<hotkey>:<variant>" pairs here; the variant index must differ per hotkey or siblings submit
+# byte-identical rows.
+SEED_DEPEND_VARIANTS=""
 
 run_one() {
   # <name> <port> <ext_port> <window>. exec so the process replaces this shell — pm2 then
@@ -59,10 +78,12 @@ run_one() {
   # NIOME_INSTANCE namespaces this hotkey's own read/write files under data/inst/<name>/ so the
   # siblings' submission, task artifacts, upload record and local scoring don't collide (settings.py).
   local sd=""
-  if [[ "$name" == "${SEED_DEPEND_HOTKEY:-}" ]]; then
-    sd=1
-    echo "  ($name is the seed-depend hotkey: pinned to seed 0, no band)"
-  fi
+  for pair in ${SEED_DEPEND_VARIANTS:-}; do
+    if [[ "${pair%%:*}" == "$name" ]]; then
+      sd="${pair##*:}"
+      echo "  ($name is a seed-depend hotkey, variant $sd: pinned to seed 0, no band)"
+    fi
+  done
   NIOME_INSTANCE="$name" NIOME_HDR_WINDOW="$win" NIOME_SEED_DEPEND="$sd" \
     exec "$PY" neurons/miner.py \
     --netuid 55 \

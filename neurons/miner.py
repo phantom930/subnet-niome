@@ -19,6 +19,7 @@ import contextlib
 import hashlib
 import json
 import logging
+import dataclasses
 import os
 import requests
 import shutil
@@ -286,21 +287,32 @@ class Miner(BaseMinerNeuron):
     # False to revert to all-cut everywhere.
     # --- seed-dependent builder (EXPERIMENTAL, one hotkey) --------------------------------------
     # A task is broadcast with seed 0 and the real seeds are stamped in before scoring — except on
-    # ~5.4% of rounds (8 of 352 scored, 3 of 56 since 2026-08-25) where the stamp never happens and
-    # the validator scores with seed 0 itself. A submission pinned to seed 0 reaches consistency
-    # exactly 1.000 on those rounds, and since the whole placing field also reaches 1.000 the
-    # ranking collapses to weighted x fidelity.
+    # a few rounds where the stamp never happens and the validator scores with seed 0 itself. A
+    # submission pinned to seed 0 reaches consistency exactly 1.000 on those, and since the whole
+    # placing field also reaches 1.000 the ranking collapses to weighted x fidelity.
     #
-    # The trade: a hotkey running this scores the ~0.10 floor on the 94.6% of rounds that DO get
-    # stamped, giving up its band entirely. Priced against every seed-0 round on record, the module
-    # scores 331.78 and would have taken rank 1 on 7 of 8 — worth ~0.054 x 0.300 = 0.016 a round
-    # against the ~0.0027 that one hotkey contributes to the band fleet's 0.0242. It misses only on
-    # 8f02f1a4 (2026-09-02), where 13 miners hit cons 1.000 and the cutoff was 332.06.
+    # **Do not read the frequency off the task listing.** /api/v3/tasks shows `seed: 0` for rounds
+    # that were in fact stamped — 9 tasks list as seed 0 and only 4 were actually scored on it. The
+    # reliable signature is miners reaching cons 1.000 in the score rows: a seed-0 build hits
+    # exactly 1.000, so a round where nobody does was stamped. By that test the rate is 2 of 57
+    # rounds since 2026-08-25 = **3.5%**, not the 5.4% the listing implies.
+    #
+    # The trade: a hotkey running this scores the ~0.10 floor on the other 96.5%, giving up its band
+    # entirely. On the 4 genuine seed-0 rounds the module takes rank 1 on all of them (2 of 2 in the
+    # current regime: f35f29b2 222.76 vs the field's 217.6, 8f02f1a4 338.52 vs 333.8) — worth
+    # ~0.035 x 0.300 = 0.0105 a round against the ~0.0027 one hotkey contributes to the band
+    # fleet's 0.0242.
     #
     # **Watch the competition count**: miners at cons 1.000 on seed-0 rounds went 0,0,0,1,6,6 and
     # then 13 on 2026-09-02. If that keeps climbing the cutoff rises with it and this stops paying.
-    # Set NIOME_SEED_DEPEND=1 on exactly one hotkey; unset everywhere else.
-    SEED_DEPEND = bool(os.getenv("NIOME_SEED_DEPEND"))
+    # NIOME_SEED_DEPEND is the *variant index*, not a flag: set it to 1, 2, 3 ... on each hotkey
+    # that should run this, and leave it unset elsewhere. The build is deterministic, so siblings
+    # would otherwise submit byte-identical rows; the variant breaks ties among near-equal
+    # candidates so their row sets differ while their scores stay within a fraction of a point.
+    # Sibling hotkeys compete for the same top slots — n of them take ranks 1..n rather than n x
+    # rank 1 — so each one added is worth less than the last, against a band it gives up outright.
+    SEED_DEPEND = bool((os.getenv("NIOME_SEED_DEPEND") or "").strip())
+    SEED_DEPEND_VARIANT = int((os.getenv("NIOME_SEED_DEPEND") or "0").strip() or 0)
     SEED_DEPEND_SEED = 0
     # 92s to enumerate at max_distance 600 on HEK293; the gate leaves room inside the in-TTL path.
     SEED_DEPEND_MIN_BUDGET_S = 190.0
@@ -402,6 +414,54 @@ class Miner(BaseMinerNeuron):
                            "using the cell-type default band")
             return None
 
+    # Written once a round by window_plan.py and shared across instances, so it lives in data/
+    # rather than the per-instance DATA_DIR. Absent, stale or malformed, every hotkey falls back to
+    # its NIOME_HDR_WINDOW pin — a seed-window prediction must never be able to stop a build.
+    WINDOW_PLAN_PATH = "data/window_plan.json"
+
+    def _window_for(self, cell_type: str) -> tuple[int, int] | None:
+        """This hotkey's clean-band window for one round: the live plan if fresh, else the env pin.
+
+        The plan concentrates several hotkeys onto the window a round is predicted to draw from.
+        That is EV-neutral if the prediction is worthless — six hotkeys covering 88 band seeds hit a
+        uniform seed with probability 88/900 whether those seeds sit in one window or nine — and
+        positive if it is not, which is why it is safe to run before the prediction has proven
+        itself. It stops being neutral past the point where the concentrated hotkeys saturate a
+        100-seed window, so window_plan.py caps the count rather than this reader.
+
+        Every failure path returns ``self.hdr_window``, the behaviour the fleet had before.
+        """
+        instance = os.getenv("NIOME_INSTANCE")
+        if not instance:
+            return self.hdr_window
+        try:
+            with open(self.WINDOW_PLAN_PATH) as handle:
+                plan = json.load(handle)
+            expires = plan.get("expires_at") or ""
+            if expires and expires < datetime.now(timezone.utc).isoformat():
+                if not self._window_plan_warned:
+                    self._window_plan_warned = True
+                    logger.warning(
+                        f"window plan expired at {expires}; falling back to the "
+                        f"NIOME_HDR_WINDOW pin. Is the window_plan.py cron running?"
+                    )
+                return self.hdr_window
+            raw = ((plan.get("assignments") or {}).get(cell_type) or {}).get(instance)
+            if not raw:
+                return self.hdr_window
+            lo, hi = int(raw[0]), int(raw[1])
+            if not (100 <= lo < hi <= 999):
+                raise ValueError(f"window {lo}-{hi} outside 100-999 or non-increasing")
+            self._window_plan_warned = False
+            logger.info(f"Build: window {lo}-{hi} from the round plan "
+                        f"(generated {plan.get('generated_at', '?')[:16]})")
+            return lo, hi
+        except FileNotFoundError:
+            return self.hdr_window
+        except Exception as exc:
+            logger.warning(f"window plan unusable ({exc}); using the NIOME_HDR_WINDOW pin")
+            return self.hdr_window
+
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
 
@@ -435,6 +495,7 @@ class Miner(BaseMinerNeuron):
         # This hotkey's all-HDR clean-band window, parsed once. A bad value logs and falls back to
         # the cell-type default rather than taking the process down — a misconfigured window should
         # cost decorrelation, not the miner.
+        self._window_plan_warned = False
         self.hdr_window = self._parse_hdr_window(self.HDR_WINDOW)
         if self.hdr_window:
             logger.info(f"all-HDR clean-band window pinned to {self.hdr_window[0]}-"
@@ -1197,8 +1258,11 @@ class Miner(BaseMinerNeuron):
             try:
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
+                        sd_cfg = dataclasses.replace(SD.SeedDependConfig(),
+                                                     variant=self.SEED_DEPEND_VARIANT)
                         sd_rows, sd_meta = SD.build(contract, reference, cell_types,
-                                                    seed=self.SEED_DEPEND_SEED, budget_s=budget)
+                                                    seed=self.SEED_DEPEND_SEED, cfg=sd_cfg,
+                                                    budget_s=budget)
                     else:
                         sd_rows, sd_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:
@@ -1208,6 +1272,7 @@ class Miner(BaseMinerNeuron):
             if sd_rows:
                 logger.info(
                     f"Build: seed-depend ({cell_type}) | seed {self.SEED_DEPEND_SEED} "
+                    f"variant {self.SEED_DEPEND_VARIANT} "
                     f"rule {sd_meta['rule']} | cands {sd_meta['candidates']} "
                     f"heavy {sd_meta['heavy']}/{sd_meta['rows']} cells {sd_meta['cells']}/8 "
                     f"| weighted {sd_meta['weighted']:.1f} fid {sd_meta['fidelity']:.3f} "
@@ -1229,7 +1294,7 @@ class Miner(BaseMinerNeuron):
                     if slot:
                         hdr_rows, hdr_meta = AH.build_for_cell(
                             contract, reference, cell_types, budget_s=budget,
-                            hdr_range=self.hdr_window)
+                            hdr_range=self._window_for(cell_type))
                     else:
                         hdr_rows, hdr_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:

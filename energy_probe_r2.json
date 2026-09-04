@@ -1,0 +1,114 @@
+[
+ {
+  "task": "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+  "cell_type": "K562",
+  "mode": "high",
+  "energy_mean": 0.9950761567142246,
+  "energy_sd": 0.008079857958614498,
+  "cons": 0.10974619727062734,
+  "r2_per_target": {
+   "is_cut": -0.0083,
+   "is_hdr": -0.1551,
+   "indel_length": -0.3121
+  },
+  "detail": [
+   {
+    "cons": 0.10974619727062734,
+    "r2": {
+     "is_cut": -0.0083,
+     "is_hdr": -0.1551,
+     "indel_length": -0.3121
+    },
+    "mae": {
+     "is_cut": 0.0149,
+     "is_hdr": 0.5134,
+     "indel_length": 2.0178
+    }
+   }
+  ]
+ },
+ {
+  "task": "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+  "cell_type": "K562",
+  "mode": "low",
+  "energy_mean": 0.2650736738845477,
+  "energy_sd": 0.002919189782186113,
+  "cons": 0.06307113406878102,
+  "r2_per_target": {
+   "is_cut": -0.3169,
+   "is_hdr": -0.1199,
+   "indel_length": -0.2152
+  },
+  "detail": [
+   {
+    "cons": 0.06307113406878102,
+    "r2": {
+     "is_cut": -0.3169,
+     "is_hdr": -0.1199,
+     "indel_length": -0.2152
+    },
+    "mae": {
+     "is_cut": 0.2433,
+     "is_hdr": 0.4575,
+     "indel_length": 2.1573
+    }
+   }
+  ]
+ },
+ {
+  "task": "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+  "cell_type": "K562",
+  "mode": "bimodal",
+  "energy_mean": 0.6211773069340241,
+  "energy_sd": 0.36496756989765566,
+  "cons": 0.07671872810863557,
+  "r2_per_target": {
+   "is_cut": -0.2946,
+   "is_hdr": -0.2891,
+   "indel_length": -0.1543
+  },
+  "detail": [
+   {
+    "cons": 0.07671872810863557,
+    "r2": {
+     "is_cut": -0.2946,
+     "is_hdr": -0.2891,
+     "indel_length": -0.1543
+    },
+    "mae": {
+     "is_cut": 0.1413,
+     "is_hdr": 0.5044,
+     "indel_length": 2.2331
+    }
+   }
+  ]
+ },
+ {
+  "task": "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+  "cell_type": "K562",
+  "mode": "closed",
+  "energy_mean": 0.873703356820666,
+  "energy_sd": 0.0628672205337374,
+  "cons": 0.09069353206755261,
+  "r2_per_target": {
+   "is_cut": -0.0944,
+   "is_hdr": -0.1556,
+   "indel_length": -0.2448
+  },
+  "detail": [
+   {
+    "cons": 0.09069353206755261,
+    "r2": {
+     "is_cut": -0.0944,
+     "is_hdr": -0.1556,
+     "indel_length": -0.2448
+    },
+    "mae": {
+     "is_cut": 0.07,
+     "is_hdr": 0.4845,
+     "indel_length": 1.6229
+    }
+   }
+  ]
+ }
+]
