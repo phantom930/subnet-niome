@@ -1,0 +1,78 @@
+{
+ "task": "138a47f7-f842-4490-91b6-7d63466e89d0",
+ "cell": "CD34+_HSPC",
+ "field_best": 252.09163251305762,
+ "variant": 1,
+ "configs": {
+  "base": {
+   "weighted": 276.87950646018993,
+   "consistency": 1.0,
+   "fidelity": 0.9376533309753797,
+   "final": 259.61699151121627,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 197
+  },
+  "hdr": {
+   "weighted": 278.3973020882755,
+   "consistency": 1.0,
+   "fidelity": 0.932093303117269,
+   "final": 259.4922608823969,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 199
+  },
+  "vps12k": {
+   "weighted": 279.9132652602934,
+   "consistency": 1.0,
+   "fidelity": 0.933345350653849,
+   "final": 261.25574471703237,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 199
+  },
+  "hdr_vps12k": {
+   "weighted": 277.96586222876954,
+   "consistency": 1.0,
+   "fidelity": 0.9404861972323797,
+   "final": 261.42305672795504,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 195
+  },
+  "vps24k": {
+   "weighted": 280.4428780205366,
+   "consistency": 1.0,
+   "fidelity": 0.9334897747457425,
+   "final": 261.79055903243847,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 199
+  },
+  "step1": {
+   "weighted": 276.87950646018993,
+   "consistency": 1.0,
+   "fidelity": 0.9376533309753797,
+   "final": 259.61699151121627,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 197
+  },
+  "greedy1200": {
+   "weighted": 272.7633920450219,
+   "consistency": 1.0,
+   "fidelity": 0.9416036911606905,
+   "final": 256.8350167631031,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 0.0,
+   "heavy": 195
+  }
+ }
+}

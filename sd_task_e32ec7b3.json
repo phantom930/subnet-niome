@@ -1,0 +1,102 @@
+{
+ "task": "e32ec7b3-33b9-468e-8894-a47313dabbe4",
+ "cell": "HUDEP-2",
+ "unstamped": true,
+ "ours": {
+  "valid": 250,
+  "weighted": 363.70329659525606,
+  "consistency": 1.0,
+  "fidelity": 0.914939443183402,
+  "final": 332.76649167083133
+ },
+ "meta": {
+  "method": "seed-depend",
+  "seed": 0,
+  "rule": "mh",
+  "candidates": 1120782,
+  "cells_with_candidates": 8,
+  "weighted": 363.70329659525606,
+  "fidelity": 0.914939443183402,
+  "product": 332.76649167083133,
+  "heavy": 207,
+  "cells": 8,
+  "rows": 250,
+  "elapsed_s": 99.3
+ },
+ "place": 1,
+ "payout_share": 0.3,
+ "field_top10": [
+  [
+   330.47263643253314,
+   1.0,
+   356.0360228749549,
+   0.9282,
+   "5Gsm3foQ9n9nBvFfhTtoP9Uhi4wj5QUHkZPf14VP2eM4bmvk"
+  ],
+  [
+   329.4570211625331,
+   1.0,
+   346.0319516463955,
+   0.9521,
+   "5EvMR4NMzyaEVjAH9Ho5kiCqCyC92HFttJ5aueX7xo8skx4z"
+  ],
+  [
+   328.9257306725331,
+   1.0,
+   343.56144837323285,
+   0.9574,
+   "5E4SsYpA8TdqeYEJFue7EfH8m9mCq8vraFcRmF5QiAFLWgRC"
+  ],
+  [
+   328.3040357325331,
+   1.0,
+   352.1064304295722,
+   0.9324,
+   "5CPEWDMnsmZRpm4pdq8STrgsTDKebi5ZrwVF2hkNnjBxhsup"
+  ],
+  [
+   326.83084373253314,
+   1.0,
+   356.1183645023028,
+   0.9177590270844336,
+   "5Hmr4b8Z1DPUMDiAa7uXe25Su14BA9kuEkZ6rUxBmPyNuJK4"
+  ],
+  [
+   321.35144949829356,
+   1.0,
+   353.7169820331745,
+   0.9084987880738917,
+   "5FbXWMQtDo9JP6TfGQTdPyBhQb5ReWHnUFYWVpSqv45rp2UJ"
+  ],
+  [
+   321.20341322642173,
+   1.0,
+   353.7169820331745,
+   0.908080271917215,
+   "5HmxuCVgC9fPo8p2utsTZDrQp9TRxKPRZ4BGkNsqiKqieaFR"
+  ],
+  [
+   320.6847745738534,
+   1.0,
+   353.7169820331745,
+   0.9066140187291799,
+   "5GsrsYfETHkfFTWUVdSVFpXPDZa4dCKbyfdnmNRqrxYV3gvT"
+  ],
+  [
+   320.6672950124301,
+   0.989,
+   334.7448560350413,
+   0.9686,
+   "5FqFSV8VQ4AWp1hptzEufAvzxSntaCUiDvekqHXXYHgdfRNY"
+  ],
+  [
+   293.60076538158165,
+   0.922,
+   325.60225767490164,
+   0.978,
+   "5HZF9AbirCfZhE9R4KH8fy2HQKoMkiYnMWdFYuAztdWYxMBH"
+  ]
+ ],
+ "n_field": 248,
+ "n_tied": 8
+}

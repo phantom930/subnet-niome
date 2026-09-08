@@ -1,0 +1,28 @@
+[
+ {
+  "error": "bank 1 < group 42",
+  "bank": 1,
+  "build_s": 34.1,
+  "window": [
+   100,
+   324
+  ],
+  "max_fail": 20
+ },
+ {
+  "bank": 60000,
+  "cached": true,
+  "union": 177,
+  "clean": 48,
+  "span": 225,
+  "clean_frac": 0.21333333333333335,
+  "group_fails_min": 20,
+  "group_fails_max": 36,
+  "build_s": 1.0,
+  "window": [
+   100,
+   324
+  ],
+  "max_fail": 100
+ }
+]

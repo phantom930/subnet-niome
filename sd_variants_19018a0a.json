@@ -1,0 +1,47 @@
+{
+ "task": "19018a0a-2cfa-4cc2-ac3e-7a35b17dc5b9",
+ "cell": "CD34+_HSPC",
+ "unstamped": true,
+ "variants": {
+  "1": {
+   "weighted": 371.6776111842935,
+   "consistency": 1.0,
+   "fidelity": 0.9146116370434492,
+   "final": 339.9406684176653,
+   "heavy": 207
+  },
+  "2": {
+   "weighted": 367.5863413687101,
+   "consistency": 1.0,
+   "fidelity": 0.9245789830779869,
+   "final": 339.86260569603974,
+   "heavy": 203
+  },
+  "3": {
+   "weighted": 371.59741405733666,
+   "consistency": 1.0,
+   "fidelity": 0.9145532921856069,
+   "final": 339.84563839379535,
+   "heavy": 207
+  },
+  "4": {
+   "weighted": 367.6107809008596,
+   "consistency": 1.0,
+   "fidelity": 0.9245908587098681,
+   "final": 339.889567584131,
+   "heavy": 203
+  }
+ },
+ "overlap": {
+  "v1-v2": 0.288,
+  "v1-v3": 0.264,
+  "v1-v4": 0.248,
+  "v2-v3": 0.288,
+  "v2-v4": 0.324,
+  "v3-v4": 0.296
+ },
+ "field_best": 336.7429682566054,
+ "n_tied": 5,
+ "share_fleet": 0.85,
+ "share_solo": 0.3
+}

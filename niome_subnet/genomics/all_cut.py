@@ -310,6 +310,25 @@ class AllCutConfig:
     # Mutation apportionment for the Cas9 half. ``weight_exponent`` skews the smooth path;
     # ``light_cell_rows`` (when set) replaces it with a hard per-light-cell quota. Both are measured
     # and deliberately left at the shipped behaviour — see assemble() and AllHdrConfig.
+    # The screening rule, from mt19937.RULE_SPECS. Both scans use it: a Cas9 row that MH_NHEJs
+    # would break the pin the Cas12a group established.
+    #
+    # "cut" ships. "not_mhnhej" ({HDR, BLUNT_NHEJ}) pins the SAME single stage-4 target (is_hdr
+    # still splits HDR/BLUNT, so only is_cut is constant) and is measured strictly worse on
+    # b9051bc7, window 100-324, 120 sampled seeds:
+    #
+    #   rule         band  weighted     fid  E[cons]  E[final]
+    #   cut (900)     557     246.6  0.8938   0.2092     46.11
+    #   cut (w225)    225     243.6  0.8847   0.1706     36.78
+    #   not_mhnhej     48     225.0  0.9003   0.1100     22.29   -51.7%
+    #
+    # Three costs compound: the band collapses 557 -> 48 for no extra pinned target, the harder
+    # rule constrains guide choice so weighted falls too, and per band seed it scores only 0.211
+    # against cut's 0.2935. That last number matters beyond this rule -- pinning the same target
+    # does NOT give the same consistency, so row composition moves it independently.
+    # (CLAUDE.md records not_mhnhej at 0.123; that is specific to the all-HDR context it was
+    # measured in, not a property of the rule.)
+    rule: str = "cut"
     weight_exponent: float = 1.25
     light_cell_rows: int | None = None
     cas9_cell_floor: int = 6           # min Cas9 rows per (mutation, strand) cell, so a skewed
@@ -333,6 +352,9 @@ def bank_key(contract: dict, cell_types: dict, cfg: AllCutConfig) -> str:
         "regions": contract.get("mutation_regions") or {},
         "gc": cfg.cas12a_gc, "d": cfg.max_distance, "v": cfg.variants,
         "mf": cfg.cas12a_max_fail, "w": [cfg.start_seed, cfg.end_seed],
+        # Added only for a non-default rule, so every bank cached before `rule` existed keeps its
+        # key. A "cut" bank and a "not_mhnhej" bank at the same window would otherwise collide.
+        **({} if getattr(cfg, "rule", "cut") == "cut" else {"rule": cfg.rule}),
     }, sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
@@ -379,7 +401,8 @@ def build_bank(contract: dict, reference: dict, cell_types: dict, ctx, sites,
             continue
         params_of = _params_fn(site, distance, accessibility, offset)
         survivors = MT.screen_guides_rule_gpu(guides, cfg.seeds, mutation, site.cas, site.start,
-                                              site.strand, params_of, "cut", cfg.cas12a_max_fail)
+                                              site.strand, params_of, cfg.rule,
+                                              cfg.cas12a_max_fail)
         for guide, fails in survivors.items():
             bank.append({"guide": guide, "mutation": mutation, "cas_system": site.cas,
                          "strand": site.strand, "start": site.start, "length": site.length,
@@ -461,7 +484,7 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
             continue
         params_of = _params_fn(site, distance, accessibility, offset)
         for guide in MT.screen_guides_rule_gpu(guides, clean, mutation, "Cas9", site.start,
-                                               site.strand, params_of, "cut", 0):
+                                               site.strand, params_of, cfg.rule, 0):
             gc, _energy, _cut_p = params_of(guide)
             found.append({"guide": guide, "mutation": mutation, "cas_system": "Cas9",
                           "strand": site.strand, "start": site.start, "length": site.length,

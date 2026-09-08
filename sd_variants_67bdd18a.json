@@ -1,0 +1,47 @@
+{
+ "task": "67bdd18a-9aa1-43b3-9bc7-13c23fadfed1",
+ "cell": "HUDEP-2",
+ "unstamped": true,
+ "variants": {
+  "1": {
+   "weighted": 360.07336420883144,
+   "consistency": 1.0,
+   "fidelity": 0.9147183365265256,
+   "final": 329.3657087366121,
+   "heavy": 207
+  },
+  "2": {
+   "weighted": 360.05531717877653,
+   "consistency": 1.0,
+   "fidelity": 0.9148082283390379,
+   "final": 329.3815668123669,
+   "heavy": 207
+  },
+  "3": {
+   "weighted": 360.1736368773695,
+   "consistency": 1.0,
+   "fidelity": 0.9148479036738028,
+   "final": 329.50409665583095,
+   "heavy": 207
+  },
+  "4": {
+   "weighted": 360.13241624083923,
+   "consistency": 1.0,
+   "fidelity": 0.9147837421305668,
+   "final": 329.44327939131784,
+   "heavy": 207
+  }
+ },
+ "overlap": {
+  "v1-v2": 0.352,
+  "v1-v3": 0.296,
+  "v1-v4": 0.336,
+  "v2-v3": 0.292,
+  "v2-v4": 0.316,
+  "v3-v4": 0.3
+ },
+ "field_best": 328.7385957764331,
+ "n_tied": 25,
+ "share_fleet": 0.85,
+ "share_solo": 0.3
+}

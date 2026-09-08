@@ -84,7 +84,25 @@ class SeedDependConfig:
     # GC band for variant enumeration. Wide on purpose: gc_score peaks at GC 0.50 and the allocator
     # ranks by weighted_score, so narrowing here only removes candidates it would not have picked.
     gc_band: tuple[float, float] = (0.30, 0.70)
-    variants_per_site: int = 4000
+    # 12000, up from 4000: the single best knob found, and the only one that paid. Measured over
+    # the six never-stamped rounds (paired within contract at a fixed variant, so the tie-break
+    # noise cannot confound it): **+1.47 +- 0.25, t = 5.80, 6/6 rounds**. It works by widening the
+    # candidate pool — more variants of each site tried means a better chance of a high-GC guide
+    # near the mutation that still satisfies the rule — which lifts term 1 and fidelity together.
+    #
+    # What it does NOT do is win rounds, and that is the honest framing: on five of those six we
+    # already held rank 1, so the points crossed no rank boundary, and mean payout share moved only
+    # 25.5% -> 25.8%. This is insurance against a field that is catching up fast (miners at
+    # consistency 1.000 on seed-0 rounds went 6 -> 8 -> 5 -> 25 -> 38 over 2026-09-07/08), not a
+    # fix for the one round already lost.
+    #
+    # Two things measured alongside it, so they are not re-run:
+    #   rule="hdr"            +0.53 alone but NOT additive with this (+1.40 combined, i.e. worse
+    #                         than this alone). The wider search already reaches those guides.
+    #   variants_per_site 24k +2.17 on the one round that finished — but 540s and **20 GB RSS**,
+    #                         which OOM-killed the sweep. Not adoptable at any budget.
+    # Cost: build goes ~100s -> ~300s, which is why SEED_DEPEND_MIN_BUDGET_S moved to 360.
+    variants_per_site: int = 12000
     # Floor per (mutation, cas, strand) cell. An empty cell zeroes one of stage 5's six ratios and
     # costs roughly a 0.03x multiplier on the whole score, so this is a hard constraint, not a knob.
     per_cell_floor: int = 4

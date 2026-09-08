@@ -1,0 +1,102 @@
+{
+ "task": "138a47f7-f842-4490-91b6-7d63466e89d0",
+ "cell": "CD34+_HSPC",
+ "unstamped": true,
+ "ours": {
+  "valid": 250,
+  "weighted": 276.87950646018993,
+  "consistency": 1.0,
+  "fidelity": 0.9376533309753797,
+  "final": 259.61699151121627
+ },
+ "meta": {
+  "method": "seed-depend",
+  "seed": 0,
+  "rule": "mh",
+  "candidates": 1135848,
+  "cells_with_candidates": 8,
+  "weighted": 276.87950646018993,
+  "fidelity": 0.9376533309753797,
+  "product": 259.61699151121627,
+  "heavy": 197,
+  "cells": 8,
+  "rows": 250,
+  "elapsed_s": 99.8
+ },
+ "place": 1,
+ "payout_share": 0.3,
+ "field_top10": [
+  [
+   252.09163251305762,
+   1.0,
+   269.905388129612,
+   0.934,
+   "5H8vqvECF7z4R9u7oosHRH3NEcD5ueXi379R7nPpEgLL27Fy"
+  ],
+  [
+   251.9549716335956,
+   1.0,
+   264.46412473348965,
+   0.9527,
+   "5CPEWDMnsmZRpm4pdq8STrgsTDKebi5ZrwVF2hkNnjBxhsup"
+  ],
+  [
+   251.89643786359477,
+   1.0,
+   262.5288565540331,
+   0.9595,
+   "5GLMBXc73iueF8vPSooSmujNVjs3HPuuAw7BDTEx9458j5eX"
+  ],
+  [
+   251.5156471125637,
+   1.0,
+   271.08978937351685,
+   0.9277946162923044,
+   "5GsrsYfETHkfFTWUVdSVFpXPDZa4dCKbyfdnmNRqrxYV3gvT"
+  ],
+  [
+   251.48932337653684,
+   1.0,
+   271.08978937351685,
+   0.9276975129078956,
+   "5FbXWMQtDo9JP6TfGQTdPyBhQb5ReWHnUFYWVpSqv45rp2UJ"
+  ],
+  [
+   251.4429302901875,
+   1.0,
+   271.08978937351685,
+   0.9275263774090021,
+   "5HmxuCVgC9fPo8p2utsTZDrQp9TRxKPRZ4BGkNsqiKqieaFR"
+  ],
+  [
+   245.36999847487644,
+   0.978,
+   262.4642420679111,
+   0.9559,
+   "5FqEwvdXud7J2cVDTEW4vkaUnkUdZCcp5YNE9bnpYA9C2Eun"
+  ],
+  [
+   233.8307143947997,
+   0.9430000000000001,
+   255.23901434226428,
+   0.9715,
+   "5HgVUrHY5BwdpTomUkWX67BiWzaGg3K97VdzWxjhUZapWCfY"
+  ],
+  [
+   227.61684312004002,
+   0.925,
+   251.73633026340224,
+   0.9775,
+   "5ERJtkrUDLUz5176rcMheB69kcRe8fKwuBaH9eFvPAAURaJk"
+  ],
+  [
+   85.14209645584059,
+   0.33340081897867485,
+   280.1586497311505,
+   0.9115356147531509,
+   "5GjovDbWPqwERwpAX2mW428wYXtip4M6ArZuLtj35CL9Kqqt"
+  ]
+ ],
+ "n_field": 248,
+ "n_tied": 6
+}

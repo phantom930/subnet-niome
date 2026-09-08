@@ -50,6 +50,189 @@ LOG = "seed_window_log.json"
 CHANCE = 1 - (8 / 9) ** 3  # 0.2977: any one window among three uniform draws
 
 
+# instance name -> on-chain hotkey, in miner.sh table order (niome_hotkey == h0). Needed to join
+# a logged assignment to what the validator actually scored that hotkey.
+INSTANCES = ["niome_hotkey"] + [f"niome_hotkey{i}" for i in range(1, 9)]
+SS58 = [
+    "5HT66iVw1UPgQa73toQ3PhNKQ6FvL2z1NWk2dC1EdnX5wYHW", "5GFE8UJcTjEW7QsdHvQDUxbPsVKLfNzTcwGUPbf6Nc5o1hvb",
+    "5FP4o2SSosZbCB71TzMQC2WPxTsKQUEzghWvkcc4B4PEbUeU", "5Fjzzbaf6q1fQfiprNKZtv8Twxm4J8C94aev4egCFYyrTXdf",
+    "5GBWGSM6ZTk1hzrf3cgrAc9vmkA7p1x8oEVz6QLk6wACsuC2", "5GNz6g47q45YN471GpfdSrMSeJrzynbCgBBic759nsjLaPNn",
+    "5H5v45M2i6cFtS3Di4abh2zjWrPmuJZzNPoAYtVAXVFa6sp3", "5CS8FdHr8Ddv14QHr75E5K7e9xv3wre9m66ywRHZMR8zhntN",
+    "5Cr9gJ3ukDDdxnhpyRM58gdMz7Sjuw8u58iiuYphVz1ZUGD2",
+]
+HOTKEY_OF = dict(zip(INSTANCES, SS58))
+BAND_HIT = 0.30            # round consistency above this means a seed really landed in the band
+
+
+def load_log():
+    return json.load(open(LOG)) if os.path.exists(LOG) else {"live": []}
+
+
+def save_log(log):
+    tmp = LOG + ".tmp"
+    with open(tmp, "w") as handle:
+        json.dump(log, handle, indent=1)
+    os.replace(tmp, LOG)
+
+
+def pending_for(log, cell):
+    """The unresolved live entry for this cell type, if any — where window_plan records what it
+    actually applied, so a resolved round shows predicted *and* applied windows side by side."""
+    for entry in log["live"]:
+        if entry["cell"] == cell and not entry.get("resolved"):
+            return entry
+    return None
+
+
+SCORE_MAX_AGE_H = 48       # past this a still-unscored hotkey was never contacted, stop retrying
+_SCORES = None             # the whole score feed, fetched at most once per process
+
+
+def _all_scores():
+    """The backend's score feed, cached for the process. One resolve plus a backfill of several
+    stale entries would otherwise download ~38k rows once per entry."""
+    global _SCORES
+    if _SCORES is None:
+        try:
+            raw = json.load(urllib.request.urlopen(
+                "https://niome-api.genomes.io/api/v3/miners/scores?limit=40000", timeout=180))
+            _SCORES = raw if isinstance(raw, list) else (raw.get("data") or raw.get("items") or [])
+        except Exception:
+            _SCORES = []
+    return _SCORES
+
+
+def fetch_scores(task_id):
+    """Our nine hotkeys' scores on one task, plus their rank in that task's full field."""
+    raw = _all_scores()
+    best = {}
+    for x in raw:
+        if x["task_id"] != task_id:
+            continue
+        hk = x["miner_hotkey"]
+        if hk not in best or x["final_score"] > best[hk]["final_score"]:
+            best[hk] = x
+    if not best:
+        return {}
+    field = sorted(best.values(), key=lambda y: -y["final_score"])
+    rank = {y["miner_hotkey"]: i for i, y in enumerate(field, 1)}
+    out = {}
+    for inst, hk in HOTKEY_OF.items():
+        x = best.get(hk)
+        if x:
+            b = x["breakdown"]
+            out[inst] = {"rank": rank[hk], "final": round(x["final_score"], 2),
+                         "consistency": round(b["consistency_factor"], 4),
+                         "weighted": round(b["total_weighted_score"], 1),
+                         "fidelity": round(b["distribution_fidelity_factor"], 4),
+                         "band_hit": b["consistency_factor"] >= BAND_HIT}
+    return out
+
+
+WINDOW_USED = "data/inst/{inst}/window_used.json"
+
+
+def windows_used(task_id):
+    """What each instance actually built this task with, from its own per-instance record.
+
+    Preferred over the round plan's assignments: ``window_plan.json`` is rewritten hourly, so a
+    round whose build straddled a cron tick was built from a plan that is no longer on disk, and
+    reading the plan back would credit a window the hotkey never used. Instances with no record
+    (a build that predates this file, or one that never reached all-HDR) are simply absent.
+    """
+    out = {}
+    for inst in INSTANCES:
+        try:
+            with open(WINDOW_USED.format(inst=inst)) as handle:
+                row = json.load(handle).get(task_id)
+        except (FileNotFoundError, json.JSONDecodeError, OSError):
+            continue
+        # A row with no window is still evidence: it means all-HDR was never attempted, so no
+        # band existed. Keep it so the reader can say that rather than "unverified".
+        if row and (row.get("window") or row.get("all_hdr_built") is False):
+            out[inst] = row
+    return out
+
+
+def per_hotkey_block(entry, task, scored):
+    """Join one round's seeds to what each hotkey actually built, and what it scored.
+
+    ``window`` comes from the instance's own record where there is one and from the plan only as a
+    last resort, marked ``plan_file_unverified`` so an unverifiable row cannot be mistaken for a
+    confirmed one. Where the two disagree the plan's value is kept alongside as
+    ``planned_window``: that is the straddled-cron case, and hiding it would make the log look
+    self-consistent while being wrong.
+    """
+    applied = (entry.get("applied") or {}).get("assignments") or {}
+    roles = (entry.get("applied") or {}).get("roles") or {}
+    shipped = windows_used(task["id"])
+    per = {}
+    for inst in sorted(set(applied) | set(shipped), key=INSTANCES.index):
+        rec = shipped.get(inst)
+        planned = applied.get(inst)
+        # A record with no window of its own (all-HDR never attempted) still needs a window to
+        # report containment against, and the plan's assignment is the right one for that: the
+        # question "did the plan name the window a seed came from" is separate from "was a band
+        # built there". all_hdr_built below carries the second.
+        rec_window = (rec or {}).get("window")
+        window_ = tuple(rec_window) if rec_window else tuple(planned or (0, 0))
+        if not window_ or window_ == (0, 0):
+            continue
+        per[inst] = {"window": list(window_),
+                     "window_source": rec["source"] if rec else "plan_file_unverified",
+                     "window_confirmed": bool(rec_window),
+                     "role": roles.get(inst),
+                     "seeds_in_window": [x for x in task["seeds"]
+                                         if window_[0] <= x <= window_[1]],
+                     **(scored.get(inst) or {})}
+        # Whether all-HDR actually built the band for that window. A decline ships all-cut rows
+        # with no band at all, so containment there says something about the plan's accuracy but
+        # nothing about whether a spike was even possible.
+        if rec and rec.get("all_hdr_built") is not None:
+            per[inst]["all_hdr_built"] = rec["all_hdr_built"]
+        if planned and rec_window and list(planned) != list(rec_window):
+            per[inst]["planned_window"] = list(planned)
+    return per
+
+
+def _fill(per, scored):
+    """Merge a score fetch into a per_hotkey block; True if anything landed."""
+    got = False
+    for inst, row in per.items():
+        add = scored.get(inst)
+        if add and row.get("consistency") is None:
+            row.update(add)
+            got = True
+    return got
+
+
+def backfill_scores(log, now):
+    """Resolution captures scores at resolve time, but the backend publishes a round's score rows
+    minutes to hours after its seeds are stamped — so an entry resolved by the cron tick right
+    after its round carries per_hotkey with `consistency: null` throughout, and resolution is
+    one-shot. Re-fetch for any resolved entry still missing scores, until the round is old enough
+    that a missing hotkey means it was never contacted rather than not yet scored."""
+    filled, stale = 0, 0
+    for entry in log["live"]:
+        res = entry.get("resolved")
+        per = (res or {}).get("per_hotkey")
+        if not per or all(v.get("consistency") is not None for v in per.values()):
+            continue
+        at = datetime.fromisoformat(res["at"])          # backend stamps are naive UTC
+        if at.tzinfo is None:
+            at = at.replace(tzinfo=timezone.utc)
+        age = (now - at).total_seconds() / 3600.0
+        if age > SCORE_MAX_AGE_H:
+            stale += 1
+            continue
+        if _fill(per, fetch_scores(res["task_id"])):
+            res["scores_at"] = now.isoformat()
+            res["hotkeys_with_band_hit"] = sorted(
+                k for k, v in per.items() if v.get("band_hit"))
+            filled += 1
+    return filled, stale
+
+
 def window(seed):
     return min(NW - 1, max(0, seed // 100 - 1))
 
@@ -179,9 +362,10 @@ def wilson(hits, n, z=1.96):
 
 def main():
     rows = load_tasks()
-    log = json.load(open(LOG)) if os.path.exists(LOG) else {"live": []}
+    log = load_log()
     by_id = {t["id"]: t for t in rows}
-    now = datetime.now(timezone.utc).isoformat()
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat()
 
     # --- resolve any pending live predictions against tasks that have appeared since ---
     resolved_now = 0
@@ -195,15 +379,42 @@ def main():
         t = later[0]
         actual = sorted({window(s) for s in t["seeds"]})
         top = [r["window"] for r in entry["ranked"]]
+        hlab = entry.get("heuristic") or []
         entry["resolved"] = {"task_id": t["id"], "at": t["at"], "seeds": t["seeds"],
                              "actual_windows": actual,
                              "top1_hit": top[0] in actual,
-                             "top2_hit": bool(set(top[:2]) & set(actual))}
+                             "top2_hit": bool(set(top[:2]) & set(actual)),
+                             "heuristic_hit": bool(hlab) and hlab[0] in
+                             [window_label(w) for w in actual]}
+        # What each hotkey was actually running, whether a seed fell in its window, and what the
+        # validator scored it. Containment is not a hit: a concentrated hotkey holds ~92% of its
+        # 16-seed window as band, a width-100 spread hotkey only ~13% of its 100 -- so band_hit
+        # (consistency >= 0.30) is ground truth and seeds_in_window is the part the plan controls.
+        scored = fetch_scores(t["id"])
+        per = per_hotkey_block(entry, t, scored)
+        if per:
+            entry["resolved"]["per_hotkey"] = per
+            if scored:
+                entry["resolved"]["scores_at"] = now
+            entry["resolved"]["hotkeys_with_seed_in_window"] = sorted(
+                k for k, v in per.items() if v["seeds_in_window"])
+            declined = sorted(k for k, v in per.items() if v.get("all_hdr_built") is False)
+            if declined:
+                entry["resolved"]["hotkeys_without_band"] = declined
+            entry["resolved"]["hotkeys_with_band_hit"] = sorted(
+                k for k, v in per.items() if v.get("band_hit"))
         resolved_now += 1
 
     print(f"{len(rows)} three-seed tasks, {rows[0]['at'][:16]} .. {rows[-1]['at'][:16]}")
     if resolved_now:
         print(f"resolved {resolved_now} pending live prediction(s) this run")
+
+    filled, stale = backfill_scores(log, now_dt)
+    if filled:
+        print(f"backfilled validator scores for {filled} earlier round(s)")
+    if stale:
+        print(f"{stale} resolved round(s) still unscored past {SCORE_MAX_AGE_H}h — "
+              f"those hotkeys were never contacted, not merely unscored")
 
     res, betas = backtest(rows)
     a = res["ALL"]
@@ -242,10 +453,38 @@ def main():
         print(f"  verdict: {verdict}")
         for e in done[-6:]:
             r = e["resolved"]
-            print(f"    {r['at'][:16]}  {e['cell']:<11} predicted "
+            print(f"    {r['at'][:16]}  {e['cell']:<11} task {r['task_id'][:8]}  predicted "
                   f"{e['ranked'][0]['label']:<9} actual "
                   f"{','.join(window_label(w) for w in r['actual_windows']):<30} "
                   f"{'HIT' if r['top1_hit'] else 'miss'}")
+            if r.get("per_hotkey"):
+                inw = r.get("hotkeys_with_seed_in_window") or []
+                band = r.get("hotkeys_with_band_hit") or []
+                n_scored = sum(1 for v in r["per_hotkey"].values()
+                               if v.get("consistency") is not None)
+                # "none" and "not scored yet" are different facts -- never print the first for the
+                # second, or an unpublished round reads as nine hotkeys that all missed the band.
+                hit = (f"{', '.join(band)}" if band else
+                       "none" if n_scored == len(r["per_hotkey"]) else
+                       f"none of {n_scored} scored" if n_scored else "not scored yet")
+                print(f"      applied {len(r['per_hotkey'])} hotkeys | seed in window: "
+                      f"{', '.join(inw) if inw else 'none'} | scored band hit: {hit}")
+                drift = [k for k, v in r["per_hotkey"].items() if v.get("planned_window")]
+                # A missing window_source is a round resolved before per-instance recording
+                # existed -- unverified for the same reason, so default to that rather than
+                # letting an older entry read as confirmed.
+                unver = [k for k, v in r["per_hotkey"].items()
+                         if not v.get("window_confirmed", False)]
+                if drift:
+                    print(f"      NOTE {len(drift)} hotkey(s) built a window the plan did not "
+                          f"assign: {', '.join(drift)} — the plan was rewritten mid-round")
+                nb = r.get("hotkeys_without_band") or []
+                if nb:
+                    print(f"      NOTE {len(nb)} hotkey(s) shipped without a band (all-HDR "
+                          f"declined): {', '.join(nb)} — no spike was possible for them")
+                if unver:
+                    print(f"      NOTE {len(unver)} hotkey(s) unverified (no per-instance "
+                          f"record); their window is the plan's, not a confirmed build")
 
     # --- current prediction for the next task of each cell type ---
     print(f"\n=== PREDICTION for the next task (history through {rows[-1]['at'][:16]}) ===")
@@ -264,7 +503,7 @@ def main():
     if emit:
         pend = sum(1 for e in log["live"] if not e.get("resolved"))
         print(f"\n  {pend} live prediction(s) pending; re-run after the next round to resolve them.")
-    json.dump(log, open(LOG, "w"), indent=1)
+    save_log(log)
 
 
 if __name__ == "__main__":

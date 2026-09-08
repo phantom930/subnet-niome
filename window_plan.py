@@ -35,7 +35,8 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 
-from seed_window_model import load_tasks, predict, window_label
+from seed_window_model import (load_log, load_tasks, pending_for, predict, save_log,
+                               window_label)
 
 PLAN_PATH = "data/window_plan.json"
 MINER_SH = "miner.sh"
@@ -43,8 +44,16 @@ MINER_SH = "miner.sh"
 # 12 on HEK293 (168 builds, zero declines).
 WIDTH = {"HEK293": 12}
 DEFAULT_WIDTH = 16
-# Hotkeys concentrated on the predicted window. Capped below the point where they saturate its 100
-# seeds: 6 x 14.7 = 88 at width 16, 8 x 10.1 = 81 at width 12.
+# Hotkeys concentrated on the window CONC_RANK names. The layout differs by cell type because the
+# band width does:
+#
+#   erythroid (width 16): 6 concentrated + 1 spread on rank 1 + 1 spread on rank 3 + 1 all-cut
+#   HEK293    (width 12): 8 concentrated + 1 all-cut, no spread at all
+#
+# HEK293 takes 8 because its band is 10.1 of 12, so 8 x 12 tiles the whole 100-seed window (81
+# band seeds) where 6 would leave 28 seeds uncovered (61 band seeds). That consumes every banded
+# hotkey, so HEK293 has no rank-1 or rank-3 exposure -- the concentrated block is the entire bet.
+# Set this to 6 to buy that exposure back at the cost of 20 band seeds on the concentrated window.
 CONCENTRATE = {"HEK293": 8}
 DEFAULT_CONCENTRATE = 6
 # Spread hotkeys run the shipped 100-wide window rather than the narrow band width, and sit on the
@@ -58,11 +67,80 @@ DEFAULT_CONCENTRATE = 6
 # narrow-window bet while the spread hotkeys stay on the configuration the fleet has always run,
 # which is the fallback if the prediction turns out to be worthless.
 SPREAD_WIDTH = 100
+# Which ranked window the concentrated block tiles, per cell type, as a 1-based rank into
+# predict()'s ranked list. 1 = the model's top pick. Any remaining hotkeys take the other ranks in
+# order, so with a multi-hotkey fleet at rank 2 the layout is: rank 2 concentrated, rank 1 spread,
+# rank 3 spread. With a single hotkey there is no spread — it takes the whole 100-seed window at
+# the rank named here and nothing else is covered.
+#
+# Set per cell type from perrank.py, which measured each rank's *exclusive* hit rate (did that one
+# window hold a seed) over 38 scored predictions against the 29.8% chance baseline every individual
+# rank shares:
+#
+#   cell           n      #1      #2      #3      #4
+#   CD34+_HSPC    13   46.2%   15.4%   15.4%   46.2%
+#   HEK293        13   38.5%   30.8%   15.4%   23.1%
+#   HUDEP-2       12   33.3%   50.0%   66.7%    8.3%
+#
+# So CD34+_HSPC -> 1 and HUDEP-2 -> 3. Read this for what it is: 12-13 rounds per cell, no rank
+# significant on its own, and the three cells do not agree on an ordering (HUDEP-2's is inverted).
+# It is the best available read, not a proven edge. The aggregate is weakly monotone (39.5% / 31.6%
+# / 31.6% / 26.3%), which is why an unmeasured cell type defaults to the top pick.
+#
+# HEK293 and K562 are not here: they run all-cut instead (miner.sh ALL_CUT_HOTKEYS), because
+# HEK293's ranks decline roughly monotonically with no rank worth a lone hotkey and K562 had no
+# scored prediction in the window at all.
+CELL_RANK = {"CD34+_HSPC": 1, "HUDEP-2": 3}
+DEFAULT_RANK = 1
 TTL_HOURS = 6                      # survives a missed cron run, expires before it misleads
 
 
-def fleet():
-    """(instance, default window) in table order, parsed from miner.sh so the two cannot drift."""
+def _sh_list(var):
+    """A space-separated bash list from miner.sh, so the two files cannot drift."""
+    for line in open(MINER_SH):
+        m = re.match(rf'\s*{var}=(.*)', line)
+        if m:
+            return [x for x in m.group(1).strip().strip('"\'').split() if x]
+    return []
+
+
+def hedge_spec():
+    """{instance: frozenset(cell types) or None} for the all-cut hotkeys, from ALL_CUT_HOTKEYS.
+
+    ``None`` means every cell type — miner.sh's bare "<hotkey>" form. The "<hotkey>:CELL,CELL" form
+    hedges only those cell types and keeps the band elsewhere, which is what a one-hotkey fleet
+    runs: the same hotkey is the band bet on the cells where the rank ordering has an edge and the
+    flat hedge on the cells where it does not.
+
+    A hotkey has no clean band on the cells it hedges — all-cut pins is_cut across the whole
+    900-seed window — so assigning it a window there would waste a window another hotkey could be
+    covering, and would make the log read as though a band had existed.
+    """
+    out = {}
+    for token in _sh_list("ALL_CUT_HOTKEYS"):
+        name, _, cells = token.partition(":")
+        out[name] = frozenset(c for c in cells.split(",") if c) or None
+    return out
+
+
+def hedges_for(cell, spec):
+    """The instances running all-cut for this cell type, so they get no window in this round."""
+    return {n for n, cells in spec.items() if cells is None or cell in cells}
+
+
+def seed_depend_hotkeys():
+    """Instances pinned to seed 0 by miner.sh's SEED_DEPEND_VARIANTS ("<hotkey>:<variant>").
+
+    Seed-depend is the first rung of the miner's ladder and replaces the construction outright, so
+    such a hotkey has no clean band on any cell type. It is excluded for the same reason an all-cut
+    hedge is: a window assigned to it is a window nothing covers, and the log would read as though
+    a band had been played there.
+    """
+    return {token.partition(":")[0] for token in _sh_list("SEED_DEPEND_VARIANTS")}
+
+
+def table():
+    """Every (instance, default window) row of miner.sh's HOTKEYS table, unfiltered."""
     rows = []
     for line in open(MINER_SH):
         m = re.match(r'\s*"(\S+)\s+\d+\s+\d+\s+(\d+)-(\d+)"', line)
@@ -71,44 +149,101 @@ def fleet():
     return rows
 
 
+def fleet():
+    """(instance, default window) in table order, parsed from miner.sh so the two cannot drift.
+
+    Hotkeys hedged on *every* cell type are dropped here: they need no window at all, and leaving
+    them in would consume a concentrated slot or a spread window for a build that ignores it. A
+    hotkey hedged on only some cell types stays — main() drops it per cell instead.
+    """
+    skip = ({n for n, cells in hedge_spec().items() if cells is None}
+            | set(_sh_list("DEREGISTERED")) | seed_depend_hotkeys())
+    rows = [r for r in table() if r[0] not in skip]
+    # Concentrated slots are filled from the hotkeys NOT preferred for spread, so a hotkey freed by
+    # a deregistration elsewhere in the table lands in the concentrated block rather than pushing
+    # a designated spread hotkey out of its role. Spread hotkeys are still used for concentration
+    # when the block needs them (HEK293 concentrates 8 and consumes both).
+    spread = _sh_list("SPREAD_HOTKEYS")
+    rows.sort(key=lambda r: (spread.index(r[0]) + 1) if r[0] in spread else 0)
+    return rows
+
+
 def tile(lo, hi, width, n):
-    """n disjoint sub-windows of `width` inside [lo, hi], packed from lo."""
-    out = []
+    """n disjoint sub-windows covering [lo, hi] as completely as n slots allow.
+
+    The remainder is spread one seed at a time across the leading slots rather than dropped off the
+    end. Packing from ``lo`` at a fixed ``width`` left the tail of the window uncovered -- 8 x 12 =
+    96 of 100 on HEK293, 6 x 16 = 96 on the erythroid types -- so a seed landing in the last four
+    seeds scored the floor even when the prediction was right. That is not hypothetical: on
+    678cf369 the model called 300-399, seed 397 landed in it, and the block tiled only 300-395.
+
+    Widening is free. The width sweep found band flat at 14-15 from width 16 through 50 (168
+    builds), so a 17-seed window bands the same as a 16-seed one -- the extra seed is covered at no
+    cost to any hotkey's band.
+
+    ``width`` is now a *minimum*: if n slots of that width would overflow the window, the old
+    fixed-width packing is kept and the slots that do not fit are dropped.
+    """
+    span = hi - lo + 1
+    if n <= 0 or span <= 0:
+        return []
+    base, rem = divmod(span, n)
+    if base < width:
+        # More hotkeys than the window can give `width` each -- keep the intended band width and
+        # let the surplus slots fall off, as before.
+        return [(lo + i * width, lo + i * width + width - 1)
+                for i in range(n) if lo + i * width + width - 1 <= hi]
+    out, a = [], lo
     for i in range(n):
-        a = lo + i * width
-        b = a + width - 1
-        if b > hi:
-            break
-        out.append((a, b))
+        b = a + base + (1 if i < rem else 0) - 1
+        out.append((a, min(b, hi)))
+        a = b + 1
     return out
 
 
 def main():
     members = fleet()
-    if not members:
+    if not table():
         print(f"no HOTKEYS table found in {MINER_SH}", file=sys.stderr)
         return 1
+    # An empty ``members`` is not an error: every hotkey may be playing something that has no band
+    # (seed-depend, or all-cut on every cell). The plan is still written -- with no assignments --
+    # and seed_window_model.py still resolves and emits predictions, so the shadow log keeps
+    # accruing the evidence that decides whether a band is worth going back to.
     rows = load_tasks()
+    log = load_log()
     now = datetime.now(timezone.utc)
     plan = {"generated_at": now.isoformat(),
             "expires_at": (now + timedelta(hours=TTL_HOURS)).isoformat(),
             "history_through": rows[-1]["at"], "n_tasks": len(rows), "assignments": {}}
 
-    print(f"{len(rows)} tasks through {rows[-1]['at'][:16]}; {len(members)} hotkeys\n")
+    spec = hedge_spec()
+    sd = seed_depend_hotkeys()
+    hedge_note = ", ".join(f"{n}:{'all cells' if c is None else '/'.join(sorted(c))}"
+                           for n, c in sorted(spec.items()))
+    print(f"{len(rows)} tasks through {rows[-1]['at'][:16]}; {len(members)} banded hotkeys"
+          + (f"; all-cut {hedge_note}" if spec else "")
+          + (f"; seed-depend {', '.join(sorted(sd))}" if sd else "") + "\n")
     for cell in sorted({t["cell"] for t in rows}):
         pr = predict(rows, cell)
-        top = pr["ranked"][0]
+        hedged = hedges_for(cell, spec)
+        # Hotkeys that run all-cut on *this* cell type play no window here, so they are out of the
+        # allocation for this cell only and back in it for the next.
+        avail = [m for m in members if m[0] not in hedged]
+        rank = min(CELL_RANK.get(cell, DEFAULT_RANK), len(pr["ranked"])) - 1
+        top = pr["ranked"][rank]               # the window the concentrated block tiles
         width = WIDTH.get(cell, DEFAULT_WIDTH)
-        conc = min(CONCENTRATE.get(cell, DEFAULT_CONCENTRATE), len(members))
+        conc = min(CONCENTRATE.get(cell, DEFAULT_CONCENTRATE), len(avail))
         lo = (top["window"] + 1) * 100
         slots = tile(lo, lo + 99, width, conc)
         assign = {}
-        for (name, _default), w in zip(members[:len(slots)], slots):
+        for (name, _default), w in zip(avail[:len(slots)], slots):
             assign[name] = list(w)
-        # The rest take the next most under-drawn windows, full width. Ranked order skips entry 0
-        # (the concentrated block already owns it), so these can never overlap it.
-        rest = members[len(slots):]
-        for (name, _default), nxt in zip(rest, pr["ranked"][1:1 + len(rest)]):
+        # The rest take the other ranked windows in order, full width, skipping the one the
+        # concentrated block already owns -- so a spread hotkey can never overlap it.
+        rest = avail[len(slots):]
+        spread_ranks = [r for i, r in enumerate(pr["ranked"]) if i != rank]
+        for (name, _default), nxt in zip(rest, spread_ranks[:len(rest)]):
             a = (nxt["window"] + 1) * 100
             assign[name] = [a, a + SPREAD_WIDTH - 1]
 
@@ -118,19 +253,50 @@ def main():
                 print(f"ERROR: {cell} windows {a1}-{b1} and {a2}-{b2} overlap", file=sys.stderr)
                 return 1
         plan["assignments"][cell] = assign
-        print(f"  {cell:<11} predict {top['label']} (p_hit {top['p_hit']:.0%}, beta {pr['beta']:+.2f})"
-              f"  width {width}  concentrate {len(slots)}")
-        print(f"    concentrated: "
-              + ", ".join(f"{n}:{a}-{b}" for (n, _d), (a, b) in zip(members, slots)))
+        # Record what was actually applied against this cell's pending prediction, so a resolved
+        # round in seed_window_log.json shows predicted window, applied per-hotkey windows, the
+        # task id and each hotkey's scored outcome together. Cells where every hotkey hedges still
+        # get the block, with no assignments -- the prediction was live and its accuracy is still
+        # scored, it just was not played.
+        roles = {n: ("concentrated" if i < len(slots) else "spread")
+                 for i, (n, _d) in enumerate(avail)}
+        roles.update({n: "all-cut-hedge" for n in hedged})
+        entry = pending_for(log, cell)
+        if entry is not None:
+            entry["applied"] = {
+                "applied_at": now.isoformat(), "predicted_window": top["label"],
+                # The width actually assigned, not the configured minimum: tile() widens the slots
+                # to cover the window, so a lone hotkey gets the full 100 rather than WIDTH's 16.
+                "predicted_p_hit": top["p_hit"],
+                "band_width": (slots[0][1] - slots[0][0] + 1) if slots else 0,
+                "conc_rank": rank + 1, "rank1_window": pr["ranked"][0]["label"],
+                "spread_width": SPREAD_WIDTH, "n_concentrated": len(slots),
+                "played": bool(assign),
+                "assignments": {n: list(v) for n, v in assign.items()}, "roles": roles}
+        head = (f"  {cell:<11} rank1 {pr['ranked'][0]['label']} "
+                f"({pr['ranked'][0]['p_hit']:.0%})  | ")
+        if not assign:
+            why = ", ".join(filter(None, [
+                f"all-cut {'/'.join(sorted(hedged))}" if hedged else "",
+                f"seed-depend {'/'.join(sorted(sd))}" if sd else ""]))
+            print(head + f"no window played ({why or 'no banded hotkey'})")
+            continue
+        print(head + f"rank{rank + 1} {top['label']} "
+              f"({top['p_hit']:.0%}, beta {pr['beta']:+.2f})  "
+              f"width {slots[0][1] - slots[0][0] + 1} x{len(slots)}")
+        print(f"    banded: "
+              + ", ".join(f"{n}:{a}-{b}" for (n, _d), (a, b) in zip(avail, slots)))
         ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
-        print(f"    spread (w{SPREAD_WIDTH}): "
-              + ", ".join(f"{n}:{v[0]}-{v[1]}(rank {ranks.get(v[0], '?')+1},"
-                          f" {pr['ranked'][ranks[v[0]]]['p_hit']:.0%})"
-                          for n, v in list(assign.items())[len(slots):]))
+        if len(assign) > len(slots):
+            print(f"    spread (w{SPREAD_WIDTH}): "
+                  + ", ".join(f"{n}:{v[0]}-{v[1]}(rank {ranks.get(v[0], '?')+1},"
+                              f" {pr['ranked'][ranks[v[0]]]['p_hit']:.0%})"
+                              for n, v in list(assign.items())[len(slots):]))
 
     if "--dry-run" in sys.argv:
         print("\n--dry-run: not written")
         return 0
+    save_log(log)
     os.makedirs(os.path.dirname(PLAN_PATH), exist_ok=True)
     tmp = PLAN_PATH + ".tmp"
     with open(tmp, "w") as handle:            # atomic: miners read this file mid-round

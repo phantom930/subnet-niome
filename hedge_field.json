@@ -1,0 +1,1738 @@
+[
+ {
+  "rank": 1,
+  "final": 125.96472133001733,
+  "total_weighted_score": 222.7669447162123,
+  "consistency_factor": 0.584329,
+  "distribution_fidelity_factor": 0.9677
+ },
+ {
+  "rank": 2,
+  "final": 125.70015266061101,
+  "total_weighted_score": 226.22972691668073,
+  "consistency_factor": 0.585861,
+  "distribution_fidelity_factor": 0.9484
+ },
+ {
+  "rank": 3,
+  "final": 123.74240028437512,
+  "total_weighted_score": 222.52680496046418,
+  "consistency_factor": 0.583075,
+  "distribution_fidelity_factor": 0.9537
+ },
+ {
+  "rank": 4,
+  "final": 123.57678619634704,
+  "total_weighted_score": 229.66591024729505,
+  "consistency_factor": 0.552492,
+  "distribution_fidelity_factor": 0.9739
+ },
+ {
+  "rank": 5,
+  "final": 117.82500395882248,
+  "total_weighted_score": 221.60612710190802,
+  "consistency_factor": 0.559258,
+  "distribution_fidelity_factor": 0.9507
+ },
+ {
+  "rank": 6,
+  "final": 116.33860276862677,
+  "total_weighted_score": 220.33705634879388,
+  "consistency_factor": 0.544389,
+  "distribution_fidelity_factor": 0.9699
+ },
+ {
+  "rank": 7,
+  "final": 113.93539760978513,
+  "total_weighted_score": 260.29904297006544,
+  "consistency_factor": 0.4620760397483102,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 8,
+  "final": 98.4674744099833,
+  "total_weighted_score": 260.7340252122465,
+  "consistency_factor": 0.398678153410688,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 9,
+  "final": 97.89344040270713,
+  "total_weighted_score": 259.4326498209333,
+  "consistency_factor": 0.39834219190981823,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 10,
+  "final": 48.80041113937744,
+  "total_weighted_score": 261.6096128092861,
+  "consistency_factor": 0.19692331197752533,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 11,
+  "final": 45.9211708382154,
+  "total_weighted_score": 260.37963308610836,
+  "consistency_factor": 0.18618011338039017,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 12,
+  "final": 45.68829855644293,
+  "total_weighted_score": 258.21562833335327,
+  "consistency_factor": 0.18678836021728595,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 13,
+  "final": 44.52696485863256,
+  "total_weighted_score": 259.29089989909346,
+  "consistency_factor": 0.18128554075557257,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 14,
+  "final": 43.99830489315482,
+  "total_weighted_score": 258.75238160631045,
+  "consistency_factor": 0.179505986826304,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 15,
+  "final": 43.45424629138946,
+  "total_weighted_score": 261.42487775158475,
+  "consistency_factor": 0.17547395165249016,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 16,
+  "final": 43.43302815356257,
+  "total_weighted_score": 260.86345334778366,
+  "consistency_factor": 0.17576573668038672,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 17,
+  "final": 43.322368072813674,
+  "total_weighted_score": 260.4526275645667,
+  "consistency_factor": 0.17559445329661885,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 18,
+  "final": 43.23275446965504,
+  "total_weighted_score": 261.5975163941073,
+  "consistency_factor": 0.17446432659084263,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 19,
+  "final": 43.23275446965504,
+  "total_weighted_score": 261.5975163941073,
+  "consistency_factor": 0.17446432659084263,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 20,
+  "final": 43.119364588168786,
+  "total_weighted_score": 261.72772924386254,
+  "consistency_factor": 0.17392017498497436,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 21,
+  "final": 43.08536781559318,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.1720558770673679,
+  "distribution_fidelity_factor": 0.9413993431461818
+ },
+ {
+  "rank": 22,
+  "final": 42.6255582209184,
+  "total_weighted_score": 261.594,
+  "consistency_factor": 0.172174,
+  "distribution_fidelity_factor": 0.9464
+ },
+ {
+  "rank": 23,
+  "final": 42.29095540850233,
+  "total_weighted_score": 260.2042724265116,
+  "consistency_factor": 0.17157753409555276,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 24,
+  "final": 42.16243578128282,
+  "total_weighted_score": 261.5923,
+  "consistency_factor": 0.174301,
+  "distribution_fidelity_factor": 0.9247
+ },
+ {
+  "rank": 25,
+  "final": 41.64116062189586,
+  "total_weighted_score": 259.0504940423559,
+  "consistency_factor": 0.16969371178952455,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 26,
+  "final": 41.5930173788432,
+  "total_weighted_score": 261.5945,
+  "consistency_factor": 0.173276,
+  "distribution_fidelity_factor": 0.9176
+ },
+ {
+  "rank": 27,
+  "final": 41.57171760993879,
+  "total_weighted_score": 262.035542591212,
+  "consistency_factor": 0.16748083361857732,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 28,
+  "final": 41.556401035813785,
+  "total_weighted_score": 260.80206482142984,
+  "consistency_factor": 0.16821094543119833,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 29,
+  "final": 41.48207303539128,
+  "total_weighted_score": 262.329136961485,
+  "consistency_factor": 0.16693264313397704,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 30,
+  "final": 41.43514871754753,
+  "total_weighted_score": 261.5912,
+  "consistency_factor": 0.174292,
+  "distribution_fidelity_factor": 0.9088
+ },
+ {
+  "rank": 31,
+  "final": 41.11379631735395,
+  "total_weighted_score": 262.0609951026521,
+  "consistency_factor": 0.16561990939708052,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 32,
+  "final": 41.00483166596762,
+  "total_weighted_score": 262.0678429830347,
+  "consistency_factor": 0.1651766476931166,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 33,
+  "final": 40.771803128779766,
+  "total_weighted_score": 257.84630845516375,
+  "consistency_factor": 0.16692690799060525,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 34,
+  "final": 40.654378005282794,
+  "total_weighted_score": 261.5882,
+  "consistency_factor": 0.170335,
+  "distribution_fidelity_factor": 0.9124
+ },
+ {
+  "rank": 35,
+  "final": 40.584589452188794,
+  "total_weighted_score": 261.50981286386616,
+  "consistency_factor": 0.16383267248910632,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 36,
+  "final": 40.46721406294099,
+  "total_weighted_score": 261.9244288085154,
+  "consistency_factor": 0.16310025864329913,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 37,
+  "final": 40.18794665581412,
+  "total_weighted_score": 260.3096392736518,
+  "consistency_factor": 0.16297947530017773,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 38,
+  "final": 40.13117835380293,
+  "total_weighted_score": 260.01252201864224,
+  "consistency_factor": 0.16293522949140155,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 39,
+  "final": 40.10849919215782,
+  "total_weighted_score": 259.73189052822414,
+  "consistency_factor": 0.16301909709622767,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 40,
+  "final": 40.0734700710008,
+  "total_weighted_score": 257.10253397582125,
+  "consistency_factor": 0.16454244345740077,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 41,
+  "final": 39.82644923831656,
+  "total_weighted_score": 261.5896,
+  "consistency_factor": 0.162121,
+  "distribution_fidelity_factor": 0.9391
+ },
+ {
+  "rank": 42,
+  "final": 39.64237449753295,
+  "total_weighted_score": 261.5965,
+  "consistency_factor": 0.165817,
+  "distribution_fidelity_factor": 0.9139
+ },
+ {
+  "rank": 43,
+  "final": 39.62858946371324,
+  "total_weighted_score": 261.5925,
+  "consistency_factor": 0.166089,
+  "distribution_fidelity_factor": 0.9121
+ },
+ {
+  "rank": 44,
+  "final": 39.49490129901249,
+  "total_weighted_score": 257.2024967061387,
+  "consistency_factor": 0.1621038021294835,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 45,
+  "final": 39.35478791373656,
+  "total_weighted_score": 261.5905,
+  "consistency_factor": 0.159521,
+  "distribution_fidelity_factor": 0.9431
+ },
+ {
+  "rank": 46,
+  "final": 39.34914998136504,
+  "total_weighted_score": 260.67732988023215,
+  "consistency_factor": 0.15935270494528928,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 47,
+  "final": 39.14878584073205,
+  "total_weighted_score": 259.071897132005,
+  "consistency_factor": 0.15952374643659614,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 48,
+  "final": 39.09187244751104,
+  "total_weighted_score": 261.5926,
+  "consistency_factor": 0.159112,
+  "distribution_fidelity_factor": 0.9392
+ },
+ {
+  "rank": 49,
+  "final": 38.3496306478912,
+  "total_weighted_score": 261.5888,
+  "consistency_factor": 0.166028,
+  "distribution_fidelity_factor": 0.883
+ },
+ {
+  "rank": 50,
+  "final": 38.25717728029081,
+  "total_weighted_score": 260.9627286116843,
+  "consistency_factor": 0.15476109264634563,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 51,
+  "final": 38.09566856049441,
+  "total_weighted_score": 258.2201941908537,
+  "consistency_factor": 0.1557445093019368,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 52,
+  "final": 37.77894194055481,
+  "total_weighted_score": 261.5916,
+  "consistency_factor": 0.155457,
+  "distribution_fidelity_factor": 0.929
+ },
+ {
+  "rank": 53,
+  "final": 37.767895600197406,
+  "total_weighted_score": 261.3855327487744,
+  "consistency_factor": 0.15253467779287505,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 54,
+  "final": 37.464744546182516,
+  "total_weighted_score": 261.5942,
+  "consistency_factor": 0.166978,
+  "distribution_fidelity_factor": 0.8577
+ },
+ {
+  "rank": 55,
+  "final": 37.399565140822496,
+  "total_weighted_score": 261.5954,
+  "consistency_factor": 0.151625,
+  "distribution_fidelity_factor": 0.9429
+ },
+ {
+  "rank": 56,
+  "final": 37.366302567853,
+  "total_weighted_score": 261.5942,
+  "consistency_factor": 0.159154,
+  "distribution_fidelity_factor": 0.8975
+ },
+ {
+  "rank": 57,
+  "final": 37.23139636117252,
+  "total_weighted_score": 261.9426183984341,
+  "consistency_factor": 0.1500481028650252,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 58,
+  "final": 37.142497209956495,
+  "total_weighted_score": 260.94783277586555,
+  "consistency_factor": 0.15026047369615828,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 59,
+  "final": 37.02249125911329,
+  "total_weighted_score": 261.7353044574629,
+  "consistency_factor": 0.14932436647899883,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 60,
+  "final": 36.930135893287506,
+  "total_weighted_score": 261.595,
+  "consistency_factor": 0.153033,
+  "distribution_fidelity_factor": 0.9225
+ },
+ {
+  "rank": 61,
+  "final": 36.78524756670387,
+  "total_weighted_score": 261.5951,
+  "consistency_factor": 0.161131,
+  "distribution_fidelity_factor": 0.8727
+ },
+ {
+  "rank": 62,
+  "final": 36.624161821930336,
+  "total_weighted_score": 260.3513434128953,
+  "consistency_factor": 0.14850299746705772,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 63,
+  "final": 36.608980468764294,
+  "total_weighted_score": 260.1263980004783,
+  "consistency_factor": 0.1485698057561411,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 64,
+  "final": 36.48699629164875,
+  "total_weighted_score": 261.5909,
+  "consistency_factor": 0.150125,
+  "distribution_fidelity_factor": 0.9291
+ },
+ {
+  "rank": 65,
+  "final": 36.4722839266698,
+  "total_weighted_score": 261.5885,
+  "consistency_factor": 0.153081,
+  "distribution_fidelity_factor": 0.9108
+ },
+ {
+  "rank": 66,
+  "final": 36.2622372286471,
+  "total_weighted_score": 261.5965,
+  "consistency_factor": 0.148462,
+  "distribution_fidelity_factor": 0.9337
+ },
+ {
+  "rank": 67,
+  "final": 36.19743652531188,
+  "total_weighted_score": 261.5886,
+  "consistency_factor": 0.148106,
+  "distribution_fidelity_factor": 0.9343
+ },
+ {
+  "rank": 68,
+  "final": 35.97376803015996,
+  "total_weighted_score": 261.5951,
+  "consistency_factor": 0.152644,
+  "distribution_fidelity_factor": 0.9009
+ },
+ {
+  "rank": 69,
+  "final": 35.9333224165264,
+  "total_weighted_score": 261.80379384956865,
+  "consistency_factor": 0.14489346122426017,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 70,
+  "final": 35.89924138606386,
+  "total_weighted_score": 261.5949,
+  "consistency_factor": 0.145589,
+  "distribution_fidelity_factor": 0.9426
+ },
+ {
+  "rank": 71,
+  "final": 35.638096080970804,
+  "total_weighted_score": 261.5955,
+  "consistency_factor": 0.146677,
+  "distribution_fidelity_factor": 0.9288
+ },
+ {
+  "rank": 72,
+  "final": 35.228751879172925,
+  "total_weighted_score": 257.4918315776793,
+  "consistency_factor": 0.14443124300077018,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 73,
+  "final": 35.01544253373095,
+  "total_weighted_score": 261.5915,
+  "consistency_factor": 0.157867,
+  "distribution_fidelity_factor": 0.8479
+ },
+ {
+  "rank": 74,
+  "final": 34.74219706512772,
+  "total_weighted_score": 261.5879,
+  "consistency_factor": 0.141682,
+  "distribution_fidelity_factor": 0.9374
+ },
+ {
+  "rank": 75,
+  "final": 34.14657714635151,
+  "total_weighted_score": 260.35143582578297,
+  "consistency_factor": 0.13845688221346925,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 76,
+  "final": 32.08461469746225,
+  "total_weighted_score": 261.5955,
+  "consistency_factor": 0.138509,
+  "distribution_fidelity_factor": 0.8855
+ },
+ {
+  "rank": 77,
+  "final": 32.05722866593824,
+  "total_weighted_score": 261.5908,
+  "consistency_factor": 0.129762,
+  "distribution_fidelity_factor": 0.9444
+ },
+ {
+  "rank": 78,
+  "final": 31.831280389074596,
+  "total_weighted_score": 261.597,
+  "consistency_factor": 0.141374,
+  "distribution_fidelity_factor": 0.8607
+ },
+ {
+  "rank": 79,
+  "final": 31.561800034307197,
+  "total_weighted_score": 261.5956,
+  "consistency_factor": 0.13004,
+  "distribution_fidelity_factor": 0.9278
+ },
+ {
+  "rank": 80,
+  "final": 31.390884278167494,
+  "total_weighted_score": 261.5934,
+  "consistency_factor": 0.139875,
+  "distribution_fidelity_factor": 0.8579
+ },
+ {
+  "rank": 81,
+  "final": 31.3541933517285,
+  "total_weighted_score": 261.5889,
+  "consistency_factor": 0.12685,
+  "distribution_fidelity_factor": 0.9449
+ },
+ {
+  "rank": 82,
+  "final": 31.109779682296,
+  "total_weighted_score": 261.592,
+  "consistency_factor": 0.129689,
+  "distribution_fidelity_factor": 0.917
+ },
+ {
+  "rank": 83,
+  "final": 31.037920634096043,
+  "total_weighted_score": 261.5969,
+  "consistency_factor": 0.132007,
+  "distribution_fidelity_factor": 0.8988
+ },
+ {
+  "rank": 84,
+  "final": 31.026514797451348,
+  "total_weighted_score": 261.5961,
+  "consistency_factor": 0.126755,
+  "distribution_fidelity_factor": 0.9357
+ },
+ {
+  "rank": 85,
+  "final": 30.996387280991,
+  "total_weighted_score": 261.5905,
+  "consistency_factor": 0.135652,
+  "distribution_fidelity_factor": 0.8735
+ },
+ {
+  "rank": 86,
+  "final": 30.624592181087397,
+  "total_weighted_score": 261.589,
+  "consistency_factor": 0.134287,
+  "distribution_fidelity_factor": 0.8718
+ },
+ {
+  "rank": 87,
+  "final": 30.330982257661795,
+  "total_weighted_score": 261.5915,
+  "consistency_factor": 0.135564,
+  "distribution_fidelity_factor": 0.8553
+ },
+ {
+  "rank": 88,
+  "final": 29.93492083608,
+  "total_weighted_score": 261.5916,
+  "consistency_factor": 0.1326,
+  "distribution_fidelity_factor": 0.863
+ },
+ {
+  "rank": 89,
+  "final": 29.861662108500003,
+  "total_weighted_score": 261.5916,
+  "consistency_factor": 0.121764,
+  "distribution_fidelity_factor": 0.9375
+ },
+ {
+  "rank": 90,
+  "final": 29.771987614871044,
+  "total_weighted_score": 261.5914,
+  "consistency_factor": 0.129096,
+  "distribution_fidelity_factor": 0.8816
+ },
+ {
+  "rank": 91,
+  "final": 29.454597236229006,
+  "total_weighted_score": 261.595,
+  "consistency_factor": 0.130713,
+  "distribution_fidelity_factor": 0.8614
+ },
+ {
+  "rank": 92,
+  "final": 28.72291585423536,
+  "total_weighted_score": 261.5944,
+  "consistency_factor": 0.118102,
+  "distribution_fidelity_factor": 0.9297
+ },
+ {
+  "rank": 93,
+  "final": 28.548791175305002,
+  "total_weighted_score": 261.593,
+  "consistency_factor": 0.123595,
+  "distribution_fidelity_factor": 0.883
+ },
+ {
+  "rank": 94,
+  "final": 28.35294439628976,
+  "total_weighted_score": 261.5906,
+  "consistency_factor": 0.120003,
+  "distribution_fidelity_factor": 0.9032
+ },
+ {
+  "rank": 95,
+  "final": 28.00306681584603,
+  "total_weighted_score": 258.5069985819744,
+  "consistency_factor": 0.11435644339270983,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 96,
+  "final": 27.3067360379379,
+  "total_weighted_score": 261.5945,
+  "consistency_factor": 0.117261,
+  "distribution_fidelity_factor": 0.8902
+ },
+ {
+  "rank": 97,
+  "final": 27.27921909070662,
+  "total_weighted_score": 261.1557586837366,
+  "consistency_factor": 0.11027058422926089,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 98,
+  "final": 27.27921909070662,
+  "total_weighted_score": 261.1557586837366,
+  "consistency_factor": 0.11027058422926089,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 99,
+  "final": 27.220294553928298,
+  "total_weighted_score": 261.5943,
+  "consistency_factor": 0.11799,
+  "distribution_fidelity_factor": 0.8819
+ },
+ {
+  "rank": 100,
+  "final": 27.13064945872534,
+  "total_weighted_score": 261.0389916448694,
+  "consistency_factor": 0.10971907951869775,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 101,
+  "final": 26.98821265741212,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.10758387018637393,
+  "distribution_fidelity_factor": 0.9430626785444208
+ },
+ {
+  "rank": 102,
+  "final": 26.939632678647982,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.10946737486199744,
+  "distribution_fidelity_factor": 0.9352887562214104
+ },
+ {
+  "rank": 103,
+  "final": 26.8757905165866,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.10925391977374277,
+  "distribution_fidelity_factor": 0.9348952794355522
+ },
+ {
+  "rank": 104,
+  "final": 26.86402302853517,
+  "total_weighted_score": 259.37505018241154,
+  "consistency_factor": 0.10933776736476937,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 105,
+  "final": 26.78871465451896,
+  "total_weighted_score": 261.5882,
+  "consistency_factor": 0.115676,
+  "distribution_fidelity_factor": 0.8853
+ },
+ {
+  "rank": 106,
+  "final": 26.757259042278395,
+  "total_weighted_score": 259.86528845612634,
+  "consistency_factor": 0.10869778623874289,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 107,
+  "final": 26.73136625834053,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.10863679812009919,
+  "distribution_fidelity_factor": 0.9351535919298845
+ },
+ {
+  "rank": 108,
+  "final": 26.724055615573647,
+  "total_weighted_score": 261.57623440197773,
+  "consistency_factor": 0.10785280186331898,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 109,
+  "final": 26.714208456561664,
+  "total_weighted_score": 265.99536193582105,
+  "consistency_factor": 0.10659680687123939,
+  "distribution_fidelity_factor": 0.9421586743328088
+ },
+ {
+  "rank": 110,
+  "final": 26.706126517672782,
+  "total_weighted_score": 260.4228849612401,
+  "consistency_factor": 0.10825777700281676,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 111,
+  "final": 26.634702922965122,
+  "total_weighted_score": 265.6923531586367,
+  "consistency_factor": 0.10582691850337723,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 112,
+  "final": 26.575264547085187,
+  "total_weighted_score": 260.5446862533799,
+  "consistency_factor": 0.10767694485724034,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 113,
+  "final": 26.575264547085187,
+  "total_weighted_score": 260.5446862533799,
+  "consistency_factor": 0.10767694485724034,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 114,
+  "final": 26.57306832576292,
+  "total_weighted_score": 260.9579432689943,
+  "consistency_factor": 0.10749754149124076,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 115,
+  "final": 26.452511734995383,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.1055338072831284,
+  "distribution_fidelity_factor": 0.9422993844564647
+ },
+ {
+  "rank": 116,
+  "final": 26.422907828273054,
+  "total_weighted_score": 261.99473219194743,
+  "consistency_factor": 0.10844323852239052,
+  "distribution_fidelity_factor": 0.9300056174323584
+ },
+ {
+  "rank": 117,
+  "final": 26.35068080772851,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.10519108692515204,
+  "distribution_fidelity_factor": 0.9417301950547287
+ },
+ {
+  "rank": 118,
+  "final": 26.274695058521093,
+  "total_weighted_score": 260.1576242503186,
+  "consistency_factor": 0.10661749510495437,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 119,
+  "final": 26.253615920981783,
+  "total_weighted_score": 259.67713434433597,
+  "consistency_factor": 0.10672908005350233,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 120,
+  "final": 26.253615920981783,
+  "total_weighted_score": 259.67713434433597,
+  "consistency_factor": 0.10672908005350233,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 121,
+  "final": 26.22497465763438,
+  "total_weighted_score": 260.90991543818626,
+  "consistency_factor": 0.10610890716212391,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 122,
+  "final": 26.202177715389002,
+  "total_weighted_score": 271.78208499232113,
+  "consistency_factor": 0.11204767454314755,
+  "distribution_fidelity_factor": 0.8604263746082309
+ },
+ {
+  "rank": 123,
+  "final": 26.186271693827972,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.10644252041053888,
+  "distribution_fidelity_factor": 0.9349691194225181
+ },
+ {
+  "rank": 124,
+  "final": 26.14387072343797,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.10433989427071882,
+  "distribution_fidelity_factor": 0.9419613706364012
+ },
+ {
+  "rank": 125,
+  "final": 26.00816846843176,
+  "total_weighted_score": 261.1554096509551,
+  "consistency_factor": 0.10513276627133329,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 126,
+  "final": 25.99537875204541,
+  "total_weighted_score": 260.51913927769226,
+  "consistency_factor": 0.10533770772222516,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 127,
+  "final": 25.990270787078117,
+  "total_weighted_score": 259.4259946628881,
+  "consistency_factor": 0.10576078418771735,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 128,
+  "final": 25.91405686937163,
+  "total_weighted_score": 257.5818715874268,
+  "consistency_factor": 0.10620561095064156,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 129,
+  "final": 25.89876801075339,
+  "total_weighted_score": 259.39381392420637,
+  "consistency_factor": 0.1054015115844787,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 130,
+  "final": 25.79335891568749,
+  "total_weighted_score": 262.26159934347663,
+  "consistency_factor": 0.1038246664593148,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 131,
+  "final": 25.758569458839002,
+  "total_weighted_score": 261.5926,
+  "consistency_factor": 0.10537,
+  "distribution_fidelity_factor": 0.9345
+ },
+ {
+  "rank": 132,
+  "final": 25.722317669060967,
+  "total_weighted_score": 260.3163453078159,
+  "consistency_factor": 0.10431241678491372,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 133,
+  "final": 25.71064633954171,
+  "total_weighted_score": 260.14488268357377,
+  "consistency_factor": 0.1043338072955411,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 134,
+  "final": 25.65801904484174,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.1043227436040648,
+  "distribution_fidelity_factor": 0.9347228726432651
+ },
+ {
+  "rank": 135,
+  "final": 25.616250921714098,
+  "total_weighted_score": 265.99536193582105,
+  "consistency_factor": 0.10225076701374462,
+  "distribution_fidelity_factor": 0.9418352271042507
+ },
+ {
+  "rank": 136,
+  "final": 25.611639557948262,
+  "total_weighted_score": 261.7442456483187,
+  "consistency_factor": 0.10329697106743423,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 137,
+  "final": 25.576307271396868,
+  "total_weighted_score": 261.3362308188326,
+  "consistency_factor": 0.10331552009328433,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 138,
+  "final": 25.540797467587495,
+  "total_weighted_score": 261.597,
+  "consistency_factor": 0.113199,
+  "distribution_fidelity_factor": 0.8625
+ },
+ {
+  "rank": 139,
+  "final": 25.518200763250693,
+  "total_weighted_score": 261.5923,
+  "consistency_factor": 0.107327,
+  "distribution_fidelity_factor": 0.9089
+ },
+ {
+  "rank": 140,
+  "final": 25.509480618695605,
+  "total_weighted_score": 261.5957,
+  "consistency_factor": 0.113192,
+  "distribution_fidelity_factor": 0.8615
+ },
+ {
+  "rank": 141,
+  "final": 25.42371165048117,
+  "total_weighted_score": 261.5947,
+  "consistency_factor": 0.106647,
+  "distribution_fidelity_factor": 0.9113
+ },
+ {
+  "rank": 142,
+  "final": 25.304651091180762,
+  "total_weighted_score": 259.1601175036196,
+  "consistency_factor": 0.10307646922236975,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 143,
+  "final": 25.289052037537548,
+  "total_weighted_score": 254.9142682952191,
+  "consistency_factor": 0.10472870990170134,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 144,
+  "final": 25.281960578887283,
+  "total_weighted_score": 263.0494788638582,
+  "consistency_factor": 0.10278919526920456,
+  "distribution_fidelity_factor": 0.9350306304793254
+ },
+ {
+  "rank": 145,
+  "final": 25.272690586521275,
+  "total_weighted_score": 262.97447886385817,
+  "consistency_factor": 0.10277945874094051,
+  "distribution_fidelity_factor": 0.9350429302631115
+ },
+ {
+  "rank": 146,
+  "final": 25.17449129264607,
+  "total_weighted_score": 261.04345655859515,
+  "consistency_factor": 0.10180643749674763,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 147,
+  "final": 25.138068155370004,
+  "total_weighted_score": 261.5941,
+  "consistency_factor": 0.106773,
+  "distribution_fidelity_factor": 0.9
+ },
+ {
+  "rank": 148,
+  "final": 25.132376546859657,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.10034177329127049,
+  "distribution_fidelity_factor": 0.9415976891691997
+ },
+ {
+  "rank": 149,
+  "final": 25.108685731526176,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.10206769938257677,
+  "distribution_fidelity_factor": 0.9349198960045898
+ },
+ {
+  "rank": 150,
+  "final": 25.09259996504677,
+  "total_weighted_score": 260.0411460893745,
+  "consistency_factor": 0.10186639572286309,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 151,
+  "final": 25.05133912174303,
+  "total_weighted_score": 265.99536193582105,
+  "consistency_factor": 0.09999736041241823,
+  "distribution_fidelity_factor": 0.9418209478885146
+ },
+ {
+  "rank": 152,
+  "final": 25.007828238874623,
+  "total_weighted_score": 260.0574118147517,
+  "consistency_factor": 0.10151590493307013,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 153,
+  "final": 24.94622932943822,
+  "total_weighted_score": 259.2585181304479,
+  "consistency_factor": 0.10157789872672791,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 154,
+  "final": 24.929596095142045,
+  "total_weighted_score": 258.28590815136744,
+  "consistency_factor": 0.10189242035783115,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 155,
+  "final": 24.90815972364685,
+  "total_weighted_score": 260.2815473733343,
+  "consistency_factor": 0.10102424432407064,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 156,
+  "final": 24.841391920651393,
+  "total_weighted_score": 258.1574204642,
+  "consistency_factor": 0.10158244514563634,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 157,
+  "final": 24.831022213876295,
+  "total_weighted_score": 262.37749034575404,
+  "consistency_factor": 0.09990687463816643,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 158,
+  "final": 24.828797894279575,
+  "total_weighted_score": 266.0029187972198,
+  "consistency_factor": 0.09906040765431139,
+  "distribution_fidelity_factor": 0.942256583244545
+ },
+ {
+  "rank": 159,
+  "final": 24.801129782536247,
+  "total_weighted_score": 265.99536193582105,
+  "consistency_factor": 0.09901487190028824,
+  "distribution_fidelity_factor": 0.9416661756505748
+ },
+ {
+  "rank": 160,
+  "final": 24.788621459535676,
+  "total_weighted_score": 258.64718146589644,
+  "consistency_factor": 0.10117471131484013,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 161,
+  "final": 24.726648446775027,
+  "total_weighted_score": 256.848943373637,
+  "consistency_factor": 0.10162833706544161,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 162,
+  "final": 24.713118665235,
+  "total_weighted_score": 261.5886,
+  "consistency_factor": 0.09975,
+  "distribution_fidelity_factor": 0.9471
+ },
+ {
+  "rank": 163,
+  "final": 24.62669694979952,
+  "total_weighted_score": 261.83107839457176,
+  "consistency_factor": 0.09929155681853565,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 164,
+  "final": 24.57988009429644,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.09991677040230744,
+  "distribution_fidelity_factor": 0.9349322030739143
+ },
+ {
+  "rank": 165,
+  "final": 24.559096772485745,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.0998362294437739,
+  "distribution_fidelity_factor": 0.9348952794355524
+ },
+ {
+  "rank": 166,
+  "final": 24.532936619136862,
+  "total_weighted_score": 259.86299549331216,
+  "consistency_factor": 0.09966265327362872,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 167,
+  "final": 24.496859236528984,
+  "total_weighted_score": 261.5946,
+  "consistency_factor": 0.103463,
+  "distribution_fidelity_factor": 0.9051
+ },
+ {
+  "rank": 168,
+  "final": 24.463291462282132,
+  "total_weighted_score": 258.7227082749809,
+  "consistency_factor": 0.09981773006592014,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 169,
+  "final": 24.460624412211487,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.09944378264252886,
+  "distribution_fidelity_factor": 0.9348214102768817
+ },
+ {
+  "rank": 170,
+  "final": 24.41824654725063,
+  "total_weighted_score": 265.6923531586367,
+  "consistency_factor": 0.09702033451716036,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 171,
+  "final": 24.396956363702994,
+  "total_weighted_score": 261.59,
+  "consistency_factor": 0.100101,
+  "distribution_fidelity_factor": 0.9317
+ },
+ {
+  "rank": 172,
+  "final": 24.351419866561205,
+  "total_weighted_score": 259.6188549533084,
+  "consistency_factor": 0.0990182866332349,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 173,
+  "final": 24.3481482262641,
+  "total_weighted_score": 261.5915,
+  "consistency_factor": 0.108003,
+  "distribution_fidelity_factor": 0.8618
+ },
+ {
+  "rank": 174,
+  "final": 24.341146941901922,
+  "total_weighted_score": 260.6778145696678,
+  "consistency_factor": 0.09857443925546822,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 175,
+  "final": 24.309608897965592,
+  "total_weighted_score": 263.0494788638582,
+  "consistency_factor": 0.09883199244404367,
+  "distribution_fidelity_factor": 0.9350675274040445
+ },
+ {
+  "rank": 176,
+  "final": 24.30959260058763,
+  "total_weighted_score": 261.87132996652736,
+  "consistency_factor": 0.09964808753139014,
+  "distribution_fidelity_factor": 0.9315812926189352
+ },
+ {
+  "rank": 177,
+  "final": 24.285699245341274,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.09869626201961713,
+  "distribution_fidelity_factor": 0.9351658836297472
+ },
+ {
+  "rank": 178,
+  "final": 24.258538993411907,
+  "total_weighted_score": 259.39767113674156,
+  "consistency_factor": 0.09872472146451261,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 179,
+  "final": 24.168842378141075,
+  "total_weighted_score": 260.6069436521835,
+  "consistency_factor": 0.09790327390895841,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 180,
+  "final": 23.978745051901623,
+  "total_weighted_score": 258.32708630663336,
+  "consistency_factor": 0.09799047280978333,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 181,
+  "final": 23.913365940229937,
+  "total_weighted_score": 253.59811171073864,
+  "consistency_factor": 0.0993292449389437,
+  "distribution_fidelity_factor": 0.9493307756647041
+ },
+ {
+  "rank": 182,
+  "final": 23.680980174352054,
+  "total_weighted_score": 260.1242323331145,
+  "consistency_factor": 0.09610505048318951,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 183,
+  "final": 23.62796753998268,
+  "total_weighted_score": 261.5914,
+  "consistency_factor": 0.095743,
+  "distribution_fidelity_factor": 0.9434
+ },
+ {
+  "rank": 184,
+  "final": 23.547189856462648,
+  "total_weighted_score": 261.5949,
+  "consistency_factor": 0.095465,
+  "distribution_fidelity_factor": 0.9429
+ },
+ {
+  "rank": 185,
+  "final": 23.453882779941015,
+  "total_weighted_score": 259.46774714858697,
+  "consistency_factor": 0.09542424176024,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 186,
+  "final": 23.387465681159167,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.09504836982195224,
+  "distribution_fidelity_factor": 0.9351412994221553
+ },
+ {
+  "rank": 187,
+  "final": 23.36112560615064,
+  "total_weighted_score": 261.5932,
+  "consistency_factor": 0.100771,
+  "distribution_fidelity_factor": 0.8862
+ },
+ {
+  "rank": 188,
+  "final": 23.342579516599613,
+  "total_weighted_score": 250.38511678714613,
+  "consistency_factor": 0.1032330960035915,
+  "distribution_fidelity_factor": 0.9030699358869559
+ },
+ {
+  "rank": 189,
+  "final": 23.21700399011536,
+  "total_weighted_score": 251.01657662197704,
+  "consistency_factor": 0.10415463178918798,
+  "distribution_fidelity_factor": 0.8880249864610373
+ },
+ {
+  "rank": 190,
+  "final": 23.097742496009207,
+  "total_weighted_score": 260.8613592680677,
+  "consistency_factor": 0.09347320433944584,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 191,
+  "final": 23.054346275941196,
+  "total_weighted_score": 261.5884,
+  "consistency_factor": 0.103807,
+  "distribution_fidelity_factor": 0.849
+ },
+ {
+  "rank": 192,
+  "final": 23.0523529294549,
+  "total_weighted_score": 244.92166186560152,
+  "consistency_factor": 0.10703958400713391,
+  "distribution_fidelity_factor": 0.8793133155276088
+ },
+ {
+  "rank": 193,
+  "final": 23.001386854490836,
+  "total_weighted_score": 257.51601969321246,
+  "consistency_factor": 0.09888106696487146,
+  "distribution_fidelity_factor": 0.9033096032303612
+ },
+ {
+  "rank": 194,
+  "final": 22.80119635461033,
+  "total_weighted_score": 263.1244788638582,
+  "consistency_factor": 0.09267547712738168,
+  "distribution_fidelity_factor": 0.9350429302631115
+ },
+ {
+  "rank": 195,
+  "final": 22.76337069053079,
+  "total_weighted_score": 246.45033380631278,
+  "consistency_factor": 0.10428671128273133,
+  "distribution_fidelity_factor": 0.8856827535245625
+ },
+ {
+  "rank": 196,
+  "final": 22.56947529817712,
+  "total_weighted_score": 242.73389760456908,
+  "consistency_factor": 0.09712845623142859,
+  "distribution_fidelity_factor": 0.9572922589608178
+ },
+ {
+  "rank": 197,
+  "final": 22.382686168858825,
+  "total_weighted_score": 241.91738967538672,
+  "consistency_factor": 0.10421203022958232,
+  "distribution_fidelity_factor": 0.8878247769342221
+ },
+ {
+  "rank": 198,
+  "final": 22.350049722281156,
+  "total_weighted_score": 260.9098367739578,
+  "consistency_factor": 0.09043059514943415,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 199,
+  "final": 22.347609828065313,
+  "total_weighted_score": 255.26271556791843,
+  "consistency_factor": 0.10083496720242964,
+  "distribution_fidelity_factor": 0.8682254936389725
+ },
+ {
+  "rank": 200,
+  "final": 22.303859260707696,
+  "total_weighted_score": 243.05039992742778,
+  "consistency_factor": 0.09585861520276151,
+  "distribution_fidelity_factor": 0.9573098449150163
+ },
+ {
+  "rank": 201,
+  "final": 22.29232764551408,
+  "total_weighted_score": 246.64838624071442,
+  "consistency_factor": 0.1036900999520982,
+  "distribution_fidelity_factor": 0.8716454071150226
+ },
+ {
+  "rank": 202,
+  "final": 21.892376257096945,
+  "total_weighted_score": 245.87357556814914,
+  "consistency_factor": 0.09852743701363313,
+  "distribution_fidelity_factor": 0.9036991234388342
+ },
+ {
+  "rank": 203,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 204,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 205,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 206,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 207,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 208,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 209,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 210,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 211,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 212,
+  "final": 21.82928581433384,
+  "total_weighted_score": 230.65936236544925,
+  "consistency_factor": 0.10024740830895516,
+  "distribution_fidelity_factor": 0.9440506300427276
+ },
+ {
+  "rank": 213,
+  "final": 21.770326888728416,
+  "total_weighted_score": 259.26974999786836,
+  "consistency_factor": 0.08864218439656145,
+  "distribution_fidelity_factor": 0.9472675310206581
+ },
+ {
+  "rank": 214,
+  "final": 21.53538675381097,
+  "total_weighted_score": 247.8617798108486,
+  "consistency_factor": 0.09781000656697063,
+  "distribution_fidelity_factor": 0.8883003305213796
+ },
+ {
+  "rank": 215,
+  "final": 21.43862273081584,
+  "total_weighted_score": 261.5948,
+  "consistency_factor": 0.088906,
+  "distribution_fidelity_factor": 0.9218
+ },
+ {
+  "rank": 216,
+  "final": 21.338781388418756,
+  "total_weighted_score": 257.36511598496554,
+  "consistency_factor": 0.09178360387865869,
+  "distribution_fidelity_factor": 0.9033474582322184
+ },
+ {
+  "rank": 217,
+  "final": 21.27932426437567,
+  "total_weighted_score": 243.54390880230082,
+  "consistency_factor": 0.09131497192206132,
+  "distribution_fidelity_factor": 0.9568383437573843
+ },
+ {
+  "rank": 218,
+  "final": 21.180649640319967,
+  "total_weighted_score": 235.3617496532141,
+  "consistency_factor": 0.09462093508701429,
+  "distribution_fidelity_factor": 0.9510780460601828
+ },
+ {
+  "rank": 219,
+  "final": 20.956055412790253,
+  "total_weighted_score": 240.45638854165057,
+  "consistency_factor": 0.09734322790491401,
+  "distribution_fidelity_factor": 0.8952977121920179
+ },
+ {
+  "rank": 220,
+  "final": 20.59140665894904,
+  "total_weighted_score": 261.5883,
+  "consistency_factor": 0.089016,
+  "distribution_fidelity_factor": 0.8843
+ },
+ {
+  "rank": 221,
+  "final": 20.05457835357912,
+  "total_weighted_score": 261.5876,
+  "consistency_factor": 0.088959,
+  "distribution_fidelity_factor": 0.8618
+ },
+ {
+  "rank": 222,
+  "final": 19.990931936195217,
+  "total_weighted_score": 261.5954,
+  "consistency_factor": 0.085071,
+  "distribution_fidelity_factor": 0.8983
+ },
+ {
+  "rank": 223,
+  "final": 19.83650223668256,
+  "total_weighted_score": 261.5912,
+  "consistency_factor": 0.080091,
+  "distribution_fidelity_factor": 0.9468
+ },
+ {
+  "rank": 224,
+  "final": 19.656930183925713,
+  "total_weighted_score": 249.48545068833025,
+  "consistency_factor": 0.08835970728328335,
+  "distribution_fidelity_factor": 0.8916947360322007
+ },
+ {
+  "rank": 225,
+  "final": 19.491588556331042,
+  "total_weighted_score": 261.5901,
+  "consistency_factor": 0.084519,
+  "distribution_fidelity_factor": 0.8816
+ },
+ {
+  "rank": 226,
+  "final": 19.48138964233445,
+  "total_weighted_score": 196.47773580273716,
+  "consistency_factor": 0.10335103586507728,
+  "distribution_fidelity_factor": 0.9593824156956288
+ },
+ {
+  "rank": 227,
+  "final": 19.436128118162486,
+  "total_weighted_score": 199.1697650886807,
+  "consistency_factor": 0.10179825914704028,
+  "distribution_fidelity_factor": 0.9586189079549001
+ },
+ {
+  "rank": 228,
+  "final": 19.27634414868162,
+  "total_weighted_score": 261.5958,
+  "consistency_factor": 0.078533,
+  "distribution_fidelity_factor": 0.9383
+ },
+ {
+  "rank": 229,
+  "final": 19.16931133886352,
+  "total_weighted_score": 261.5934,
+  "consistency_factor": 0.085367,
+  "distribution_fidelity_factor": 0.8584
+ },
+ {
+  "rank": 230,
+  "final": 18.92833473411672,
+  "total_weighted_score": 261.5881,
+  "consistency_factor": 0.082536,
+  "distribution_fidelity_factor": 0.8767
+ },
+ {
+  "rank": 231,
+  "final": 18.89191843989375,
+  "total_weighted_score": 261.5875,
+  "consistency_factor": 0.082415,
+  "distribution_fidelity_factor": 0.8763
+ },
+ {
+  "rank": 232,
+  "final": 18.25695654258759,
+  "total_weighted_score": 261.5971,
+  "consistency_factor": 0.077433,
+  "distribution_fidelity_factor": 0.9013
+ },
+ {
+  "rank": 233,
+  "final": 18.252907418487503,
+  "total_weighted_score": 261.5887,
+  "consistency_factor": 0.08185,
+  "distribution_fidelity_factor": 0.8525
+ },
+ {
+  "rank": 234,
+  "final": 18.25065472642173,
+  "total_weighted_score": 205.22033438858747,
+  "consistency_factor": 0.09258732974175383,
+  "distribution_fidelity_factor": 0.9605201920983203
+ },
+ {
+  "rank": 235,
+  "final": 18.09510274610225,
+  "total_weighted_score": 261.5975,
+  "consistency_factor": 0.077209,
+  "distribution_fidelity_factor": 0.8959
+ },
+ {
+  "rank": 236,
+  "final": 17.8071592976448,
+  "total_weighted_score": 261.589,
+  "consistency_factor": 0.075536,
+  "distribution_fidelity_factor": 0.9012
+ },
+ {
+  "rank": 237,
+  "final": 17.766427526349972,
+  "total_weighted_score": 202.50768768787074,
+  "consistency_factor": 0.09148072784140197,
+  "distribution_fidelity_factor": 0.9590229110800403
+ },
+ {
+  "rank": 238,
+  "final": 17.65776754191855,
+  "total_weighted_score": 261.5909,
+  "consistency_factor": 0.077277,
+  "distribution_fidelity_factor": 0.8735
+ },
+ {
+  "rank": 239,
+  "final": 16.804844509368294,
+  "total_weighted_score": 196.1641670370224,
+  "consistency_factor": 0.08892123059487915,
+  "distribution_fidelity_factor": 0.9634060196682735
+ },
+ {
+  "rank": 240,
+  "final": 15.8617249458049,
+  "total_weighted_score": 167.1411305479689,
+  "consistency_factor": 0.09534353667846229,
+  "distribution_fidelity_factor": 0.995350001769633
+ },
+ {
+  "rank": 241,
+  "final": 14.854985563249285,
+  "total_weighted_score": 168.24058864541442,
+  "consistency_factor": 0.08880944108469317,
+  "distribution_fidelity_factor": 0.9942195941585936
+ },
+ {
+  "rank": 242,
+  "final": 14.453346977479077,
+  "total_weighted_score": 168.70140204215215,
+  "consistency_factor": 0.0860928640155859,
+  "distribution_fidelity_factor": 0.9951363294094125
+ },
+ {
+  "rank": 243,
+  "final": 13.9341025243953,
+  "total_weighted_score": 158.05575383908806,
+  "consistency_factor": 0.09277744876303778,
+  "distribution_fidelity_factor": 0.9502245907599973
+ },
+ {
+  "rank": 244,
+  "final": 12.640564984878734,
+  "total_weighted_score": 164.3901094909185,
+  "consistency_factor": 0.07718588852554856,
+  "distribution_fidelity_factor": 0.9962145789440037
+ },
+ {
+  "rank": 245,
+  "final": 0.0,
+  "total_weighted_score": 0.0,
+  "consistency_factor": 0.0,
+  "distribution_fidelity_factor": 0.0
+ },
+ {
+  "rank": 246,
+  "final": 0.0,
+  "total_weighted_score": 0.0,
+  "consistency_factor": 0.0,
+  "distribution_fidelity_factor": 0.0
+ },
+ {
+  "rank": 247,
+  "final": 0.0,
+  "total_weighted_score": 0.0,
+  "consistency_factor": 0.0,
+  "distribution_fidelity_factor": 0.0
+ },
+ {
+  "rank": 248,
+  "final": 0.0,
+  "total_weighted_score": 0.0,
+  "consistency_factor": 0.0,
+  "distribution_fidelity_factor": 0.0
+ }
+]

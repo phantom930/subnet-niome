@@ -303,19 +303,73 @@ class Miner(BaseMinerNeuron):
     # ~0.035 x 0.300 = 0.0105 a round against the ~0.0027 one hotkey contributes to the band
     # fleet's 0.0242.
     #
-    # **Watch the competition count**: miners at cons 1.000 on seed-0 rounds went 0,0,0,1,6,6 and
-    # then 13 on 2026-09-02. If that keeps climbing the cutoff rises with it and this stops paying.
-    # NIOME_SEED_DEPEND is the *variant index*, not a flag: set it to 1, 2, 3 ... on each hotkey
-    # that should run this, and leave it unset elsewhere. The build is deterministic, so siblings
-    # would otherwise submit byte-identical rows; the variant breaks ties among near-equal
-    # candidates so their row sets differ while their scores stay within a fraction of a point.
-    # Sibling hotkeys compete for the same top slots — n of them take ranks 1..n rather than n x
-    # rank 1 — so each one added is worth less than the last, against a band it gives up outright.
+    # **Watch the competition count**: miners at cons 1.000 on seed-0 rounds went 6, 8, 5, 25, 38
+    # across 2026-09-07/08 — it is climbing fast, and the cutoff climbs with it.
+    # NIOME_SEED_DEPEND marks a hotkey as running this; its value was once the *variant index*.
+    #
+    # SHARED BUILD. The siblings now submit the SAME rows: the first process to reach a task builds
+    # it, writes the result to a path shared across instances, and the others load it. The variant
+    # index survives only as the cache key's canonical value, because what it decorrelated is no
+    # longer wanted.
+    #
+    # Why identical submissions are fine: they score identically and so take consecutive ranks,
+    # which is the same sweep four distinct-but-equal builds produced (measured: the variant index
+    # moved finals by 0.03-0.14 points, never a rank). The field already does this openly — on
+    # a66f01fa the top four rows are byte-equal at 262.92 and the next three at 260.58. Nothing in
+    # the validator compares submissions across miners; stage 4 and stage 5 are computed per
+    # submission. If that ever changes, a coldkey's hotkeys shipping identical rows is the most
+    # visible possible signature, so this is the first thing to revert.
+    #
+    # What it buys is the whole point: ONE build per round instead of four. At
+    # variants_per_site 12000 a build holds ~10 GB, and four concurrent would exhaust a 49 GB box —
+    # measured, by OOM-killing four sweep processes at 24000.
     SEED_DEPEND = bool((os.getenv("NIOME_SEED_DEPEND") or "").strip())
     SEED_DEPEND_VARIANT = int((os.getenv("NIOME_SEED_DEPEND") or "0").strip() or 0)
     SEED_DEPEND_SEED = 0
-    # 92s to enumerate at max_distance 600 on HEK293; the gate leaves room inside the in-TTL path.
-    SEED_DEPEND_MIN_BUDGET_S = 190.0
+    # Shared across instances, so NOT under settings.DATA_DIR (which is per-hotkey).
+    SEED_DEPEND_CACHE_DIR = "data/seed_depend"
+    SEED_DEPEND_SHARED = True          # False restores one independent build per hotkey
+    SEED_DEPEND_SHARED_VARIANT = 1     # fixed, so the rows do not depend on who built them
+    SEED_DEPEND_LOCK_STALE_S = 1200.0  # a lock older than this had its builder die
+    SEED_DEPEND_POLL_S = 5.0
+    SEED_DEPEND_CACHE_KEEP = 40
+    # 360, not 190: at variants_per_site 12000 the build measures 285-333s, so the old gate would
+    # start a build that cannot finish inside the ~225s in-TTL path — burning the window and then
+    # falling through to the ladder anyway, later and with less budget left than if it had never
+    # tried. Above this gate the build only ever runs on the prefetch path, which allows 900s and
+    # leaves >=600s of lead on 86% of rounds. A round whose prefetch fails now skips seed-depend
+    # entirely and lands on all-HDR/all-cut, which is the documented fallback.
+    SEED_DEPEND_MIN_BUDGET_S = 360.0
+
+    # NIOME_ALL_CUT_ONLY turns one hotkey into the fleet's flat-score hedge: it skips all-HDR and
+    # lands on all-cut, which pins is_cut across the whole 900-seed window instead of pinning all
+    # three targets over a ~14-seed band. It therefore has no band and needs no window.
+    #
+    # Measured on round b9051bc7 (K562, a round where none of the nine spiked): all-cut scored
+    # 42.31 against the fleet's 19.7-23.2, and 28.53 for the seed-agnostic hedge below it. That
+    # round drew 1 of 3 seeds clean where 557/900 predicts 1.86, so it understates the build —
+    # over the clean-seed distribution E[final] is 57.4, which was rank 10 of 248 that round.
+    #
+    # Why exactly one: sibling all-cut builds score within noise of each other, so n of them take
+    # ranks r..r+n-1 rather than n x rank r. The second one is worth almost nothing, while every
+    # hotkey converted costs the band coverage that produces the k>=2 spikes all-cut cannot make.
+    #
+    # The value is read two ways, because with a single hotkey the choice is no longer per hotkey
+    # but per cell type — one hotkey has to be the band bet where the seed-window prediction has an
+    # edge and the flat hedge where it does not:
+    #   NIOME_ALL_CUT_ONLY=1            all-cut on every cell type (the old fleet-hedge meaning)
+    #   NIOME_ALL_CUT_ONLY=HEK293,K562  all-cut on those cell types, all-HDR on the rest
+    # Cell types are matched exactly as the contract spells them ("CD34+_HSPC", "HUDEP-2").
+    ALL_CUT_ONLY_RAW = (os.getenv("NIOME_ALL_CUT_ONLY") or "").strip()
+    ALL_CUT_ONLY_CELLS = frozenset(
+        x for x in ALL_CUT_ONLY_RAW.replace(",", " ").split()
+        if x.lower() not in ("1", "true", "yes", "on", "all"))
+    # A bare flag with no cell type named means every cell type, as it always did.
+    ALL_CUT_ONLY = bool(ALL_CUT_ONLY_RAW) and not ALL_CUT_ONLY_CELLS
+
+    def _all_cut_only(self, cell_type: str) -> bool:
+        """Whether this hotkey skips all-HDR and lands on all-cut for this cell type."""
+        return self.ALL_CUT_ONLY or cell_type in self.ALL_CUT_ONLY_CELLS
 
     ALL_HDR = True
     # All four cell types the backend issues. HEK293 was excluded while the only groups measured
@@ -419,7 +473,73 @@ class Miner(BaseMinerNeuron):
     # its NIOME_HDR_WINDOW pin — a seed-window prediction must never be able to stop a build.
     WINDOW_PLAN_PATH = "data/window_plan.json"
 
-    def _window_for(self, cell_type: str) -> tuple[int, int] | None:
+    WINDOW_USED_KEEP = 200      # tasks retained in window_used.json; the log only reads recent ones
+
+    def _record_window(self, task_id: str | None, cell_type: str,
+                       used: tuple[int, int] | None, source: str, plan_at: str | None) -> None:
+        """Append this task's actual window to the per-instance record.
+
+        ``window_plan.json`` is regenerated hourly, so a round whose build straddles a cron tick
+        was built from a plan that no longer exists on disk — reading the plan back later can
+        attribute a window this hotkey never used. This file is what actually shipped, keyed by
+        task id, and it is the only source ``seed_window_model.py`` should believe.
+
+        Diagnostics must never be able to fail a build, so every error here is swallowed.
+        """
+        if not task_id:
+            return
+        try:
+            path = Path(settings.WINDOW_USED_PATH)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                record = json.loads(path.read_text())
+                if not isinstance(record, dict):
+                    record = {}
+            except (FileNotFoundError, json.JSONDecodeError):
+                record = {}
+            record[task_id] = {
+                "cell": cell_type,
+                "window": list(used) if used else None,
+                "source": source,
+                "plan_generated_at": plan_at,
+                "at": datetime.now(timezone.utc).isoformat(),
+            }
+            if len(record) > self.WINDOW_USED_KEEP:
+                order = sorted(record, key=lambda k: (record[k] or {}).get("at", ""))
+                for stale in order[:-self.WINDOW_USED_KEEP]:
+                    del record[stale]
+            tmp = path.with_suffix(".tmp")
+            tmp.write_text(json.dumps(record, indent=1))
+            os.replace(tmp, path)
+        except Exception as exc:
+            logger.debug(f"could not record the window used for {task_id}: {exc}")
+
+    def _note_window_outcome(self, task_id: str | None, built: bool,
+                             band: str | None = None) -> None:
+        """Record whether all-HDR actually produced the banded rows for the window it was given.
+
+        ``_window_for`` runs before the build, so on its own it only says which window was
+        *offered*. A decline (short pool, no GPU, hedge slot taken) falls through to all-cut and
+        ships rows with no clean band — crediting a seed to that window afterwards would invent a
+        spike that could not have happened. Best-effort like the write itself.
+        """
+        if not task_id:
+            return
+        try:
+            path = Path(settings.WINDOW_USED_PATH)
+            record = json.loads(path.read_text())
+            if task_id not in record:
+                return
+            record[task_id]["all_hdr_built"] = built
+            if band:
+                record[task_id]["band"] = band
+            tmp = path.with_suffix(".tmp")
+            tmp.write_text(json.dumps(record, indent=1))
+            os.replace(tmp, path)
+        except Exception as exc:
+            logger.debug(f"could not note the window outcome for {task_id}: {exc}")
+
+    def _window_for(self, cell_type: str, task_id: str | None = None) -> tuple[int, int] | None:
         """This hotkey's clean-band window for one round: the live plan if fresh, else the env pin.
 
         The plan concentrates several hotkeys onto the window a round is predicted to draw from.
@@ -431,9 +551,14 @@ class Miner(BaseMinerNeuron):
 
         Every failure path returns ``self.hdr_window``, the behaviour the fleet had before.
         """
+        def pin(source: str) -> tuple[int, int] | None:
+            self._record_window(task_id, cell_type, self.hdr_window,
+                                source if self.hdr_window else "cell_default", None)
+            return self.hdr_window
+
         instance = os.getenv("NIOME_INSTANCE")
         if not instance:
-            return self.hdr_window
+            return pin("env_pin_no_instance")
         try:
             with open(self.WINDOW_PLAN_PATH) as handle:
                 plan = json.load(handle)
@@ -445,22 +570,24 @@ class Miner(BaseMinerNeuron):
                         f"window plan expired at {expires}; falling back to the "
                         f"NIOME_HDR_WINDOW pin. Is the window_plan.py cron running?"
                     )
-                return self.hdr_window
+                return pin("env_pin_plan_expired")
             raw = ((plan.get("assignments") or {}).get(cell_type) or {}).get(instance)
             if not raw:
-                return self.hdr_window
+                return pin("env_pin_no_entry")
             lo, hi = int(raw[0]), int(raw[1])
             if not (100 <= lo < hi <= 999):
                 raise ValueError(f"window {lo}-{hi} outside 100-999 or non-increasing")
             self._window_plan_warned = False
+            plan_at = plan.get("generated_at")
             logger.info(f"Build: window {lo}-{hi} from the round plan "
-                        f"(generated {plan.get('generated_at', '?')[:16]})")
+                        f"(generated {(plan_at or '?')[:16]})")
+            self._record_window(task_id, cell_type, (lo, hi), "plan", plan_at)
             return lo, hi
         except FileNotFoundError:
-            return self.hdr_window
+            return pin("env_pin_no_plan")
         except Exception as exc:
             logger.warning(f"window plan unusable ({exc}); using the NIOME_HDR_WINDOW pin")
-            return self.hdr_window
+            return pin("env_pin_plan_unusable")
 
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
@@ -500,6 +627,12 @@ class Miner(BaseMinerNeuron):
         if self.hdr_window:
             logger.info(f"all-HDR clean-band window pinned to {self.hdr_window[0]}-"
                         f"{self.hdr_window[1]} for this hotkey (NIOME_HDR_WINDOW)")
+        if self.ALL_CUT_ONLY:
+            logger.info("all-cut hedge on every cell type (NIOME_ALL_CUT_ONLY): no clean band, "
+                        "the seed window is unused")
+        elif self.ALL_CUT_ONLY_CELLS:
+            logger.info(f"all-cut hedge on {', '.join(sorted(self.ALL_CUT_ONLY_CELLS))} "
+                        f"(NIOME_ALL_CUT_ONLY); all-HDR with a seed window elsewhere")
 
         logger.info(
             f"Generation config: strategy={self.STRATEGY} selection={self.SELECTION} "
@@ -1066,7 +1199,7 @@ class Miner(BaseMinerNeuron):
             self._persist(settings.HBB_REFERENCE_PATH, reference)
             cell_types = self._fetch_cell_types()
             prepared.rows = self._build(contract, reference, cell_types,
-                                        budget_s=self.PREPARE_BUDGET_S)
+                                        budget_s=self.PREPARE_BUDGET_S, task_id=task_id)
         except Exception as e:
             prepared.error = str(e)
             logger.error(f"Prefetch: build for {task_id} failed ({e}); the validator's request "
@@ -1130,7 +1263,7 @@ class Miner(BaseMinerNeuron):
                 return self._built[1]
             rows = await asyncio.to_thread(
                 self._build, contract, reference, cell_types, deadline,
-                None, not still_preparing,
+                None, not still_preparing, task.id,
             )
             # Only the current task's rows are worth keeping: a new task means a new contract, and
             # the old rows can never be submitted again.
@@ -1151,6 +1284,97 @@ class Miner(BaseMinerNeuron):
         finally:
             if acquired:
                 self._hedge_lock.release()
+
+    def _seed_depend_key(self, contract: dict, task_id: str | None) -> str:
+        """Cache key for one round's shared seed-depend rows.
+
+        The contract is hashed rather than trusting the task id alone: a broadcast arrives from
+        several validators and a re-issued task id with different content must not serve stale
+        rows. The build parameters that change the output go in too, so bumping
+        ``variants_per_site`` or the rule invalidates every cached round rather than silently
+        shipping the old build.
+        """
+        cfg = SD.SeedDependConfig()
+        ident = json.dumps({"task": task_id or "", "contract": contract,
+                            "seed": self.SEED_DEPEND_SEED,
+                            "variant": self.SEED_DEPEND_SHARED_VARIANT,
+                            "rule": cfg.rule, "vps": cfg.variants_per_site,
+                            "greedy": cfg.greedy_window, "step": cfg.alloc_step,
+                            "kmer": cfg.kmer_price}, sort_keys=True)
+        return hashlib.sha256(ident.encode()).hexdigest()[:24]
+
+    def _seed_depend_cached(self, path: Path) -> tuple[list[dict] | None, dict]:
+        try:
+            got = json.loads(path.read_text())
+            return got["rows"], {**got.get("meta", {}), "shared": "read"}
+        except (FileNotFoundError, json.JSONDecodeError, KeyError, OSError):
+            return None, {}
+
+    def _prune_seed_depend_cache(self, directory: Path) -> None:
+        try:
+            files = sorted(directory.glob("*.json"), key=lambda p: p.stat().st_mtime)
+            for stale in files[:-self.SEED_DEPEND_CACHE_KEEP]:
+                stale.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+    def _build_seed_depend(self, contract: dict, reference: dict, cell_types: dict,
+                           budget_s: float, task_id: str | None) -> tuple[list[dict] | None, dict]:
+        """The seed-0 rows for this round, built once per fleet rather than once per hotkey.
+
+        One process wins an O_EXCL lock and builds; the others poll for the result it writes. A
+        follower that runs out of budget returns None and the caller falls through the ladder —
+        it must never build its own copy as a consolation, because the reason this exists is that
+        four concurrent builds do not fit in memory.
+        """
+        cfg = dataclasses.replace(SD.SeedDependConfig(), variant=self.SEED_DEPEND_VARIANT)
+        if not self.SEED_DEPEND_SHARED:
+            return SD.build(contract, reference, cell_types, seed=self.SEED_DEPEND_SEED,
+                            cfg=cfg, budget_s=budget_s)
+
+        cfg = dataclasses.replace(cfg, variant=self.SEED_DEPEND_SHARED_VARIANT)
+        directory = Path(self.SEED_DEPEND_CACHE_DIR)
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{self._seed_depend_key(contract, task_id)}.json"
+        lock = path.with_suffix(".lock")
+        deadline = time.monotonic() + budget_s
+
+        while time.monotonic() < deadline:
+            rows, meta = self._seed_depend_cached(path)
+            if rows:
+                logger.info(f"Build: seed-depend rows reused from the fleet-shared cache "
+                            f"({path.name}, {len(rows)} rows)")
+                return rows, meta
+            try:
+                fd = os.open(str(lock), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            except FileExistsError:
+                try:                       # a builder that died leaves the lock behind
+                    age = time.time() - lock.stat().st_mtime
+                except OSError:
+                    continue               # it vanished: the winner finished, loop and read it
+                if age > self.SEED_DEPEND_LOCK_STALE_S:
+                    logger.warning(f"seed-depend lock {lock.name} is {age:.0f}s old; taking over")
+                    lock.unlink(missing_ok=True)
+                    continue
+                time.sleep(self.SEED_DEPEND_POLL_S)
+                continue
+
+            try:
+                os.write(fd, f"{os.getenv('NIOME_INSTANCE', '?')} {time.time():.0f}".encode())
+                os.close(fd)
+                rows, meta = SD.build(contract, reference, cell_types,
+                                      seed=self.SEED_DEPEND_SEED, cfg=cfg,
+                                      budget_s=max(1.0, deadline - time.monotonic()))
+                if rows:
+                    tmp = path.with_suffix(".tmp")
+                    tmp.write_text(json.dumps({"rows": rows, "meta": meta}))
+                    os.replace(tmp, path)
+                    self._prune_seed_depend_cache(directory)
+                return rows, {**meta, "shared": "built"}
+            finally:
+                lock.unlink(missing_ok=True)
+
+        return None, {"reason": "ran out of budget waiting for the fleet's shared build"}
 
     def _seed_agnostic_applies(self, contract: dict, budget_s: float) -> tuple[bool, str]:
         """Whether the bank builder should run for this contract, and why not when it should not."""
@@ -1213,7 +1437,7 @@ class Miner(BaseMinerNeuron):
 
     def _build(self, contract: dict, reference: dict, cell_types: dict,
                deadline: float | None = None, budget_s: float | None = None,
-               allow_hedges: bool = True) -> list[dict]:
+               allow_hedges: bool = True, task_id: str | None = None) -> list[dict]:
         """Generate this task's submission and log what it should be worth.
 
         Most cell types follow the same sequence as ``submission.build_for_task``. HEK293 instead
@@ -1224,6 +1448,10 @@ class Miner(BaseMinerNeuron):
         that is not racing an upload TTL; without it the budget is derived from ``deadline`` as
         before. ``allow_hedges=False`` skips them entirely — the emergency path, for when a
         prepare already holds the GPU and only the ordinary construction will finish in time.
+
+        ``task_id`` is diagnostic only: it keys the record of which clean-band window all-HDR was
+        actually given, so a resolved round can be joined to what shipped rather than to whichever
+        round plan happens to be on disk afterwards.
         """
         logger.info("Build: loading chr11 (cached after the first call)")
         self._load_sequence()
@@ -1258,11 +1486,8 @@ class Miner(BaseMinerNeuron):
             try:
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
-                        sd_cfg = dataclasses.replace(SD.SeedDependConfig(),
-                                                     variant=self.SEED_DEPEND_VARIANT)
-                        sd_rows, sd_meta = SD.build(contract, reference, cell_types,
-                                                    seed=self.SEED_DEPEND_SEED, cfg=sd_cfg,
-                                                    budget_s=budget)
+                        sd_rows, sd_meta = self._build_seed_depend(
+                            contract, reference, cell_types, budget, task_id)
                     else:
                         sd_rows, sd_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:
@@ -1272,12 +1497,20 @@ class Miner(BaseMinerNeuron):
             if sd_rows:
                 logger.info(
                     f"Build: seed-depend ({cell_type}) | seed {self.SEED_DEPEND_SEED} "
-                    f"variant {self.SEED_DEPEND_VARIANT} "
-                    f"rule {sd_meta['rule']} | cands {sd_meta['candidates']} "
-                    f"heavy {sd_meta['heavy']}/{sd_meta['rows']} cells {sd_meta['cells']}/8 "
-                    f"| weighted {sd_meta['weighted']:.1f} fid {sd_meta['fidelity']:.3f} "
-                    f"-> {sd_meta['product']:.1f} | {sd_meta['elapsed_s']}s"
+                    f"variant {sd_meta.get('variant', self.SEED_DEPEND_SHARED_VARIANT)} "
+                    f"{sd_meta.get('shared', 'own')} "
+                    f"rule {sd_meta.get('rule')} | cands {sd_meta.get('candidates')} "
+                    f"heavy {sd_meta.get('heavy')}/{sd_meta.get('rows')} "
+                    f"cells {sd_meta.get('cells')}/8 "
+                    f"| weighted {sd_meta.get('weighted', 0):.1f} "
+                    f"fid {sd_meta.get('fidelity', 0):.3f} "
+                    f"-> {sd_meta.get('product', 0):.1f} | {sd_meta.get('elapsed_s')}s"
                 )
+                # No band exists on these rows — they are pinned to seed 0, not to a window — so
+                # record that explicitly. Left absent, the round reads later as merely
+                # "unverified" when the truth is stronger: no spike was possible.
+                self._record_window(task_id, cell_type, None, "seed_depend", None)
+                self._note_window_outcome(task_id, False)
                 self._persist(settings.MINER_SUBMISSION_PATH, sd_rows)
                 return sd_rows
             logger.info("Build: seed-depend declined (%s); falling through to the usual ladder",
@@ -1287,14 +1520,25 @@ class Miner(BaseMinerNeuron):
         # All-HDR goes ahead of all-cut for the cell types it is configured for. It declines to
         # None on an unmeasured cell type or a short pool, and all-cut below is then the fallback —
         # so HEK293, and any failure on the other three, still gets the build it had before.
-        if (allow_hedges and self.ALL_HDR and cell_type in self.ALL_HDR_CELL_TYPES
-                and budget >= self.ALL_HDR_MIN_BUDGET_S):
+        all_cut_only = self._all_cut_only(cell_type)
+        all_hdr_applies = (allow_hedges and self.ALL_HDR and not all_cut_only
+                           and cell_type in self.ALL_HDR_CELL_TYPES
+                           and budget >= self.ALL_HDR_MIN_BUDGET_S)
+        if not all_hdr_applies:
+            # The emergency in-TTL path and a short budget never reach _window_for, so without
+            # this the round leaves no record at all and reads later as merely "unverified" —
+            # when the truth is stronger: no clean band was built, so no spike was possible.
+            self._record_window(task_id, cell_type, None,
+                                "all_cut_only" if all_cut_only else "all_hdr_not_attempted",
+                                None)
+            self._note_window_outcome(task_id, False)
+        if all_hdr_applies:
             try:
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
                         hdr_rows, hdr_meta = AH.build_for_cell(
                             contract, reference, cell_types, budget_s=budget,
-                            hdr_range=self._window_for(cell_type))
+                            hdr_range=self._window_for(cell_type, task_id))
                     else:
                         hdr_rows, hdr_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:
@@ -1310,9 +1554,11 @@ class Miner(BaseMinerNeuron):
                     f"cells {hdr_meta['cells']}/8 | {hdr_meta['elapsed_s']}s"
                 )
                 self._persist(settings.MINER_SUBMISSION_PATH, hdr_rows)
+                self._note_window_outcome(task_id, True, str(hdr_meta.get("band")))
                 return hdr_rows
             logger.info("Build: all-HDR declined (%s); falling through to all-cut",
                         hdr_meta.get("reason", "unknown"))
+            self._note_window_outcome(task_id, False)
             budget = remaining()
 
         min_budget = self.ALL_CUT_MIN_BUDGET_S.get(contract.get("cell_type"), 0.0)

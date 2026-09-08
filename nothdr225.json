@@ -1,0 +1,27 @@
+[
+ {
+  "bank": 15793,
+  "cached": false,
+  "union": 215,
+  "clean": 10,
+  "span": 225,
+  "clean_frac": 0.044444444444444446,
+  "group_fails_min": 81,
+  "group_fails_max": 100,
+  "build_s": 43.5,
+  "window": [
+   100,
+   324
+  ],
+  "max_fail": 100
+ },
+ {
+  "error": "bank scan produced nothing",
+  "build_s": 39.5,
+  "window": [
+   100,
+   324
+  ],
+  "max_fail": 80
+ }
+]

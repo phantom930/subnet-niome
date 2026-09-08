@@ -212,9 +212,11 @@ contracts, clean and dirty legs:
 That is 51-61% of all-cut's expected score, ~-24/round. **The justification is `SCORING_SYSTEM =
 "top"`, which pays only the top 10 on a fixed curve** ([settings.py](niome_subnet/utils/settings.py)
 `SCORE_DISTRIBUTION`, rank 1 = 29.4% and rank 11 = 0%): a build worth ~290 on a few percent of
-rounds can out-*rank* a flat 56 that never places. **No rank measurement in this repo supports
-that** — it is an operator decision, recorded as one. `Miner.ALL_HDR = False` reverts to all-cut
-everywhere, and that is the switch to reach for if the bet is judged wrong.
+rounds can out-*rank* a flat one that rarely does. It has **since been measured**, and the bet
+holds while the reasoning behind it was wrong — all-HDR's k=1 (~88) places on 60% of rounds against
+all-cut's E[final] 46.1 at 11%, so the gap is 60-vs-11, not something-vs-never (see the cutoff
+distribution below). `Miner.ALL_HDR = False` reverts to all-cut everywhere, and that is the switch
+to reach for if the bet is judged wrong.
 
 Three regimes, and the reason there is no middle:
 
@@ -226,8 +228,16 @@ Three regimes, and the reason there is no middle:
 
 Regime 2 was written here as ~0.26 and is measured at 0.123-0.138 — and it is economically dead
 either way: it covers 5-6 seeds of 900 for all-HDR (cut-clean is 18-19 total, and 13 of those *are*
-the band), against all-cut's ~560. At 0.138 a full all-cut-style floor scores ~57, below the
-current-regime rank-10 cutoff of 62-86, which is why all-cut never places (see the fleet section).
+the band), against all-cut's ~560.
+
+**The "rank-10 cutoff of 62-86, which is why all-cut never places" claim that stood here is wrong
+on both halves.** Measured across 72 current-regime rounds the cutoff is a *distribution*, not a
+band: min 20.7, p10 45.9, **median 82.3**, p90 120.0, max 158.1 (per-cell medians HEK293 64.5,
+CD34+ 81.4, HUDEP-2 83.8, K562 90.9). Against that, all-cut's E[final] of **46.1** — priced over
+the clean-seed distribution, not the single lucky seed that produced the old 57.4 — places on
+**11%** of rounds, not never. all-HDR's k=1 (~88) places on 60% and k=2 (~154) on 99%. The
+conclusion that all-HDR is the better bet survives; the reasoning "all-cut never places" does not,
+and a construction should not be dismissed on it.
 
 HDR-clean ⊂ cut-clean, so all-HDR gives up all-cut's wide regime-2 floor to buy regime 1. **Two
 attempts to have both were falsified, don't repeat them:** a *combined* construction cannot, because
@@ -306,9 +316,21 @@ the cas entropy to ~0.65. Nothing about accessibility bounds fidelity.
 `ALL_HDR_MIN_BUDGET_S` stays a single flat 190 s, unlike `ALL_CUT_MIN_BUDGET_S`: all four cell types
 build well inside the ~225 s in-TTL path.
 
-#### The fleet — one coldkey, nine hotkeys, disjoint bands
+#### The fleet — four hotkeys, all on seed-depend, no bands
 
-The band is ~1-2% of the 100-999 seed space and a round draws three seeds, so one hotkey spikes on
+**Read this before trusting anything below about windows.** As of 2026-09-08 the fleet runs
+**four** hotkeys (h0 uid 74, h1 uid 209, h2 uid 235, h3 uid 196; h4-h8 unregistered) and **none of
+them plays a band**. All four run `seed_depend` on a single shared build. The band machinery below
+is intact, configured and dormant — `window_plan.py` still writes a plan every hour and
+`seed_window_model.py` still accrues predictions, but with every hotkey on seed-depend the plan's
+`assignments` are empty by design. Everything from `NIOME_HDR_WINDOW` down still describes how the
+band fleet works and is what to restore to; it is not what is currently shipping.
+
+The whole fleet was deregistered on 2026-09-04/05 and rebuilt smaller, so any claim here about nine
+hotkeys or coverage unions is history.
+
+The band arithmetic, kept because it is what a returning band hotkey is worth: the band is ~1-2% of
+the 100-999 seed space and a round draws three seeds, so one hotkey spikes on
 `1-(1-band/900)**3` of rounds — 2.3% at HEK293's band 7. A coldkey's payout is that expression over
 the **union** of its hotkeys' bands, so the whole win is making the bands **disjoint**. Measured:
 three hotkeys on disjoint windows covered 15.2% of rounds against 5.2% for the same window three
@@ -329,19 +351,84 @@ Two environment variables carry this, both read at process start:
   shared: large, read-only or content-keyed (`bank_key` folds in the window).
 
 [miner.sh](miner.sh) is the launcher: a `HOTKEYS` table of `<hotkey> <port> <external-port>
-<window>`, tiling 100-999 across nine hotkeys. `assert_disjoint_windows` parses the ranges and
+<window>`, tiling 100-999 across nine rows (the table is the port registry; which rows are *live*
+is set by `DEREGISTERED`). `assert_disjoint_windows` parses the ranges and
 **exits** on an overlap or a malformed range rather than warning — `600-899` vs `800-899` overlap
 without matching as strings, and a silently-rejected window re-correlates the sibling, which costs
 the entire decorrelation. Run one hotkey per pm2 app —
 `pm2 start ./miner.sh --name miner-h1 -- niome_hotkey1` — because the no-argument form launches all
-nine under one wrapper, where pm2 cannot restart an individual crash-looping child. `PY` is an absolute venv path on purpose: `pm2 restart
+of them under one wrapper, where pm2 cannot restart an individual crash-looping child. `PY` is an absolute venv path on purpose: `pm2 restart
 --update-env` has rewritten `PATH` and sent the miner into a crash loop before.
+
+Four bash lists in [miner.sh](miner.sh) decide what each hotkey does, and `window_plan.py` parses
+all four so the two files cannot drift:
+
+| list | meaning |
+|---|---|
+| `SEED_DEPEND_VARIANTS` | `<hotkey>:<n>` — runs seed-depend. The value no longer differentiates: the build is shared |
+| `ALL_CUT_HOTKEYS` | `<hotkey>` (all cells) or `<hotkey>:CELL,CELL` — all-cut instead of all-HDR on those cells |
+| `DEREGISTERED` | not on the metagraph; left out of the window allocation entirely |
+| `SPREAD_HOTKEYS` | preferred for the wide 100-seed windows when the concentrated block does not need them |
+
+A hotkey that plays no band (seed-depend, or all-cut on that cell) is excluded from the plan for
+that cell — a window assigned to it is a window nothing covers, and the log would read as though a
+band had been played there. With every hotkey excluded, `window_plan.py` writes empty assignments
+rather than erroring, so the shadow log keeps accruing the evidence that decides whether a band is
+worth returning to.
+
+**A deregistered hotkey cannot start.** `base/neuron.check_registered` calls `exit()` in `__init__`
+*and* in every `sync()`, so a process that starts unregistered crash-loops and one that is
+deregistered mid-run dies at its next sync. pm2 apps here carry `--restart-delay 60000` for that
+reason: the miner retries once a minute and comes up on its own within a minute of
+`btcli subnet register` landing, instead of hammering the chain endpoint every 7s.
 
 [fleet_status.py](fleet_status.py) tallies the latest task across `/root/.pm2/logs/miner-h*`:
 prefetch-ready, build time, whether a validator called, whether the rows were served from the
-prepare or an in-TTL fallback, submitted rows, and OOM. It is the check for GPU contention — nine
-processes sharing one GPU is the failure mode the `_hedge_slot` bound exists for. Note the
-`KeyboardInterrupt` tracebacks in those logs are pm2's SIGINT at shutdown, not failures.
+prepare or an in-TTL fallback, submitted rows, and OOM. It is the check for resource contention.
+Note the `KeyboardInterrupt` tracebacks in those logs are pm2's SIGINT at shutdown, not failures,
+and that **the miner's own output goes to `miner-h<N>-error.log`** (loguru writes to stderr); the
+`-out.log` holds only miner.sh's launcher echoes. Filter `Miner running` and `resync_metagraph`
+or you will see nothing else.
+
+**Memory, not the GPU, is the binding constraint now.** seed-depend is CPU-only, and one build at
+`variants_per_site 12000` holds **12.7 GB** (measured): four concurrent would need 50.6 GB on a
+49 GB box, which is why the build is shared rather than repeated per hotkey. A 24000-variant build
+reaches ~24 GB and OOM-killed four research processes; the miners survived only because the kernel
+picked the larger victims.
+
+#### The seed-window prediction, and why it is dormant
+
+[seed_window_model.py](seed_window_model.py) predicts which 100-seed window the next round of a
+cell type will draw from, and [window_plan.py](window_plan.py) concentrates several hotkeys onto it
+(`round_plan.sh`, cron at :17, resolves live predictions then writes `data/window_plan.json`; the
+miner reads it per build and falls back to `NIOME_HDR_WINDOW` if it is missing, stale or malformed,
+TTL 6h). Concentration is EV-neutral under a uniform generator, which is why it was safe to run
+before the prediction was proven: six hotkeys at width 16 cover 88 band seeds and a uniform seed
+hits them with probability 88/900 whether those seeds sit in one window or nine.
+
+**It has not proven itself.** Per-rank *exclusive* hit rates over 38 scored predictions, against
+the 29.8% chance baseline every individual rank shares (`1-(8/9)**3`):
+
+| rank | held a seed | 95% CI | lift | p |
+|---|---:|---|---:|---:|
+| #1 | 39.5% | [25.6%, 55.3%] | 1.33x | 0.130 |
+| #2 | 31.6% | [19.1%, 47.5%] | 1.06x | 0.464 |
+| #3 | 31.6% | [19.1%, 47.5%] | 1.06x | 0.464 |
+| #4 | 26.3% | [15.0%, 42.0%] | 0.88x | 0.735 |
+
+The aggregate ordering is monotone, which is the right shape, but only rank 1 is above chance and
+not significantly; ranks 2-3 are indistinguishable from naming any window, and rank 4 is worse.
+**Per cell type the ordering does not reproduce at all** — CD34+ 46.2/15.4/15.4/**46.2**, HEK293
+38.5/30.8/15.4/23.1, HUDEP-2 **inverted** at 33.3/50.0/**66.7**/8.3 — so a per-cell allocation has
+nothing to stand on at n≈13. The "double window" result (a repeated window among the three seeds,
+chance 3.43%) collapses the same way: all three of its apparent hits sit in one cell at one rank.
+
+Two things worth keeping from the mechanics. `fit_beta` returns **0.00** for CD34+ and HEK293,
+meaning maximum likelihood finds no balancing at all — and with beta 0 every window ties at 0.298
+and `predict`'s "rank 1" is a *stable-sort tie-break to the lowest index*, not a prediction. Check
+beta before reading anything into a rank. And `tile()` must cover the window: packing at a fixed
+width left 4 of 100 seeds uncovered and cost one of only two correct predictions (678cf369 called
+300-399, seed 397 landed in it, the block tiled only 300-395).
 
 #### One shared-config hazard
 
@@ -427,6 +514,9 @@ wide the window it was searched in.
 | recover cut-clean seeds inside all-HDR's pools | ceiling **34 of 900** (against all-cut's ~560). Only **82 of 60,000** bank guides are HDR-clean on the band and 80 are needed, so the Cas12a min-union has no freedom. Cas9 min-union on cut does work (union 498 → 394) and is swamped. |
 | no-MH_NHEJ (`not_mhnhej`) for a wider band | band **45** (3.5x, real — the rule holds on all 45) but only one pinned target → cons **0.123**. Even all three seeds in band scores 25.7, under every cutoff. E[pay] exactly 0. |
 | the rule ladder generally | `hdr` 3 targets → 1.000 / band 13; `not_hdr` 2 targets → 0.577 / band 12; `not_mhnhej` 1 target → 0.123 / band 45. Frequency×value is a wash and `hdr` is the best point. |
+| narrowing all-cut's window to widen its clean set | clean fraction *does* rise (62% over 900 → 93.6% at width 300, and strict Cas12a guides exist below ~225) but E[final] **falls**: width 225 **36.78**, width 300 **37.62**, whole window **46.11**. Consistency has a second channel independent of coverage — row composition — so a build can hold union 0 and still lose monotonically as `group_size` grows (0.1706 → 0.1583 → 0.1452). |
+| the rule ladder inside a narrow window | at width 225 the band tracks P(rule) exactly as it does at 900: `cut` 225 → `not_mhnhej` 48 → `not_hdr` 10 → `mh_any` 9, all set by the Cas9 conditional fill rather than the window. `not_mhnhej` at width 225 scores E[final] **22.29** (−51.7% against the whole-window 46.11). |
+| fidelity as all-cut's ceiling | group 125 at width 225 reached casR 1.000 and fidelity **0.9759** — above the leaders' 0.9473 — with 8/8 cells, and still lost. Fidelity was never the binding term; consistency fell faster. |
 
 `not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
 range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round
@@ -503,13 +593,102 @@ per cell type (HEK293 has its own clustered builder,
 [genomics/generation.py](niome_subnet/genomics/generation.py) is the superseded packaged port of
 genExp's pure path. Nothing imports it any more.
 
+### Seed-depend — the build the fleet actually ships
+
+[genomics/seed_depend.py](niome_subnet/genomics/seed_depend.py) solves the opposite problem to
+everything else here: the seed is **known**. A task is broadcast with `seed: 0` and the real seeds
+are normally stamped in before scoring — but sometimes the stamp never happens and the validator
+scores at seed 0 itself. On those rounds a seed-0 build reaches `consistency_factor` exactly 1.000
+and the ranking collapses to `total_weighted_score x distribution_fidelity_factor`. It is the first
+rung of `_build`'s ladder, so it replaces the construction rather than hedging alongside it.
+
+**How often, and against how many.** Do not read the rate off the task listing — `/api/v3/tasks`
+reports `seed: 0` for rounds that were in fact stamped. The reliable test is miners reaching
+consistency 1.000 in the score rows. By that test, over the 105 scored rounds since 2026-08-25:
+
+| | |
+|---|---|
+| never stamped | **8 of 105 = 7.6%** (the ~3.5% and ~5.4% figures elsewhere are stale and too low) |
+| crowd on those rounds | 0, 0, 0, 0, 1, 6, 8, 13 — and then **25, 38** on 2026-09-07/08 |
+| four seed-0 rounds in one day | 2026-09-07 (14:16, 16:41, 19:06, 21:29) |
+
+**The competition is converging fast, and it has caught us.** Replaying our build into six seed-0
+fields (excluding our own rows — from 2026-09-07 18:46 our submissions are *in* that feed):
+
+| round | cell | tied at 1.000 | our margin over the field | ranks | curve share |
+|---|---|---:|---:|:---:|---:|
+| 8f02f1a4 09-02 | HEK293 | 13 | +4.57 | 1-4 | 85% |
+| 138a47f7 09-07 | CD34+ | 6 | +7.55 | 1-4 | 85% |
+| e32ec7b3 09-07 | HUDEP-2 | 8 | +2.34 | 1-4 | 85% |
+| 19018a0a 09-07 | CD34+ | 5 | +3.20 | 1-4 | 85% |
+| 67bdd18a 09-07 | HUDEP-2 | 25 | +0.77 | 1-4 | 85% |
+| **a66f01fa 09-08** | CD34+ | **38** | **−1.87** | **6-9** | **9%** |
+
+h0 took **rank 1 of 248 twice live** (19018a0a 339.94, 67bdd18a 329.37) within three hours of
+registering, then placed 6th on the next round. 1.8 weighted points is the whole distance between
+85% of the curve and 9% — `SCORE_DISTRIBUTION` is a step function, so score gains that cross no
+rank boundary pay nothing.
+
+**Sibling hotkeys take consecutive ranks, which is leverage in both directions.** Four correlated
+builds occupy ranks r..r+3: 0.30+0.20+0.20+0.15 = 0.85 at r=1, but 0.09 at r=6. They move as a
+block because their scores differ by less than any gap in the field.
+
+**The build is shared across the fleet, and the submissions are identical.** `Miner._build_seed_depend`
+takes an `O_EXCL` lock, builds once, writes the rows to `data/seed_depend/` (shared, *not* under
+`DATA_DIR`), and the other hotkeys load them. Keyed on a hash of the contract plus the build
+parameters, so bumping `variants_per_site` invalidates every cached round instead of silently
+shipping the old build. A follower that runs out of budget falls through the ladder and must
+**never** build its own copy — the whole point is that four concurrent builds do not fit in memory.
+`SEED_DEPEND_SHARED = False` restores independent builds. Identical rows across a coldkey's hotkeys
+is the most visible possible signature if cross-miner duplicate detection ever appears; nothing in
+the validator does that today, and the field ships byte-equal rows openly (a66f01fa's top four are
+equal at 262.92).
+
+**Config, measured over those six rounds** (paired within contract at a fixed variant, since the
+variant tie-break alone moves 0.03-0.14):
+
+| knob | result |
+|---|---|
+| `variants_per_site` 4000 → **12000** | **+1.47 ± 0.25, t = 5.80, 6/6.** Shipped. 100s → 294s build |
+| `variants_per_site` 24000 | +1.59 — i.e. +0.12 over 12k for 2x build and 2x memory, and the *same* payout share. 12k is the plateau |
+| `rule="hdr"` | +0.53 alone, but **not additive** with vps12k (+1.40 combined, worse than vps12k alone). `rule` stays `"mh"` |
+| `alloc_step` 4 → 1 | −0.01. The split search was already converged at granularity 2 — closed knob |
+| `greedy_window` 400 → 1200 | **−4.27, 0/6.** A wider window lets `kmer_price` pull in structurally weaker rows (weighted 279.7 → 274.9). 400 is tuned, not arbitrary |
+
+Note what the winning knob does *not* do: mean payout share moved 25.5% → 25.8%. It is insurance
+against a field that is catching up, not a fix for a round already lost — and neither 12k nor 24k
+recovers a66f01fa, where both reach 262.90 against the field's 262.92.
+
+`SEED_DEPEND_MIN_BUDGET_S` is **360s**, not 190: a 294s build cannot finish inside the ~225s in-TTL
+path, so the old gate would start a build it could not complete, burn the window, and fall through
+the ladder later and poorer than if it had never tried. Above 360 it only ever runs on the prefetch
+path (900s budget, >=600s of lead on 86% of rounds); a failed prefetch now skips seed-depend and
+lands on all-HDR/all-cut.
+
+**Research tooling** (none of it imported by the neurons): `sd_task.py` builds and scores one task
+against its real field, `sd_variants.py` sweeps variant indices, `sd_fleet.py` aggregates rounds,
+`sd_sweep.py` / `sd_sweep_all.py` run the config sweep with paired statistics, `sd_shared_test.py`
+verifies the shared-build locking across four real processes. Three traps these hit, all of which
+produced convincing wrong answers:
+
+- **Score rows are per validator per miner.** A round scored by two validators lists every
+  competitor twice; ranks computed from raw rows double-count. Dedupe by `miner_hotkey`.
+- **Our own submissions are in the score feed** from 2026-09-07 18:46. A replay compared against an
+  unfiltered field is racing itself — the exact-match "field best 339.94" was h0.
+- **`NIOME_INSTANCE` must differ per concurrent process.** Two runs under one instance name write
+  `contract.json`, `submission.json` and every stage output to the same paths; they interleave and
+  score one task's rows against another's contract. That produced `fidelity 0.0010` and looked
+  exactly like a catastrophic build failure.
+
 ### Seed-agnostic hedge (non-HEK293, unstamped contracts)
 
 [genomics/seed_agnostic.py](niome_subnet/genomics/seed_agnostic.py) builds a submission whose
 `is_cut` is constant across a seed *window* (default 100-999), for the case where the contract
 arrives with `seed: 0` and the real seeds are stamped later. Two banks: **strict Cas9** (`max_fail 0`
 — reachable because `cut_p` clamps at 0.99, so `0.99**900 ≈ 1.2e-4` yields a few hundred) and a
-**Cas12a pool** at `cas12a_max_fail 22` (`cut_p` caps at 0.96, so no strict guide exists) from which
+**Cas12a pool** at `cas12a_max_fail 22` (`cut_p` caps at 0.96, so no strict guide exists **at this
+window width** — `0.96**900 ~ 1.6e-16`; the claim is about the 900-seed window and does not
+generalise, since at width 225 it is `~1.0e-4` and 246-277 strict Cas12a guides were measured) from which
 `min_union_group` picks the subset minimising the *union* of failed seeds — overlapping failures are
 free, so it selects for coincidence, subject to per-cell floors that keep stage 5's geometric mean
 off zero. `_build` in the miner gates on it (skip for HEK293, for a stamped seed, without a GPU, or

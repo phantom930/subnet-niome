@@ -54,6 +54,10 @@ MINER_SUBMISSION_PATH = f"{DATA_DIR}/submission.json"
 # Where the miner records the task id, presigned URL and outcome of its most recent upload, so
 # scripts/resubmit.py can retry a failed one while the URL's TTL lasts.
 LAST_UPLOAD_PATH = f"{DATA_DIR}/last_upload.json"
+# The clean-band window this instance actually built each task with, and where it came from. The
+# round plan is rewritten hourly and a build can straddle that boundary, so the plan file is not
+# evidence of what shipped — this is. Read back by seed_window_model.py when it resolves a round.
+WINDOW_USED_PATH = f"{DATA_DIR}/window_used.json"
 VALID_EXPERIMENTS_PATH = f"{DATA_DIR}/valid_experiments.json"
 INVALID_EXPERIMENTS_PATH = f"{DATA_DIR}/invalid_experiments.json"
 STAGE3_DATASET = f"{DATA_DIR}/stage3_dataset.json"

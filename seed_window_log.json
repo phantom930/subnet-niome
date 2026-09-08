@@ -60,7 +60,252 @@
     "999dc89d-7896-4666-a19d-e695047044f2",
     "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
     "4d385215-547a-46a1-84da-78d63af4e04a"
-   ]
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T03:26:17.341522+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3067,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "500-599",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      816
+     ],
+     "niome_hotkey2": [
+      817,
+      833
+     ],
+     "niome_hotkey3": [
+      834,
+      850
+     ],
+     "niome_hotkey4": [
+      851,
+      867
+     ],
+     "niome_hotkey5": [
+      868,
+      883
+     ],
+     "niome_hotkey8": [
+      884,
+      899
+     ],
+     "niome_hotkey6": [
+      500,
+      599
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "at": "2026-09-05T02:08:10.659631",
+    "seeds": [
+     234,
+     271,
+     775
+    ],
+    "actual_windows": [
+     1,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       800,
+       815
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       816,
+       831
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 212,
+      "final": 21.35,
+      "consistency": 0.0992,
+      "weighted": 244.0,
+      "fidelity": 0.8823,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       800,
+       816
+      ]
+     },
+     "niome_hotkey2": {
+      "window": [
+       832,
+       847
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 214,
+      "final": 20.87,
+      "consistency": 0.0997,
+      "weighted": 242.7,
+      "fidelity": 0.8619,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       817,
+       833
+      ]
+     },
+     "niome_hotkey3": {
+      "window": [
+       848,
+       863
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 180,
+      "final": 24.36,
+      "consistency": 0.115,
+      "weighted": 237.1,
+      "fidelity": 0.8932,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       834,
+       850
+      ]
+     },
+     "niome_hotkey4": {
+      "window": [
+       864,
+       879
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 211,
+      "final": 21.46,
+      "consistency": 0.1021,
+      "weighted": 237.0,
+      "fidelity": 0.8869,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       851,
+       867
+      ]
+     },
+     "niome_hotkey5": {
+      "window": [
+       880,
+       895
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 209,
+      "final": 21.58,
+      "consistency": 0.1004,
+      "weighted": 249.4,
+      "fidelity": 0.8618,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       868,
+       883
+      ]
+     },
+     "niome_hotkey6": {
+      "window": [
+       500,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "rank": 208,
+      "final": 21.65,
+      "consistency": 0.0985,
+      "weighted": 248.8,
+      "fidelity": 0.8833,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "rank": 210,
+      "final": 21.51,
+      "consistency": 0.0981,
+      "weighted": 245.4,
+      "fidelity": 0.8935,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       884,
+       899
+      ],
+      "window_source": "all_cut_only",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 92,
+      "final": 35.32,
+      "consistency": 0.162,
+      "weighted": 253.8,
+      "fidelity": 0.8589,
+      "band_hit": false,
+      "all_hdr_built": false
+     }
+    },
+    "scores_at": "2026-09-05T04:17:12.817287+00:00",
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_without_band": [
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": []
+   }
   },
   {
    "made_at": "2026-09-04T09:34:54.112344+00:00",
@@ -120,7 +365,212 @@
     "9cf0def4-1e37-4d39-acce-533f54310d23",
     "b9322a5a-1579-492c-bc94-04aded62e54d",
     "29488fed-3d55-4b9b-af2e-11708d126306"
-   ]
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T00:17:07.337410+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3386,
+    "band_width": 12,
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey": [
+      300,
+      311
+     ],
+     "niome_hotkey1": [
+      312,
+      323
+     ],
+     "niome_hotkey2": [
+      324,
+      335
+     ],
+     "niome_hotkey3": [
+      336,
+      347
+     ],
+     "niome_hotkey4": [
+      348,
+      359
+     ],
+     "niome_hotkey5": [
+      360,
+      371
+     ],
+     "niome_hotkey6": [
+      372,
+      383
+     ],
+     "niome_hotkey7": [
+      384,
+      395
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated",
+     "niome_hotkey8": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "at": "2026-09-04T23:43:57.365480",
+    "seeds": [
+     201,
+     397,
+     720
+    ],
+    "actual_windows": [
+     1,
+     2,
+     6
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       300,
+       311
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       312,
+       323
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 125,
+      "final": 25.43,
+      "consistency": 0.0829,
+      "weighted": 352.3,
+      "fidelity": 0.8711,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       324,
+       335
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 137,
+      "final": 24.7,
+      "consistency": 0.0803,
+      "weighted": 340.5,
+      "fidelity": 0.9031,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       336,
+       347
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 154,
+      "final": 21.21,
+      "consistency": 0.0697,
+      "weighted": 345.5,
+      "fidelity": 0.8815,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       348,
+       359
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 147,
+      "final": 22.91,
+      "consistency": 0.075,
+      "weighted": 350.1,
+      "fidelity": 0.8725,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       360,
+       371
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 145,
+      "final": 23.31,
+      "consistency": 0.0764,
+      "weighted": 345.8,
+      "fidelity": 0.8818,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       372,
+       383
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 150,
+      "final": 22.36,
+      "consistency": 0.0728,
+      "weighted": 345.0,
+      "fidelity": 0.8903,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       384,
+       395
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 122,
+      "final": 25.62,
+      "consistency": 0.0836,
+      "weighted": 341.5,
+      "fidelity": 0.8975,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-05T02:17:02.070365+00:00"
+   }
   },
   {
    "made_at": "2026-09-04T09:34:54.112344+00:00",
@@ -178,7 +628,225 @@
     "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
     "05071346-8862-4a4d-a1be-780c1983e304",
     "e890b5d2-ca97-4226-b329-65e854e8bc60"
-   ]
+   ],
+   "applied": {
+    "applied_at": "2026-09-04T19:17:05.063753+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.3414,
+    "band_width": 16,
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey": [
+      100,
+      115
+     ],
+     "niome_hotkey1": [
+      116,
+      131
+     ],
+     "niome_hotkey2": [
+      132,
+      147
+     ],
+     "niome_hotkey3": [
+      148,
+      163
+     ],
+     "niome_hotkey4": [
+      164,
+      179
+     ],
+     "niome_hotkey5": [
+      180,
+      195
+     ],
+     "niome_hotkey6": [
+      500,
+      599
+     ],
+     "niome_hotkey7": [
+      800,
+      899
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread",
+     "niome_hotkey8": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "at": "2026-09-04T18:56:17.190561",
+    "seeds": [
+     125,
+     504,
+     516
+    ],
+    "actual_windows": [
+     0,
+     4
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       115
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 211,
+      "final": 28.75,
+      "consistency": 0.1094,
+      "weighted": 293.8,
+      "fidelity": 0.8943,
+      "band_hit": false
+     },
+     "niome_hotkey1": {
+      "window": [
+       116,
+       131
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       125
+      ],
+      "all_hdr_built": true,
+      "rank": 216,
+      "final": 26.61,
+      "consistency": 0.0998,
+      "weighted": 292.3,
+      "fidelity": 0.9118,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       132,
+       147
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 214,
+      "final": 27.31,
+      "consistency": 0.1018,
+      "weighted": 296.6,
+      "fidelity": 0.9048,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       148,
+       163
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 213,
+      "final": 28.31,
+      "consistency": 0.1058,
+      "weighted": 292.8,
+      "fidelity": 0.914,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       164,
+       179
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 215,
+      "final": 26.79,
+      "consistency": 0.1014,
+      "weighted": 297.3,
+      "fidelity": 0.8885,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       180,
+       195
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 199,
+      "final": 30.02,
+      "consistency": 0.1123,
+      "weighted": 302.1,
+      "fidelity": 0.8851,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       500,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       504,
+       516
+      ],
+      "all_hdr_built": true,
+      "rank": 212,
+      "final": 28.72,
+      "consistency": 0.1058,
+      "weighted": 307.9,
+      "fidelity": 0.8816,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 218,
+      "final": 25.41,
+      "consistency": 0.0931,
+      "weighted": 306.7,
+      "fidelity": 0.89,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-04T21:17:16.512556+00:00"
+   }
   },
   {
    "made_at": "2026-09-04T09:34:54.112344+00:00",
@@ -229,7 +897,6147 @@
     "9ed335da-2667-4119-9a8b-8bd190b60709",
     "92280006-3fe8-4d80-ba26-57380770eb54",
     "87411bfa-28c4-48d0-9db5-97bb6c46df66"
-   ]
+   ],
+   "applied": {
+    "applied_at": "2026-09-04T12:17:01.849034+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.4313,
+    "band_width": 16,
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey": [
+      900,
+      915
+     ],
+     "niome_hotkey1": [
+      916,
+      931
+     ],
+     "niome_hotkey2": [
+      932,
+      947
+     ],
+     "niome_hotkey3": [
+      948,
+      963
+     ],
+     "niome_hotkey4": [
+      964,
+      979
+     ],
+     "niome_hotkey5": [
+      980,
+      995
+     ],
+     "niome_hotkey6": [
+      300,
+      399
+     ],
+     "niome_hotkey7": [
+      600,
+      699
+     ],
+     "niome_hotkey8": [
+      700,
+      799
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread",
+     "niome_hotkey8": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "at": "2026-09-04T11:43:20.071469",
+    "seeds": [
+     208,
+     341,
+     632
+    ],
+    "actual_windows": [
+     1,
+     2,
+     5
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       900,
+       915
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 195,
+      "final": 22.76,
+      "consistency": 0.1043,
+      "weighted": 246.5,
+      "fidelity": 0.8857,
+      "band_hit": false
+     },
+     "niome_hotkey1": {
+      "window": [
+       916,
+       931
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 197,
+      "final": 22.38,
+      "consistency": 0.1042,
+      "weighted": 241.9,
+      "fidelity": 0.8878,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       932,
+       947
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 214,
+      "final": 21.54,
+      "consistency": 0.0978,
+      "weighted": 247.9,
+      "fidelity": 0.8883,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       948,
+       963
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 201,
+      "final": 22.29,
+      "consistency": 0.1037,
+      "weighted": 246.6,
+      "fidelity": 0.8716,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       964,
+       979
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 219,
+      "final": 20.96,
+      "consistency": 0.0973,
+      "weighted": 240.5,
+      "fidelity": 0.8953,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       980,
+       995
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 192,
+      "final": 23.05,
+      "consistency": 0.107,
+      "weighted": 244.9,
+      "fidelity": 0.8793,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       300,
+       399
+      ],
+      "role": "spread",
+      "seeds_in_window": [
+       341
+      ],
+      "rank": 224,
+      "final": 19.66,
+      "consistency": 0.0884,
+      "weighted": 249.5,
+      "fidelity": 0.8917,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       600,
+       699
+      ],
+      "role": "spread",
+      "seeds_in_window": [
+       632
+      ],
+      "rank": 189,
+      "final": 23.22,
+      "consistency": 0.1042,
+      "weighted": 251.0,
+      "fidelity": 0.888,
+      "band_hit": false
+     },
+     "niome_hotkey8": {
+      "window": [
+       700,
+       799
+      ],
+      "role": "spread",
+      "seeds_in_window": [],
+      "rank": 199,
+      "final": 22.35,
+      "consistency": 0.1008,
+      "weighted": 255.3,
+      "fidelity": 0.8682,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-04T15:32:17.982832+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-04T13:17:02.125727+00:00",
+   "cell": "K562",
+   "beta": 0.55,
+   "counts": [
+    4,
+    6,
+    4,
+    5,
+    5,
+    4,
+    3,
+    3,
+    2
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.455
+    },
+    {
+     "window": 6,
+     "label": "700-799",
+     "p_hit": 0.362
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.362
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "700-799",
+    "800-899"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5"
+   ],
+   "applied": {
+    "applied_at": "2026-09-04T15:17:02.124987+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.455,
+    "band_width": 16,
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey": [
+      900,
+      915
+     ],
+     "niome_hotkey1": [
+      916,
+      931
+     ],
+     "niome_hotkey2": [
+      932,
+      947
+     ],
+     "niome_hotkey3": [
+      948,
+      963
+     ],
+     "niome_hotkey4": [
+      964,
+      979
+     ],
+     "niome_hotkey5": [
+      980,
+      995
+     ],
+     "niome_hotkey6": [
+      700,
+      799
+     ],
+     "niome_hotkey7": [
+      800,
+      899
+     ],
+     "niome_hotkey8": [
+      100,
+      199
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread",
+     "niome_hotkey8": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "at": "2026-09-04T14:07:23.059934",
+    "seeds": [
+     102,
+     488,
+     494
+    ],
+    "actual_windows": [
+     0,
+     3
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       900,
+       915
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 192,
+      "final": 31.0,
+      "consistency": 0.103,
+      "weighted": 334.1,
+      "fidelity": 0.9007,
+      "band_hit": false
+     },
+     "niome_hotkey1": {
+      "window": [
+       916,
+       931
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 188,
+      "final": 31.62,
+      "consistency": 0.1071,
+      "weighted": 326.4,
+      "fidelity": 0.9049,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       932,
+       947
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 209,
+      "final": 27.71,
+      "consistency": 0.0942,
+      "weighted": 322.4,
+      "fidelity": 0.9127,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       948,
+       963
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 210,
+      "final": 27.69,
+      "consistency": 0.0933,
+      "weighted": 327.1,
+      "fidelity": 0.9075,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       964,
+       979
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 193,
+      "final": 30.92,
+      "consistency": 0.1039,
+      "weighted": 330.8,
+      "fidelity": 0.9,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       980,
+       995
+      ],
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "rank": 191,
+      "final": 31.14,
+      "consistency": 0.1064,
+      "weighted": 322.1,
+      "fidelity": 0.9082,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       700,
+       799
+      ],
+      "role": "spread",
+      "seeds_in_window": [],
+      "rank": 208,
+      "final": 27.72,
+      "consistency": 0.0924,
+      "weighted": 333.3,
+      "fidelity": 0.9,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       800,
+       899
+      ],
+      "role": "spread",
+      "seeds_in_window": [],
+      "rank": 186,
+      "final": 31.82,
+      "consistency": 0.1064,
+      "weighted": 333.3,
+      "fidelity": 0.8974,
+      "band_hit": false
+     },
+     "niome_hotkey8": {
+      "window": [
+       100,
+       199
+      ],
+      "role": "spread",
+      "seeds_in_window": [
+       102
+      ],
+      "rank": 196,
+      "final": 30.07,
+      "consistency": 0.1007,
+      "weighted": 334.3,
+      "fidelity": 0.8931,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-04T16:17:02.167761+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-04T16:17:02.167761+00:00",
+   "cell": "K562",
+   "beta": 0.45,
+   "counts": [
+    5,
+    6,
+    4,
+    7,
+    5,
+    4,
+    3,
+    3,
+    2
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.4384
+    },
+    {
+     "window": 6,
+     "label": "700-799",
+     "p_hit": 0.3661
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3661
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "700-799",
+    "800-899"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301"
+   ],
+   "applied": {
+    "applied_at": "2026-09-04T18:17:08.616215+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.4388,
+    "band_width": 16,
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey": [
+      900,
+      915
+     ],
+     "niome_hotkey1": [
+      916,
+      931
+     ],
+     "niome_hotkey2": [
+      932,
+      947
+     ],
+     "niome_hotkey3": [
+      948,
+      963
+     ],
+     "niome_hotkey4": [
+      964,
+      979
+     ],
+     "niome_hotkey5": [
+      980,
+      995
+     ],
+     "niome_hotkey6": [
+      800,
+      899
+     ],
+     "niome_hotkey7": [
+      600,
+      699
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread",
+     "niome_hotkey8": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "at": "2026-09-04T16:31:20.232518",
+    "seeds": [
+     178,
+     362,
+     713
+    ],
+    "actual_windows": [
+     0,
+     2,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       900,
+       915
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 219,
+      "final": 25.6,
+      "consistency": 0.0996,
+      "weighted": 289.3,
+      "fidelity": 0.8882,
+      "band_hit": false
+     },
+     "niome_hotkey1": {
+      "window": [
+       916,
+       931
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 204,
+      "final": 26.06,
+      "consistency": 0.0981,
+      "weighted": 297.3,
+      "fidelity": 0.8934,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       932,
+       947
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 196,
+      "final": 27.57,
+      "consistency": 0.107,
+      "weighted": 294.1,
+      "fidelity": 0.8761,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       948,
+       963
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 227,
+      "final": 23.16,
+      "consistency": 0.0898,
+      "weighted": 291.7,
+      "fidelity": 0.8844,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       964,
+       979
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 194,
+      "final": 27.74,
+      "consistency": 0.1071,
+      "weighted": 295.4,
+      "fidelity": 0.8767,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       980,
+       995
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 205,
+      "final": 26.01,
+      "consistency": 0.1016,
+      "weighted": 288.3,
+      "fidelity": 0.8879,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       700,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       713
+      ],
+      "all_hdr_built": true,
+      "planned_window": [
+       800,
+       899
+      ],
+      "rank": 182,
+      "final": 29.07,
+      "consistency": 0.1079,
+      "weighted": 304.2,
+      "fidelity": 0.8857,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "planned_window": [
+       600,
+       699
+      ],
+      "rank": 171,
+      "final": 29.83,
+      "consistency": 0.11,
+      "weighted": 304.9,
+      "fidelity": 0.8892,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-04T19:17:01.912045+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-04T19:17:01.912045+00:00",
+   "cell": "K562",
+   "beta": 0.4,
+   "counts": [
+    6,
+    6,
+    5,
+    7,
+    5,
+    4,
+    4,
+    3,
+    2
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.4388
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3762
+    },
+    {
+     "window": 5,
+     "label": "600-699",
+     "p_hit": 0.3207
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "600-699"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T10:17:04.888739+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3762,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      816
+     ],
+     "niome_hotkey2": [
+      817,
+      833
+     ],
+     "niome_hotkey3": [
+      834,
+      850
+     ],
+     "niome_hotkey4": [
+      851,
+      867
+     ],
+     "niome_hotkey5": [
+      868,
+      883
+     ],
+     "niome_hotkey8": [
+      884,
+      899
+     ],
+     "niome_hotkey6": [
+      900,
+      999
+     ],
+     "niome_hotkey7": [
+      600,
+      699
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "at": "2026-09-05T09:21:14.681485",
+    "seeds": [
+     696,
+     797,
+     947
+    ],
+    "actual_windows": [
+     5,
+     6,
+     8
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       800,
+       816
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       817,
+       833
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       834,
+       850
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 198,
+      "final": 26.28,
+      "consistency": 0.1027,
+      "weighted": 284.1,
+      "fidelity": 0.9005,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       851,
+       867
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 209,
+      "final": 24.49,
+      "consistency": 0.095,
+      "weighted": 284.4,
+      "fidelity": 0.9068,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       868,
+       883
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 206,
+      "final": 25.31,
+      "consistency": 0.1,
+      "weighted": 277.9,
+      "fidelity": 0.9106,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       900,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       947
+      ],
+      "all_hdr_built": true,
+      "rank": 193,
+      "final": 26.94,
+      "consistency": 0.1011,
+      "weighted": 296.0,
+      "fidelity": 0.9007,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       600,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       696
+      ],
+      "all_hdr_built": true,
+      "rank": 190,
+      "final": 27.39,
+      "consistency": 0.1036,
+      "weighted": 291.4,
+      "fidelity": 0.9077,
+      "band_hit": false
+     },
+     "niome_hotkey8": {
+      "window": [
+       884,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 141,
+      "final": 30.88,
+      "consistency": 0.1179,
+      "weighted": 291.1,
+      "fidelity": 0.9001,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-05T12:17:01.926914+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-04T20:17:01.336460+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    5,
+    6,
+    6,
+    7,
+    7,
+    9,
+    7,
+    5,
+    5
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3322
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3322
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3322
+    }
+   ],
+   "heuristic": [
+    "100-199",
+    "800-899",
+    "900-999"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6"
+   ],
+   "applied": {
+    "applied_at": "2026-09-04T22:17:01.698139+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.3322,
+    "band_width": 16,
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey": [
+      100,
+      115
+     ],
+     "niome_hotkey1": [
+      116,
+      131
+     ],
+     "niome_hotkey2": [
+      132,
+      147
+     ],
+     "niome_hotkey3": [
+      148,
+      163
+     ],
+     "niome_hotkey4": [
+      164,
+      179
+     ],
+     "niome_hotkey5": [
+      180,
+      195
+     ],
+     "niome_hotkey6": [
+      800,
+      899
+     ],
+     "niome_hotkey7": [
+      900,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "concentrated",
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread",
+     "niome_hotkey8": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "at": "2026-09-04T21:19:20.899337",
+    "seeds": [
+     438,
+     566,
+     730
+    ],
+    "actual_windows": [
+     3,
+     4,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       115
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       116,
+       131
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 206,
+      "final": 28.96,
+      "consistency": 0.1006,
+      "weighted": 313.9,
+      "fidelity": 0.9169,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       132,
+       147
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 210,
+      "final": 28.19,
+      "consistency": 0.0973,
+      "weighted": 318.2,
+      "fidelity": 0.9106,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       148,
+       163
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 188,
+      "final": 31.92,
+      "consistency": 0.1099,
+      "weighted": 316.5,
+      "fidelity": 0.9176,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       164,
+       179
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 201,
+      "final": 29.67,
+      "consistency": 0.1021,
+      "weighted": 318.6,
+      "fidelity": 0.9124,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       180,
+       195
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 212,
+      "final": 27.97,
+      "consistency": 0.0962,
+      "weighted": 318.7,
+      "fidelity": 0.9127,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 186,
+      "final": 32.11,
+      "consistency": 0.1066,
+      "weighted": 330.6,
+      "fidelity": 0.9115,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       900,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 175,
+      "final": 33.24,
+      "consistency": 0.1096,
+      "weighted": 334.2,
+      "fidelity": 0.9076,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-05T00:17:01.631887+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-04T23:17:01.998142+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.2,
+   "counts": [
+    5,
+    6,
+    6,
+    8,
+    8,
+    9,
+    8,
+    5,
+    5
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3314
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3314
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3314
+    }
+   ],
+   "heuristic": [
+    "100-199",
+    "800-899",
+    "900-999"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T12:17:07.222793+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3314,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      816
+     ],
+     "niome_hotkey2": [
+      817,
+      833
+     ],
+     "niome_hotkey3": [
+      834,
+      850
+     ],
+     "niome_hotkey4": [
+      851,
+      867
+     ],
+     "niome_hotkey5": [
+      868,
+      883
+     ],
+     "niome_hotkey8": [
+      884,
+      899
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      900,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "at": "2026-09-05T11:44:48.345026",
+    "seeds": [
+     463,
+     515,
+     519
+    ],
+    "actual_windows": [
+     3,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       800,
+       816
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       817,
+       833
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       834,
+       850
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       851,
+       867
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       868,
+       883
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 227,
+      "final": 23.77,
+      "consistency": 0.0932,
+      "weighted": 284.0,
+      "fidelity": 0.8979,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 218,
+      "final": 27.12,
+      "consistency": 0.1023,
+      "weighted": 295.1,
+      "fidelity": 0.8983,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       900,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 212,
+      "final": 28.13,
+      "consistency": 0.1064,
+      "weighted": 296.5,
+      "fidelity": 0.892,
+      "band_hit": false
+     },
+     "niome_hotkey8": {
+      "window": [
+       884,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 222,
+      "final": 25.42,
+      "consistency": 0.0976,
+      "weighted": 294.8,
+      "fidelity": 0.8837,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-05T14:17:01.968573+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-05T01:17:09.588696+00:00",
+   "cell": "HEK293",
+   "beta": 0.15,
+   "counts": [
+    8,
+    7,
+    5,
+    10,
+    4,
+    6,
+    11,
+    5,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3431
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3266
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3266
+    }
+   ],
+   "heuristic": [
+    "500-599",
+    "300-399",
+    "800-899"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T07:18:55.817973+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3266,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "500-599",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      300,
+      312
+     ],
+     "niome_hotkey2": [
+      313,
+      325
+     ],
+     "niome_hotkey3": [
+      326,
+      338
+     ],
+     "niome_hotkey4": [
+      339,
+      351
+     ],
+     "niome_hotkey5": [
+      352,
+      363
+     ],
+     "niome_hotkey8": [
+      364,
+      375
+     ],
+     "niome_hotkey6": [
+      376,
+      387
+     ],
+     "niome_hotkey7": [
+      388,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "at": "2026-09-05T06:56:33.915125",
+    "seeds": [
+     153,
+     490,
+     731
+    ],
+    "actual_windows": [
+     0,
+     3,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       153
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       300,
+       312
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       313,
+       325
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       326,
+       338
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 114,
+      "final": 19.45,
+      "consistency": 0.0892,
+      "weighted": 244.2,
+      "fidelity": 0.8928,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       339,
+       351
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 98,
+      "final": 19.92,
+      "consistency": 0.091,
+      "weighted": 243.4,
+      "fidelity": 0.8994,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       352,
+       363
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 154,
+      "final": 17.69,
+      "consistency": 0.0792,
+      "weighted": 246.6,
+      "fidelity": 0.9057,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       376,
+       387
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 165,
+      "final": 16.3,
+      "consistency": 0.0737,
+      "weighted": 245.1,
+      "fidelity": 0.9021,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       388,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 167,
+      "final": 15.64,
+      "consistency": 0.0699,
+      "weighted": 246.7,
+      "fidelity": 0.9065,
+      "band_hit": false
+     },
+     "niome_hotkey8": {
+      "window": [
+       364,
+       375
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 162,
+      "final": 16.9,
+      "consistency": 0.0773,
+      "weighted": 245.7,
+      "fidelity": 0.8905,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-05T09:17:02.202701+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-05T04:17:12.817287+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": -0.05,
+   "counts": [
+    6,
+    7,
+    9,
+    9,
+    15,
+    4,
+    5,
+    10,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3314
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3067
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3019
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "700-799",
+    "100-199"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T07:17:06.875728+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3067,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "500-599",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      816
+     ],
+     "niome_hotkey2": [
+      817,
+      833
+     ],
+     "niome_hotkey3": [
+      834,
+      850
+     ],
+     "niome_hotkey4": [
+      851,
+      867
+     ],
+     "niome_hotkey5": [
+      868,
+      883
+     ],
+     "niome_hotkey8": [
+      884,
+      899
+     ],
+     "niome_hotkey6": [
+      500,
+      599
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "at": "2026-09-06T07:01:14.917300",
+    "seeds": [
+     646,
+     780,
+     907
+    ],
+    "actual_windows": [
+     5,
+     6,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       800,
+       816
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       817,
+       833
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       834,
+       850
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       851,
+       867
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       868,
+       883
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       500,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       884,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T08:17:03.392014+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    9,
+    7,
+    5,
+    11,
+    4,
+    6,
+    12,
+    5,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3139
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3089
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3089
+    }
+   ],
+   "heuristic": [
+    "500-599",
+    "300-399",
+    "800-899"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T18:17:09.483732+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3089,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "500-599",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      300,
+      312
+     ],
+     "niome_hotkey2": [
+      313,
+      325
+     ],
+     "niome_hotkey3": [
+      326,
+      338
+     ],
+     "niome_hotkey4": [
+      339,
+      351
+     ],
+     "niome_hotkey5": [
+      352,
+      363
+     ],
+     "niome_hotkey8": [
+      364,
+      375
+     ],
+     "niome_hotkey6": [
+      376,
+      387
+     ],
+     "niome_hotkey7": [
+      388,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "at": "2026-09-05T18:57:39.296903",
+    "seeds": [
+     380,
+     527,
+     599
+    ],
+    "actual_windows": [
+     2,
+     4
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       300,
+       312
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       313,
+       325
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       326,
+       338
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       339,
+       351
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       352,
+       363
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       376,
+       387
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       380
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       388,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       364,
+       375
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T11:17:03.422377+00:00",
+   "cell": "K562",
+   "beta": 0.5,
+   "counts": [
+    6,
+    6,
+    5,
+    7,
+    5,
+    5,
+    5,
+    3,
+    3
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.4219
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.4219
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2873
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "300-399"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb"
+   ],
+   "applied": {
+    "applied_at": "2026-09-07T08:17:39.571975+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.4219,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "65786823-abc0-4288-849b-fce1d35fcb47",
+    "at": "2026-09-07T07:03:36.742587",
+    "seeds": [
+     432,
+     480,
+     763
+    ],
+    "actual_windows": [
+     3,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-05T13:17:22.965929+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.15,
+   "counts": [
+    5,
+    6,
+    6,
+    9,
+    10,
+    9,
+    8,
+    5,
+    5
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3272
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3272
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3272
+    }
+   ],
+   "heuristic": [
+    "100-199",
+    "800-899",
+    "900-999"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T15:17:07.787283+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3272,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      816
+     ],
+     "niome_hotkey2": [
+      817,
+      833
+     ],
+     "niome_hotkey3": [
+      834,
+      850
+     ],
+     "niome_hotkey4": [
+      851,
+      867
+     ],
+     "niome_hotkey5": [
+      868,
+      883
+     ],
+     "niome_hotkey8": [
+      884,
+      899
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      900,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "at": "2026-09-05T15:29:09.327454",
+    "seeds": [
+     841,
+     901,
+     941
+    ],
+    "actual_windows": [
+     7,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       800,
+       816
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": []
+     },
+     "niome_hotkey2": {
+      "window": [
+       817,
+       833
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": []
+     },
+     "niome_hotkey3": {
+      "window": [
+       834,
+       850
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": [
+       841
+      ]
+     },
+     "niome_hotkey4": {
+      "window": [
+       851,
+       867
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": []
+     },
+     "niome_hotkey5": {
+      "window": [
+       868,
+       883
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": []
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "spread",
+      "seeds_in_window": []
+     },
+     "niome_hotkey7": {
+      "window": [
+       900,
+       999
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "spread",
+      "seeds_in_window": [
+       901,
+       941
+      ]
+     },
+     "niome_hotkey8": {
+      "window": [
+       884,
+       899
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "concentrated",
+      "seeds_in_window": []
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey3",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T16:17:02.071544+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.2,
+   "counts": [
+    5,
+    6,
+    6,
+    9,
+    10,
+    9,
+    8,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3439
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3225
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3225
+    }
+   ],
+   "heuristic": [
+    "100-199",
+    "200-299",
+    "300-399"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T17:17:07.303350+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.3225,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      216
+     ],
+     "niome_hotkey2": [
+      217,
+      233
+     ],
+     "niome_hotkey3": [
+      234,
+      250
+     ],
+     "niome_hotkey4": [
+      251,
+      267
+     ],
+     "niome_hotkey5": [
+      268,
+      283
+     ],
+     "niome_hotkey8": [
+      284,
+      299
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "at": "2026-09-05T16:33:15.486140",
+    "seeds": [
+     179,
+     369,
+     743
+    ],
+    "actual_windows": [
+     0,
+     2,
+     6
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       179
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       216
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       217,
+       233
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       234,
+       250
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       251,
+       267
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       268,
+       283
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       179
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       369
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       284,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T18:17:01.603205+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    6,
+    6,
+    7,
+    9,
+    10,
+    9,
+    9,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.337
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.337
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.337
+    }
+   ],
+   "heuristic": [
+    "100-199",
+    "200-299",
+    "800-899"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T03:17:07.267130+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.337,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      216
+     ],
+     "niome_hotkey2": [
+      217,
+      233
+     ],
+     "niome_hotkey3": [
+      234,
+      250
+     ],
+     "niome_hotkey4": [
+      251,
+      267
+     ],
+     "niome_hotkey5": [
+      268,
+      283
+     ],
+     "niome_hotkey8": [
+      284,
+      299
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      800,
+      899
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "at": "2026-09-06T02:11:23.013563",
+    "seeds": [
+     166,
+     282,
+     775
+    ],
+    "actual_windows": [
+     0,
+     1,
+     6
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       166
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       216
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       217,
+       233
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       234,
+       250
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       251,
+       267
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       268,
+       283
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       282
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       166
+      ],
+      "all_hdr_built": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       284,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey5",
+     "niome_hotkey6"
+    ],
+    "hotkeys_without_band": [
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T20:17:02.322659+00:00",
+   "cell": "HEK293",
+   "beta": 0.15,
+   "counts": [
+    9,
+    7,
+    6,
+    11,
+    6,
+    6,
+    12,
+    5,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3356
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3201
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3201
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "300-399",
+    "500-599"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180"
+   ],
+   "applied": {
+    "applied_at": "2026-09-05T22:17:07.591357+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3201,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      300,
+      312
+     ],
+     "niome_hotkey2": [
+      313,
+      325
+     ],
+     "niome_hotkey3": [
+      326,
+      338
+     ],
+     "niome_hotkey4": [
+      339,
+      351
+     ],
+     "niome_hotkey5": [
+      352,
+      363
+     ],
+     "niome_hotkey8": [
+      364,
+      375
+     ],
+     "niome_hotkey6": [
+      376,
+      387
+     ],
+     "niome_hotkey7": [
+      388,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "at": "2026-09-05T21:22:45.874771",
+    "seeds": [
+     171,
+     307,
+     404
+    ],
+    "actual_windows": [
+     0,
+     2,
+     3
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       171
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       300,
+       312
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       307
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       313,
+       325
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       326,
+       338
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       339,
+       351
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       352,
+       363
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       376,
+       387
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       388,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       364,
+       375
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey1"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-05T23:17:01.878400+00:00",
+   "cell": "HEK293",
+   "beta": 0.1,
+   "counts": [
+    10,
+    7,
+    7,
+    12,
+    6,
+    6,
+    12,
+    5,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3256
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3157
+    },
+    {
+     "window": 5,
+     "label": "600-699",
+     "p_hit": 0.3157
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "500-599",
+    "600-699"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T00:17:07.359865+00:00",
+    "predicted_window": "500-599",
+    "predicted_p_hit": 0.3157,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      500,
+      512
+     ],
+     "niome_hotkey2": [
+      513,
+      525
+     ],
+     "niome_hotkey3": [
+      526,
+      538
+     ],
+     "niome_hotkey4": [
+      539,
+      551
+     ],
+     "niome_hotkey5": [
+      552,
+      563
+     ],
+     "niome_hotkey8": [
+      564,
+      575
+     ],
+     "niome_hotkey6": [
+      576,
+      587
+     ],
+     "niome_hotkey7": [
+      588,
+      599
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "at": "2026-09-05T23:46:56.485043",
+    "seeds": [
+     119,
+     523,
+     867
+    ],
+    "actual_windows": [
+     0,
+     4,
+     7
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       119
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       500,
+       512
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       513,
+       525
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       523
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       526,
+       538
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       539,
+       551
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       552,
+       563
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       576,
+       587
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       588,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       564,
+       575
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey2"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T01:17:01.645033+00:00",
+   "cell": "HEK293",
+   "beta": 0.1,
+   "counts": [
+    11,
+    7,
+    7,
+    12,
+    7,
+    6,
+    12,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 5,
+     "label": "600-699",
+     "p_hit": 0.3187
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3187
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3091
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "800-899",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T05:17:07.479155+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3187,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "600-699",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      800,
+      812
+     ],
+     "niome_hotkey2": [
+      813,
+      825
+     ],
+     "niome_hotkey3": [
+      826,
+      838
+     ],
+     "niome_hotkey4": [
+      839,
+      851
+     ],
+     "niome_hotkey5": [
+      852,
+      863
+     ],
+     "niome_hotkey8": [
+      864,
+      875
+     ],
+     "niome_hotkey6": [
+      876,
+      887
+     ],
+     "niome_hotkey7": [
+      888,
+      899
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "0c554bce-4842-4870-b308-763fe851d055",
+    "at": "2026-09-06T04:35:44.251095",
+    "seeds": [
+     415,
+     748,
+     876
+    ],
+    "actual_windows": [
+     3,
+     6,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       800,
+       812
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       813,
+       825
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       826,
+       838
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       839,
+       851
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       852,
+       863
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       876,
+       887
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       876
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       888,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       864,
+       875
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T04:17:01.555113+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    7,
+    7,
+    7,
+    9,
+    10,
+    9,
+    10,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3451
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3196
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3196
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "100-199",
+    "200-299"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T10:17:05.477548+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.3196,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      116
+     ],
+     "niome_hotkey2": [
+      117,
+      133
+     ],
+     "niome_hotkey3": [
+      134,
+      150
+     ],
+     "niome_hotkey4": [
+      151,
+      167
+     ],
+     "niome_hotkey5": [
+      168,
+      183
+     ],
+     "niome_hotkey8": [
+      184,
+      199
+     ],
+     "niome_hotkey6": [
+      800,
+      899
+     ],
+     "niome_hotkey7": [
+      200,
+      299
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "at": "2026-09-06T09:24:34.538801",
+    "seeds": [
+     252,
+     476,
+     693
+    ],
+    "actual_windows": [
+     1,
+     3,
+     5
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       100,
+       116
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       117,
+       133
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       134,
+       150
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       151,
+       167
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       168,
+       183
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       200,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       252
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       184,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T06:17:01.758405+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    11,
+    7,
+    7,
+    13,
+    7,
+    6,
+    13,
+    7,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 5,
+     "label": "600-699",
+     "p_hit": 0.3095
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3049
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3049
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "200-299",
+    "300-399"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T20:17:07.849256+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.3049,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "600-699",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      212
+     ],
+     "niome_hotkey2": [
+      213,
+      225
+     ],
+     "niome_hotkey3": [
+      226,
+      238
+     ],
+     "niome_hotkey4": [
+      239,
+      251
+     ],
+     "niome_hotkey5": [
+      252,
+      263
+     ],
+     "niome_hotkey8": [
+      264,
+      275
+     ],
+     "niome_hotkey6": [
+      276,
+      287
+     ],
+     "niome_hotkey7": [
+      288,
+      299
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "at": "2026-09-06T19:02:32.559276",
+    "seeds": [
+     103,
+     463,
+     821
+    ],
+    "actual_windows": [
+     0,
+     3,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       103
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       212
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       213,
+       225
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       226,
+       238
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       239,
+       251
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       252,
+       263
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       276,
+       287
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       288,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       264,
+       275
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T08:17:43.977550+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    6,
+    7,
+    9,
+    9,
+    15,
+    5,
+    6,
+    10,
+    8
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "100-199",
+    "700-799"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65"
+   ],
+   "applied": {
+    "applied_at": "2026-09-07T00:17:07.622847+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.2977,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      216
+     ],
+     "niome_hotkey2": [
+      217,
+      233
+     ],
+     "niome_hotkey3": [
+      234,
+      250
+     ],
+     "niome_hotkey4": [
+      251,
+      267
+     ],
+     "niome_hotkey5": [
+      268,
+      283
+     ],
+     "niome_hotkey8": [
+      284,
+      299
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "at": "2026-09-06T23:51:15.705366",
+    "seeds": [
+     432,
+     796,
+     968
+    ],
+    "actual_windows": [
+     3,
+     6,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       216
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       217,
+       233
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       234,
+       250
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       251,
+       267
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       268,
+       283
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       284,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T11:17:17.897934+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    7,
+    8,
+    7,
+    10,
+    10,
+    10,
+    10,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3522
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3268
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3268
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "100-199",
+    "300-399"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T12:17:21.410271+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.3268,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      116
+     ],
+     "niome_hotkey2": [
+      117,
+      133
+     ],
+     "niome_hotkey3": [
+      134,
+      150
+     ],
+     "niome_hotkey4": [
+      151,
+      167
+     ],
+     "niome_hotkey5": [
+      168,
+      183
+     ],
+     "niome_hotkey8": [
+      184,
+      199
+     ],
+     "niome_hotkey6": [
+      800,
+      899
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "at": "2026-09-06T11:49:09.139622",
+    "seeds": [
+     119,
+     170,
+     363
+    ],
+    "actual_windows": [
+     0,
+     2
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       119,
+       170
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       100,
+       116
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       117,
+       133
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       119
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       134,
+       150
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       151,
+       167
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       168,
+       183
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       170
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       363
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       184,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey2",
+     "niome_hotkey5",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T13:17:02.229325+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    9,
+    8,
+    8,
+    10,
+    10,
+    10,
+    10,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3602
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3348
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3109
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "200-299"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T15:17:07.253362+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3348,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      900,
+      916
+     ],
+     "niome_hotkey2": [
+      917,
+      933
+     ],
+     "niome_hotkey3": [
+      934,
+      950
+     ],
+     "niome_hotkey4": [
+      951,
+      967
+     ],
+     "niome_hotkey5": [
+      968,
+      983
+     ],
+     "niome_hotkey8": [
+      984,
+      999
+     ],
+     "niome_hotkey6": [
+      800,
+      899
+     ],
+     "niome_hotkey7": [
+      200,
+      299
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "at": "2026-09-06T14:13:20.610793",
+    "seeds": [
+     217,
+     366,
+     485
+    ],
+    "actual_windows": [
+     1,
+     2,
+     3
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       900,
+       916
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       917,
+       933
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       934,
+       950
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       951,
+       967
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       968,
+       983
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       200,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       217
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       984,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T16:17:01.559238+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    9,
+    9,
+    9,
+    11,
+    10,
+    10,
+    10,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3673
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.342
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2956
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "100-199"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T04:17:08.324964+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2956,
+    "band_width": 0,
+    "conc_rank": 3,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   }
+  },
+  {
+   "made_at": "2026-09-06T21:17:02.134406+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    12,
+    7,
+    7,
+    14,
+    7,
+    6,
+    13,
+    8,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 5,
+     "label": "600-699",
+     "p_hit": 0.3108
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3062
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3062
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "200-299",
+    "300-399"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf"
+   ],
+   "applied": {
+    "applied_at": "2026-09-06T22:18:01.913709+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.3062,
+    "band_width": 12,
+    "conc_rank": 2,
+    "rank1_window": "600-699",
+    "spread_width": 100,
+    "n_concentrated": 8,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      212
+     ],
+     "niome_hotkey2": [
+      213,
+      225
+     ],
+     "niome_hotkey3": [
+      226,
+      238
+     ],
+     "niome_hotkey4": [
+      239,
+      251
+     ],
+     "niome_hotkey5": [
+      252,
+      263
+     ],
+     "niome_hotkey8": [
+      264,
+      275
+     ],
+     "niome_hotkey6": [
+      276,
+      287
+     ],
+     "niome_hotkey7": [
+      288,
+      299
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "concentrated",
+     "niome_hotkey7": "concentrated"
+    }
+   },
+   "resolved": {
+    "task_id": "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "at": "2026-09-06T21:27:30.547338",
+    "seeds": [
+     162,
+     850,
+     880
+    ],
+    "actual_windows": [
+     0,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       162
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       212
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       213,
+       225
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       226,
+       238
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       239,
+       251
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       252,
+       263
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       276,
+       287
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       288,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       264,
+       275
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-06T23:17:02.195018+00:00",
+   "cell": "HEK293",
+   "beta": 0.0,
+   "counts": [
+    13,
+    7,
+    7,
+    14,
+    7,
+    6,
+    13,
+    10,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "200-299",
+    "300-399"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75"
+   ],
+   "applied": {
+    "applied_at": "2026-09-07T10:17:07.594896+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "at": "2026-09-07T09:28:08.362258",
+    "seeds": [
+     232,
+     487,
+     966
+    ],
+    "actual_windows": [
+     1,
+     3,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-07T01:17:01.958528+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    6,
+    7,
+    9,
+    10,
+    15,
+    5,
+    7,
+    10,
+    9
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "100-199",
+    "200-299"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d"
+   ],
+   "applied": {
+    "applied_at": "2026-09-07T04:18:09.568470+00:00",
+    "predicted_window": "200-299",
+    "predicted_p_hit": 0.2977,
+    "band_width": 16,
+    "conc_rank": 2,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 6,
+    "assignments": {
+     "niome_hotkey1": [
+      200,
+      216
+     ],
+     "niome_hotkey2": [
+      217,
+      233
+     ],
+     "niome_hotkey3": [
+      234,
+      250
+     ],
+     "niome_hotkey4": [
+      251,
+      267
+     ],
+     "niome_hotkey5": [
+      268,
+      283
+     ],
+     "niome_hotkey8": [
+      284,
+      299
+     ],
+     "niome_hotkey6": [
+      100,
+      199
+     ],
+     "niome_hotkey7": [
+      300,
+      399
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "concentrated",
+     "niome_hotkey2": "concentrated",
+     "niome_hotkey3": "concentrated",
+     "niome_hotkey4": "concentrated",
+     "niome_hotkey5": "concentrated",
+     "niome_hotkey8": "concentrated",
+     "niome_hotkey6": "spread",
+     "niome_hotkey7": "spread"
+    }
+   },
+   "resolved": {
+    "task_id": "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "at": "2026-09-07T02:16:29.123215",
+    "seeds": [
+     166,
+     283,
+     915
+    ],
+    "actual_windows": [
+     0,
+     1,
+     8
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "env_pin_no_entry",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       166
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       216
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       217,
+       233
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       234,
+       250
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       251,
+       267
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       268,
+       283
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [
+       283
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [
+       166
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "spread",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       284,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "concentrated",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey5",
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-07T05:17:22.562152+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    7,
+    8,
+    9,
+    10,
+    15,
+    5,
+    7,
+    10,
+    10
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "100-199",
+    "700-799"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T04:17:08.324964+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   }
+  },
+  {
+   "made_at": "2026-09-07T09:17:01.889970+00:00",
+   "cell": "K562",
+   "beta": 0.35,
+   "counts": [
+    6,
+    6,
+    5,
+    9,
+    5,
+    5,
+    6,
+    3,
+    3
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.393
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.393
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3027
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "300-399"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47"
+   ],
+   "applied": {
+    "applied_at": "2026-09-07T12:17:07.328271+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.393,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "at": "2026-09-07T11:52:57.287911",
+    "seeds": [
+     416,
+     635,
+     856
+    ],
+    "actual_windows": [
+     3,
+     5,
+     7
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true
+   }
+  },
+  {
+   "made_at": "2026-09-07T11:17:01.915053+00:00",
+   "cell": "HEK293",
+   "beta": 0.0,
+   "counts": [
+    13,
+    8,
+    7,
+    15,
+    7,
+    6,
+    13,
+    10,
+    8
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "300-399",
+    "500-599"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T04:17:08.324964+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-07T13:17:01.629897+00:00",
+   "cell": "K562",
+   "beta": 0.3,
+   "counts": [
+    6,
+    6,
+    5,
+    10,
+    5,
+    6,
+    6,
+    4,
+    3
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3896
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.35
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3137
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "300-399"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T02:18:21.510996+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3896,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "at": "2026-09-08T02:30:32.028919",
+    "seeds": [
+     430,
+     451,
+     829
+    ],
+    "actual_windows": [
+     3,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-08T03:17:01.875597+00:00",
+   "cell": "K562",
+   "beta": 0.15,
+   "counts": [
+    6,
+    6,
+    5,
+    12,
+    5,
+    6,
+    6,
+    5,
+    3
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3467
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3116
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3116
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "300-399",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T04:17:08.324964+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3734,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
   }
  ]
 }
