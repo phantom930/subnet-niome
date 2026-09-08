@@ -1,0 +1,122 @@
+{
+ "task": "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+ "cell": "K562",
+ "group": 50,
+ "bank": 60000,
+ "arms": {
+  "0": {
+   "pool": 60000,
+   "union": 366,
+   "clean": 534,
+   "cas9": 1754,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 214.13560739541282,
+   "fidelity": 0.9154886084956642,
+   "band_cons": null,
+   "clean_cons": 0.25623787475253257,
+   "dirty_cons": 0.10580803436206518,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.19506307299374248,
+   "e_final": 38.23991305082248,
+   "band": []
+  },
+  "1": {
+   "pool": 30399,
+   "union": 385,
+   "clean": 515,
+   "cas9": 1009,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 213.64652601671497,
+   "fidelity": 0.9151484308609584,
+   "band_cons": 1.0,
+   "clean_cons": 0.23607125354992564,
+   "dirty_cons": 0.10518356521426589,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.1809292188135046,
+   "e_final": 35.37497021474425,
+   "band": [
+    104
+   ]
+  },
+  "2": {
+   "pool": 15424,
+   "union": 401,
+   "clean": 499,
+   "cas9": 661,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 213.91273242721962,
+   "fidelity": 0.9142622027648466,
+   "band_cons": 1.0,
+   "clean_cons": 0.22046485474371846,
+   "dirty_cons": 0.1016277657597694,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.1692486298636618,
+   "e_final": 33.100348206008896,
+   "band": [
+    104,
+    162
+   ]
+  },
+  "3": {
+   "pool": 7869,
+   "union": 415,
+   "clean": 485,
+   "cas9": 412,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 209.09802433102905,
+   "fidelity": 0.9156946474603062,
+   "band_cons": 1.0,
+   "clean_cons": 0.21231485899012165,
+   "dirty_cons": 0.10251304477176706,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.16430963957057998,
+   "e_final": 31.460357105128548,
+   "band": [
+    104,
+    162,
+    138
+   ]
+  },
+  "4": {
+   "pool": 4063,
+   "union": 435,
+   "clean": 465,
+   "cas9": 273,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 201.23731241813084,
+   "fidelity": 0.9133509389915512,
+   "band_cons": 1.0,
+   "clean_cons": 0.1953047089935322,
+   "dirty_cons": 0.10277147167375413,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.15415673447122377,
+   "e_final": 28.33405223260511,
+   "band": [
+    104,
+    162,
+    138,
+    115
+   ]
+  },
+  "6": {
+   "reason": "cas9 pool 122",
+   "pool": 1102,
+   "clean": 424
+  },
+  "8": {
+   "reason": "cas9 pool 56",
+   "pool": 319,
+   "clean": 390
+  }
+ }
+}

@@ -277,6 +277,12 @@ RULE_SPECS = {
     # criterion, expressed as a rule so the 3-draw screen can bank it with its failed-seed sets.
     "cut": {"any": ("HDR", "MH_NHEJ", "BLUNT_NHEJ")},
     "mh_any": {"mh": ("HDR",), "no_mh": ("BLUNT_NHEJ",)},
+    # The mirror of "cut": the row must NOT cut. Like "hdr" this pins all three of stage 4's
+    # targets at once (is_cut False, is_hdr False, indel_length 0), so a seed where every row
+    # complies scores consistency 1.000 — but where "cut" asks for a ~0.99 event per row, this
+    # asks for its ~0.01-0.22 complement, because cut_p = min(0.99, max(0.4, base + 0.18*energy))
+    # with base 0.86/0.78 and energy in [0, 1] never falls below 0.78 (the 0.4 floor is dead code).
+    "nocut": {"any": ("NO_CUT",)},
 }
 
 
@@ -303,7 +309,9 @@ def rule_fails_gpu(d1, d2, d3, gc, energy, cut_p, cas: str, rule: str, xp):
     """Boolean mask of rows that BREAK ``rule``. A no_cut always breaks it (it is not an outcome)."""
     spec = RULE_SPECS[rule]
     mh, code = outcomes_gpu(d1, d2, d3, gc, energy, cut_p, cas, xp)
-    ids = {"HDR": 1, "MH_NHEJ": 2, "BLUNT_NHEJ": 3}
+    # NO_CUT is code 0. The old docstring line "a no_cut always breaks it" holds for every rule
+    # that names only repair modes; it is the "nocut" rule's whole criterion.
+    ids = {"HDR": 1, "MH_NHEJ": 2, "BLUNT_NHEJ": 3, "NO_CUT": 0}
     if "any" in spec:
         ok = xp.zeros(code.shape, dtype=bool)
         for name in spec["any"]:

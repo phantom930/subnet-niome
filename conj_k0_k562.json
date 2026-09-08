@@ -1,0 +1,26 @@
+{
+ "task": "83f430e9-1c9a-48b4-b594-e17477a046ea",
+ "cell": "K562",
+ "group": 42,
+ "bank": 60000,
+ "arms": {
+  "0": {
+   "pool": 60000,
+   "union": 351,
+   "clean": 549,
+   "cas9": 3808,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 304.5941093371868,
+   "fidelity": 0.8688234972112581,
+   "band_cons": null,
+   "clean_cons": 0.2833652994332556,
+   "dirty_cons": 0.10940543587891308,
+   "offwindow_cons": null,
+   "offwindow_seeds": 0,
+   "e_cons": 0.21552095264706206,
+   "e_final": 57.03514578756698,
+   "band": []
+  }
+ }
+}

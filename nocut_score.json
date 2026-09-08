@@ -1,0 +1,85 @@
+{
+ "task": "83f430e9-1c9a-48b4-b594-e17477a046ea",
+ "cell": "K562",
+ "accessibility": 0.77,
+ "window": [
+  100,
+  199
+ ],
+ "guides": 21633116,
+ "unconstrained_top250": 374.64887658714287,
+ "by_band": {
+  "1": {
+   "compliant": 16974043,
+   "total_weighted": 374.64887658714287,
+   "ratio": 1.0,
+   "cas9_rows": 250,
+   "mean_gc": 0.5,
+   "mean_distance": 1.0
+  },
+  "2": {
+   "compliant": 12050299,
+   "total_weighted": 374.64887658714287,
+   "ratio": 1.0,
+   "cas9_rows": 250,
+   "mean_gc": 0.5,
+   "mean_distance": 1.0
+  },
+  "3": {
+   "compliant": 9152980,
+   "total_weighted": 374.64887658714287,
+   "ratio": 1.0,
+   "cas9_rows": 250,
+   "mean_gc": 0.5,
+   "mean_distance": 1.0
+  },
+  "4": {
+   "compliant": 7535304,
+   "total_weighted": 374.3522381827854,
+   "ratio": 0.9992082228910982,
+   "cas9_rows": 250,
+   "mean_gc": 0.5,
+   "mean_distance": 1.848
+  },
+  "5": {
+   "compliant": 6309874,
+   "total_weighted": 368.9162676486278,
+   "ratio": 0.9846987157929415,
+   "cas9_rows": 190,
+   "mean_gc": 0.5,
+   "mean_distance": 17.848
+  },
+  "6": {
+   "compliant": 5163867,
+   "total_weighted": 365.47384624692353,
+   "ratio": 0.9755103220279235,
+   "cas9_rows": 31,
+   "mean_gc": 0.5,
+   "mean_distance": 28.108
+  },
+  "8": {
+   "compliant": 3098149,
+   "total_weighted": 364.8389277649527,
+   "ratio": 0.9738156192764977,
+   "cas9_rows": 0,
+   "mean_gc": 0.5,
+   "mean_distance": 30.0
+  },
+  "10": {
+   "compliant": 1580125,
+   "total_weighted": 358.03254624119427,
+   "ratio": 0.9556482579173472,
+   "cas9_rows": 0,
+   "mean_gc": 0.49660869565217386,
+   "mean_distance": 33.036
+  },
+  "12": {
+   "compliant": 677554,
+   "total_weighted": 324.53721534500164,
+   "ratio": 0.8662436634038984,
+   "cas9_rows": 0,
+   "mean_gc": 0.48597391304347826,
+   "mean_distance": 121.94
+  }
+ }
+}

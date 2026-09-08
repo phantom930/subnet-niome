@@ -1,0 +1,43 @@
+{
+ "task": "83f430e9-1c9a-48b4-b594-e17477a046ea",
+ "cell": "K562",
+ "cut_window": [
+  100,
+  399
+ ],
+ "band_window": [
+  100,
+  199
+ ],
+ "group": 80,
+ "bank": 60000,
+ "arms": {
+  "k2n0": {
+   "reason": "nocut pool 25"
+  },
+  "k2n40": {
+   "reason": "nocut pool 25"
+  },
+  "k2n80": {
+   "reason": "nocut pool 25"
+  },
+  "k4n0": {
+   "reason": "nocut pool 1"
+  },
+  "k4n40": {
+   "reason": "nocut pool 1"
+  },
+  "k4n80": {
+   "reason": "nocut pool 1"
+  },
+  "k8n0": {
+   "reason": "nocut pool 0"
+  },
+  "k8n40": {
+   "reason": "nocut pool 0"
+  },
+  "k8n80": {
+   "reason": "nocut pool 0"
+  }
+ }
+}

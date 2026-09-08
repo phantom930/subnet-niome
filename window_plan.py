@@ -92,6 +92,27 @@ SPREAD_WIDTH = 100
 # scored prediction in the window at all.
 CELL_RANK = {"CD34+_HSPC": 1, "HUDEP-2": 3}
 DEFAULT_RANK = 1
+# EXPLICIT MODE, and what actually ships as of 2026-09-08. When this map is non-empty it overrides
+# the concentrate/spread layout above entirely: each named hotkey takes the FULL 100-seed window at
+# its own ranked position, one hotkey per rank, for every cell type. A hotkey that runs all-cut or
+# seed-depend on a given cell is skipped there and its rank simply goes uncovered.
+#
+#   niome_hotkey1 -> rank 1     niome_hotkey3 -> rank 3
+#   niome_hotkey2 -> rank 2     niome_hotkey  -> rank 4  (all-cut on HEK293 instead)
+#
+# The honest case for this is COVERAGE, not prediction. Per-rank exclusive hit rates over 38 scored
+# predictions put rank 1 at 1.33x chance (p=0.130), ranks 2-3 at 1.06x and rank 4 at 0.88x — so
+# ranks 2-4 are worth no more than any disjoint window, and that is fine, because four disjoint
+# width-100 bands cover 4 x 13 = 52 seeds of 900 and spike on 1-(1-52/900)**3 = 16.4% of rounds
+# whether the ordering means anything or not. Only rank 1 carries any edge, and h1 holds it.
+#
+# Width is deliberately the full 100 rather than the 16-seed band width used when several hotkeys
+# tile one window. The measured trade is real but small and points the other way: band is 14.70 at
+# width 16 against 13.00 at width 100, so four narrow slices would cover 58.8 seeds against 52
+# (+13%) — at the cost of leaving 84% of each predicted window uncovered, which throws away
+# whatever rank 1 is worth. Switch by giving RANK_WIDTH a value.
+RANK_BY_HOTKEY = {"niome_hotkey1": 1, "niome_hotkey2": 2, "niome_hotkey3": 3, "niome_hotkey": 4}
+RANK_WIDTH = 100
 TTL_HOURS = 6                      # survives a missed cron run, expires before it misleads
 
 
@@ -230,22 +251,35 @@ def main():
         # Hotkeys that run all-cut on *this* cell type play no window here, so they are out of the
         # allocation for this cell only and back in it for the next.
         avail = [m for m in members if m[0] not in hedged]
-        rank = min(CELL_RANK.get(cell, DEFAULT_RANK), len(pr["ranked"])) - 1
-        top = pr["ranked"][rank]               # the window the concentrated block tiles
-        width = WIDTH.get(cell, DEFAULT_WIDTH)
-        conc = min(CONCENTRATE.get(cell, DEFAULT_CONCENTRATE), len(avail))
-        lo = (top["window"] + 1) * 100
-        slots = tile(lo, lo + 99, width, conc)
-        assign = {}
-        for (name, _default), w in zip(avail[:len(slots)], slots):
-            assign[name] = list(w)
-        # The rest take the other ranked windows in order, full width, skipping the one the
-        # concentrated block already owns -- so a spread hotkey can never overlap it.
-        rest = avail[len(slots):]
-        spread_ranks = [r for i, r in enumerate(pr["ranked"]) if i != rank]
-        for (name, _default), nxt in zip(rest, spread_ranks[:len(rest)]):
-            a = (nxt["window"] + 1) * 100
-            assign[name] = [a, a + SPREAD_WIDTH - 1]
+        if RANK_BY_HOTKEY:
+            # Explicit mode: one hotkey per ranked window, same mapping for every cell type.
+            assign, slots = {}, []
+            for name, _default in avail:
+                want = RANK_BY_HOTKEY.get(name)
+                if not want or want > len(pr["ranked"]):
+                    continue
+                a = (pr["ranked"][want - 1]["window"] + 1) * 100
+                assign[name] = [a, a + RANK_WIDTH - 1]
+            rank = min(RANK_BY_HOTKEY.values()) - 1 if assign else 0
+            top = pr["ranked"][rank]
+            width = RANK_WIDTH
+        else:
+            rank = min(CELL_RANK.get(cell, DEFAULT_RANK), len(pr["ranked"])) - 1
+            top = pr["ranked"][rank]           # the window the concentrated block tiles
+            width = WIDTH.get(cell, DEFAULT_WIDTH)
+            conc = min(CONCENTRATE.get(cell, DEFAULT_CONCENTRATE), len(avail))
+            lo = (top["window"] + 1) * 100
+            slots = tile(lo, lo + 99, width, conc)
+            assign = {}
+            for (name, _default), w in zip(avail[:len(slots)], slots):
+                assign[name] = list(w)
+            # The rest take the other ranked windows in order, full width, skipping the one the
+            # concentrated block already owns -- so a spread hotkey can never overlap it.
+            rest = avail[len(slots):]
+            spread_ranks = [r for i, r in enumerate(pr["ranked"]) if i != rank]
+            for (name, _default), nxt in zip(rest, spread_ranks[:len(rest)]):
+                a = (nxt["window"] + 1) * 100
+                assign[name] = [a, a + SPREAD_WIDTH - 1]
 
         spans = sorted(assign.values())
         for (a1, b1), (a2, b2) in zip(spans, spans[1:]):
@@ -258,8 +292,11 @@ def main():
         # task id and each hotkey's scored outcome together. Cells where every hotkey hedges still
         # get the block, with no assignments -- the prediction was live and its accuracy is still
         # scored, it just was not played.
-        roles = {n: ("concentrated" if i < len(slots) else "spread")
-                 for i, (n, _d) in enumerate(avail)}
+        if RANK_BY_HOTKEY:
+            roles = {n: f"rank{RANK_BY_HOTKEY[n]}" for n, _d in avail if n in RANK_BY_HOTKEY}
+        else:
+            roles = {n: ("concentrated" if i < len(slots) else "spread")
+                     for i, (n, _d) in enumerate(avail)}
         roles.update({n: "all-cut-hedge" for n in hedged})
         entry = pending_for(log, cell)
         if entry is not None:
@@ -281,12 +318,21 @@ def main():
                 f"seed-depend {'/'.join(sorted(sd))}" if sd else ""]))
             print(head + f"no window played ({why or 'no banded hotkey'})")
             continue
+        ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
+        if RANK_BY_HOTKEY:
+            print(head + f"beta {pr['beta']:+.2f}  width {RANK_WIDTH} x{len(assign)}"
+                  + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
+            for name in sorted(assign, key=lambda n: RANK_BY_HOTKEY.get(n, 99)):
+                lo_, hi_ = assign[name]
+                i = ranks.get(lo_)
+                print(f"    rank{RANK_BY_HOTKEY[name]}  {name:<14} {lo_}-{hi_}"
+                      + (f"  p_hit {pr['ranked'][i]['p_hit']:.0%}" if i is not None else ""))
+            continue
         print(head + f"rank{rank + 1} {top['label']} "
               f"({top['p_hit']:.0%}, beta {pr['beta']:+.2f})  "
               f"width {slots[0][1] - slots[0][0] + 1} x{len(slots)}")
         print(f"    banded: "
               + ", ".join(f"{n}:{a}-{b}" for (n, _d), (a, b) in zip(avail, slots)))
-        ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
         if len(assign) > len(slots):
             print(f"    spread (w{SPREAD_WIDTH}): "
                   + ", ".join(f"{n}:{v[0]}-{v[1]}(rank {ranks.get(v[0], '?')+1},"

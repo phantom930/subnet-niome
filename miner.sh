@@ -43,56 +43,32 @@ HOTKEYS=(
   "niome_hotkey8  9001 52504 900-999"
 )
 
-# EXPERIMENTAL: NIOME_SEED_DEPEND swaps a hotkey's construction for genomics/seed_depend.py, a
-# submission pinned to seed 0. It wins the rounds the backend never stamps and scores the ~0.10
-# floor on every round that IS stamped, so each listed hotkey gives up its seed window entirely.
+# NIOME_SEED_DEPEND swaps a hotkey's construction for genomics/seed_depend.py, a submission pinned
+# to seed 0. It wins the rounds the backend never stamps and scores the ~0.10 floor on every round
+# that IS stamped, so a listed hotkey gives up its seed window entirely — it is the FIRST rung of
+# _build's ladder, and listing a hotkey here is how you turn its band off.
 #
-# The value is NOT read off the task listing: /api/v3/tasks reports `seed: 0` for rounds that were
-# in fact stamped (9 list that way, only 4 were scored on it). The reliable test is miners reaching
-# cons 1.000 in the score rows. By that test the rate is 2 of 57 rounds since 2026-08-25 = 3.5%.
+# EMPTY as of 2026-09-08: the fleet is back on seed windows (h1/h2/h3 on ranks 1/2/3, h0 on rank 4
+# or all-cut for HEK293). Retired on judgement, not on failure — everything needed to switch back
+# is intact, including the shared build. To re-enable, list hotkeys as "<hotkey>:<n>"; the value is
+# now only a marker, because the four hotkeys SHARE one build (Miner.SEED_DEPEND_SHARED) and
+# Miner.SEED_DEPEND_SHARED_VARIANT is what it uses.
 #
-# Siblings compete for the same slots: n hotkeys take ranks 1..n, not n x rank 1. So 1 hotkey is
-# worth 0.035 x 0.30 = 0.0105/round against the ~0.0027 a band hotkey contributes, and 3 hotkeys
-# 0.035 x 0.70 = 0.0245 against ~0.0081 — each one added is worth less than the last, and the
-# fleet's band coverage falls from 9 windows to 6 (117 -> 78 seeds of 900).
-#
-# The VALUE is the variant index, not a flag. The build is deterministic, so without distinct
-# variants siblings would submit byte-identical rows. Measured at variants 0-3: finals spanned
-# 338.29-338.39 (0.10 points) while row sets shared only 28-36% of their guides.
-# The fleet numbers below were priced for nine hotkeys sharing the curve; with ONE hotkey the trade
-# is much simpler, because there are no siblings to crowd ranks 2..n:
-#   seed-depend   ~3.5% of rounds x rank 1 (0.300 of the curve) = 0.0105/round
-#   one band      band 13 of 900 over 3 seeds = 4.3% of rounds, at rank ~10 = ~0.0027/round
-# So at one hotkey seed-depend is worth ~3.9x the band it replaces, and unlike the band it does not
-# depend on the seed-window prediction being worth anything. What it does depend on is the field:
-# see the competition warning above — the payout is rank 1 of however many miners also pin seed 0.
-#
-# It is the FIRST rung of _build's ladder, so it replaces the construction rather than hedging
-# alongside it. ALL_CUT_HOTKEYS and the window plan below stay configured and simply become the
-# fallback for the rounds where seed-depend declines (hedge slot taken, build error, short budget).
-#
-# FOUR hotkeys on it, and here the "each one is worth less than the last" arithmetic argues FOR
-# them rather than against. The earlier note assumed our build lands mid-field, where siblings
-# split one rank's worth of curve. Measured on both of 2026-09-07's never-stamped rounds, this
-# build beat the entire field (138a47f7 +7.53 over the best of 6 tied miners; e32ec7b3 +2.29 over
-# 8), so four near-identical siblings take ranks 1-4 outright:
-#   1 hotkey   0.300 of the curve      3 hotkeys  0.700
-#   2 hotkeys  0.500                   4 hotkeys  0.850   (a 5th would add only 0.05)
-# That holds only while we out-score the field's top. If a competitor passes us the whole block
-# slides down together — the siblings are correlated, so this is leverage in both directions.
-#
-# The variant index no longer differentiates anything: the four hotkeys now SHARE one build
-# (Miner.SEED_DEPEND_SHARED), so the first process to reach a round builds it and the others load
-# the same rows and submit them verbatim. The values below are kept only to mark which hotkeys run
-# seed-depend at all; Miner.SEED_DEPEND_SHARED_VARIANT is what the build actually uses.
-#
-# Why sharing rather than four distinct builds: at variants_per_site 12000 one build holds
-# **12.7 GB** (measured), so four concurrent would need 50.6 GB on a 49 GB box — the sharing is
-# what makes that config deployable, not an optimisation. The variant index cost nothing to give
-# up: it moved finals by 0.03-0.14 points and never moved a rank, and identical submissions take
-# the same consecutive ranks that distinct-but-equal ones did. The field does this openly — on
-# a66f01fa its top four rows are byte-equal at 262.92.
-SEED_DEPEND_VARIANTS="niome_hotkey:1 niome_hotkey1:1 niome_hotkey2:1 niome_hotkey3:1"
+# What was measured, so the decision can be revisited on evidence:
+#   rate        never-stamped rounds are **7.6%** (8 of 105 since 2026-08-25), not the 3.5% once
+#               claimed here. Do not read this off the task listing — it reports seed 0 for rounds
+#               that were stamped; the reliable test is miners reaching cons 1.000 in the scores.
+#   wins        rank 1 of 248 twice live: 19018a0a 339.94, 67bdd18a 329.37.
+#   the field   miners at cons 1.000 on those rounds went 6, 8, 5, 25, **38** across 09-07/08. On
+#               the 38-deep round we placed 6th, 1.8 weighted points short — the whole distance
+#               between 85% of the curve (ranks 1-4) and 9% (ranks 6-9).
+#   siblings    four correlated builds take consecutive ranks r..r+3, so they move as a block:
+#               0.85 of the curve at r=1, 0.09 at r=6. Leverage in both directions.
+#   tuning      variants_per_site 12000 recovered +1.47 +- 0.25 (t=5.80, 6/6) and moved payout
+#               share 25.5% -> 25.8%, i.e. nothing — the points crossed no rank boundary. 24000
+#               adds +0.12 for 2x build and 2x memory. One build holds 12.7 GB; four would need
+#               50.6 GB on a 49 GB box, which is why the build is shared.
+SEED_DEPEND_VARIANTS=""
 
 # One hotkey runs all-cut instead of all-HDR: the fleet's flat-score hedge. all-HDR scores the
 # ~0.10 floor on every seed outside its ~14-seed band, which is 64% of rounds with nine bands; all-
@@ -118,14 +94,31 @@ SEED_DEPEND_VARIANTS="niome_hotkey:1 niome_hotkey1:1 niome_hotkey2:1 niome_hotke
 # single-hotkey fleet needs: the one hotkey plays the band where the seed-window prediction has a
 # measured edge and the flat hedge where it does not.
 #
-# 2026-09-07, one hotkey: all-cut on HEK293 and K562, band elsewhere. perrank.py's exclusive
-# per-rank hit rates over 38 scored predictions put CD34+_HSPC's edge at rank 1 (46.2% against the
-# 29.8% chance baseline) and HUDEP-2's at rank 3 (66.7%); K562 had no scored prediction at all in
-# that window and HEK293's ranks decline roughly monotonically from 38.5%, i.e. no rank worth
-# concentrating a lone hotkey on. n is 12-13 rounds per cell, so this is the best available read,
-# not a significant result — all-cut's flat ~46 E[final] is the defensible play where the ranking
-# has nothing.
-ALL_CUT_HOTKEYS="niome_hotkey:HEK293,K562"
+# 2026-09-08: h0 runs all-cut on **K562**, and takes the rank-4 window on the other three cell
+# types. This reverses the earlier HEK293 choice, which was made on band width and is contradicted
+# by the first rank-based pricing in this repo (price_cell.py): every possible round score of each
+# construction was placed in all 97 real three-seed fields and paid at SCORE_DISTRIBUTION, then
+# bootstrapped over fields. Expected curve share per round:
+#
+#   cell          all-cut   all-HDR   95% CI on the gap        verdict
+#   K562           0.0023    0.0006   [+0.0003, +0.0033]       all-cut, 100% of resamples
+#   HEK293         0.0027    0.0059   [-0.0044, -0.0022]       all-HDR, 0% of resamples
+#   CD34+_HSPC     0.0008    0.0013   [-0.0014, +0.0000]       all-HDR, marginal
+#   HUDEP-2        0.0008    0.0006   [-0.0003, +0.0008]       noise (76%) — left on the band
+#
+# The mechanism is accessibility. K562 at 0.77 reaches cut_p ~0.96, so all-cut holds 549 of 900
+# seeds clean at consistency 0.283; HEK293 at 0.35 reaches only ~0.875 and holds **137**, so 61% of
+# its rounds have no clean seed at all — which is exactly how h0 came 135th of 248 on 634a512c
+# while the three band hotkeys placed 77th-133rd. Meanwhile HEK293 has the strongest all-HDR spike
+# of the four (weighted 318, fidelity 0.924). The old config had each on the wrong side.
+#
+# Still exactly one hotkey: all-cut is deterministic, so a second one submits near-identical rows
+# and takes rank+1 at the tail of the curve. 1 all-cut + 3 bands prices at 0.0041 against 0.0023
+# for all four on all-cut.
+#
+# CD34+_HSPC and HUDEP-2 stay on bands — one marginal, one noise, and changing a config on a 76%
+# bootstrap is the error this session spent the day avoiding.
+ALL_CUT_HOTKEYS="niome_hotkey:K562"
 
 # Hotkeys that are not registered on the subnet right now. They keep running (a deregistration is
 # usually temporary and re-registering is cheaper than a cold restart), but window_plan.py leaves

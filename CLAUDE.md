@@ -215,8 +215,10 @@ That is 51-61% of all-cut's expected score, ~-24/round. **The justification is `
 rounds can out-*rank* a flat one that rarely does. It has **since been measured**, and the bet
 holds while the reasoning behind it was wrong — all-HDR's k=1 (~88) places on 60% of rounds against
 all-cut's E[final] 46.1 at 11%, so the gap is 60-vs-11, not something-vs-never (see the cutoff
-distribution below). `Miner.ALL_HDR = False` reverts to all-cut everywhere, and that is the switch
-to reach for if the bet is judged wrong.
+distribution below). **Both of those percentages are pooled-field numbers and are upper bounds** —
+see "Pricing a construction" below, which is also why the all-HDR side of the bet survives the
+correction and the all-cut side does not. `Miner.ALL_HDR = False` reverts to all-cut everywhere,
+and that is the switch to reach for if the bet is judged wrong.
 
 Three regimes, and the reason there is no middle:
 
@@ -316,15 +318,22 @@ the cas entropy to ~0.65. Nothing about accessibility bounds fidelity.
 `ALL_HDR_MIN_BUDGET_S` stays a single flat 190 s, unlike `ALL_CUT_MIN_BUDGET_S`: all four cell types
 build well inside the ~225 s in-TTL path.
 
-#### The fleet — four hotkeys, all on seed-depend, no bands
+#### The fleet — four hotkeys on the predicted band windows
 
 **Read this before trusting anything below about windows.** As of 2026-09-08 the fleet runs
-**four** hotkeys (h0 uid 74, h1 uid 209, h2 uid 235, h3 uid 196; h4-h8 unregistered) and **none of
-them plays a band**. All four run `seed_depend` on a single shared build. The band machinery below
-is intact, configured and dormant — `window_plan.py` still writes a plan every hour and
-`seed_window_model.py` still accrues predictions, but with every hotkey on seed-depend the plan's
-`assignments` are empty by design. Everything from `NIOME_HDR_WINDOW` down still describes how the
-band fleet works and is what to restore to; it is not what is currently shipping.
+**four** hotkeys (h0 uid 74, h1 uid 209, h2 uid 235, h3 uid 196; h4-h8 unregistered) and they are
+back on **bands**, not seed-depend. `Miner.SEED_DEPEND` is `bool(NIOME_SEED_DEPEND)` and
+`SEED_DEPEND_VARIANTS` is empty, so all four live processes carry `NIOME_SEED_DEPEND=` and skip that
+rung entirely; `window_plan.py`'s `RANK_BY_HOTKEY` gives h1/h2/h3 the model's rank-1/2/3 windows at
+`RANK_WIDTH` 100 and h0 the rank-4 window, with `ALL_CUT_HOTKEYS="niome_hotkey:K562"` putting h0 on
+all-cut for K562 (where it is therefore absent from that cell's assignments, as intended).
+
+**Half of those windows are currently arbitrary, and the plan file will not tell you.** `fit_beta`
+returns **0.00 for CD34+_HSPC and HEK293**, so every window ties at `p_hit` 0.2977 and `predict`'s
+ranking is a stable-sort tie-break to the lowest index — which is exactly the 100-199 / 200-299 /
+300-399 / 400-499 block the live plan assigns for both cells. HUDEP-2 (beta 0.25 → 800-899 first)
+and K562 (beta 0.30 → 900-999 first) are real orderings. Check beta before reading a plan as a
+prediction.
 
 The whole fleet was deregistered on 2026-09-04/05 and rebuilt smaller, so any claim here about nine
 hotkeys or coverage unions is history.
@@ -430,6 +439,34 @@ beta before reading anything into a rank. And `tile()` must cover the window: pa
 width left 4 of 100 seeds uncovered and cost one of only two correct predictions (678cf369 called
 300-399, seed 397 landed in it, the block tiled only 300-395).
 
+**What a correct prediction is worth — measured, and it is a lot.** On K562 task 7287db6a
+(seeds 907, 169, 885) the window 850-925 held two of the three. With a whole-window all-cut build
+and the HDR band **pinned to 885 and 907** — oracle knowledge, unavailable at build time — the round
+scored `1.000 / 0.149 / 1.000` = consistency **0.7162**, final **136.4**, **rank 1 of 245**, against
+that field's real rank-1 of 120.4. Note the third seed at **0.149** rather than the 0.10 floor:
+all-cut's clean set is still underneath the band. That is the "spike *and* floor" property every
+combined construction in the falsified table failed to produce, and this is the only measurement
+that has ever shown it.
+
+**It does not convert, because the band pins 3 seeds while the model predicts 100-seed windows.**
+The same build with the band chosen greedily inside that same window missed both seeds at every k
+and placed 11 / 26 / 79 / 82 — the band *cost* ranks, since pure all-cut (rank 11, final 54.4) was
+the best of the four. The binding gap is resolution, not window accuracy:
+
+| | |
+|---|---|
+| one fixed width-76 window holds >=2 of the 3 seeds | **2.02%** |
+| ...holds >=1 | 23.25% |
+| four disjoint width-76 windows, some window holds >=2 | **8.08%** (>=1: 70.78%) |
+| *some* width-76 window holds 2 seeds (min-gap <= 75) | 42.31% |
+| a blind 2-seed band inside a window that does hold both | ~1 in `C(76,2)` = 2850 |
+
+So the construction needs the seeds to within **3 of 900**, and the model predicts 100-wide windows
+at a rank-1 hit rate of 39.5% for >=1 seed (not significant). **Point prediction is a different
+problem from window prediction and nothing here has measured it** — that, not a wider band, is what
+would have to work first. Tooling: `conj_test.py` with `CONJ_BAND_FORCE` prices the oracle case,
+and without it the blind case.
+
 #### One shared-config hazard
 
 `all_hdr` imports `assemble`, `bank_key`, `_params_fn`, `load_bank` and `save_bank` from
@@ -517,10 +554,54 @@ wide the window it was searched in.
 | narrowing all-cut's window to widen its clean set | clean fraction *does* rise (62% over 900 → 93.6% at width 300, and strict Cas12a guides exist below ~225) but E[final] **falls**: width 225 **36.78**, width 300 **37.62**, whole window **46.11**. Consistency has a second channel independent of coverage — row composition — so a build can hold union 0 and still lose monotonically as `group_size` grows (0.1706 → 0.1583 → 0.1452). |
 | the rule ladder inside a narrow window | at width 225 the band tracks P(rule) exactly as it does at 900: `cut` 225 → `not_mhnhej` 48 → `not_hdr` 10 → `mh_any` 9, all set by the Cas9 conditional fill rather than the window. `not_mhnhej` at width 225 scores E[final] **22.29** (−51.7% against the whole-window 46.11). |
 | fidelity as all-cut's ceiling | group 125 at width 225 reached casR 1.000 and fidelity **0.9759** — above the leaders' 0.9473 — with 8/8 cells, and still lost. Fidelity was never the binding term; consistency fell faster. |
+| all-cut ∧ an HDR band on the same rows | dead at every setting tried: cut window 100 / 300 / 900 × group 42 / 50 / 80, k up to 8, on K562 and HEK293. HDR ⊂ cut, so this really is a sequential filter and not the falsified "combined construction" — but the filter shrinks the Cas12a pool, a smaller pool min-unions to a *larger* failed-seed union, and the clean-seed floor itself falls (0.2586 → 0.2291 → 0.2145 → 0.1668 at k=0-3, whole window, group 42). E[final] is monotone decreasing in k on every window. |
+| widening the conjunction's band | the Cas9 conditional fill caps it at **3 seeds**, against the 12-16 pure all-HDR reaches. Pool decay is ~0.55 per band seed: at group 42 over the whole window the Cas9 pool runs 1749 → 913 → 557 → 220 → **164** for k=0-4 against the 208 rows needed. Group 80 buys depth (170 needed, k=8 built at 206) and pays ~65 weighted for it. |
+| group 50 (200/50) as a middle point between 42 and 80 | weighted-identical to group 42 **on the same contract** (214.1 vs 214.4) while covering 36 fewer clean seeds. The 304.6-vs-214.1 gap that looked like a group effect is entirely the *contract*. |
 
 `not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
 range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round
 is one band hit plus two floor seeds — not a flat construction.
+
+#### Pricing a construction — the field must match the contract
+
+**A construction's score and its field move together, so a score measured on one contract must be
+placed in that contract's own field.** Pooling fields across contracts prices field softness instead
+of the construction. This has already produced a wrong config decision once, and it is the same
+class of error as the "sample across all backend history" trap above.
+
+Whole-window all-cut, group 42, the same build, on two K562 contracts:
+
+| contract | weighted | clean | E[final] | best case | own field's rank-10 cutoff | E[share] own field | vs 19 pooled |
+|---|---|---|---|---|---|---|---|
+| 83f430e9 | 304.6 | 549 | 57.04 | 75.0 | 116.0 | **0.0000** | 0.0023 |
+| 7287db6a | 214.4 | 570 | 38.97 | 49.9 | 63.4 | **0.0000** | 0.0003 |
+
+The clean sets are within 21 seeds of each other, so the 46% gap in E[final] is almost all
+`total_weighted_score` — and the field moved with it: rank-10 cutoff 116.0 against 63.4, field
+median 50.4 against 34.8. Our score fell 0.68x and the field median 0.69x. So 83f430e9's **0.0023**
+is what its score earns in *other, softer* contracts' fields; place it in 7287db6a's field and it
+reads **0.0034**, in its own **0.0000**.
+
+That 0.0023 is the number that put h0 on all-cut for K562. `price_cell.py` bootstrapped over fields
+with the contract held fixed, so its CI of [+0.0003, +0.0033] never saw the variance that decides
+the question. **`conj_price.py --own` prices each arm against the one field that played its
+contract; prefer it, and read every pooled figure in this file as an upper bound.**
+
+**Why the correction cuts in all-HDR's favour.** all-cut's ceiling (49.9-75.0) sits *inside* the
+K562 cutoff distribution (min 45.9, p25 59.5, **median 95.0**, p75 118.8, max 135.1), so whether it
+places is decided by field softness — exactly what pooling scrambles. all-HDR's spike is ~103 on a
+single band hit and ~247 on a triple against a maximum observed cutoff of 135, so a hit clears
+nearly every field whichever contract drew it.
+
+**The point-value model understates the upper tail; a modelled 0.0% is "small", not "never".** Each
+regime is priced at one sampled mean, so the model cannot produce a round above "every seed in the
+best regime". On 7287db6a all-cut's modelled best case was 49.9 and the real round scored **54.4,
+rank 11 of 245** — all three seeds drew clean *and* above the 0.2586 clean-seed mean
+(0.285 / 0.290 / 0.272). Per-seed spread within a regime is real and is not modelled.
+
+**So the K562 all-cut-vs-all-HDR question is open**, not settled as `price_cell.json` records it.
+Closing it needs all-HDR's `total_weighted_score` measured on the *same* contracts, so both arms can
+be priced against matched fields.
 
 ### Validation pipeline — stages talk through files, not return values
 

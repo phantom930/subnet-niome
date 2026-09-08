@@ -1,0 +1,95 @@
+{
+ "task": "634a512c-5760-402f-8b57-70d8e1dcc314",
+ "cell": "HEK293",
+ "group": 42,
+ "bank": 60000,
+ "arms": {
+  "0": {
+   "pool": 60000,
+   "union": 17,
+   "clean": 83,
+   "cas9": 8454,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 335.5591840072707,
+   "fidelity": 0.8371116577323832,
+   "band_cons": null,
+   "clean_cons": 0.3088453338770854,
+   "dirty_cons": 0.08755332162607558,
+   "offwindow_cons": 0.08868020015706841,
+   "offwindow_seeds": 800,
+   "e_cons": 0.10896303256121789,
+   "e_final": 30.607770850075337,
+   "band": []
+  },
+  "1": {
+   "pool": 24428,
+   "union": 23,
+   "clean": 77,
+   "cas9": 5258,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 331.60936104806115,
+   "fidelity": 0.8460135630414759,
+   "band_cons": 1.0,
+   "clean_cons": 0.3277144992203047,
+   "dirty_cons": 0.0902384671232984,
+   "offwindow_cons": 0.09423771061045585,
+   "offwindow_seeds": 800,
+   "e_cons": 0.11485772796993744,
+   "e_final": 32.22287811261473,
+   "band": [
+    130
+   ]
+  },
+  "2": {
+   "pool": 10037,
+   "union": 28,
+   "clean": 72,
+   "cas9": 3102,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 332.3040557454256,
+   "fidelity": 0.8460409384662931,
+   "band_cons": 1.0,
+   "clean_cons": 0.3058865394427237,
+   "dirty_cons": 0.08719803999695248,
+   "offwindow_cons": 0.08993660595185826,
+   "offwindow_seeds": 800,
+   "e_cons": 0.10866987515821326,
+   "e_final": 30.55175680052972,
+   "band": [
+    130,
+    176
+   ]
+  },
+  "4": {
+   "pool": 1723,
+   "union": 39,
+   "clean": 61,
+   "cas9": 1152,
+   "rows": 250,
+   "cells": 8,
+   "weighted": 334.73429497366476,
+   "fidelity": 0.8441939993873229,
+   "band_cons": 1.0,
+   "clean_cons": 0.2705821863950477,
+   "dirty_cons": 0.08677940290421678,
+   "offwindow_cons": 0.08878034635180963,
+   "offwindow_seeds": 800,
+   "e_cons": 0.10425762046581098,
+   "e_final": 29.46118962065174,
+   "band": [
+    130,
+    176,
+    195,
+    192
+   ]
+  },
+  "8": {
+   "reason": "cas9 pool 176",
+   "pool": 72,
+   "clean": 32
+  }
+ }
+}

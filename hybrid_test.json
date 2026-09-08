@@ -1,0 +1,53 @@
+{
+ "task": "83f430e9-1c9a-48b4-b594-e17477a046ea",
+ "cell": "K562",
+ "seed": 150,
+ "pools": {
+  "hdr_Cas9": 6905534,
+  "hdr_Cas12a": 4035643,
+  "nocut_Cas9": 135787,
+  "nocut_Cas12a": 571871
+ },
+ "arms": {
+  "pure_hdr": {
+   "weighted": 359.8576216956061,
+   "consistency": 1.0,
+   "fidelity": 0.4574607730847351,
+   "final": 164.62074582130612,
+   "rows": 250,
+   "cells": 8,
+   "cas9_rows": 234,
+   "valid": 250
+  },
+  "pure_nocut": {
+   "weighted": 358.82079570372895,
+   "consistency": 1.0,
+   "fidelity": 0.6139727069918556,
+   "final": 220.30617526319006,
+   "rows": 250,
+   "cells": 8,
+   "cas9_rows": 234,
+   "valid": 250
+  },
+  "hybrid_cas": {
+   "weighted": 359.8576216956061,
+   "consistency": 0.9483256012588095,
+   "fidelity": 0.4578086212702033,
+   "final": 156.23277519612412,
+   "rows": 250,
+   "cells": 8,
+   "cas9_rows": 234,
+   "valid": 250
+  },
+  "hybrid_dist": {
+   "weighted": 359.8576216956061,
+   "consistency": 1.0,
+   "fidelity": 0.4574607730847351,
+   "final": 164.62074582130612,
+   "rows": 250,
+   "cells": 8,
+   "cas9_rows": 234,
+   "valid": 250
+  }
+ }
+}
