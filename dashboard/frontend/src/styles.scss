@@ -1,0 +1,63 @@
+/* Global styles. */
+
+/* Sass requires @use before any other rule. */
+@use 'primeicons/primeicons.css';
+
+/* Must match the `cssLayer.order` configured in providePrimeNG(). This
+   statement fixes the layer order before PrimeNG injects its theme at runtime,
+   so app styles override PrimeNG without specificity battles. */
+@layer theme, base, primeng;
+
+:root {
+  color-scheme: light;
+  --app-gutter: 1.25rem;
+}
+
+html.app-dark {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--p-text-color);
+  background-color: var(--p-content-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* PrimeNG surfaces read from theme tokens, so the shell follows dark mode. */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--p-primary-color);
+}
+
+.text-muted {
+  color: var(--p-text-muted-color);
+}

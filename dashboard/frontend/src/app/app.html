@@ -1,0 +1,41 @@
+<div class="app-shell">
+  <p-toolbar class="app-toolbar">
+    <ng-template #start>
+      <span class="brand">Dashboard</span>
+    </ng-template>
+
+    <ng-template #end>
+      <p-button
+        [icon]="themeIcon()"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        [ariaLabel]="darkMode() ? 'Switch to light theme' : 'Switch to dark theme'"
+        (onClick)="toggleTheme()"
+      />
+    </ng-template>
+  </p-toolbar>
+
+  <main class="app-content">
+    <!-- Routed views render here once routes are added to app.routes.ts. -->
+    <router-outlet />
+
+    <p-card>
+      <ng-template #title>Angular + PrimeNG</ng-template>
+      <ng-template #subtitle>
+        The project is wired up. Replace this card with your first feature.
+      </ng-template>
+      <ng-template #content>
+        <p class="text-muted">
+          PrimeNG is configured in <code>app.config.ts</code> with the theme preset in
+          <code>src/app/theme/app-preset.ts</code>. The toggle above switches the
+          <code>.app-dark</code> class that the theme watches.
+        </p>
+        <div class="button-row">
+          <p-button label="Primary" icon="pi pi-check" />
+          <p-button label="Secondary" severity="secondary" [outlined]="true" />
+        </div>
+      </ng-template>
+    </p-card>
+  </main>
+</div>

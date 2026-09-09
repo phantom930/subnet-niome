@@ -1,0 +1,33 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: var(--p-content-background);
+}
+
+:host ::ng-deep .app-toolbar {
+  border-radius: 0;
+  border-width: 0 0 1px;
+  padding: 0.625rem var(--app-gutter);
+}
+
+.brand {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.app-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--app-gutter);
+}
+
+.button-row {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
