@@ -320,12 +320,39 @@ the cas entropy to ~0.65. Nothing about accessibility bounds fidelity.
 `ALL_HDR_MIN_BUDGET_S` stays a single flat 190 s, unlike `ALL_CUT_MIN_BUDGET_S`: all four cell types
 build well inside the ~225 s in-TTL path.
 
-#### The fleet — eight hotkeys, seven on overlapping width-300 windows
+#### The fleet — eleven hotkeys, ten on band windows
+
+**Three operational failures cost round 9ac1d178 (HUDEP-2, seeds 207/573/129) everything, and two
+of them are configuration, not luck.** The fleet caught **2 of the 3 seeds** — h2 hit 207 and h3 hit
+573, its best band coverage on record — and *neither placed*, at ranks 11 and 12 against a rank-10
+cutoff of 126.32 (the 86th percentile of 28 HUDEP-2 rounds; h3's 121.74 would have placed on 23 of
+28). Payout was zero. What went wrong beyond the hard field:
+
+* **h0 and h5 shipped the emergency build** and scored byte-identically (313.3 / 0.0908 / 0.9189 →
+  26.15), because `_build(allow_hedges=False)` is the deterministic ordinary construction. The
+  validator called h5 **129 s** and h0 **149 s** after task creation, against all-HDR's ~360 s build
+  and h0's all-cut 711.6 s. **That is a new minimum lead time** — the prefetch section's floor of
+  198 s is stale, so any hotkey can be asked inside 130 s and the ladder must survive it.
+* **h8, h9 and h10 scored a clean zero**: their processes first came up at 08:22/08:22/08:26, after
+  the 07:07 broadcast, so the validator found nothing at their S3 keys. h1-h7 also restarted at
+  08:10, which means **the rotated joined-window layout has not yet been exercised on a scored
+  round** — h1-h7 built the old contiguous width-300 windows from the 06:17 plan.
+* **Bands leak well outside their window.** h3's window was 300-599 but its 12-seed band came out
+  [132, 140, 144, 163, 173, 511, 517, 530, 546, 547, 573, 817] — five seeds below 300 and one above
+  599. The window only *guides* the min-union search; it does not bound the resulting clean band. So
+  sibling bands overlap more than the window layout implies, and a disjoint-window plan does not
+  give disjoint bands. Coverage unions computed from windows are upper bounds.
+
+Our `total_weighted_score` was **not** the problem that round: 340.0 median across the band hotkeys
+against the field top-10's 337.1 and rank 1's 329.8. We out-score the winner on term 1 and lose
+entirely on consistency structure.
 
 **Read this before trusting anything below about windows.** As of 2026-09-09 the fleet runs
-**eight** hotkeys — h0 uid 74, h1 209, h2 235, h3 196, h4 189, h5 147, h6 136, h7 75; only h8 is
-unregistered — and they are on **bands**, not seed-depend (`SEED_DEPEND_VARIANTS` is empty, so every
-process carries `NIOME_SEED_DEPEND=` and skips that rung).
+**eleven** hotkeys, all registered — h0 uid 74, h1 209, h2 235, h3 196, h4 189, h5 147, h6 136,
+h7 75, h8 151, h9 224, h10 10 — and they are on **bands**, not seed-depend
+(`SEED_DEPEND_VARIANTS` is empty, so every process carries `NIOME_SEED_DEPEND=` and skips that
+rung). h0 is all-cut on every cell type, so **ten** hotkeys play a band. All eleven pm2 apps carry
+`--restart-delay 60000`, and axons are bound on 8091-8099, 9001 and 9002.
 
 The layout is `window_plan.FIXED_WINDOWS`, which overrides both `RANK_BY_HOTKEY` and the
 concentrate/spread code and consults no prediction: h1-h7 take **overlapping width-300 windows
@@ -593,6 +620,65 @@ Round score averages the three seeds, so with a floor of 0.10 the only reachable
 h0 hit one seed on task 9ed335da and scored exactly 0.397 / 86.58, confirming the model. **Never
 quote the single-seed band score (~290) as a round score** — the k=1 value is what places.
 
+**That table is incomplete: there is a third per-seed value, and it is where the field's payout
+lives.** Stage 4 scores each seed independently, and what a seed is worth is set by how many of its
+three targets are *exactly constant* across the 250 rows — because `r2_score` returns 1.0 for a
+constant `y_test` predicted exactly, and `normalized_mae` returns the raw MAE **unnormalised** when
+`std(y) < 1e-9`. Pinning all three targets therefore scores exactly 1.0 on both terms; pinning one
+scores 1.0 on that target only, while the other two still overfit to negative R². Measured on
+HUDEP-2 (9ac1d178 for all-HDR, 4725e952 for all-cut):
+
+| per-seed regime | pinned targets | n | mean | range |
+|---|---|---|---|---|
+| HDR band | all 3 | 2 | **1.0000** | exact |
+| cut-clean, all-cut rows | `is_cut` | 14 | **0.237** | 0.139-0.303 |
+| cut-clean, all-HDR rows | `is_cut` | 5 | **0.162** | 0.135-0.203 |
+| dirty, all-cut rows | none | 8 | 0.108 | 0.103-0.121 |
+| dirty, all-HDR rows | none | 2 | 0.101 | 0.099-0.104 |
+
+Two things to take from it. **Pinning `is_cut` is worth far less than the 0.7 R² weight suggests** —
+`avg_r2` only reaches 0.04-0.24, because `is_hdr` and `indel_length` overfit *harder* once `is_cut`
+goes constant (-0.10 to -0.95 across the sampled seeds). And **the value is a property of row
+composition, not of the rule**: all-cut's 0.237 beats all-HDR's 0.162 by 0.075 ± 0.020 (t = 3.8),
+because all-cut's rows overfit less on those two targets. Never price a cut-clean seed at the other
+composition's number, and never off one seed — an earlier draft of this section did exactly that and
+recorded 0.299, which is the top of the range rather than the mean. This does not contradict the
+"nobody has a better floor" line above: the *dirty* floor really is ~0.10 for everyone. The
+difference between us and the field is how many seeds are not dirty.
+
+**What the field's top actually is, and why it is not two band hits.** Across 110 current-regime
+rounds, 2.52% of deduped miner-rows (≈6 per round) land in a **flat plateau** of round-cons
+0.44-0.70 — flat, with no mode, against sharp modes at 0.10, 0.16-0.18, 0.26 and 0.40. Two band hits
+cannot produce it: at band 12-16 `P(k>=2)` predicts **0.13-0.23** miners per round out of 248, and
+matching the observed rate needs a band of **~55 seeds**, against the 12-16 all-HDR reaches and the
+~12 that `pool * P**B >= group_size` allows. What does produce it is **one band hit sitting on an
+all-cut clean floor**: `(1 + 2*0.237)/3 = 0.491`, and the mixed case at all-cut's 62% clean fraction
+gives 0.459 — both inside the plateau. And it is a construction rather than luck: 17 hotkeys reach
+the plateau 6+ times while 248 never do (chi2 = 382 on 6 df against an i.i.d. lottery at the same
+base rate).
+
+**That is the whole prize, and the Cas9 conditional fill is what blocks it.** Priced against
+9ac1d178's real field (rank-10 cutoff 126.32) at our own `weighted x fidelity` of 303.6:
+
+| build | cut-clean of 900 | cons at k=1 | round final | rank | |
+|---|---|---|---|---|---|
+| all-HDR as shipped | 17 | 0.401 | 121.7 | 11 | shipped |
+| conjunction, group 80 | **52** | 0.406 | 123.2 | 11 | **measured, Cas12a-bound** |
+| conjunction, group 42 | **80** | 0.409 | 124.1 | 11 | **measured, Cas9-bound** |
+| + a *perfect* Cas12a cut tie-break | 162 | 0.408 | 123.9 | 11 | bound, not reachable |
+| + both halves cut-min-unioned, all-cut rows | 559 | 0.459 | 139.2 | **9** | **measured UNREACHABLE** |
+| every seed cut-clean | 900 | 0.491 | 149.1 | **8** | bound only |
+
+So a placing k=1 round needs the wide cut-clean set **and** all-cut's composition together, and
+**`cas12a_union.py` has since measured that the clean set caps at 52-80** — see the falsified table.
+The 559 row is kept only to show what the prize would have been worth; it is not available. Why
+neither half can be fixed alone, on the shipped group-80 build: the Cas12a half's cut-fail union is
+**845 of 900** by itself (80 rows, mean 34.2 fails each, because Cas12a's `cut_p` caps at 0.96), the
+170 Cas9 rows cover **738** (mean 9.1 at `cut_p` 0.99), and only 33 seeds have a single failing row
+against a mode of 4-5 — so perfecting the Cas12a half caps cut-clean at **162** and perfecting Cas9
+caps it at **55**. Both of those are bounds on a half in isolation; the measured joint answer is
+lower still.
+
 **The leaders run our design with more hotkeys.** Grouping current-regime placements by coldkey:
 eight coldkeys hold ~50% of the payout curve (top three alone 40.7%), each running **11-14 hotkeys**,
 and `placed ≈ hotkeys` (12 of 13, 11 of 11, 14 of 14) — the signature of disjoint band windows, the
@@ -632,7 +718,12 @@ wide the window it was searched in.
 | GC-aware tie-break inside `FastGreedy` | the greedy's `argmin` is tied on 71 of 80 picks (median 12 candidates, max 577), and preferring the tied guide nearest GC 0.50 does hold the band — but delivers only **+5.6%** on the group's `gc_score`, not the +44.7% the per-pick slack suggests, because ties are re-drawn after every pick and 12 restarts already sample them. Weighted +0.7%, fidelity −1.1%, net **−0.3%**. |
 | mutation-weight tie-break inside `FastGreedy` | same trick on `mutation_weight`: shifts 3 of 80 group rows on HEK293 (+1.6% freq×value) and 7 on CD34+, where the **1.8% fidelity drop** eats the 1.2% weighted gain (net −0.6%). CD34+ is already apportioned at `mean_weight` 1.10; only HEK293 was starved, and `cas9_cell_target` fixes that properly. |
 | narrowing the band window to buy Cas9 pool freedom | `weighted × fidelity` is **flat at 177-185 across widths 10 / 20 / 30 / 50 / 100 / 300** on HEK293 — a 4% spread over a 30x range. The mechanism fails because **narrowing the window grows the band toward the window size** rather than shrinking it (band **10 of 10** at width 10, against 7 at width 100), so the Cas9 conditional fill gets *harder* and the pool *falls* (1691 at width 10 vs 9290 at width 100). Width 50 is the best point and worth only +3.8% k=1 at equal band. |
-| `group_size` away from 80 (HEK293, re-tested after the Cas9 fix) | the two trends are real and cross exactly at 80: fidelity climbs 0.820 → 0.964 across group 42 → 125 while weighted falls 206 → 164, and the **product peaks at group 80** (179.0). Priced on 31 real HEK293 fields every arm is 0.0010-0.0014 E[share] with `P(place | k=1)` a flat **48%** — quality moves k=1 only between 60 and 69, so band size decides the ordering and group 42's band 9 edges it by 8%, inside noise. Group 80 stands. |
+| `group_size` away from 80 (HEK293, re-tested after the Cas9 fix) | the two trends are real and cross exactly at 80: fidelity climbs 0.820 → 0.964 across group 42 → 125 while weighted falls 206 → 164, and the **product peaks at group 80** (179.0). Priced on 31 real HEK293 fields every arm is 0.0010-0.0014 E[share] with `P(place \| k=1)` a flat **48%** — quality moves k=1 only between 60 and 69, so band size decides the ordering and group 42's band 9 edges it by 8%, inside noise. Group 80 stands. |
+| two band hits as the explanation for the field's top block | needs a band of **~55 seeds** to produce the observed 2.52% plateau rate; at band 12-16 the prediction is 0.13-0.23 miners per round against ~6 observed, 6-40x short. The plateau is one hit on an all-cut floor, not two hits. |
+| stage 4's overfitting as an exploit (degenerate feature vectors) | **real but not buildable.** Collapsing the feature matrix moves off-band `avg_r2` from **-0.249 to -0.032**, confirming the negative R² is pure overfitting — but `max(avg_r2, 0)` discards it, so cons moves only 0.1036 → 0.1052. Combined with a pinned `is_cut` it *is* worth 0.135 → **0.350**, except that the recovery needs `distance` cardinality **<=8** (flat from 61 down to 16: 0.1346 / 0.1359 / 0.1345), and 250 rows admit only ~8 per distance value (2 offsets x 2 mutations x 2 cas x 2 strands), forcing ~31 distinct. |
+| a cut-robustness tie-break inside all-HDR's Cas12a greedy | ceiling **+2.2 final points** (121.7 → 123.9), still under the cutoff. Two measured facts compound: perfecting the Cas12a half caps cut-clean at 162 of 900 because the Cas9 rows independently cover 738, and a cut-clean seed in an all-HDR composition is worth 0.162 rather than all-cut's 0.237. Priced before implementing — the go/no-go was `cutunion`, not a build. |
+| feature concentration (gc at 0.50, distance clustered) to buy all-cut's composition | **noise-dominated.** Concentrating gc at 0.50 for 79% of rows helped seed 373 (+0.051) and hurt seed 161 (-0.006); clustering distance to 39 levels did the reverse (+0.030 / -0.022). The R² on the two live targets is noise around a negative mean, so composition cannot be tuned seed-by-seed. |
+| the conjunction's clean set, measured at both of its bounds (`cas12a_union.py`) | **caps at 52-80 of 900 against the 559 the prize needs, and which bound binds depends on `group_size`.** (a) The HDR min-union buys **zero** cut-coincidence — the group's cut-fail union is **714** at group 42 against **724** for independent failures (848 at group 80), where all-cut reaches **341** with the same 42 rows by optimising cut instead. The two objectives are orthogonal, so a group selected for one gets nothing free on the other. (b) The HDR-on-band Cas9 pool costs `P(HDR)**2` per extra band seed (**906** candidates at band 15 against **3118** at band 13), and cut-strictness over `C` costs a further `0.99**\|C\|`. So group 42 is Cas9-bound at `\|C\|` = 80 and group 80 is Cas12a-bound at `\|C\|` = 52, worth **+0.7 to +2.4** round final (121.7 -> 122.4-124.1) against a 126.32 cutoff. **The scan's early exit is not the cause** — at group 42 the *full* pool (906) is smaller than the exit target (1664), though at group 80 it does truncate (3118 vs 1360). |
 
 `not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
 range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round

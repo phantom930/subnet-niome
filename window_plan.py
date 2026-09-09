@@ -194,14 +194,86 @@ TTL_HOURS = 6                      # survives a missed cron run, expires before 
 # (pairwise overlap 0.56 measured against 0.58 expected), so the loss is pigeonhole, not
 # correlation. Set JOINED_MODE = False to fall back to FIXED_WINDOWS.
 JOINED_MODE = True
-# Ten band hotkeys ROTATE around the joined space at stride 30, width 200 — the slice is circular,
+# Ten band hotkeys ROTATE around the joined space at stride 30, width 225 — the slice is circular,
 # so a hotkey past the end wraps to the front. 10 x 30 = 300 tiles the space exactly once, and every
-# seed sits in 200/300 x 10 = 6.67 slices on average. h0 stays on all-cut for every cell type.
+# seed sits in 225/300 x 10 = 7.5 slices on average. h0 stays on all-cut for every cell type.
+#
+# Width 200 -> 225 trades band size for per-seed slice depth, and the two nearly cancel: the band
+# narrows as the window widens (measured 13/12/11/9 at widths 100/150/200/300, so ~10-11 at 225
+# against 12 at 200), while each seed gains 0.83 more slices that could hold it. Raised anyway
+# because a seed missed by every band is the failure mode that costs a whole round, and depth is
+# the term that reduces it.
 JOINED_HK = ["niome_hotkey1", "niome_hotkey2", "niome_hotkey3", "niome_hotkey4",
              "niome_hotkey5", "niome_hotkey6", "niome_hotkey7", "niome_hotkey8",
              "niome_hotkey9", "niome_hotkey10"]
-JOINED_SUB_WIDTH = 200
+JOINED_SUB_WIDTH = 225
 JOINED_STRIDE = 30
+# h0 takes the WHOLE joined space -- width 300, no rotation offset. It came off all-cut on a
+# fleet-level pricing (fleet_price.py): all-cut wins 3.18x per hotkey on P(place), but ten identical
+# all-cut submissions hold ONE score and take ranks r..r+9, collecting the tail of
+# SCORE_DISTRIBUTION, where ten decorrelated bands put one hotkey alone near the top. Priced over
+# the real fields, 0 all-cut / 11 band beats 1/10 by +6.5% (HUDEP-2, sign-consistent over 5 RNG
+# seeds, mean/SE 21) and +6.0% (K562); every hotkey moved TO all-cut costs share, monotonically, to
+# -60% at 11/0. all-cut stays the ladder's fallback for h0, so a decline loses nothing.
+#
+# Full width rather than a rotated slice costs band size -- the band narrows as the window widens
+# (13/12/11/9 measured at 100/150/200/300), so expect ~9 against the slices' ~10-11 -- and buys
+# reach across the whole joined space instead of 75% of it.
+JOINED_FULL_HK = ["niome_hotkey"]
+
+
+# Where the joined window's three classes come from. "seed_model" reads seed_model's
+# next_prediction.json (a SeedFormer transformer, one finetuned checkpoint per cell type);
+# "rank_freq" uses _rank_freq_windows below. Both are arbitrary picks and that is measured:
+# SeedFormer scores 0.886 hits/3 in walk-forward against chance's 1.000 and cold_hand's 1.000
+# (p = 0.869), and its log-loss 2.228 is WORSE than uniform's ln 9 = 2.197 -- it learned to emit
+# the uniform distribution, which is the correct answer to an unpredictable target. See
+# seed_model/README.md. _rank_freq_windows is no better (z = -0.71 over 108 rounds).
+#
+# So this switch is EV-neutral, not an improvement: band position is free under a uniform
+# generator, so three arbitrary classes are worth exactly as much as three others. It is wired up
+# because the prediction file accrues a scored record either way, and if the generator ever stops
+# being uniform the walk-forward number in seed_model/state.json moves off chance first.
+JOINED_SOURCE = "seed_model"
+SEED_MODEL_PREDICTION = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     "seed_model", "next_prediction.json")
+
+
+def _seed_model_windows(cell, rows):
+    """The three predicted classes as window indices 0-8, or None to fall back.
+
+    Returns (windows, note). `note` carries the staleness check: the prediction is only for the
+    round after the last one it saw, so if this cell type has since drawn another round the file
+    is predicting a task that already happened and the caller should say so.
+    """
+    try:
+        with open(SEED_MODEL_PREDICTION) as handle:
+            doc = json.load(handle)
+    except Exception as exc:
+        return None, f"unreadable ({exc})"
+    entry = next((e for e in doc.get("predictions", []) if e.get("cell_type") == cell), None)
+    if not entry:
+        return None, "no entry for this cell type"
+    classes = entry.get("predicted_classes") or []
+    wins = []
+    for name in classes:
+        try:
+            lo = int(str(name).split("-")[0])
+        except (ValueError, IndexError):
+            return None, f"malformed class {name!r}"
+        if not (100 <= lo <= 900) or lo % 100:
+            return None, f"class {name!r} is not a 100-seed window"
+        wins.append(lo // 100 - 1)
+    if len(set(wins)) != 3:
+        return None, f"expected 3 distinct classes, got {classes}"
+    seen = (entry.get("last_round") or {}).get("created_at") or ""
+    # Compare against the newest round of THIS cell type only -- the prediction is per cell type,
+    # so another cell drawing since then says nothing about whether this entry is stale.
+    newest = max((t["at"] for t in rows if t.get("cell") == cell), default="")
+    stale = newest and seen and newest > seen
+    note = (f"STALE: predicts the round after {seen[:16]}, but {newest[:16]} has since drawn"
+            if stale else f"current as of {seen[:16]}")
+    return sorted(wins), note
 
 
 def _rank_freq_windows(history, cell):
@@ -253,6 +325,19 @@ def _joined_slices(windows):
         spans.append([lo, prev])
         out.append(spans)
     return out
+
+def _joined_full(windows):
+    """The entire joined space as ascending [lo, hi] ranges — width 300, no rotation."""
+    seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
+    spans, lo, prev = [], seeds[0], seeds[0]
+    for x in seeds[1:]:
+        if x != prev + 1:
+            spans.append([lo, prev])
+            lo = x
+        prev = x
+    spans.append([lo, prev])
+    return spans
+
 
 def _sh_list(var):
     """A space-separated bash list from miner.sh, so the two files cannot drift."""
@@ -391,10 +476,20 @@ def main():
         avail = [m for m in members if m[0] not in hedged]
         if JOINED_MODE:
             wins3, top3 = _rank_freq_windows(rows, cell)
+            src = "rank_freq"
+            if JOINED_SOURCE == "seed_model":
+                got, note = _seed_model_windows(cell, rows)
+                if got:
+                    wins3, top3, src = got, None, f"seed_model ({note})"
+                else:
+                    src = f"rank_freq (seed_model unusable: {note})"
             slices = _joined_slices(wins3)
             assign, slots = {}, []
+            full = _joined_full(wins3)
             for name, _default in avail:
-                if name in JOINED_HK:
+                if name in JOINED_FULL_HK:
+                    assign[name] = full
+                elif name in JOINED_HK:
                     assign[name] = slices[JOINED_HK.index(name)]
             top = pr["ranked"][0]
             width = JOINED_SUB_WIDTH
@@ -456,7 +551,8 @@ def main():
         # get the block, with no assignments -- the prediction was live and its accuracy is still
         # scored, it just was not played.
         if JOINED_MODE:
-            roles = {n: "joined" for n, _d in avail if n in JOINED_HK}
+            roles = {n: ("joined-full" if n in JOINED_FULL_HK else "joined")
+                     for n, _d in avail if n in JOINED_HK or n in JOINED_FULL_HK}
         elif FIXED_WINDOWS:
             roles = {n: "fixed" for n, _d in avail if n in FIXED_WINDOWS}
         elif RANK_BY_HOTKEY:
@@ -488,16 +584,29 @@ def main():
         ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
         if JOINED_MODE:
             wins3, top3 = _rank_freq_windows(rows, cell)
+            src = "rank_freq"
+            if JOINED_SOURCE == "seed_model":
+                got, note = _seed_model_windows(cell, rows)
+                if got:
+                    wins3, top3, src = got, None, f"seed_model ({note})"
+                else:
+                    src = f"rank_freq (seed_model unusable: {note})"
             covered = len({s for spans in assign.values() for a, b in spans
                            for s in range(a, b + 1)})
-            print(head + f"beta {pr['beta']:+.2f}  JOINED ranks {top3} -> "
+            print(head + f"beta {pr['beta']:+.2f}  JOINED "
+                  + (f"ranks {top3}" if top3 else src) + " -> "
                   + ",".join(f"{w*100+100}-{w*100+199}" for w in wins3)
                   + f"  x{len(assign)} hotkeys, width {JOINED_SUB_WIDTH} stride {JOINED_STRIDE}"
                   f" rotated"
+                  + (f" + {len([n for n in assign if n in JOINED_FULL_HK])} at full width 300"
+                     if any(n in JOINED_FULL_HK for n in assign) else "")
                   + f", span {covered} of 900"
                   + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
-            for name in sorted(assign, key=lambda n: JOINED_HK.index(n)):
-                print(f"    joined {name:<15} "
+            # full-width hotkeys first, then the rotated slices in JOINED_HK order
+            def _ord(n):
+                return (0, JOINED_FULL_HK.index(n)) if n in JOINED_FULL_HK else (1, JOINED_HK.index(n))
+            for name in sorted(assign, key=_ord):
+                print(f"    {'FULL  ' if name in JOINED_FULL_HK else 'joined'} {name:<15} "
                       + ",".join(f"{a}-{b}" for a, b in assign[name]))
             continue
         if FIXED_WINDOWS:

@@ -1,0 +1,45 @@
+{
+  "cycles": 4,
+  "history": [
+    {
+      "at": "2026-09-09T13:29:00.354793+00:00",
+      "window": "2026-09-09T23:59:59",
+      "n_samples": 79,
+      "model_hits": 0.8987341772151899,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 1.0,
+      "p_value": 0.8014099295035249,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-09T14:51:32.241114+00:00",
+      "window": "2026-09-09T23:59:59",
+      "n_samples": 80,
+      "model_hits": 0.95,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9875,
+      "p_value": 0.6590670466476676,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-09T18:14:56.738118+00:00",
+      "window": "now",
+      "n_samples": 81,
+      "model_hits": 1.0,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9876543209876543,
+      "p_value": 0.49722513874306284,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-09T18:29:29.620908+00:00",
+      "window": "now",
+      "n_samples": 82,
+      "model_hits": 0.975609756097561,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9878048780487805,
+      "p_value": 0.5791210439478026,
+      "promoted": true
+    }
+  ]
+}

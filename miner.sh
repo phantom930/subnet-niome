@@ -125,7 +125,7 @@ SEED_DEPEND_VARIANTS=""
 # HEK293 on the evidence available (pooled pricing 0.0059 all-HDR vs 0.0027 all-cut, and that
 # basis is itself discredited above — HEK293 has never had the matched treatment cmp_k562.py
 # gives K562, where all-cut wins 3.78x). Revert to "niome_hotkey:K562" for the measured split.
-ALL_CUT_HOTKEYS="niome_hotkey"
+ALL_CUT_HOTKEYS=""
 
 # Hotkeys that are not registered on the subnet right now. They keep running (a deregistration is
 # usually temporary and re-registering is cheaper than a cold restart), but window_plan.py leaves
