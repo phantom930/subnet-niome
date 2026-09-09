@@ -31,7 +31,7 @@ diagram step for step.
 
 ```mermaid
 flowchart TD
-    IN["validator sends signed POST /forward"] --> VERIFY{"bt.http_auth.verify<br/>require_receiver=False, max_age=30.0"}
+    IN["validator sends signed POST /forward"] --> VERIFY{"bt.http_auth.verify<br/>require_receiver=False, max_age=50.0"}
     VERIFY -->|"bad signature, stale nonce, replay"| X1["401 — nothing built"]
     VERIFY -->|ok| BL{"blacklist"}
     BL -->|"unregistered hotkey or no validator permit"| X2["403 — nothing built"]
@@ -79,7 +79,7 @@ change. `niome_subnet/validator/forward.py::query_miner` calls `bt.http_auth.sig
 | Keyword | Default | Set to | Why |
 | --- | --- | --- | --- |
 | `require_receiver` | `True` | `False` | `sign()` emits `X-Bittensor-Receiver` only when a `receiver_ss58` is passed, and the validator passes none. With the default, verification raises `WrongReceiver: missing X-Bittensor-Receiver` — a 401 — before the signature is even checked. |
-| `max_age` | `10.0` | `30.0` | The window is `(our clock) − (the nonce the validator stamped at sign time)`, so it is spent on **host clock skew**, not on latency: `query_miner` signs a fresh nonce immediately before each POST. A miner whose clock runs ten seconds ahead of the validator's rejects every task it is ever sent with `StaleRequest`, and looks unreachable. |
+| `max_age` | `10.0` | `50.0` | The window is `(our clock) − (the nonce the validator stamped at sign time)`, so it is spent on **host clock skew**, not on latency: `query_miner` signs a fresh nonce immediately before each POST. A miner whose clock runs ten seconds ahead of the validator's rejects every task it is ever sent with `StaleRequest`, and looks unreachable. |
 
 Dropping receiver binding costs nothing here. The payload the validator signed already commits to
 method, path, body and nonce, so a captured request cannot be replayed against a different miner's
@@ -169,11 +169,11 @@ Because every guide returned sits at the same coordinate at the same GC count, s
 **The growth loop** — one coordinate per cell is the whole point of the design, but it only fills 250
 rows if the mismatch budget can spell 250 distinct guides on it. Three free substitutions on a 20-mer
 give over a thousand; a contract with `max_mismatches: 0` allows exactly one guide per coordinate,
-and a cell would contribute a single row. Measured on `max_mismatches: 0`: 8 rows → 250, term 1 from
-7.0 to 233.4.
+and a cell would contribute a single row. Measured on `max_mismatches: 0`: 8 rows → 250, `total_weighted_score`
+from 7.0 to 233.4.
 
 **`allocate_rows`** — starts from as even a split as capacity allows (the coverage-entropy optimum)
-and only moves away when term 1 pays for the loss. Neither term 1 nor the fidelity factor reads the
+and only moves away when `total_weighted_score` pays for the loss. Neither it nor the fidelity factor reads the
 seed, so the objective is exact and needs no simulation. It also prices each cell's *cut
 probability*, since `is_cut`'s normalised error falls as the cut rate rises: Cas9 cuts at 0.95
 against Cas12a's 0.87, so the optimum leans to roughly 30 % Cas12a and pays the coverage entropy that
@@ -232,7 +232,7 @@ positive only through a degeneracy: if no row draws `no_cut`, `is_cut` is a cons
 `r2_score` returns 1.0 and `normalized_mae` short-circuits to 0. That is **unreachable here** —
 `cut_probability` is `base + 0.18·energy` and `energy` is scaled by chromatin accessibility, so at
 HEK293's 0.35 a Cas12a row cuts with probability 0.874 at best and 250 rows all cutting has
-probability ~1e-10. Chasing it by shrinking the submission loses more on term 1 than the jump is
+probability ~1e-10. Chasing it by shrinking the submission loses more on `total_weighted_score` than the jump is
 worth at every row count.
 
 What *is* reachable is the `0.3·(1 − avg_nmae)` term:
@@ -288,6 +288,7 @@ a validator pays.
 | --- | --- |
 | request handling, fetch, upload | `neurons/miner.py` |
 | row generation and local scoring | `niome_subnet/genomics/design.py` |
+| offline benchmark harness | `scripts/bench_task.py` |
 | miner artifacts | `miner_data/` — override with `NIOME_MINER_DIR` |
 | reference genome | shared read-only, `data/chr11.fa` — override with `NIOME_GENOME_PATH` |
 
@@ -295,6 +296,51 @@ The miner writes nothing into `data/`. That directory belongs to the validation 
 there communicates through fixed filenames, and `truncate_submission` rewrites `data/submission.json`
 in place. A miner writing `data/contract.json` would silently replace the contract a co-located
 validator is scoring against — and since the miner receives an unstamped contract, the validator
-would then score every submission under `seed: 0`. Re-scoring a submission with the validator's
-`benchmark_submission` therefore takes a deliberate manual copy of three files from `miner_data/`
-into `data/`.
+would then score every submission under `seed: 0`.
+
+---
+
+## Testing a change end to end
+
+```
+scripts/bench_task.py --fetch                  # refresh the task history from the backend
+scripts/bench_task.py --list                   # the recorded task history
+scripts/bench_task.py                          # newest task, 3 random seeds
+scripts/bench_task.py --task de19c2e0 --task-seed   # reproduce a closed round exactly
+scripts/bench_task.py --seeds 5 --per-seed     # show the spread across seeds
+```
+
+Select a task by id prefix rather than list position for anything you want to repeat: `--fetch`
+prepends newer rounds, so position 3 today is a different task tomorrow.
+
+`--fetch` reads `GET /api/v3/tasks` — the closed-round history, and the only task endpoint that
+needs no hotkey signature (`/current` answers `Missing required headers` to an unsigned GET). It
+also downloads the cell-type table to `testing/cell_types.json`, because a fetched task can name
+any cell type the backend issues and a missing entry is not an error: `stage2` defaults a missing
+accessibility to **1.0**, silently scoring the task as though its chromatin were fully open. The
+harness refuses to run rather than report that number. Results merge into the existing snapshot by
+task id, so a round that ages out of the backend's window stays testable; `--replace` discards the
+local copy instead.
+
+The harness runs the miner against a task from `testing/task.json` and scores the result through
+`benchmark_submission` — the validator's own entry point, not a reimplementation. It reproduces the
+two asymmetries the live subnet has:
+
+- **the miner is run blind.** `testing/task.json` is a *closed-round* snapshot, so its contracts
+  carry the seed that was stamped after the round. The harness forces `seed: 0` before the build, and
+  asserts `Context.seeds()` is empty, so the design cannot see an oracle it never has in production.
+- **the validator gets seeds the miner never saw**, drawn at random from `design.SEED_SUPPORT` and
+  comma-joined into the `seed` field the way the backend joins a multi-seed round.
+
+`benchmark_submission` communicates through the fixed `data/` filenames, so the harness redirects
+every stage's path constant into a temporary directory instead. Note that the stages do
+`from ...settings import CONTRACT_PATH`, which binds the name in each stage module's own globals —
+patching `settings` has no effect, so the modules themselves are patched. Only `chr11.fa` is read
+from where it already lives, and `run_stage12` is memoised because it otherwise re-parses the whole
+130 MB FASTA on every call.
+
+Interpreting the output: `total_weighted_score` and `distribution_fidelity_factor` are identical on
+every seed, because neither reads one. All the variance is in `consistency_factor` — measured at
+0.0701–0.0923 across four seeds on one task, a spread of 5.35 in `final_score`. A single-seed
+comparison between two designs is therefore mostly noise; use several seeds, and `--rng` to hold the
+draw fixed while comparing.

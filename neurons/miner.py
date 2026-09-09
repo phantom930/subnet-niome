@@ -52,19 +52,13 @@ class Miner(BaseMinerNeuron):
     a PUT to the presigned S3 URL that arrived with the task, and has to land before that URL
     expires — ``SUBMISSION_TIMEOUT`` is 300 s from the moment the validator minted it, and a miner
     that misses the window is indistinguishable from one that was never contacted. There is no
-    retry within a task id and no feedback channel, which is why this class scores its own build
-    locally before uploading and logs every step.
+    retry within a task id and no feedback channel, which is why this class persists every build
+    and logs every step: the archived submission and the log are the only record of what was sent.
 
     What gets built, and why it scores, is :mod:`niome_subnet.genomics.design`.
     """
 
     MAX_RETRIES = 3
-
-    # Score the build through the validator's own stages 4 and 5 before uploading (~25 s for ten
-    # seeds). Validators never report back, so this is the only signal available before the next
-    # task. Skipped automatically when the URL's remaining TTL cannot afford it.
-    SCORE_LOCALLY = True
-    LOCAL_SCORE_SEEDS = 6
 
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
@@ -83,12 +77,11 @@ class Miner(BaseMinerNeuron):
 
         logger.info(
             "Generation config: guide_lengths=%s pam_search_flank=%d coordinates_per_cell=%d "
-            "guides_per_coordinate=%d score_locally=%s",
+            "guides_per_coordinate=%d",
             self.generation_config.guide_lengths,
             self.generation_config.pam_search_flank,
             self.generation_config.coordinates_per_cell,
             self.generation_config.guides_per_coordinate,
-            self.SCORE_LOCALLY,
         )
         threading.Thread(target=self._prewarm, name="niome-prewarm", daemon=True).start()
 
@@ -269,37 +262,7 @@ class Miner(BaseMinerNeuron):
         self._persist(settings.MINER_OUTPUT_PATH, rows)
         logger.info(f"Build: wrote the submission to {settings.MINER_OUTPUT_PATH}")
 
-        self._score_locally(rows, context, deadline)
         return rows
-
-    def _score_locally(self, rows: list[dict], context, deadline: float) -> None:
-        """Predict the score, if the presigned URL's TTL can afford the forest fits."""
-        if not self.SCORE_LOCALLY or len(rows) < 2:
-            return
-        # Roughly 2.5 s per seed for 15 RandomForest fits, plus headroom for the upload itself.
-        remaining_ttl = deadline - time.time()
-        if remaining_ttl < self.LOCAL_SCORE_SEEDS * 3 + 45:
-            logger.info(
-                f"Skipping the local score: {remaining_ttl:.0f}s of TTL left, "
-                "which belongs to the upload"
-            )
-            return
-        try:
-            seeds = context.seeds() or list(design.SEED_SUPPORT[::150])[:self.LOCAL_SCORE_SEEDS]
-            report = design.score_rows(rows, context, seeds=seeds)
-            basis = "under the contract's seed" if context.seeds() else \
-                   f"averaged over {len(seeds)} sampled seeds"
-            logger.info(
-                "Predicted score %.3f %s = weighted %.3f x consistency %.4f x fidelity %.4f "
-                "(cut rate %.4f)",
-                report["final_score"], basis, report["total_weighted_score"],
-                report["consistency_factor"], report["distribution_fidelity_factor"],
-                report["cut_rate"],
-            )
-        except Exception as error:
-            # A failed prediction must never cost the upload.
-            logger.warning(f"Local scoring failed ({error}); uploading anyway")
-            logger.debug(traceback.format_exc())
 
     @staticmethod
     def _check_invariants(rows: list[dict], contract: dict) -> list[str]:
@@ -307,8 +270,8 @@ class Miner(BaseMinerNeuron):
 
         ``truncate_submission`` drops a blank or repeated ``experiment_id`` and anything past
         ``max_experiments``; stage 1 drops a repeated (cas, start, strand, guide). None of that is
-        reported anywhere, so a violation shows up only as an unexplained gap between the local
-        prediction and what a validator pays.
+        reported anywhere, so a violation shows up only as an unexplained gap between the rows
+        this build thinks it sent and what a validator pays for.
         """
         problems = []
         experiment_ids = [row.get("experiment_id") for row in rows]
@@ -386,10 +349,10 @@ class Miner(BaseMinerNeuron):
         """The accessibility table, read unsigned from the backend.
 
         Accessibility is the largest single term in stage 3's energy, which sets the cut
-        probability and the repair mix, so a wrong value makes the local prediction describe a
-        different simulation than the validator's. The rows stay valid either way — this is the
-        prediction's accuracy at risk, and the allocation's, which prices each cell's cut
-        probability. A stale table on disk is a better guess than the 1.0 default.
+        probability and the repair mix, so a wrong value makes the allocation price each cell
+        against a different simulation than the validator's. The rows stay valid either way — it
+        is the allocation's accuracy at risk. A stale table on disk is a better guess than the
+        1.0 default.
         """
         try:
             response = requests.get(settings.CELL_TYPES_URL,
@@ -408,7 +371,7 @@ class Miner(BaseMinerNeuron):
             except Exception:
                 logger.warning(
                     "No cached cell types either; stage 2 will default accessibility to 1.0, so "
-                    "the local prediction and the cut-rate pricing will both be optimistic"
+                    "the allocation's cut-rate pricing will be optimistic"
                 )
                 return {}
 

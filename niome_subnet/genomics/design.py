@@ -27,11 +27,30 @@ against the validator's own stage 4 rather than assumed:
 
 1. ``avg_r2`` is negative for any seed-blind design, so the 0.7 term contributes nothing. It turns
    positive only through a degeneracy: if no row draws ``no_cut``, ``is_cut`` is a constant column,
-   ``r2_score`` returns 1.0 and ``normalized_mae`` short-circuits to 0. That is unreachable here —
-   ``cut_probability`` is ``base + 0.18*energy`` and ``energy`` is scaled by chromatin
-   accessibility, so at HEK293's 0.35 a Cas12a row cuts with probability 0.87 at best and 250 rows
-   all cutting has probability ~1e-10. Chasing it by shrinking the submission loses more on term 1
-   than the jump is worth at every row count.
+   ``r2_score`` returns 1.0 and ``normalized_mae`` short-circuits to 0. **This generator does not
+   pursue that degeneracy, and the reason recorded here was wrong.** It said the degeneracy was
+   unreachable at HEK293's accessibility of 0.35, from the fact that a 50%-GC guide cuts with
+   probability 0.95 (Cas9) / 0.87 (Cas12a) and 250 rows all cutting is then ~1e-10. That figure is
+   right and the conclusion drawn from it is not: ``cut_probability`` is
+   ``min(0.99, base + 0.18*energy)`` and the 0.99 cap needs only ``energy >= 0.7222``, which
+   ``accessibility*(1.8*gc + 0.6*exp(-d/1500))`` reaches at **gc ~ 0.855** even at 0.35. The
+   marginal gc trade was measured at gc 0.5/0.6/0.7, found monotonically losing, and the search
+   stopped there — but the payoff is a step, not a gradient, and the step is past gc 0.8:
+
+       gc     p(Cas9)   gc_score   base structural   P(all 250 cut)
+       0.500   0.9498      1.000        0.852            2.55e-06
+       0.700   0.9725      0.600        0.602            9.29e-04
+       0.800   0.9838      0.400        0.477            1.69e-02
+       0.855   0.9900      0.291        0.409            8.11e-02
+
+   The backend's own records confirm it is reachable: on task de19c2e0 (this contract) 102 miners
+   scored non-zero, and six of them landed in ``consistency_factor`` 0.32-0.43 against a bulk
+   cluster at 0.06-0.12, the best at **0.4339** with ``total_weighted_score`` 273.81 and a
+   ``final_score`` of 109.4. So the honest description of this design is that it takes the safe
+   0.09 rather than buying a ~2-8% chance of 0.33+ at roughly half the structural score — a
+   defensible choice against a *median* of 21.1, but a choice, not a constraint. Note the best
+   miner's term1 is only 16% below this generator's, which the flat gc~0.855 story does not
+   explain, so their actual route is still unidentified.
 2. What *is* reachable is the ``0.3*(1 - avg_nmae)`` term, and two things move it. Collapsing the
    feature matrix to **one vector per cell** — every row in a cell sits at the same coordinate at
    the same GC count — leaves the forest with eight groups instead of 250 noisy points, so it can
@@ -49,9 +68,11 @@ is the expected result, not a surprise — every guide in a cell shares one feat
 cut *probability*, and ``experiment_seed`` hashes the round seed in with the design, so a guide's
 outcomes under two seeds are independent draws. Inside the scanned support it did lift the mean
 score 2.9%, but only by +0.76 +/- 0.56 paired over 29 seeds, against 36 s of a 300 s upload window.
-It was removed rather than left switched off. Should a contract ever arrive with accessibility
-above 0.67, ``energy`` clamps at 1.0 and Cas9's cut probability reaches its 0.99 ceiling — that is
-the regime where all 250 rows cutting stops being out of reach, and it is worth revisiting there.
+It was removed rather than left switched off. Above accessibility ~0.72 ``energy`` clamps at 1.0 and
+Cas9 reaches its 0.99 cap at *any* GC, so the degeneracy costs nothing there — and the backend now
+issues K562 (0.77), HUDEP-2 (0.82) and CD34+_HSPC (0.87) alongside HEK293, roughly a quarter of
+tasks each. That is the first place to revisit, because it is the case where the trade above is free
+rather than paid for in ``gc_score``.
 
 Every formula below is imported from the validation stages rather than reimplemented, so the
 generator cannot drift from the pipeline that judges it. On the reference contract the result scores
@@ -71,7 +92,7 @@ from pathlib import Path
 
 import niome_subnet.utils.settings as settings
 
-from niome_subnet.genomics.validation import stage12, stage3, stage4, stage5
+from niome_subnet.genomics.validation import stage12, stage3, stage5
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +109,8 @@ _AT_BASES = ("A", "T")
 
 # Stage 3's seed is stamped by the backend after the task is broadcast, so a miner only ever sees
 # ``seed: 0`` and cannot design against the real one. The observed seeds are three digits, so this
-# is the range the local score samples when the contract carries none — it is what makes the
-# prediction a statement about a seed drawn from the support rather than about one lucky draw.
+# is the support a seed is drawn from — the population the design is built to hold up across,
+# rather than any one lucky draw. Nothing here reads it; it is the range an offline scorer samples.
 SEED_SUPPORT = tuple(range(100, 1000))
 
 # Typical normalised MAE for the two targets no seed-blind design can predict, measured over ten
@@ -976,126 +997,3 @@ def build(context: Context, config: Config | None = None) -> tuple[list[dict], l
         ),
     }
     return rows, entries, diagnostics
-
-
-# ---------------------------------------------------------------------------------------------
-# Local scoring — the validator's stages 4 and 5, in memory, with no file I/O
-#
-# A miner gets no feedback: the score is computed by every validator independently and never sent
-# back, so this replica is the only signal available before the next task. It calls stage 4's and
-# stage 5's own functions so the number it reports is the number they would report.
-# ---------------------------------------------------------------------------------------------
-
-_ZERO_SCORE = {
-    "n_valid_experiments": 0,
-    "total_weighted_score": 0.0,
-    "consistency_score": 0.0,
-    "consistency_factor": 0.0,
-}
-
-
-def score_under_seed(entries: list[dict], context: Context, seed: int) -> dict:
-    """What a validator holding ``seed`` would pay for these entries."""
-    results = [stage3.simulate(entry, seed) for entry in entries]
-    stage3_frame = stage4.flatten_stage3(results)
-    stage12_frame = stage4.flatten_stage12(entries)
-    if len(stage12_frame) < 2 or len(stage3_frame) < 2:
-        return dict(_ZERO_SCORE, final_score=0.0, distribution_fidelity_factor=0.0)
-
-    stage12_columns = stage12_frame[[
-        "experiment_id", "guideRNA", "start", "stage2_score", "mutation_weight", "weighted_score"
-    ]]
-    merged_frame = stage3_frame.merge(stage12_columns, on="experiment_id", how="inner")
-    if merged_frame.empty:
-        return dict(_ZERO_SCORE, final_score=0.0, distribution_fidelity_factor=0.0)
-
-    feature_matrix = stage4.build_X(merged_frame)
-    targets = stage4.build_y(merged_frame)
-    sample_weight = merged_frame["mutation_weight"]
-    metrics_by_target = {
-        target_name: stage4.evaluate(
-            feature_matrix, targets[target_name],
-            sample_weight=sample_weight, fold_seed=seed, n_splits=5,
-        )
-        for target_name in targets.columns
-    }
-    average_r2 = sum(
-        metrics["r2_mean"] for metrics in metrics_by_target.values()
-    ) / len(metrics_by_target)
-    average_nmae = sum(
-        stage4.normalized_mae(metrics["mae_mean"], targets[target_name])
-        for target_name, metrics in metrics_by_target.items()
-    ) / len(metrics_by_target)
-    consistency_score = (0.7 * max(average_r2, 0.0) + 0.3 * (1 - average_nmae)) * 100
-    if math.isnan(consistency_score):
-        consistency_score = 0.0
-    consistency_factor = max(0.0, min(1.0, consistency_score / 100.0))
-
-    fidelity = stage5.compute_distribution_fidelity(
-        entries, results, context.contract, k=KMER_LENGTH
-    )
-    fidelity_factor = max(0.0, min(1.0, fidelity.get("distribution_fidelity_score", 0.0)))
-    weighted_total = float(merged_frame["weighted_score"].sum())
-
-    return {
-        "seed": seed,
-        "n_valid_experiments": len(merged_frame),
-        "total_weighted_score": weighted_total,
-        "consistency_score": float(consistency_score),
-        "consistency_factor": consistency_factor,
-        "distribution_fidelity_score": fidelity.get("distribution_fidelity_score", 0.0),
-        "distribution_fidelity_factor": fidelity_factor,
-        "final_score": weighted_total * consistency_factor * fidelity_factor,
-        "cut_rate": 1 - sum(
-            result["outcome"] == "no_cut" for result in results
-        ) / len(results),
-        "per_target": {
-            target_name: {
-                "r2": metrics["r2_mean"],
-                "nmae": stage4.normalized_mae(metrics["mae_mean"], targets[target_name]),
-            }
-            for target_name, metrics in metrics_by_target.items()
-        },
-        "fidelity_detail": fidelity,
-    }
-
-
-def score_rows(rows: list[dict], context: Context, seeds: list[int] | None = None) -> dict:
-    """Score the array that will actually be uploaded.
-
-    Re-derives stage 1-2 from ``rows`` rather than trusting entries built earlier, because stage 4
-    shuffles its cross-validation folds from the round seed and applies that shuffle in *file
-    order* — so a submission scored in a different order from the one it is sent in reports a
-    consistency factor the validator will never compute.
-
-    With no seed available the report is the mean over a sample of ``SEED_SUPPORT``: unbiased for a
-    seed drawn from that range, which is the only honest statement a miner can make before a
-    validator stamps one.
-    """
-    entries = [
-        entry for entry in (gate_and_score(row, context) for row in rows)
-        if entry is not None
-    ]
-    if len(entries) < 2:
-        return {"final_score": 0.0, "rows": len(rows), "valid": len(entries)}
-
-    if seeds is None:
-        seeds = context.seeds() or list(SEED_SUPPORT[::150])
-    per_seed_reports = [score_under_seed(entries, context, seed) for seed in seeds]
-
-    def mean_across_seeds(field_name: str) -> float:
-        return sum(
-            report[field_name] for report in per_seed_reports
-        ) / len(per_seed_reports)
-
-    return {
-        "rows": len(rows),
-        "valid": len(entries),
-        "seeds": seeds,
-        "total_weighted_score": mean_across_seeds("total_weighted_score"),
-        "consistency_factor": mean_across_seeds("consistency_factor"),
-        "distribution_fidelity_factor": mean_across_seeds("distribution_fidelity_factor"),
-        "final_score": mean_across_seeds("final_score"),
-        "cut_rate": mean_across_seeds("cut_rate"),
-        "per_seed": per_seed_reports,
-    }
