@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 import {
+  CellType,
   MutationEntry,
   RawTask,
   RefreshResult,
@@ -46,6 +47,13 @@ export class TaskService {
       map((snapshot) => this.toTaskData(snapshot)),
       catchError((error) => throwError(() => new Error(describeError(error)))),
     );
+  }
+
+  /** The accessibility table, written by the same --fetch run as the snapshot. */
+  loadCellTypes(): Observable<Record<string, CellType>> {
+    return this.http
+      .get<Record<string, CellType>>('/api/cell-types')
+      .pipe(catchError((error) => throwError(() => new Error(describeError(error)))));
   }
 
   /** Pull the upstream task history and merge it into the stored snapshot. */

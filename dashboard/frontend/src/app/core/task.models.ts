@@ -78,6 +78,20 @@ export interface TaskRow {
 }
 
 /**
+ * One row of the accessibility table the backend serves.
+ *
+ * Accessibility is the largest term in stage 3's energy, so it sets the cut
+ * probability. A cell type missing from this table is scored as though its
+ * chromatin were fully open, because the lookup defaults to 1.0.
+ */
+export interface CellType {
+  accessibility: number;
+  /** 'sourced' or 'estimated', per the upstream table. */
+  basis?: string;
+  note?: string;
+}
+
+/**
  * What POST /api/tasks/refresh reports back.
  *
  * The backend runs scripts/bench_task.py --fetch and then diffs the snapshot

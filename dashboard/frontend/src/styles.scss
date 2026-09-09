@@ -11,10 +11,23 @@
 :root {
   color-scheme: light;
   --app-gutter: 1.25rem;
+
+  /* The page sits one step off the card background rather than matching it, so
+     cards, the toolbar and the tables read as surfaces laid on it instead of
+     one flat sheet. Each theme moves in its own direction: the light page
+     darkens away from a white card, the dark page drops below a zinc-900 one.
+     Both are surface tokens, so a re-brand carries them.
+
+     Light stops at surface-50 rather than 100 because Aura gives a secondary
+     p-message a surface-100 background, and those callouts sit on the page. At
+     100 they would vanish into it. This keeps three distinct levels in both
+     themes: the page, the card above it, and the callout against it. */
+  --app-background: var(--p-surface-50);
 }
 
 html.app-dark {
   color-scheme: dark;
+  --app-background: var(--p-surface-950);
 }
 
 * {
@@ -40,7 +53,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   color: var(--p-text-color);
-  background-color: var(--p-content-background);
+  background-color: var(--app-background);
   -webkit-font-smoothing: antialiased;
 }
 

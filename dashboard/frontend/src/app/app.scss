@@ -2,7 +2,7 @@
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  background-color: var(--p-content-background);
+  background-color: var(--app-background);
 }
 
 :host ::ng-deep .app-toolbar {

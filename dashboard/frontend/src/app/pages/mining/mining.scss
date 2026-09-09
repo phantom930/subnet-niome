@@ -1,0 +1,419 @@
+.page-head {
+  margin-bottom: 1.25rem;
+}
+
+.page-sub {
+  margin: 0.25rem 0 0;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+}
+
+:host ::ng-deep .block-message {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.section {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.section-heading {
+  margin: 2rem 0 0.375rem;
+  font-size: 1.125rem;
+}
+
+.section-intro {
+  margin: 0 0 1.25rem;
+}
+
+.lede {
+  margin-top: 0;
+}
+
+/* Formulas are fixed-width and must not wrap, so they scroll instead. */
+.formula {
+  margin: 1rem 0;
+  padding: 0.75rem 0.875rem;
+  overflow-x: auto;
+  border-radius: var(--p-border-radius-md, 6px);
+  background-color: var(--p-content-hover-background);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.factor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.factor {
+  padding: 0.875rem;
+  border: 1px solid var(--p-content-border-color);
+  border-radius: var(--p-border-radius-md, 6px);
+}
+
+.factor-name {
+  display: block;
+  color: var(--p-primary-color);
+  word-break: break-all;
+}
+
+.factor-question {
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 500;
+}
+
+.factor-range {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+/* Steps */
+:host ::ng-deep .steps {
+  margin-bottom: 1.5rem;
+}
+
+.marker {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--p-primary-100);
+  color: var(--p-primary-700);
+  font-size: 0.875rem;
+}
+
+:host-context(html.app-dark) .marker {
+  background-color: color-mix(in srgb, var(--p-primary-500) 22%, transparent);
+  color: var(--p-primary-300);
+}
+
+.marker.build {
+  background-color: var(--p-content-hover-background);
+  color: var(--p-text-muted-color);
+}
+
+.step {
+  padding-bottom: 1.75rem;
+}
+
+.step-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.step-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.step-source {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--p-text-muted-color);
+  word-break: break-all;
+}
+
+.step-summary {
+  margin: 0.625rem 0 0.5rem;
+}
+
+.step-details {
+  margin: 0;
+  padding-left: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-details li {
+  color: var(--p-text-muted-color);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+/* Accordion */
+.accordion-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.accordion-question {
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+:host ::ng-deep .p-accordioncontent-content ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .p-accordioncontent-content li {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--p-text-muted-color);
+}
+
+/* Diagrams
+ *
+ * Hand-authored inline SVG: no library, no runtime, no images. The rules below
+ * are the whole visual language, grouped by what a mark means rather than
+ * restated per class.
+ */
+figure.diagram {
+  margin: 1.25rem 0 0;
+}
+
+/* The pipeline figure stands between a heading and the accordion rather than
+   inside a card, so it carries the section's own bottom margin. */
+figure.diagram.section {
+  margin-bottom: 1.5rem;
+}
+
+.diagram figcaption {
+  margin-top: 0.75rem;
+  color: var(--p-text-muted-color);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.diagram-scroll {
+  overflow-x: auto;
+}
+
+/* Each svg carries width and height attributes matching its viewBox, so it
+   renders at one user unit per CSS pixel and the font sizes below are the sizes
+   that reach the screen. Left to stretch, it would scale the type up with the
+   card, which on this 1200px layout turns a 12px label into a 20px one. A
+   container narrower than min-width scrolls instead of shrinking the labels
+   past legibility. */
+.dg {
+  display: block;
+  max-width: 100%;
+  min-width: 28rem;
+  height: auto;
+  font-family: inherit;
+
+  /* What an unroled box looks like. A role sets --dg-hue and everything else
+     follows from it, so neither theme is hand-coded: the fill is that hue mixed
+     into whatever the figure sits on, which is a pale wash in light and a deep
+     one in dark. Custom properties inherit, so a role on a group tints it. */
+  --dg-hue: currentColor;
+  --dg-ground: var(--p-content-background);
+  --dg-tint: var(--p-content-hover-background);
+  --dg-line-opacity: 0.22;
+}
+
+/* Two of the figures sit on a card and this one sits on the page, which is a
+   different colour. Anything that mixes with or knocks out its ground reads
+   from --dg-ground, so both cases come out the same. */
+figure.diagram.section .dg {
+  --dg-ground: var(--app-background);
+}
+
+/* Roles: one hue per kind of component, so a box says what it is before it is
+   read. The validator and the stages it runs are indigo, the bucket the data
+   waits in is amber, the miner and the array it builds are sky, and the score
+   with its three factors is the primary emerald. Reused across all three
+   figures, so the same hue means the same thing throughout. */
+.dg-validator,
+.dg-store,
+.dg-miner,
+.dg-score {
+  --dg-tint: color-mix(in srgb, var(--dg-hue) 20%, var(--dg-ground));
+  --dg-line-opacity: 0.85;
+}
+
+.dg-validator {
+  --dg-hue: var(--p-indigo-400);
+}
+
+.dg-store {
+  --dg-hue: var(--p-amber-400);
+}
+
+.dg-miner {
+  --dg-hue: var(--p-sky-400);
+}
+
+.dg-score {
+  --dg-hue: var(--p-emerald-400);
+}
+
+/* Structure takes the card's own foreground, so both themes fall out of it. */
+.dg-group,
+.dg-arrow {
+  stroke: currentColor;
+}
+
+.dg-head,
+.dg-t,
+.dg-num {
+  fill: currentColor;
+}
+
+.dg-group,
+.dg-arrow {
+  fill: none;
+}
+
+/* Dashed means provisional or absent: a phase boundary, a lifeline, a reply
+   that carries nothing, a cell no row landed in. */
+.dg-group,
+.dg-life,
+.dg-dash,
+.dg-cell-empty {
+  stroke-dasharray: 4 4;
+}
+
+/* The accent is spent only on what is under discussion: the path the data
+   takes, the cells that are occupied. */
+.dg-key,
+.dg-cell,
+.dg-badge {
+  stroke: var(--p-primary-color);
+}
+
+.dg-head-key,
+.dg-badge-glyph {
+  fill: var(--p-primary-color);
+}
+
+/* Boxes and lifelines wear their role. Ordered so each override lands after
+   what it overrides. */
+.dg-box {
+  fill: var(--dg-tint);
+  stroke: var(--dg-hue);
+  stroke-opacity: var(--dg-line-opacity);
+}
+
+/* The box that is a result rather than a step, whatever its role. */
+.dg-box-key {
+  --dg-hue: var(--p-primary-color);
+  --dg-line-opacity: 1;
+}
+
+.dg-group {
+  stroke-opacity: 0.3;
+}
+
+.dg-life {
+  stroke: var(--dg-hue);
+  stroke-opacity: 0.5;
+}
+
+.dg-arrow {
+  stroke-opacity: 0.55;
+}
+
+.dg-head {
+  fill-opacity: 0.55;
+}
+
+.dg-key {
+  stroke-opacity: 1;
+}
+
+.dg-head-key {
+  fill-opacity: 1;
+}
+
+.dg-cell {
+  fill: color-mix(in srgb, var(--p-primary-500) 16%, transparent);
+  stroke-opacity: 0.5;
+}
+
+/* Carries its own stroke and fill because it sits on top of .dg-cell. */
+.dg-cell-empty {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.35;
+}
+
+.dg-badge {
+  fill: var(--dg-ground);
+}
+
+.dg-t {
+  font-size: 12px;
+}
+
+.dg-t-sm {
+  fill: var(--p-text-muted-color);
+  font-size: 10.5px;
+}
+
+.dg-mono {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+
+.dg-num {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dg-badge-glyph {
+  font-size: 12px;
+}
+
+.dg-mid {
+  text-anchor: middle;
+}
+
+.dg-group-label {
+  text-anchor: start;
+}
+
+/* A label that crosses a lifeline or an arrow knocks a gap in it rather than
+   colliding with it. */
+.dg-knock {
+  paint-order: stroke;
+  stroke: var(--dg-ground);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+/* The one value that is a cliff rather than a haircut. */
+.dg-num-cliff {
+  fill: var(--p-red-500);
+}
+
+:host-context(html.app-dark) .dg-num-cliff {
+  fill: var(--p-red-400);
+}
+
+.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.takeaway {
+  margin-top: 1rem;
+}
+
+:host ::ng-deep .p-datatable-table-container {
+  overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+  .step-details {
+    padding-left: 1rem;
+  }
+}

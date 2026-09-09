@@ -1,8 +1,8 @@
 # Dashboard Frontend
 
 Angular 22 single-page app with [PrimeNG](https://primeng.org) 22. Browses the
-closed-round task snapshot, shows any task's raw JSON, and runs benchmarks
-against individual tasks.
+closed-round task snapshot, shows any task's raw JSON, runs benchmarks against
+individual tasks, and documents the mining process.
 
 ## Requirements
 
@@ -68,6 +68,8 @@ src/
     pages/tasks/tasks.*            Paginated task table
     pages/tasks/benchmark-dialog.* Per-row benchmark result popup
     pages/tasks/task-json-dialog.* Per-row raw JSON viewer
+    pages/mining/mining.*          The mining process, step by step
+    pages/mining/mining.data.ts    Its content, with a source file per step
     theme/app-preset.ts            PrimeNG theme preset (Aura + emerald)
   styles.scss                      Global styles, CSS layer order, PrimeIcons
 ```
@@ -117,6 +119,14 @@ Three pieces have to agree with each other:
 
 To re-brand, edit the `primary` palette in `src/app/theme/app-preset.ts`, or
 pass `Aura` directly to `providePrimeNG()` for the stock theme.
+
+The page itself is one step off the card background rather than equal to it, so
+cards, the toolbar and the tables read as surfaces laid on the page instead of
+one flat sheet. `styles.scss` holds that as `--app-background`, which the body
+and `.app-shell` both use: `--p-surface-50` in light, `--p-surface-950` in dark.
+Light stops at 50 rather than 100 because Aura gives a secondary `p-message` a
+surface-100 background and those callouts sit directly on the page. Each theme
+therefore keeps three distinct levels: page, card, callout.
 
 Components are imported per feature, not globally. Add the module you need to a
 component's `imports` array, for example `import { TableModule } from
@@ -173,3 +183,92 @@ Worth knowing when comparing the two views: the JSON shows the seed exactly as
 sent, so a task whose seed arrived as the string `546,343,346` reads that way
 here while the table column shows the normalized number. A test pins that
 difference so neither view drifts.
+
+## The Mining page
+
+A step-by-step account of what happens between a validator's broadcast and a
+score: the request path, the design pipeline inside the build, what each
+scoring factor responds to, the contract's obligations, and the rules that cost
+rows without reporting anything.
+
+The prose lives in `mining.data.ts` rather than in the template, so there is one
+place to edit, and every step names the file it was drawn from. The sources are
+`docs/miner_flow.md`, `docs/validation_pipeline.md`, `neurons/miner.py`,
+`niome_subnet/genomics/design.py`, `niome_subnet/validator/forward.py` and the
+validation stages themselves. Numeric results quoted from those docs are
+offline measurements, and the page says so rather than presenting them as
+guarantees.
+
+## The three figures
+
+Three things on that page are pictures because the prose version of them needs
+the reader to hold several parts in mind at once:
+
+| Figure                            | What it shows                                                               |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| The round trip, in the first card | That the score comes from an S3 object, not from the reply to `/forward`    |
+| The pipeline, above the factors   | Which stage emits which factor, and which half of it the round seed reaches |
+| Occupancy, in the coverage card   | Which kind of missing coverage is a haircut and which is a cliff            |
+
+They are hand-authored inline SVG in `mining.html`: no chart library, no
+runtime, no images. Five conventions hold across all three, and are worth
+keeping if you add a fourth figure:
+
+- **Each `<svg>` carries `width` and `height` attributes matching its
+  `viewBox`.** That is what makes one user unit render as one CSS pixel, so the
+  font sizes in `mining.scss` are the sizes that reach the screen. Left to
+  stretch, an svg fills the card and scales its type up with it, which on this
+  1200px layout renders a 12px label at 20px. The single `.dg` rule handles
+  the rest: `max-width: 100%` to shrink on a narrow screen, `min-width` to
+  scroll instead of shrinking past legibility.
+- **One hue per kind of component, shared across the figures.** Indigo is the
+  validator and the stages it runs, amber the bucket, sky the miner and the
+  array it builds, emerald the score and its three factors. A box wears its
+  role by class: `class="dg-box dg-validator"`. The role sets `--dg-hue` and
+  the fill follows from it as `color-mix(… var(--dg-hue) 20%,
+var(--p-content-background))`, so neither theme is hand-coded: the same
+  declaration is a pale wash on a light card and a deep one on a dark card. Add
+  a role by adding one line. The colour is always a shortcut, never the only
+  clue, since every box is labelled and the first figure's caption states the
+  key.
+- Everything unroled stays `currentColor` so it falls out of the card's own
+  foreground, and `--p-red-500` marks the one number that is a cliff.
+  `mining.scss` groups these rules by what a mark means rather than restating
+  them per class, so the ordering comment there matters: the overrides have to
+  land after what they override.
+- Each figure is a `<figure>` with a `<figcaption>` carrying its claim, and the
+  `<svg>` repeats that claim in `aria-label` for anyone who cannot see it. A
+  test asserts all three still have both.
+- Geometry that needs arithmetic is computed in `mining.ts`, because Angular
+  template expressions have no floor or bitwise operator. Labels that cross a
+  line knock a gap in it via `paint-order`, rather than being nudged by hand.
+
+The diagram rules take `mining.scss` past the 4 kB `anyComponentStyle` budget
+that `angular.json` shipped with, so the warning threshold there is now 5 kB.
+The 8 kB error is untouched and is still the real guard.
+
+The occupancy figure is derived, not drawn: `mining.ts` ports stage 5's
+`coverage_entropy_ratio` and `geometric_mean`, and the factor under each grid
+comes out of them. That is how the figure came to correct the page. Stage 5
+floors each of the six ratios at 1e-9 and then takes a sixth root, so a zeroed
+ratio caps the factor at 0.032 rather than zeroing it, and one empty cell out
+of eight does not zero any ratio at all: it costs about two percent. The 1e-9
+cliff belongs to a collapsed dimension, every row on one Cas system, one strand
+or one mutation. `design.py`'s own docstring and `docs/miner_flow.md` attribute
+it to a single empty cell, which the arithmetic does not support.
+
+One section is computed rather than written. The accessibility table is fetched
+from `/api/cell-types` and run through stage 3's own formulas to show, per cell
+type, the energy and the Cas9 and Cas12a cut probabilities:
+
+```text
+energy          = clamp(0, 1, accessibility x (1.8*gc + 0.6*exp(-dist/1500) + offset))
+cut_probability = clamp(0.4, 0.99, base + 0.18 * energy)    base 0.86 Cas9, 0.78 Cas12a
+```
+
+Substituting the miner's own design, GC at 50 percent and the nearest PAM, puts
+the inner term near 1.5, so energy saturates once accessibility passes about
+0.67. That is worth seeing live rather than describing, because three of the
+four cell types the backend currently issues are already past it, which changes
+what `consistency_factor` can reach. The tests pin the derived numbers against
+the formulas so this section cannot drift from the code it describes.

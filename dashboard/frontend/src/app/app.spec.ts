@@ -29,7 +29,7 @@ describe('App', () => {
     const links = Array.from(compiled.querySelectorAll('.nav-link')).map((el) =>
       el.textContent?.trim(),
     );
-    expect(links).toEqual(['Tasks']);
+    expect(links).toEqual(['Tasks', 'Mining']);
   });
 
   it('should toggle the dark mode class on the document root', async () => {

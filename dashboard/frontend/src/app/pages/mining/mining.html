@@ -1,0 +1,648 @@
+<header class="page-head">
+  <div>
+    <h1>The mining process</h1>
+    <p class="text-muted page-sub">
+      What happens between a validator's broadcast and a score, step by step.
+    </p>
+  </div>
+</header>
+
+<p-message severity="secondary" icon="pi pi-book" class="block-message">
+  Drawn from this repo's own documentation and code, so every step names the file it came from. The
+  sources are <code>docs/miner_flow.md</code>, <code>docs/validation_pipeline.md</code>,
+  <code>neurons/miner.py</code> and <code>niome_subnet/genomics/design.py</code>. The measured
+  figures quoted below are offline results recorded in those docs, not guarantees.
+</p-message>
+
+<!-- What the round is worth -->
+<p-card class="section">
+  <ng-template #title>What a round is worth</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      One task, one presigned URL that lives 300 seconds, and no feedback afterwards. The reply to
+      the validator is an empty acknowledgement. The dataset travels out of band as a PUT to S3, so
+      a miner that misses the window is indistinguishable from one that was never contacted.
+    </p>
+
+    <figure class="diagram">
+      <div class="diagram-scroll">
+        <svg
+          class="dg"
+          width="640"
+          height="280"
+          viewBox="0 0 640 280"
+          role="img"
+          aria-label="Sequence diagram. The validator's signed POST to /forward returns an empty body. The miner then fetches the contract from S3, builds its rows, and PUTs them to the presigned URL inside the 300 second window. A later validation pass downloads that object and scores it through stages 1 to 5."
+        >
+          <defs>
+            <marker
+              id="dgSeqHead"
+              viewBox="0 0 8 8"
+              refX="8"
+              refY="4"
+              markerWidth="8"
+              markerHeight="8"
+              orient="auto"
+            >
+              <path class="dg-head" d="M0 0 L8 4 L0 8 Z" />
+            </marker>
+            <marker
+              id="dgSeqHeadKey"
+              viewBox="0 0 8 8"
+              refX="8"
+              refY="4"
+              markerWidth="8"
+              markerHeight="8"
+              orient="auto"
+            >
+              <path class="dg-head dg-head-key" d="M0 0 L8 4 L0 8 Z" />
+            </marker>
+          </defs>
+
+          <rect class="dg-box dg-validator" x="14" y="3" width="132" height="24" rx="5" />
+          <text class="dg-t dg-mid" x="80" y="19">validator</text>
+          <rect class="dg-box dg-store" x="254" y="3" width="132" height="24" rx="5" />
+          <text class="dg-t dg-mid" x="320" y="19">S3 bucket</text>
+          <rect class="dg-box dg-miner" x="494" y="3" width="132" height="24" rx="5" />
+          <text class="dg-t dg-mid" x="560" y="19">miner</text>
+
+          <line class="dg-life dg-validator" x1="80" y1="31" x2="80" y2="238" />
+          <line class="dg-life dg-store" x1="320" y1="31" x2="320" y2="238" />
+          <line class="dg-life dg-miner" x1="560" y1="31" x2="560" y2="238" />
+
+          <text class="dg-t dg-mid dg-knock" x="320" y="52">signed POST /forward</text>
+          <line class="dg-arrow" x1="88" y1="60" x2="552" y2="60" marker-end="url(#dgSeqHead)" />
+
+          <text class="dg-t dg-mid dg-knock" x="320" y="80">200 with an empty body</text>
+          <line
+            class="dg-arrow dg-dash"
+            x1="554"
+            y1="88"
+            x2="90"
+            y2="88"
+            marker-end="url(#dgSeqHead)"
+          />
+
+          <text class="dg-t dg-mid dg-knock" x="442" y="108">
+            GET contract, reference, cell types
+          </text>
+          <line class="dg-arrow" x1="554" y1="116" x2="330" y2="116" marker-end="url(#dgSeqHead)" />
+
+          <rect class="dg-box dg-miner" x="494" y="128" width="132" height="28" rx="5" />
+          <text class="dg-t dg-mid" x="560" y="147">build the rows</text>
+
+          <text class="dg-t dg-mid dg-knock" x="442" y="172">PUT the bare JSON array</text>
+          <line
+            class="dg-arrow dg-key"
+            x1="554"
+            y1="180"
+            x2="330"
+            y2="180"
+            marker-end="url(#dgSeqHeadKey)"
+          />
+          <text class="dg-t-sm dg-mid dg-knock" x="442" y="193">
+            niome/&lt;uid&gt;.json, inside 300 s
+          </text>
+
+          <text class="dg-t dg-mid dg-knock" x="201" y="215">a later pass downloads it</text>
+          <line class="dg-arrow" x1="312" y1="223" x2="90" y2="223" marker-end="url(#dgSeqHead)" />
+
+          <rect class="dg-box dg-score dg-box-key" x="14" y="238" width="132" height="34" rx="5" />
+          <text class="dg-t dg-mid" x="80" y="254">stages 1–5</text>
+          <text class="dg-t-sm dg-mono dg-mid" x="80" y="267">final_score</text>
+        </svg>
+      </div>
+      <figcaption>
+        Nothing the miner returns to the validator is scored. The round is decided by the object at
+        <code>niome/&lt;uid&gt;.json</code>, which is why the reply can be empty and why a missed
+        deadline leaves no trace: <code>run_validation</code> is a separate pass that downloads
+        whatever is there.
+        <br />
+        The hues carry through every figure on this page: indigo is the validator and the stages it
+        runs, amber the bucket the data waits in, sky the miner and the array it builds, and green
+        the score. Every box is labelled too, so the colour is a shortcut rather than the only clue.
+      </figcaption>
+    </figure>
+
+    <pre class="formula">
+final_score = total_weighted_score × consistency_factor × distribution_fidelity_factor</pre>
+
+    <p>
+      The three factors are multiplicative, so each one is a veto. A zero anywhere zeroes the round.
+      Stages 1 and 2 run once and are seed independent; stages 3, 4 and 5 re-run for every round
+      seed and the result is averaged.
+    </p>
+
+    <div class="factor-grid">
+      @for (factor of factors; track factor.name) {
+        <div class="factor">
+          <code class="mono factor-name">{{ factor.name }}</code>
+          <p class="factor-question">{{ factor.question }}</p>
+          <p class="text-muted factor-range">Range {{ factor.range }}</p>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-card>
+
+<!-- Request path -->
+<h2 class="section-heading">The request path</h2>
+<p class="text-muted section-intro">
+  The numbered steps are the ones the miner logs by name, so a live log lines up against this list
+  step for step.
+</p>
+
+<p-timeline [value]="requestSteps" class="steps">
+  <ng-template #marker let-step>
+    <span class="marker"><i [class]="step.icon" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template #content let-step>
+    <div class="step">
+      <div class="step-head">
+        <p-tag [value]="step.tag" severity="contrast" />
+        <h3>{{ step.title }}</h3>
+      </div>
+      <code class="mono step-source">{{ step.source }}</code>
+      <p class="step-summary">{{ step.summary }}</p>
+      <ul class="step-details">
+        @for (detail of step.details; track detail) {
+          <li>{{ detail }}</li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+</p-timeline>
+
+<!-- The build -->
+<h2 class="section-heading">Inside the build</h2>
+<p class="text-muted section-intro">
+  Step 4 in detail. The miner supplies designs only: guide, coordinate, strand, mutation, Cas system
+  and cell type. Every biological outcome is rolled by the validator under a seed stamped after the
+  broadcast, so nothing here tries to pick an outcome. Each formula is imported from the validation
+  stages rather than reimplemented, so the generator cannot drift from the pipeline that judges it.
+</p>
+
+<p-timeline [value]="buildSteps" class="steps">
+  <ng-template #marker let-step>
+    <span class="marker build"><i [class]="step.icon" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template #content let-step>
+    <div class="step">
+      <div class="step-head">
+        <p-tag [value]="step.tag" severity="secondary" />
+        <h3>{{ step.title }}</h3>
+      </div>
+      <code class="mono step-source">{{ step.source }}</code>
+      <p class="step-summary">{{ step.summary }}</p>
+      <ul class="step-details">
+        @for (detail of step.details; track detail) {
+          <li>{{ detail }}</li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+</p-timeline>
+
+<!-- Coverage cells -->
+<p-card class="section">
+  <ng-template #title>The coverage cells</ng-template>
+  <ng-template #content>
+    <p>
+      A cell is one combination of mutation, Cas system and strand. Two mutations, two Cas systems
+      and two strands make eight cells, and the rows are distributed across them.
+    </p>
+    <p>
+      Stage 5 measures coverage as entropy over the <em>declared</em> support, and then takes a
+      <strong>geometric</strong> mean of six ratios with every ratio floored at 1e-9. Those two
+      rules punish very different mistakes, and the gap between them is large:
+    </p>
+
+    <figure class="diagram">
+      <div class="diagram-scroll">
+        <svg
+          class="dg"
+          width="540"
+          height="134"
+          viewBox="0 0 540 134"
+          role="img"
+          aria-label="Three occupancy patterns over the eight coverage cells, with the distribution fidelity factor each one produces. All eight occupied gives 1.00. One cell empty gives 0.98. Rows on one Cas system only gives 0.03, because that ratio reaches zero and is floored at 1e-9."
+        >
+          @for (panel of occupancyPanels; track panel.label) {
+            <g [attr.transform]="'translate(' + panel.offset + ' 0)'">
+              <text class="dg-t dg-mid" x="80" y="11">{{ panel.label }}</text>
+              @for (square of panel.squares; track $index) {
+                <rect
+                  class="dg-cell"
+                  [class.dg-cell-empty]="!square.occupied"
+                  [attr.x]="square.x"
+                  [attr.y]="square.y"
+                  width="32"
+                  height="32"
+                  rx="4"
+                />
+              }
+              <text class="dg-num dg-mid" [class.dg-num-cliff]="panel.floored" x="80" y="112">
+                {{ panel.fidelity | number: '1.2-2' }}
+              </text>
+              <text class="dg-t-sm dg-mid" x="80" y="127">{{ panel.hint }}</text>
+            </g>
+          }
+        </svg>
+      </div>
+      <figcaption>
+        Each grid is the eight cells: one row per mutation, and the four columns are Cas9 and Cas12a
+        crossed with the two strands. Dashed means no rows landed there. The factor under each grid
+        is stage 5's own arithmetic over that pattern, with the rows spread evenly across the
+        occupied cells and the k-mer and distinct-guide ratios held at the 0.985 and 1.0 the current
+        design measures.
+      </figcaption>
+    </figure>
+
+    <p>
+      A ratio that genuinely reaches zero caps the factor at
+      {{ flooredCeiling | number: '1.3-3' }}, the sixth root of the floor, however good the other
+      five are. Only a collapsed dimension does that: every row on one Cas system, one strand or one
+      mutation. An empty cell is a different thing and costs about two percent, because seven of
+      eight cells still carry most of the joint entropy. Worth knowing when reading
+      <code>design.py</code>, whose comments call a single empty cell the 1e-9 cliff.
+    </p>
+
+    <p>
+      Filling every cell is still the right rule. It is cheap, it keeps that two percent, and it
+      rules out the collapse that does cost a round.
+    </p>
+    <p>
+      Collapsing each cell onto a single coordinate is the other half of the design. Every row in a
+      cell then shares one stage 2 feature vector, so stage 4's forest sees eight groups instead of
+      250 noisy points.
+    </p>
+    <p class="text-muted">
+      Three pressures act on the split at once. Mutation weight pulls rows toward the
+      higher-weighted mutation, coverage entropy pulls them level, and cut probability pulls them
+      toward Cas9. The hill climb resolves all three together.
+    </p>
+  </ng-template>
+</p-card>
+
+<!-- Accessibility, computed live -->
+<p-card class="section">
+  <ng-template #title>Accessibility and the cut probability</ng-template>
+  <ng-template #subtitle>
+    Computed from the live cell-type table using stage 3's own formulas.
+  </ng-template>
+  <ng-template #content>
+    <p>
+      The contract's cell type is looked up in the accessibility table, and accessibility scales
+      stage 3's energy, which in turn sets the cut probability:
+    </p>
+
+    <pre class="formula">
+energy = clamp(0, 1, accessibility × (1.8·gc + 0.6·exp(−distance / 1500) + region_offset))
+cut_probability = clamp(0.4, 0.99, base + 0.18 × energy)     base = 0.86 for Cas9, 0.78 for Cas12a</pre>
+
+    <p class="text-muted">
+      The table below substitutes the miner's own design: GC pinned to
+      {{ gcAtOptimum * 100 }} percent and the nearest usable PAM, which puts the inner term at about
+      1.5 before accessibility scales it. Region offset is zero for every mutation region seen so
+      far. Real per-row values move with the actual GC and distance, so read these as the best case
+      for each cell type.
+    </p>
+
+    @if (cellTypesError(); as message) {
+      <p-message severity="warn" icon="pi pi-exclamation-triangle" class="block-message">
+        {{ message }}
+      </p-message>
+    } @else if (loadingCellTypes()) {
+      <p class="text-muted">Loading the cell-type table…</p>
+    } @else if (accessibilityRows().length === 0) {
+      <p-message severity="warn" icon="pi pi-exclamation-triangle" class="block-message">
+        The cell-type table is empty. Refresh the task snapshot to fetch it. With no table,
+        accessibility defaults to 1.0 and every estimate here is optimistic.
+      </p-message>
+    } @else {
+      <p-table [value]="accessibilityRows()" [tableStyle]="{ 'min-width': '38rem' }">
+        <ng-template #header>
+          <tr>
+            <th>Cell type</th>
+            <th class="numeric">Accessibility</th>
+            <th class="numeric">Energy</th>
+            <th class="numeric">Cas9 cut p</th>
+            <th class="numeric">Cas12a cut p</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-row>
+          <tr>
+            <td>
+              <code class="mono">{{ row.cellType }}</code>
+              @if (row.basis === 'estimated') {
+                <p-tag value="estimated" severity="warn" />
+              }
+            </td>
+            <td class="numeric">{{ row.accessibility | number: '1.2-2' }}</td>
+            <td class="numeric">
+              {{ row.energy | number: '1.3-3' }}
+              @if (row.saturated) {
+                <p-tag value="saturated" severity="info" />
+              }
+            </td>
+            <td class="numeric">{{ row.cas9CutProbability | number: '1.3-3' }}</td>
+            <td class="numeric">{{ row.cas12aCutProbability | number: '1.3-3' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <p class="takeaway">
+        Energy saturates at 1.0 once accessibility passes about
+        {{ saturationPoint() | number: '1.2-2' }} under these assumptions, and
+        {{ saturatedCount() }} of {{ accessibilityRows().length }} cell types in the live table are
+        already there. That matters for <code>consistency_factor</code>: its <code>r²</code> term
+        only turns positive if no row draws a no-cut, which becomes plausible as the cut probability
+        approaches its ceiling and is remote at a low accessibility like HEK293's.
+      </p>
+
+      <p class="text-muted">
+        Accessibility does <strong>not</strong> enter <code>total_weighted_score</code>. It changes
+        only how rows are split across cells, which is why a stale table on disk is a better guess
+        than the 1.0 default.
+      </p>
+    }
+  </ng-template>
+</p-card>
+
+<!-- The factors in detail -->
+<h2 class="section-heading">What each factor responds to</h2>
+<p class="text-muted section-intro">
+  Which stage emits which factor, and which half of the pipeline the round seed reaches.
+</p>
+
+<figure class="diagram section">
+  <div class="diagram-scroll">
+    <svg
+      class="dg"
+      width="600"
+      height="352"
+      viewBox="0 0 600 352"
+      role="img"
+      aria-label="Pipeline diagram. The uploaded array is truncated, then stages 1 and 2 run once because they are seed independent, and stages 3, 4 and 5 re-run for every round seed and are averaged. Stage 2 emits total_weighted_score, stage 4 emits consistency_factor, stage 5 emits distribution_fidelity_factor, and the three multiply into final_score."
+    >
+      <defs>
+        <marker
+          id="dgPipeHead"
+          viewBox="0 0 8 8"
+          refX="8"
+          refY="4"
+          markerWidth="8"
+          markerHeight="8"
+          orient="auto"
+        >
+          <path class="dg-head" d="M0 0 L8 4 L0 8 Z" />
+        </marker>
+        <marker
+          id="dgPipeHeadKey"
+          viewBox="0 0 8 8"
+          refX="8"
+          refY="4"
+          markerWidth="8"
+          markerHeight="8"
+          orient="auto"
+        >
+          <path class="dg-head dg-head-key" d="M0 0 L8 4 L0 8 Z" />
+        </marker>
+      </defs>
+
+      <rect class="dg-box dg-miner" x="20" y="6" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="27">the array that reached S3</text>
+      <line class="dg-arrow" x1="260" y1="23" x2="292" y2="23" marker-end="url(#dgPipeHead)" />
+
+      <rect class="dg-box dg-validator" x="300" y="6" width="222" height="34" rx="5" />
+      <text class="dg-t dg-mono dg-mid" x="411" y="21">truncate_submission</text>
+      <text class="dg-t-sm dg-mid" x="411" y="33">cap rows, drop blank or duplicate ids</text>
+      <line class="dg-arrow" x1="411" y1="40" x2="411" y2="48" marker-end="url(#dgPipeHead)" />
+
+      <rect class="dg-group" x="12" y="52" width="520" height="98" rx="7" />
+      <text class="dg-t-sm dg-group-label" x="22" y="66">run once — seed independent</text>
+      <rect class="dg-box dg-validator" x="20" y="72" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="87">Stage 1 — structural gate</text>
+      <text class="dg-t-sm dg-mid" x="138" y="99">each row passes or is dropped</text>
+      <rect class="dg-box dg-validator" x="20" y="110" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="125">Stage 2 — structural scoring</text>
+      <text class="dg-t-sm dg-mid" x="138" y="137">gc, distance, off-target, weight</text>
+      <line class="dg-arrow" x1="260" y1="127" x2="292" y2="127" marker-end="url(#dgPipeHead)" />
+      <rect class="dg-box dg-score" x="300" y="110" width="222" height="34" rx="5" />
+      <text class="dg-t dg-mono dg-mid" x="411" y="125">total_weighted_score</text>
+      <text class="dg-t-sm dg-mid" x="411" y="137">deterministic, no seed</text>
+
+      <line class="dg-arrow" x1="138" y1="150" x2="138" y2="158" marker-end="url(#dgPipeHead)" />
+
+      <rect class="dg-group" x="12" y="162" width="520" height="140" rx="7" />
+      <text class="dg-t-sm dg-group-label" x="22" y="176">
+        re-run per round seed, then averaged
+      </text>
+      <rect class="dg-box dg-validator" x="20" y="182" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="197">Stage 3 — simulation</text>
+      <text class="dg-t-sm dg-mid" x="138" y="209">cut, repair and indel per row</text>
+      <rect class="dg-box dg-validator" x="20" y="220" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="235">Stage 4 — random forest</text>
+      <text class="dg-t-sm dg-mid" x="138" y="247">r² and normalised MAE</text>
+      <rect class="dg-box dg-validator" x="20" y="258" width="236" height="34" rx="5" />
+      <text class="dg-t dg-mid" x="138" y="273">Stage 5 — coverage ratios</text>
+      <text class="dg-t-sm dg-mid" x="138" y="285">six ratios, geometric mean</text>
+      <line class="dg-arrow" x1="260" y1="237" x2="292" y2="237" marker-end="url(#dgPipeHead)" />
+      <rect class="dg-box dg-score" x="300" y="220" width="222" height="34" rx="5" />
+      <text class="dg-t dg-mono dg-mid" x="411" y="235">consistency_factor</text>
+      <text class="dg-t-sm dg-mid" x="411" y="247">the only seed-dependent term</text>
+      <line class="dg-arrow" x1="260" y1="275" x2="292" y2="275" marker-end="url(#dgPipeHead)" />
+      <rect class="dg-box dg-score" x="300" y="258" width="222" height="34" rx="5" />
+      <text class="dg-t dg-mono dg-mid" x="411" y="273">distribution_fidelity_factor</text>
+      <text class="dg-t-sm dg-mid" x="411" y="285">six coverage ratios</text>
+
+      <line class="dg-arrow dg-key" x1="522" y1="127" x2="542" y2="127" />
+      <line class="dg-arrow dg-key" x1="522" y1="237" x2="542" y2="237" />
+      <line class="dg-arrow dg-key" x1="522" y1="275" x2="542" y2="275" />
+      <line class="dg-arrow dg-key" x1="544" y1="127" x2="544" y2="326" />
+      <circle class="dg-badge" cx="544" cy="182" r="10" />
+      <text class="dg-t dg-mid dg-badge-glyph" x="544" y="186">×</text>
+      <line
+        class="dg-arrow dg-key"
+        x1="544"
+        y1="326"
+        x2="526"
+        y2="326"
+        marker-end="url(#dgPipeHeadKey)"
+      />
+
+      <rect class="dg-box dg-score dg-box-key" x="300" y="308" width="222" height="36" rx="5" />
+      <text class="dg-t dg-mono dg-mid" x="411" y="325">final_score</text>
+      <text class="dg-t-sm dg-mid" x="411" y="338">the product of the three</text>
+    </svg>
+  </div>
+  <figcaption>
+    Stages 1 and 2 are seed independent, so <code>total_weighted_score</code> is the same number on
+    every seed and can be maximised exactly. Only <code>consistency_factor</code> moves with the
+    seed, which is why a single-seed comparison between two designs is mostly noise. Because the
+    three are multiplied, each is a veto.
+  </figcaption>
+</figure>
+
+<p-accordion [multiple]="true" class="section">
+  @for (factor of factors; track factor.name) {
+    <p-accordion-panel [value]="factor.name">
+      <p-accordion-header>
+        <span class="accordion-title">
+          <code class="mono">{{ factor.name }}</code>
+          <span class="text-muted accordion-question">{{ factor.question }}</span>
+        </span>
+      </p-accordion-header>
+      <p-accordion-content>
+        <p>{{ factor.summary }}</p>
+        <ul>
+          @for (point of factor.points; track point) {
+            <li>{{ point }}</li>
+          }
+        </ul>
+      </p-accordion-content>
+    </p-accordion-panel>
+  }
+</p-accordion>
+
+<!-- The row surface -->
+<p-card class="section">
+  <ng-template #title>What a row contains</ng-template>
+  <ng-template #subtitle>Eight fields, and that is the entire miner-supplied surface.</ng-template>
+  <ng-template #content>
+    <p-table [value]="rowFields" [tableStyle]="{ 'min-width': '34rem' }">
+      <ng-template #header>
+        <tr>
+          <th style="width: 14rem">Field</th>
+          <th>Meaning</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-field>
+        <tr>
+          <td>
+            <code class="mono">{{ field.field }}</code>
+          </td>
+          <td>{{ field.meaning }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Contract obligations -->
+<p-card class="section">
+  <ng-template #title>What the contract obliges</ng-template>
+  <ng-template #content>
+    <p-table [value]="contractRules" [tableStyle]="{ 'min-width': '46rem' }">
+      <ng-template #header>
+        <tr>
+          <th style="width: 11rem">Field</th>
+          <th>Where it is enforced</th>
+          <th>How the miner honours it</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-rule>
+        <tr>
+          <td>
+            <code class="mono">{{ rule.field }}</code>
+          </td>
+          <td>{{ rule.gate }}</td>
+          <td>{{ rule.honoured }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Fixed constraints -->
+<p-card class="section">
+  <ng-template #title>Fixed by the validator</ng-template>
+  <ng-template #subtitle>No contract can change these.</ng-template>
+  <ng-template #content>
+    <p-table [value]="fixedConstraints" [tableStyle]="{ 'min-width': '34rem' }">
+      <ng-template #header>
+        <tr>
+          <th style="width: 16rem">Constraint</th>
+          <th>Detail</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>{{ item.field }}</td>
+          <td>{{ item.meaning }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Silent failures -->
+<p-card class="section">
+  <ng-template #title>Rules that cost rows silently</ng-template>
+  <ng-template #subtitle>
+    None of these is reported downstream, so a violation shows up only as an unexplained gap between
+    the local prediction and what a validator pays.
+  </ng-template>
+  <ng-template #content>
+    <p-table [value]="pitfalls" [tableStyle]="{ 'min-width': '34rem' }">
+      <ng-template #header>
+        <tr>
+          <th style="width: 18rem">Violation</th>
+          <th>Consequence</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-pitfall>
+        <tr>
+          <td>{{ pitfall.violation }}</td>
+          <td>{{ pitfall.consequence }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Testing -->
+<p-card class="section">
+  <ng-template #title>Testing a change</ng-template>
+  <ng-template #content>
+    <p>
+      The offline harness runs the miner against a recorded task and scores it through the
+      validator's own entry point, not a reimplementation. It reproduces the two asymmetries the
+      live subnet has: the miner is run blind with the seed forced to 0, and the validator is given
+      seeds the miner never saw.
+    </p>
+
+    <p-table [value]="harnessCommands" [tableStyle]="{ 'min-width': '38rem' }">
+      <ng-template #header>
+        <tr>
+          <th style="width: 24rem">Command</th>
+          <th>Purpose</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>
+            <code class="mono">{{ item.command }}</code>
+          </td>
+          <td>{{ item.purpose }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p class="text-muted takeaway">
+      Select a task by id prefix rather than list position for anything you want to repeat, because
+      a fetch prepends newer rounds. Note also that
+      <code>total_weighted_score</code> and <code>distribution_fidelity_factor</code> are identical
+      on every seed, since neither reads one. All the variance is in
+      <code>consistency_factor</code>, so a single-seed comparison between two designs is mostly
+      noise.
+    </p>
+
+    <p-divider />
+
+    <p>
+      The Tasks page runs the same harness. Its play button benchmarks one task and shows the
+      result, which is the quickest way to see these numbers for a real contract.
+    </p>
+  </ng-template>
+</p-card>
