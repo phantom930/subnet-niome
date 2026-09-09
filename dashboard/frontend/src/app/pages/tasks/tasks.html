@@ -1,0 +1,178 @@
+<p-toast position="bottom-right" />
+
+<header class="page-head">
+  <div>
+    <h1>Tasks</h1>
+    <p class="text-muted page-sub">Closed-round contract snapshot from the dashboard backend.</p>
+  </div>
+
+  <div class="head-actions">
+    @if (meta(); as m) {
+      <div class="head-meta text-muted">
+        <span>Fetched {{ m.fetchedAt | date: 'medium' }}</span>
+        <span>{{ m.count | number }} tasks, {{ m.unstamped | number }} unstamped</span>
+      </div>
+    }
+
+    <p-button
+      label="Refresh"
+      icon="pi pi-cloud-download"
+      [loading]="refreshing()"
+      [disabled]="refreshing()"
+      (onClick)="refresh()"
+    />
+  </div>
+</header>
+
+@if (error(); as message) {
+  <p-message severity="error" icon="pi pi-exclamation-triangle" class="load-error">
+    {{ message }}
+  </p-message>
+
+  <p-button
+    label="Try again"
+    icon="pi pi-refresh"
+    severity="secondary"
+    [outlined]="true"
+    (onClick)="reload()"
+  />
+} @else {
+  @if (meta()?.sharedRules; as rules) {
+    <p-message severity="secondary" icon="pi pi-info-circle" class="rules-note">
+      Identical across every task in this snapshot, so not shown per row: padding
+      {{ rules.base_padding }}, max {{ rules.max_experiments }} experiments, up to
+      {{ rules.max_mismatches }} mismatches, Cas systems {{ rules.cas_systems.join(' and ') }},
+      proximity gate {{ rules.proximity_gate ? 'on' : 'off' }}.
+    </p-message>
+  }
+
+  <p-card>
+    <ng-template #content>
+      <div class="filter-bar">
+        <p-iconfield>
+          <p-inputicon class="pi pi-search" />
+          <input
+            pInputText
+            type="search"
+            placeholder="Search id, mutation, region, seed"
+            [value]="search()"
+            (input)="setSearch($any($event.target).value)"
+            aria-label="Search tasks"
+          />
+        </p-iconfield>
+
+        <p-select
+          [options]="cellTypeOptions()"
+          [ngModel]="cellType()"
+          (ngModelChange)="setCellType($event)"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Any cell type"
+          [showClear]="true"
+          class="filter-select"
+        />
+
+        <p-select
+          [options]="seedOptions"
+          [ngModel]="seedFilter()"
+          (ngModelChange)="setSeedFilter($event)"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Any seed"
+          [showClear]="true"
+          class="filter-select"
+        />
+
+        <p-button
+          label="Clear"
+          icon="pi pi-filter-slash"
+          severity="secondary"
+          [outlined]="true"
+          [disabled]="!isFiltered()"
+          (onClick)="clearFilters()"
+        />
+
+        <span class="result-count text-muted">
+          {{ rows().length | number }} of {{ allRowCount() | number }}
+        </span>
+      </div>
+
+      @if (loading()) {
+        <p-skeleton width="100%" height="20rem" />
+      } @else {
+        <p-table
+          [value]="rows()"
+          dataKey="id"
+          [paginator]="true"
+          [rows]="rowsPerPage"
+          [rowsPerPageOptions]="[10, 25, 50, 100]"
+          [first]="first()"
+          (firstChange)="first.set($event ?? 0)"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          [rowHover]="true"
+          [stripedRows]="true"
+          sortField="createdAt"
+          [sortOrder]="-1"
+          [tableStyle]="{ 'min-width': '54rem' }"
+        >
+          <ng-template #header>
+            <tr>
+              <th pSortableColumn="createdAt" style="width: 13rem">
+                Created <p-sort-icon field="createdAt" />
+              </th>
+              <th style="width: 8rem">Task</th>
+              <th pSortableColumn="cellType" style="width: 11rem">
+                Cell type <p-sort-icon field="cellType" />
+              </th>
+              <th>Active mutations</th>
+              <th pSortableColumn="seed" style="width: 12rem">Seed <p-sort-icon field="seed" /></th>
+            </tr>
+          </ng-template>
+
+          <ng-template #body let-row>
+            <tr>
+              <td>{{ row.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td>
+                <code class="mono" [title]="row.id">{{ row.shortId }}</code>
+              </td>
+              <td>{{ row.cellType }}</td>
+              <td>
+                <ul class="mutation-list">
+                  @for (mutation of row.mutations; track mutation.name) {
+                    <li>
+                      <code class="mono">{{ mutation.name }}</code>
+                      @if (mutation.region) {
+                        <p-tag [value]="mutation.region" severity="secondary" />
+                      }
+                      @if (mutation.weight !== null) {
+                        <span class="weight text-muted">
+                          w {{ mutation.weight | number: '1.2-3' }}
+                        </span>
+                      }
+                    </li>
+                  }
+                </ul>
+              </td>
+              <td class="seed-cell">
+                @if (row.seed !== null) {
+                  <code class="mono" [title]="'as sent: ' + row.seedRaw">
+                    {{ row.seed | number }}
+                  </code>
+                } @else {
+                  <p-tag value="unstamped" severity="warn" />
+                }
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="5" class="empty-cell text-muted">No tasks match the current filters.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </ng-template>
+  </p-card>
+}

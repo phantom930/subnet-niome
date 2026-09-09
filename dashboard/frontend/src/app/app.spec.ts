@@ -18,14 +18,18 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render PrimeNG components', async () => {
+  it('should render the toolbar shell and section navigation', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.querySelector('.p-toolbar')).toBeTruthy();
-    expect(compiled.querySelector('.p-card')).toBeTruthy();
     expect(compiled.querySelectorAll('.p-button').length).toBeGreaterThan(0);
+
+    const links = Array.from(compiled.querySelectorAll('.nav-link')).map((el) =>
+      el.textContent?.trim(),
+    );
+    expect(links).toEqual(['Tasks']);
   });
 
   it('should toggle the dark mode class on the document root', async () => {

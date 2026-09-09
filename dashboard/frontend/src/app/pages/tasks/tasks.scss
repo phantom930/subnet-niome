@@ -1,0 +1,115 @@
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.page-sub {
+  margin: 0.25rem 0 0;
+}
+
+.head-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.8125rem;
+  gap: 0.125rem;
+}
+
+:host ::ng-deep .rules-note {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.filter-bar input[pInputText] {
+  min-width: 18rem;
+}
+
+:host ::ng-deep .filter-select {
+  min-width: 11rem;
+}
+
+.result-count {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+}
+
+td .mono {
+  color: var(--p-text-muted-color);
+}
+
+.mutation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mutation-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.weight {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty-cell {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+/* The table scrolls on its own so the page never scrolls sideways. */
+:host ::ng-deep .p-datatable-table-container {
+  overflow-x: auto;
+}
+
+@media (max-width: 720px) {
+  .filter-bar input[pInputText] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .head-meta {
+    align-items: flex-start;
+  }
+
+  .result-count {
+    margin-left: 0;
+  }
+}
+
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .load-error {
+  display: block;
+  margin-bottom: 1rem;
+}

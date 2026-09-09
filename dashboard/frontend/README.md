@@ -10,6 +10,15 @@ and ready for features.
 
 ## Install and run
 
+Start the backend first, since the dev server proxies `/api` to it:
+
+```bash
+cd dashboard/backend
+../../.venv/bin/uvicorn main:app --reload --port 8000
+```
+
+Then, in a second terminal:
+
 ```bash
 cd dashboard/frontend
 npm ci
@@ -18,6 +27,8 @@ npm start
 
 The dev server listens on <http://localhost:4200>. The port is set on the serve
 target in `angular.json`; override it per run with `npm start -- --port 9001`.
+If the backend is not running, the Tasks page says so instead of showing an
+empty table.
 
 Use `npm ci` if your global npm is v10. A fresh `npm install` under npm 10.9.8
 crashes with `Cannot read properties of null (reading 'edgesOut')` while
@@ -43,15 +54,45 @@ npx npm@12 install
 ## Layout
 
 ```text
+proxy.conf.json                    Forwards /api to the backend on port 8000
 src/
   app/
-    app.ts / app.html / app.scss   Root shell: toolbar and theme toggle
+    app.ts / app.html / app.scss   Root shell: toolbar, nav, theme toggle
     app.config.ts                  Providers, including providePrimeNG()
-    app.routes.ts                  Empty; add feature routes here
+    app.routes.ts                  Lazy feature routes
+    core/task.models.ts            Shapes of the API payloads and table row
+    core/task.service.ts           Calls the backend, flattens the snapshot
     core/theme.service.ts          Light/dark mode, persisted per browser
+    pages/tasks/                   Paginated task table
     theme/app-preset.ts            PrimeNG theme preset (Aura + emerald)
   styles.scss                      Global styles, CSS layer order, PrimeIcons
 ```
+
+## Task data
+
+`TaskService` calls the backend in `dashboard/backend` and flattens each task
+into one table row. The dev server proxies `/api` there via `proxy.conf.json`,
+so both run same-origin in development and no CORS is involved.
+
+The Refresh button posts to `/api/tasks/refresh`, which makes the backend pull
+the upstream task history and merge it into its stored snapshot. The toast
+reports how many tasks were added and how many were newly stamped, then the
+table reloads. A refresh reporting `added: 0` can still have done something, if
+a previously unstamped task just got its seed.
+
+Two things about the data are worth knowing, both handled in `TaskService` and
+mirrored in the backend:
+
+- **The seed is mixed-type.** Most tasks send it as a number, some as a
+  comma-grouped string, and the grouping is not always right. One observed
+  value reads `328,371,1000`. Seeds are normalized to numbers so the column
+  sorts correctly, with the original kept for the cell's tooltip.
+- **A seed of `0` means unstamped**, not a seed of zero. Those rows show a tag
+  instead of a value, which matches the `unstamped` count the backend reports.
+
+The five rule fields are identical across every task, so they appear once above
+the table rather than as five identical columns. If they ever stop being
+uniform, the panel hides itself and the rules belong back in the rows.
 
 ## How PrimeNG is wired
 

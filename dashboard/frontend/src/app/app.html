@@ -2,6 +2,13 @@
   <p-toolbar class="app-toolbar">
     <ng-template #start>
       <span class="brand">Dashboard</span>
+
+      <nav class="app-nav" aria-label="Sections">
+        <a class="nav-link" routerLink="/tasks" routerLinkActive="nav-link-active">
+          <i class="pi pi-list" aria-hidden="true"></i>
+          <span>Tasks</span>
+        </a>
+      </nav>
     </ng-template>
 
     <ng-template #end>
@@ -17,25 +24,6 @@
   </p-toolbar>
 
   <main class="app-content">
-    <!-- Routed views render here once routes are added to app.routes.ts. -->
     <router-outlet />
-
-    <p-card>
-      <ng-template #title>Angular + PrimeNG</ng-template>
-      <ng-template #subtitle>
-        The project is wired up. Replace this card with your first feature.
-      </ng-template>
-      <ng-template #content>
-        <p class="text-muted">
-          PrimeNG is configured in <code>app.config.ts</code> with the theme preset in
-          <code>src/app/theme/app-preset.ts</code>. The toggle above switches the
-          <code>.app-dark</code> class that the theme watches.
-        </p>
-        <div class="button-row">
-          <p-button label="Primary" icon="pi pi-check" />
-          <p-button label="Secondary" severity="secondary" [outlined]="true" />
-        </div>
-      </ng-template>
-    </p-card>
   </main>
 </div>

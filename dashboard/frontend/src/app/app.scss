@@ -15,6 +15,37 @@
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  padding-right: 1.25rem;
+}
+
+.app-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--p-border-radius-md, 6px);
+  color: var(--p-text-muted-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.nav-link:hover {
+  background-color: var(--p-content-hover-background);
+  color: var(--p-text-color);
+}
+
+.nav-link-active {
+  background-color: var(--p-highlight-background);
+  color: var(--p-highlight-color);
 }
 
 .app-content {

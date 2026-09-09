@@ -1,14 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { ToolbarModule } from 'primeng/toolbar';
 
 import { ThemeService } from './core/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToolbarModule, ButtonModule, CardModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ToolbarModule, ButtonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
