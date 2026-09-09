@@ -24,17 +24,45 @@ not running, the Tasks page says so rather than showing an empty table.
 
 ## Endpoints
 
-| Method | Path                 | Does                                        |
-| ------ | -------------------- | ------------------------------------------- |
-| GET    | `/api/health`        | Status, snapshot counts, resolved paths     |
-| GET    | `/api/tasks`         | The whole snapshot, newest first            |
-| GET    | `/api/cell-types`    | The accessibility table                     |
-| POST   | `/api/tasks/refresh` | Runs `--fetch`, reports what changed        |
+| Method | Path                     | Does                                    |
+| ------ | ------------------------ | --------------------------------------- |
+| GET    | `/api/health`            | Status, snapshot counts, resolved paths |
+| GET    | `/api/tasks`             | The whole snapshot, newest first        |
+| GET    | `/api/cell-types`        | The accessibility table                 |
+| POST   | `/api/tasks/refresh`     | Runs `--fetch`, reports what changed    |
+| POST   | `/api/benchmarks`        | Queues a benchmark, returns its job     |
+| GET    | `/api/benchmarks`        | The most recent jobs                    |
+| GET    | `/api/benchmarks/{id}`   | One job, with its result once done      |
 
 `POST /api/tasks/refresh` takes `{"replace": false}`; `replace` passes
 `--replace`, discarding the local snapshot instead of merging into it. It
-answers 409 if a refresh is already running, 502 if the harness fails, and 504
-if it outruns `DASHBOARD_FETCH_TIMEOUT` (120s default).
+answers 409 if the harness is busy, 502 if it fails, and 504 if it outruns
+`DASHBOARD_FETCH_TIMEOUT` (120s default).
+
+## Benchmarks are jobs, not requests
+
+A run takes about 7 seconds for one seed and 15 for two, and it queues behind
+any other harness run, so a synchronous request would sometimes time out.
+`POST /api/benchmarks` answers 202 with a job whose status is `queued`, and the
+client polls `GET /api/benchmarks/{id}` until it reads `done` or `failed`.
+
+The body mirrors the script's flags: `task` (an id, or a list position with 0
+the newest), `seeds`, `rng`, `task_seed`, `per_seed` and `uid`.
+
+Jobs live in memory, capped at the last 50, so a restart forgets them. That is
+a deliberate trade against introducing a database: the authoritative output of
+a run is the report text, which the client already holds once it has polled.
+
+### The result is parsed best-effort
+
+`bench_task.py` has no JSON mode, so `report.py` reads the numbers back out of
+its printed report. Parsing is section-aware, because
+`total_weighted_score` is printed twice, once under miner and once under
+validator, with different meanings.
+
+Every job also carries the raw report in `output`, and the dialog can show it.
+So if the harness's format changes, the parsed fields go missing rather than
+wrong, and nothing is actually lost.
 
 ## Why a subprocess and not an import
 
@@ -89,14 +117,9 @@ compares normalized seeds, because the same seed arriving as `100000` on one
 fetch and `100,000` on the next would otherwise be reported as a restamp that
 never happened. The frontend normalizes the same way for display and sorting.
 
-## What is not here
+## Every run writes testing/submission.json
 
-A benchmark button. `--fetch` is network I/O that finishes in seconds, so it
-runs inline. A default `bench_task.py` run scores a submission through all five
-validation stages, which takes roughly 7 seconds for one seed and longer for
-more, and a synchronous request would time out.
-
-The shape for that is a job API rather than a blocking call: POST starts a run
-and returns an id, GET polls for the result. The subprocess approach here
-carries over unchanged, and it already handles the global-state problem that
-makes concurrent runs unsafe.
+`bench_task.py` writes the submission it built to that one fixed path on every
+run, which is a second reason benchmarks are serialized: two at once would
+overwrite each other's rows there. The file therefore reflects whichever run
+finished last.

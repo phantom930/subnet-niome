@@ -67,6 +67,14 @@ export interface TaskRow {
   /** Seed exactly as the backend sent it, kept because its grouping can differ. */
   seedRaw: string | null;
   version: string;
+  /**
+   * The task exactly as the backend sent it, for the JSON view.
+   *
+   * Kept rather than refetched because it is already loaded: a task is about
+   * 1.2 kB, so all of them together are the half-megabyte the snapshot
+   * response already carried.
+   */
+  raw: RawTask;
 }
 
 /**
@@ -96,4 +104,73 @@ export interface SnapshotMeta {
   unstamped: number;
   /** Rules common to all tasks, or null if they are not in fact uniform. */
   sharedRules: TaskRules | null;
+}
+
+/** ---- Benchmark jobs ---- */
+
+export type JobStatus = 'queued' | 'running' | 'done' | 'failed';
+
+export interface BenchmarkRequest {
+  task: string;
+  seeds?: number;
+  rng?: number | null;
+  task_seed?: boolean;
+  per_seed?: boolean;
+  uid?: number;
+}
+
+export interface PerSeedScore {
+  seed: number;
+  total_weighted_score: number;
+  consistency_factor: number;
+  distribution_fidelity_factor: number;
+  final_score: number;
+}
+
+/**
+ * Numbers read back out of the harness's printed report.
+ *
+ * Best-effort: bench_task.py has no JSON mode, so the backend parses its
+ * stdout. Any field can be absent if the format changes, which is why the job
+ * also carries the raw `output` and the dialog shows it.
+ */
+export interface BenchmarkResult {
+  task: {
+    id?: string;
+    created_at?: string;
+    cell_type?: string;
+    accessibility?: number;
+    mutations?: string[];
+    recorded_seed?: string;
+    weights?: string;
+    rules?: string;
+  };
+  miner: Record<string, string | number>;
+  validator: {
+    n_valid_experiments?: number;
+    total_weighted_score?: number;
+    consistency_score?: number;
+    consistency_factor?: number;
+    distribution_fidelity_score?: number;
+    distribution_fidelity_factor?: number;
+    final_score?: number;
+  };
+  seeds: number[];
+  per_seed: PerSeedScore[];
+  /** Null for a single-seed run; absent on older backends. */
+  spread?: number | null;
+}
+
+export interface BenchmarkJob {
+  id: string;
+  status: JobStatus;
+  request: Required<BenchmarkRequest>;
+  created_at: number;
+  started_at: number | null;
+  finished_at: number | null;
+  duration_seconds: number | null;
+  /** The report as the harness printed it. The source of truth. */
+  output: string | null;
+  result: BenchmarkResult | null;
+  error: string | null;
 }

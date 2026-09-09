@@ -88,6 +88,7 @@ export class TaskService {
       seed,
       seedRaw: seed === null ? null : String(contract.seed),
       version: contract.version,
+      raw: task,
     };
   }
 

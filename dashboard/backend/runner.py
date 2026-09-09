@@ -23,6 +23,13 @@ class FetchTimeout(FetchError):
     """The harness was still running when the timeout expired."""
 
 
+# Every harness invocation goes through this, because they share files under
+# testing/: a --fetch run rewrites task.json while a benchmark is reading it,
+# and every benchmark writes the same testing/submission.json, so two at once
+# would clobber each other's rows.
+harness_lock = asyncio.Lock()
+
+
 async def fetch_snapshot(replace: bool = False) -> str:
     """Run ``bench_task.py --fetch`` and return what it printed.
 
@@ -30,6 +37,43 @@ async def fetch_snapshot(replace: bool = False) -> str:
     merges them into testing/ and prints a summary. Its exit code decides
     whether this raises.
     """
+    command = [str(config.PYTHON), str(config.BENCH_SCRIPT), "--fetch"]
+    if replace:
+        command.append("--replace")
+
+    return await _run(command, config.FETCH_TIMEOUT_SECONDS)
+
+
+async def run_benchmark(
+    task: str,
+    seeds: int = 3,
+    rng: int | None = None,
+    task_seed: bool = False,
+    per_seed: bool = False,
+    uid: int = 0,
+) -> str:
+    """Run the miner blind against one task and score it. Returns the report.
+
+    Slower than a fetch: the miner builds a submission and the validator puts
+    it through five stages once per seed.
+    """
+    command = [str(config.PYTHON), str(config.BENCH_SCRIPT), "--task", str(task)]
+    if task_seed:
+        command.append("--task-seed")
+    else:
+        command += ["--seeds", str(seeds)]
+        if rng is not None:
+            command += ["--rng", str(rng)]
+    if per_seed:
+        command.append("--per-seed")
+    if uid:
+        command += ["--uid", str(uid)]
+
+    return await _run(command, config.BENCHMARK_TIMEOUT_SECONDS)
+
+
+async def _run(command: list[str], timeout: float) -> str:
+    """Run the harness and return its stdout, raising on failure."""
     if not config.BENCH_SCRIPT.exists():
         raise FetchError(f"no harness at {config.BENCH_SCRIPT}")
     if not config.PYTHON.exists():
@@ -37,10 +81,6 @@ async def fetch_snapshot(replace: bool = False) -> str:
             f"no interpreter at {config.PYTHON}. Set DASHBOARD_PYTHON to the one "
             "that has the project's dependencies."
         )
-
-    command = [str(config.PYTHON), str(config.BENCH_SCRIPT), "--fetch"]
-    if replace:
-        command.append("--replace")
 
     try:
         process = await asyncio.create_subprocess_exec(
@@ -54,21 +94,17 @@ async def fetch_snapshot(replace: bool = False) -> str:
 
     try:
         raw_stdout, raw_stderr = await asyncio.wait_for(
-            process.communicate(), timeout=config.FETCH_TIMEOUT_SECONDS
+            process.communicate(), timeout=timeout
         )
     except asyncio.TimeoutError as error:
         process.kill()
         await process.wait()
-        raise FetchTimeout(
-            f"the harness was still running after {config.FETCH_TIMEOUT_SECONDS:.0f}s"
-        ) from error
+        raise FetchTimeout(f"the harness was still running after {timeout:.0f}s") from error
 
     stdout = raw_stdout.decode(errors="replace").strip()
     stderr = raw_stderr.decode(errors="replace").strip()
 
     if process.returncode != 0:
-        # bench_task raises SystemExit with a message for the failures worth
-        # reading, so stderr is the useful half.
         detail = stderr or stdout or "no output"
         raise FetchError(f"the harness exited {process.returncode}: {_last_lines(detail)}")
 

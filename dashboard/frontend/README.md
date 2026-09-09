@@ -1,7 +1,8 @@
 # Dashboard Frontend
 
-Angular 22 single-page app with [PrimeNG](https://primeng.org) 22, initialized
-and ready for features.
+Angular 22 single-page app with [PrimeNG](https://primeng.org) 22. Browses the
+closed-round task snapshot, shows any task's raw JSON, and runs benchmarks
+against individual tasks.
 
 ## Requirements
 
@@ -43,13 +44,13 @@ npx npm@12 install
 
 ## Commands
 
-| Command           | What it does                                 |
-| ----------------- | -------------------------------------------- |
-| `npm start`       | Dev server on port 4200 with hot reload      |
-| `npm run build`   | Production build into `dist/frontend`        |
-| `npm run watch`   | Development build, rebuilding on change      |
-| `npm test`        | Unit tests (Vitest); watches in a TTY        |
-| `npm run test:ci` | Unit tests once, no watch                    |
+| Command           | What it does                            |
+| ----------------- | --------------------------------------- |
+| `npm start`       | Dev server on port 4200 with hot reload |
+| `npm run build`   | Production build into `dist/frontend`   |
+| `npm run watch`   | Development build, rebuilding on change |
+| `npm test`        | Unit tests (Vitest); watches in a TTY   |
+| `npm run test:ci` | Unit tests once, no watch               |
 
 ## Layout
 
@@ -62,8 +63,11 @@ src/
     app.routes.ts                  Lazy feature routes
     core/task.models.ts            Shapes of the API payloads and table row
     core/task.service.ts           Calls the backend, flattens the snapshot
+    core/benchmark.service.ts      Starts a benchmark job and polls it
     core/theme.service.ts          Light/dark mode, persisted per browser
-    pages/tasks/                   Paginated task table
+    pages/tasks/tasks.*            Paginated task table
+    pages/tasks/benchmark-dialog.* Per-row benchmark result popup
+    pages/tasks/task-json-dialog.* Per-row raw JSON viewer
     theme/app-preset.ts            PrimeNG theme preset (Aura + emerald)
   styles.scss                      Global styles, CSS layer order, PrimeIcons
 ```
@@ -131,3 +135,41 @@ Two API changes bite when copying older PrimeNG examples:
 
 `provideHttpClient(withFetch())` is already configured for when you start
 calling an API.
+
+## Benchmarking a task
+
+Each row has a play button that runs `scripts/bench_task.py` against that task
+and shows the result in a dialog. The backend runs it as a subprocess and the
+dialog polls until it finishes, roughly 7 seconds for one seed and 15 for the
+default three.
+
+The dialog leads with the final score and the product it comes from, then the
+validator's fields, then a row per seed when more than one was used. The
+harness's full printed report is behind "Show full report".
+
+The numbers are parsed out of that report, because `bench_task.py` has no JSON
+mode. If its format ever changes, parsed fields go missing rather than wrong,
+and the raw report is still there.
+
+`BenchmarkDialog` starts its run from its `row` input rather than from a method
+the parent calls, so there is no ordering to get right between binding the row
+and starting the job.
+
+## Viewing a task as JSON
+
+The code button on each row opens the task exactly as the backend sent it,
+pretty-printed, with a toggle between the whole task and the contract alone,
+and a copy button.
+
+Nothing is refetched for this. `TaskRow` keeps the raw task, which costs
+nothing because it is already loaded: a task is about 1.2 kB, so all of them
+together are the half-megabyte the snapshot response already carried.
+
+The JSON is rendered as text, not markup. Syntax highlighting would mean
+building HTML out of backend data, and that injection risk is not worth it for
+a viewer.
+
+Worth knowing when comparing the two views: the JSON shows the seed exactly as
+sent, so a task whose seed arrived as the string `546,343,346` reads that way
+here while the table column shows the normalized number. A test pins that
+difference so neither view drifts.

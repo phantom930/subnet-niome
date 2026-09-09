@@ -35,6 +35,10 @@ PYTHON = Path(os.getenv("DASHBOARD_PYTHON", _default_python if _default_python.e
 # A fetch is network I/O over a paginated endpoint, normally a few seconds.
 FETCH_TIMEOUT_SECONDS = float(os.getenv("DASHBOARD_FETCH_TIMEOUT", "120"))
 
+# A benchmark builds a submission and scores it through five validation stages
+# once per seed. Roughly 7s for one seed, so this leaves generous headroom.
+BENCHMARK_TIMEOUT_SECONDS = float(os.getenv("DASHBOARD_BENCHMARK_TIMEOUT", "600"))
+
 CORS_ORIGINS = [
     origin.strip()
     for origin in os.getenv(

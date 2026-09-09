@@ -1,0 +1,130 @@
+<p-dialog
+  [visible]="row() !== null"
+  (visibleChange)="!$event && close()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '46rem', maxWidth: '95vw' }"
+  header="Benchmark"
+>
+  @if (row(); as task) {
+    <div class="subject">
+      <code class="mono">{{ task.shortId }}</code>
+      <span class="text-muted">{{ task.cellType }}</span>
+      @if (result()?.task?.accessibility !== undefined) {
+        <p-tag [value]="'accessibility ' + result()!.task.accessibility" severity="secondary" />
+      }
+    </div>
+  }
+
+  @if (error(); as message) {
+    <p-message severity="error" icon="pi pi-exclamation-triangle" class="block-message">
+      {{ message }}
+    </p-message>
+  } @else if (job()?.status === 'failed') {
+    <p-message severity="error" icon="pi pi-exclamation-triangle" class="block-message">
+      {{ job()!.error }}
+    </p-message>
+  } @else if (running() || !job()) {
+    <div class="progress">
+      <p-progressbar mode="indeterminate" [showValue]="false" />
+      <p class="text-muted progress-note">
+        {{ statusLabel() }}. This takes a few seconds per seed.
+      </p>
+    </div>
+  } @else if (result(); as data) {
+    <div class="headline">
+      <div class="final">
+        <span class="final-label text-muted">Final score</span>
+        <span class="final-value">
+          {{ data.validator.final_score | number: '1.4-4' }}
+        </span>
+      </div>
+      <div class="run-meta text-muted">
+        <span>seeds {{ data.seeds.join(', ') }}</span>
+        <span>{{ job()!.duration_seconds }}s</span>
+        @if (data.spread != null) {
+          <span>spread {{ data.spread | number: '1.4-4' }}</span>
+        }
+      </div>
+    </div>
+
+    @if (formula(); as f) {
+      <p class="formula mono text-muted">
+        {{ f.weighted | number: '1.3-3' }} &times; {{ f.consistency | number: '1.4-4' }} &times;
+        {{ f.fidelity | number: '1.4-4' }}
+      </p>
+    }
+
+    <table class="metrics">
+      <tbody>
+        @for (metric of validatorRows(); track metric.label) {
+          <tr>
+            <th>{{ metric.label }}</th>
+            <td class="numeric">
+              {{ metric.value | number: '1.' + metric.digits + '-' + metric.digits }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (data.per_seed.length > 1) {
+      <h3 class="section-title">Per seed</h3>
+      <p-table [value]="data.per_seed" [tableStyle]="{ 'min-width': '24rem' }">
+        <ng-template #header>
+          <tr>
+            <th>Seed</th>
+            <th>Consistency</th>
+            <th>Fidelity</th>
+            <th>Final</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-seedRow>
+          <tr>
+            <td class="numeric mono">{{ seedRow.seed }}</td>
+            <td class="numeric">{{ seedRow.consistency_factor | number: '1.4-4' }}</td>
+            <td class="numeric">
+              {{ seedRow.distribution_fidelity_factor | number: '1.4-4' }}
+            </td>
+            <td class="numeric">{{ seedRow.final_score | number: '1.4-4' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+
+    @if (data.miner['rows']) {
+      <p class="text-muted miner-note">
+        Miner built {{ data.miner['rows'] }} rows blind, with the round seed withheld.
+      </p>
+    }
+  }
+
+  @if (job()?.output) {
+    <div class="raw">
+      <p-button
+        [label]="showRaw() ? 'Hide full report' : 'Show full report'"
+        [icon]="showRaw() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        (onClick)="toggleRaw()"
+      />
+      @if (showRaw()) {
+        <pre class="report">{{ job()!.output }}</pre>
+      }
+    </div>
+  }
+
+  <ng-template #footer>
+    <p-button
+      label="Run again"
+      icon="pi pi-refresh"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="running()"
+      (onClick)="start()"
+    />
+    <p-button label="Close" icon="pi pi-times" (onClick)="close()" />
+  </ng-template>
+</p-dialog>

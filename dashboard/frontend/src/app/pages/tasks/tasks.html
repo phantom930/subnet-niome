@@ -127,6 +127,7 @@
               </th>
               <th>Active mutations</th>
               <th pSortableColumn="seed" style="width: 12rem">Seed <p-sort-icon field="seed" /></th>
+              <th style="width: 6rem"><span class="sr-only">Actions</span></th>
             </tr>
           </ng-template>
 
@@ -163,12 +164,38 @@
                   <p-tag value="unstamped" severity="warn" />
                 }
               </td>
+              <td>
+                <div class="row-actions">
+                  <p-button
+                    icon="pi pi-code"
+                    severity="secondary"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    ariaLabel="View this task as JSON"
+                    pTooltip="View JSON"
+                    tooltipPosition="left"
+                    (onClick)="openJson(row)"
+                  />
+                  <p-button
+                    icon="pi pi-play"
+                    severity="secondary"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    ariaLabel="Run benchmark against this task"
+                    pTooltip="Run benchmark"
+                    tooltipPosition="left"
+                    (onClick)="openBenchmark(row)"
+                  />
+                </div>
+              </td>
             </tr>
           </ng-template>
 
           <ng-template #emptymessage>
             <tr>
-              <td colspan="5" class="empty-cell text-muted">No tasks match the current filters.</td>
+              <td colspan="6" class="empty-cell text-muted">No tasks match the current filters.</td>
             </tr>
           </ng-template>
         </p-table>
@@ -176,3 +203,6 @@
     </ng-template>
   </p-card>
 }
+
+<app-benchmark-dialog [row]="benchmarkRow()" (closed)="closeBenchmark()" />
+<app-task-json-dialog [row]="jsonRow()" (closed)="closeJson()" />

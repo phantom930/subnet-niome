@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 import config
+import jobs
 import runner
 import store
 
@@ -36,17 +37,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# One refresh at a time. Two harness runs would both write the snapshot, and
-# the second merge would be built from a file the first was mid-way through
-# replacing.
-_refresh_lock = asyncio.Lock()
-
-
 class RefreshBody(BaseModel):
     replace: bool = Field(
         False,
         description="Pass --replace, discarding the local snapshot instead of merging into it",
     )
+
+
+class BenchmarkBody(BaseModel):
+    """Mirrors bench_task.py's flags."""
+
+    task: str = Field(..., description="Task id, or list position with 0 the newest")
+    seeds: int = Field(3, ge=1, le=20, description="How many random round seeds")
+    rng: int | None = Field(None, description="Seed the RNG that picks the seeds, to repeat a run")
+    task_seed: bool = Field(
+        False, description="Score under the task's own recorded seed instead of random ones"
+    )
+    per_seed: bool = Field(False, description="Also score each seed alone, to show the spread")
+    uid: int = Field(0, ge=0, description="uid to report")
 
 
 @app.get("/api/health")
@@ -56,7 +64,8 @@ def health() -> dict[str, Any]:
         "snapshot": store.summary(),
         "snapshot_path": str(config.SNAPSHOT_PATH),
         "harness": str(config.BENCH_SCRIPT),
-        "refreshing": _refresh_lock.locked(),
+        "harness_busy": runner.harness_lock.locked(),
+        "active_jobs": jobs.active_count(),
     }
 
 
@@ -80,10 +89,13 @@ def get_cell_types() -> dict[str, Any]:
 @app.post("/api/tasks/refresh")
 async def refresh_tasks(body: RefreshBody = Body(default_factory=RefreshBody)) -> dict[str, Any]:
     """Run the harness's --fetch, then report what it changed."""
-    if _refresh_lock.locked():
-        raise HTTPException(status_code=409, detail="a refresh is already running")
+    if runner.harness_lock.locked():
+        raise HTTPException(
+            status_code=409,
+            detail="the harness is busy with another run. Try again in a moment.",
+        )
 
-    async with _refresh_lock:
+    async with runner.harness_lock:
         before = store.seeds_by_id()
 
         try:
@@ -102,3 +114,39 @@ async def refresh_tasks(body: RefreshBody = Body(default_factory=RefreshBody)) -
             )
 
         return {**change, "replaced": body.replace, "output": output}
+
+
+@app.post("/api/benchmarks", status_code=202)
+async def start_benchmark(body: BenchmarkBody) -> dict[str, Any]:
+    """Queue a benchmark for one task and return its job immediately.
+
+    A run takes seconds, and it queues behind any other harness run, so the
+    outcome is polled from /api/benchmarks/{id} rather than awaited here.
+    """
+    job = jobs.submit(
+        jobs.Request(
+            task=body.task,
+            seeds=body.seeds,
+            rng=body.rng,
+            task_seed=body.task_seed,
+            per_seed=body.per_seed,
+            uid=body.uid,
+        )
+    )
+    return job.to_dict()
+
+
+@app.get("/api/benchmarks")
+def list_benchmarks(limit: int = 20) -> dict[str, Any]:
+    return {"jobs": [job.to_dict() for job in jobs.recent(limit)]}
+
+
+@app.get("/api/benchmarks/{job_id}")
+def get_benchmark(job_id: str) -> dict[str, Any]:
+    job = jobs.get(job_id)
+    if job is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"no job {job_id}. Jobs are held in memory, so a restart forgets them.",
+        )
+    return job.to_dict()

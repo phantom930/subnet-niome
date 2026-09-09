@@ -1,0 +1,47 @@
+<p-dialog
+  [visible]="row() !== null"
+  (visibleChange)="!$event && close()"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [style]="{ width: '48rem', maxWidth: '95vw' }"
+  header="Task JSON"
+>
+  @if (row(); as task) {
+    <div class="toolbar">
+      <code class="mono subject">{{ task.id }}</code>
+
+      <p-selectbutton
+        [options]="scopeOptions"
+        [ngModel]="scope()"
+        (ngModelChange)="setScope($event)"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        size="small"
+      />
+    </div>
+
+    <pre class="json">{{ json() }}</pre>
+
+    <div class="footer-note text-muted">
+      {{ lineCount() }} lines, {{ byteCount() }} bytes
+      @if (copyFailed()) {
+        <span class="copy-failed">
+          Copying was blocked by the browser. Select the text and copy manually.
+        </span>
+      }
+    </div>
+  }
+
+  <ng-template #footer>
+    <p-button
+      [label]="copied() ? 'Copied' : 'Copy'"
+      [icon]="copied() ? 'pi pi-check' : 'pi pi-copy'"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="copy()"
+    />
+    <p-button label="Close" icon="pi pi-times" (onClick)="close()" />
+  </ng-template>
+</p-dialog>

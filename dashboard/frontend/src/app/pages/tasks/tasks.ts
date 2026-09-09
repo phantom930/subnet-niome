@@ -12,7 +12,11 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
+
+import { BenchmarkDialog } from './benchmark-dialog';
+import { TaskJsonDialog } from './task-json-dialog';
 
 import { TaskService } from '../../core/task.service';
 import { RefreshResult, SnapshotMeta, TaskRow } from '../../core/task.models';
@@ -37,6 +41,9 @@ type SeedFilter = 'stamped' | 'unstamped' | null;
     TableModule,
     TagModule,
     ToastModule,
+    TooltipModule,
+    BenchmarkDialog,
+    TaskJsonDialog,
   ],
   templateUrl: './tasks.html',
   styleUrl: './tasks.scss',
@@ -150,6 +157,30 @@ export class Tasks {
         });
       },
     });
+  }
+
+  /** The row whose benchmark dialog is open, or null when it is closed. */
+  protected readonly benchmarkRow = signal<TaskRow | null>(null);
+
+  protected openBenchmark(row: TaskRow): void {
+    // Setting the row both opens the dialog and starts the run: the dialog
+    // watches this input, so there is no start() call to sequence against it.
+    this.benchmarkRow.set(row);
+  }
+
+  protected closeBenchmark(): void {
+    this.benchmarkRow.set(null);
+  }
+
+  /** The row whose JSON dialog is open, or null when it is closed. */
+  protected readonly jsonRow = signal<TaskRow | null>(null);
+
+  protected openJson(row: TaskRow): void {
+    this.jsonRow.set(row);
+  }
+
+  protected closeJson(): void {
+    this.jsonRow.set(null);
   }
 
   private changed(result: RefreshResult): boolean {
