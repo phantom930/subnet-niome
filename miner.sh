@@ -32,15 +32,17 @@ EXTERNAL_IP=184.144.255.144
 # collapses toward a single hotkey's. 200-299 / 500-599 / 800-899 are evenly spread; any three
 # non-overlapping 100-seed windows in 100-999 are equivalent, since band position is otherwise free.
 HOTKEYS=(
-  "niome_hotkey   8091 52760 100-399"
-  "niome_hotkey1  8092 52096 100-399"
-  "niome_hotkey2  8093 52424 200-499"
-  "niome_hotkey3  8094 52069 300-599"
-  "niome_hotkey4  8095 52011 400-699"
-  "niome_hotkey5  8096 52079 500-799"
-  "niome_hotkey6  8097 52799 600-899"
-  "niome_hotkey7  8098 52240 700-999"
+  "niome_hotkey   8091 52760 100-299"
+  "niome_hotkey1  8092 52096 100-299"
+  "niome_hotkey2  8093 52424 120-319"
+  "niome_hotkey3  8094 52069 130-329"
+  "niome_hotkey4  8095 52011 150-349"
+  "niome_hotkey5  8096 52079 170-369"
+  "niome_hotkey6  8097 52799 180-379"
+  "niome_hotkey7  8098 52240 200-399"
   "niome_hotkey8  9001 52504 900-999"
+  "niome_hotkey9  9002 52384 900-999"
+  "niome_hotkey10  8099 52543 900-999"
 )
 
 # NIOME_SEED_DEPEND swaps a hotkey's construction for genomics/seed_depend.py, a submission pinned
@@ -139,7 +141,9 @@ ALL_CUT_HOTKEYS="niome_hotkey"
 #   h8 remains off. Nothing here can register a hotkey — until `btcli subnet register` puts one
 #   back on netuid 55 its process exits at startup (base/neuron.check_registered calls exit()) and
 #   pm2 restarts it on a delay.
-DEREGISTERED="niome_hotkey8"
+# 2026-09-09: all eleven are registered — niome_hotkey uid 74, h1 209, h2 235, h3 196, h4 189,
+#   h5 147, h6 136, h7 75, h8 151, h9 224, h10 10 — so nothing is held out of the allocation.
+DEREGISTERED=""
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so

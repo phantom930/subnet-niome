@@ -36,6 +36,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 
 from seed_window_model import (load_log, load_tasks, pending_for, predict, save_log,
+                               window as _sw_window,
                                window_label)
 
 PLAN_PATH = "data/window_plan.json"
@@ -131,17 +132,127 @@ RANK_WIDTH = 100
 # rounds -- level with the six width-100 disjoint windows' 78 seeds and 23.8%. Hotkey COUNT is
 # what buys coverage here, not width: five width-300 hotkeys managed only ~57 seeds (17.8%).
 # Set this to {} to return to RANK_BY_HOTKEY.
+# CONCENTRATED STRIDE-10 LAYOUT (operator's choice, 2026-09-09). Eleven width-200 windows at
+# stride 10 over the 300-seed span 100-399, so h_n covers 100+10n .. 299+10n.
+#
+# **Measured, so the trade is known.** Bands are effectively INDEPENDENT even at stride 10 —
+# adjacent windows share 190 of 200 seeds, yet measured pairwise band overlap is 0.56 seeds against
+# an independent-draw expectation of 0.58 (band_overlap.py, K562 1eca4bf1) — because a 10-seed shift
+# changes which guides survive the max_fail tail cut, so FastGreedy lands elsewhere. The
+# re-correlation failure mode does NOT occur here.
+#
+# What concentration does cost is room: 11 bands of 12 is 132 seeds, and 132 cannot sit distinctly
+# in a 300-seed span, so collisions are forced by pigeonhole rather than by correlation.
+#
+#   layout                          hotkeys  span  union  P(>=1 of 3 seeds)
+#   spread stride 70 over 900            11   900    126        36.4%
+#   concentrated stride 10               11   300    104        30.8%
+#   current width-300 stride 100          7   900    ~80        24.3%
+#   concentrated stride 10                7   260    ~73        22.6%
+#
+# So this needs ALL ELEVEN slots to beat what it replaces; at seven it is slightly worse. Only h0-h7
+# are registered (h8 is keyed but not on the metagraph; h9/h10 have no key at all), and h0 runs
+# all-cut, so the seven live band hotkeys are spread across the eleven offsets instead of taking the
+# first seven — same layout, best coverage available until the rest register. Set
+# `SPREAD_OVER_900 = True` below for the 36.4% variant.
 FIXED_WINDOWS = {
-    "niome_hotkey1": [100, 399],
-    "niome_hotkey2": [200, 499],
-    "niome_hotkey3": [300, 599],
-    "niome_hotkey4": [400, 699],
-    "niome_hotkey5": [500, 799],
-    "niome_hotkey6": [600, 899],
-    "niome_hotkey7": [700, 999],
+    "niome_hotkey1": [100, 299],   # offset 0
+    "niome_hotkey2": [120, 319],   # offset 20
+    "niome_hotkey3": [130, 329],   # offset 30
+    "niome_hotkey4": [150, 349],   # offset 50
+    "niome_hotkey5": [170, 369],   # offset 70
+    "niome_hotkey6": [180, 379],   # offset 80
+    "niome_hotkey7": [200, 399],   # offset 100
+    # ---- unfilled slots, assigned as hotkeys register (completes the stride-10 tiling) ----
+    "niome_hotkey8": [110, 309],   # offset 10
+    "niome_hotkey9": [140, 339],   # offset 40
+    "niome_hotkey10": [160, 359],  # offset 60
+    "niome_hotkey11": [190, 389],  # offset 90
 }
 TTL_HOURS = 6                      # survives a missed cron run, expires before it misleads
 
+
+# ---------------------------------------------------------------------------------------------
+# JOINED-WINDOW MODE — the operator's rank-frequency scheme.
+#
+# Per cell type, over all previous three-seed rounds: count how often each of the nine width-100
+# windows was drawn; rank the nine (ties -> most recently updated first, then lower index); record
+# the rank of each round's three seed windows; count how often each rank appears; take the three
+# most frequent ranks (ties -> most recently updated position, then lower rank); and map those back
+# to the windows now holding them. Those three windows are the joined 300-seed band space, and the
+# eleven hotkeys take width-200 slices of it at stride 10 in sorted-seed order.
+#
+# **The prediction has no measured skill** (rank_freq.py, 108 out-of-sample rounds: 102 of 324 seeds
+# landed in the predicted window against 108.0 +/- 8.5 expected, z = -0.71; per cell +0.45 / -0.88 /
+# +0.00 / -1.07). Seeds are uniform, so counting them cannot forecast them. Band position is free,
+# so this is EV-equivalent to any other 300-seed space -- it is kept because it costs nothing and
+# would start paying by itself if the generator ever stopped being uniform.
+#
+# What the layout costs is separate and measured (band_overlap.py): eleven bands of 12 is 132 seeds,
+# which cannot sit distinctly in 300, so union is 104 (30.8% of rounds) against 126 (36.4%) for the
+# same eleven hotkeys spread over the full 900. Bands themselves stay independent even at stride 10
+# (pairwise overlap 0.56 measured against 0.58 expected), so the loss is pigeonhole, not
+# correlation. Set JOINED_MODE = False to fall back to FIXED_WINDOWS.
+JOINED_MODE = True
+# Ten band hotkeys ROTATE around the joined space at stride 30, width 200 — the slice is circular,
+# so a hotkey past the end wraps to the front. 10 x 30 = 300 tiles the space exactly once, and every
+# seed sits in 200/300 x 10 = 6.67 slices on average. h0 stays on all-cut for every cell type.
+JOINED_HK = ["niome_hotkey1", "niome_hotkey2", "niome_hotkey3", "niome_hotkey4",
+             "niome_hotkey5", "niome_hotkey6", "niome_hotkey7", "niome_hotkey8",
+             "niome_hotkey9", "niome_hotkey10"]
+JOINED_SUB_WIDTH = 200
+JOINED_STRIDE = 30
+
+
+def _rank_freq_windows(history, cell):
+    """The three windows holding the three most frequent ranks, per the scheme above."""
+    counts = [0] * 9
+    last_upd = [-1] * 9
+    rank_counts = {k: 0 for k in range(10)}
+    rank_last = {k: -1 for k in range(10)}
+    rows = [t for t in history if t["cell"] == cell]
+    for r, t in enumerate(rows):
+        order = sorted(range(9), key=lambda w: (-counts[w], -last_upd[w], w))
+        rank_of = {w: i + 1 for i, w in enumerate(order)}
+        ranks_this = [0, 0, 0] if r == 0 else [rank_of[_sw_window(s)] for s in t["seeds"]]
+        for k in ranks_this:
+            rank_counts[k] = rank_counts.get(k, 0) + 1
+            rank_last[k] = r
+        for s in t["seeds"]:
+            w = _sw_window(s)
+            counts[w] += 1
+            last_upd[w] = r
+    order = sorted(range(9), key=lambda w: (-counts[w], -last_upd[w], w))
+    rank_of = {w: i + 1 for i, w in enumerate(order)}
+    top3 = sorted(range(1, 10), key=lambda k: (-rank_counts.get(k, 0), -rank_last.get(k, -1), k))[:3]
+    holder = {rk: w for w, rk in rank_of.items()}
+    return sorted(holder[k] for k in top3 if k in holder), top3
+
+
+def _joined_slices(windows):
+    """Rotated width-`JOINED_SUB_WIDTH` slices at `JOINED_STRIDE` over the sorted joined seeds.
+
+    The slice is CIRCULAR: hotkey h takes indices (h*stride + k) mod n for k < width, so a slice
+    running past the end wraps to the front and every hotkey gets exactly `width` seeds. Returned as
+    ascending, non-overlapping [lo, hi] ranges, which is what the plan stores and
+    `Miner._window_for` validates.
+    """
+    seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
+    n = len(seeds)
+    width = min(JOINED_SUB_WIDTH, n)
+    out = []
+    for h in range(len(JOINED_HK)):
+        off = (h * JOINED_STRIDE) % max(1, n)
+        chunk = sorted({seeds[(off + k) % n] for k in range(width)})
+        spans, lo, prev = [], chunk[0], chunk[0]
+        for x in chunk[1:]:
+            if x != prev + 1:
+                spans.append([lo, prev])
+                lo = x
+            prev = x
+        spans.append([lo, prev])
+        out.append(spans)
+    return out
 
 def _sh_list(var):
     """A space-separated bash list from miner.sh, so the two files cannot drift."""
@@ -278,7 +389,17 @@ def main():
         # Hotkeys that run all-cut on *this* cell type play no window here, so they are out of the
         # allocation for this cell only and back in it for the next.
         avail = [m for m in members if m[0] not in hedged]
-        if FIXED_WINDOWS:
+        if JOINED_MODE:
+            wins3, top3 = _rank_freq_windows(rows, cell)
+            slices = _joined_slices(wins3)
+            assign, slots = {}, []
+            for name, _default in avail:
+                if name in JOINED_HK:
+                    assign[name] = slices[JOINED_HK.index(name)]
+            top = pr["ranked"][0]
+            width = JOINED_SUB_WIDTH
+            rank = 0
+        elif FIXED_WINDOWS:
             # Fixed mode: literal windows, same for every cell type, overlap permitted.
             assign, slots = {}, []
             for name, _default in avail:
@@ -319,7 +440,7 @@ def main():
                 assign[name] = [a, a + SPREAD_WIDTH - 1]
 
         spans = sorted(assign.values())
-        if not FIXED_WINDOWS:
+        if not (FIXED_WINDOWS or JOINED_MODE):
             # Every other layout is built to be disjoint, so an overlap there is a bug that would
             # silently re-correlate two siblings and cost the whole decorrelation. In fixed mode
             # the operator asked for the overlap, so it is reported and kept.
@@ -334,7 +455,9 @@ def main():
         # task id and each hotkey's scored outcome together. Cells where every hotkey hedges still
         # get the block, with no assignments -- the prediction was live and its accuracy is still
         # scored, it just was not played.
-        if FIXED_WINDOWS:
+        if JOINED_MODE:
+            roles = {n: "joined" for n, _d in avail if n in JOINED_HK}
+        elif FIXED_WINDOWS:
             roles = {n: "fixed" for n, _d in avail if n in FIXED_WINDOWS}
         elif RANK_BY_HOTKEY:
             roles = {n: f"rank{RANK_BY_HOTKEY[n]}" for n, _d in avail if n in RANK_BY_HOTKEY}
@@ -363,6 +486,20 @@ def main():
             print(head + f"no window played ({why or 'no banded hotkey'})")
             continue
         ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
+        if JOINED_MODE:
+            wins3, top3 = _rank_freq_windows(rows, cell)
+            covered = len({s for spans in assign.values() for a, b in spans
+                           for s in range(a, b + 1)})
+            print(head + f"beta {pr['beta']:+.2f}  JOINED ranks {top3} -> "
+                  + ",".join(f"{w*100+100}-{w*100+199}" for w in wins3)
+                  + f"  x{len(assign)} hotkeys, width {JOINED_SUB_WIDTH} stride {JOINED_STRIDE}"
+                  f" rotated"
+                  + f", span {covered} of 900"
+                  + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
+            for name in sorted(assign, key=lambda n: JOINED_HK.index(n)):
+                print(f"    joined {name:<15} "
+                      + ",".join(f"{a}-{b}" for a, b in assign[name]))
+            continue
         if FIXED_WINDOWS:
             spans = sorted(assign.values())
             olap = sum(max(0, min(b1, b2) - max(a1, a2) + 1)

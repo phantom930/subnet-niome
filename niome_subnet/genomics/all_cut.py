@@ -352,6 +352,11 @@ def bank_key(contract: dict, cell_types: dict, cfg: AllCutConfig) -> str:
         "regions": contract.get("mutation_regions") or {},
         "gc": cfg.cas12a_gc, "d": cfg.max_distance, "v": cfg.variants,
         "mf": cfg.cas12a_max_fail, "w": [cfg.start_seed, cfg.end_seed],
+        # A joined (non-contiguous) band space must never share a bank with the contiguous range
+        # that spans it — the screened seeds differ, so the fail lists do too. Absent for every
+        # contiguous config, which keeps every bank cached before `seed_list` existed valid.
+        **({} if not getattr(cfg, "seed_list", None)
+           else {"seeds": sorted(set(int(x) for x in cfg.seed_list))}),
         # Added only for a non-default rule, so every bank cached before `rule` existed keeps its
         # key. A "cut" bank and a "not_mhnhej" bank at the same window would otherwise collide.
         **({} if getattr(cfg, "rule", "cut") == "cut" else {"rule": cfg.rule}),

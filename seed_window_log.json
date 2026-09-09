@@ -8065,7 +8065,13 @@
        126,
        383
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 228,
+      "final": 29.5,
+      "consistency": 0.0972,
+      "weighted": 335.1,
+      "fidelity": 0.9058,
+      "band_hit": false
      },
      "niome_hotkey2": {
       "window": [
@@ -8078,7 +8084,13 @@
       "seeds_in_window": [
        383
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 223,
+      "final": 30.17,
+      "consistency": 0.0999,
+      "weighted": 338.6,
+      "fidelity": 0.8918,
+      "band_hit": false
      },
      "niome_hotkey3": {
       "window": [
@@ -8091,7 +8103,13 @@
       "seeds_in_window": [
        383
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 164,
+      "final": 36.33,
+      "consistency": 0.1195,
+      "weighted": 338.2,
+      "fidelity": 0.8986,
+      "band_hit": false
      },
      "niome_hotkey4": {
       "window": [
@@ -8104,7 +8122,13 @@
       "seeds_in_window": [
        694
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 210,
+      "final": 32.12,
+      "consistency": 0.1074,
+      "weighted": 330.2,
+      "fidelity": 0.9061,
+      "band_hit": false
      },
      "niome_hotkey5": {
       "window": [
@@ -8117,7 +8141,13 @@
       "seeds_in_window": [
        694
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 183,
+      "final": 34.41,
+      "consistency": 0.1135,
+      "weighted": 338.9,
+      "fidelity": 0.8943,
+      "band_hit": false
      },
      "niome_hotkey6": {
       "window": [
@@ -8130,7 +8160,13 @@
       "seeds_in_window": [
        694
       ],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 216,
+      "final": 31.05,
+      "consistency": 0.1033,
+      "weighted": 331.9,
+      "fidelity": 0.9055,
+      "band_hit": false
      },
      "niome_hotkey7": {
       "window": [
@@ -8141,7 +8177,13 @@
       "window_confirmed": true,
       "role": "fixed",
       "seeds_in_window": [],
-      "all_hdr_built": true
+      "all_hdr_built": true,
+      "rank": 226,
+      "final": 29.88,
+      "consistency": 0.0986,
+      "weighted": 342.3,
+      "fidelity": 0.8858,
+      "band_hit": false
      }
     },
     "hotkeys_with_seed_in_window": [
@@ -8152,7 +8194,8 @@
      "niome_hotkey5",
      "niome_hotkey6"
     ],
-    "hotkeys_with_band_hit": []
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-09T05:17:01.557787+00:00"
    }
   },
   {
@@ -9047,7 +9090,7 @@
     "12be08f9-8e88-455d-aa18-3a995626df20"
    ],
    "applied": {
-    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "applied_at": "2026-09-09T06:17:02.695952+00:00",
     "predicted_window": "100-199",
     "predicted_p_hit": 0.2977,
     "band_width": 0,
@@ -9096,6 +9139,161 @@
      "niome_hotkey7": "fixed",
      "niome_hotkey": "all-cut-hedge"
     }
+   },
+   "resolved": {
+    "task_id": "445d95d2-55ec-4b36-a26e-58efeff789b0",
+    "at": "2026-09-09T04:42:56.062946",
+    "seeds": [
+     622,
+     867,
+     966
+    ],
+    "actual_windows": [
+     5,
+     7,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 226,
+      "final": 27.8,
+      "consistency": 0.0923,
+      "weighted": 337.4,
+      "fidelity": 0.8927,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 219,
+      "final": 30.28,
+      "consistency": 0.101,
+      "weighted": 336.2,
+      "fidelity": 0.8922,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 221,
+      "final": 30.16,
+      "consistency": 0.101,
+      "weighted": 335.9,
+      "fidelity": 0.8892,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "fixed",
+      "seeds_in_window": [
+       622
+      ],
+      "rank": 225,
+      "final": 28.32,
+      "consistency": 0.0995,
+      "weighted": 306.3,
+      "fidelity": 0.9292,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       622
+      ],
+      "rank": 230,
+      "final": 26.12,
+      "consistency": 0.0875,
+      "weighted": 344.2,
+      "fidelity": 0.8672,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       622,
+       867
+      ],
+      "rank": 222,
+      "final": 29.91,
+      "consistency": 0.0996,
+      "weighted": 342.1,
+      "fidelity": 0.878,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       867,
+       966
+      ],
+      "rank": 214,
+      "final": 30.96,
+      "consistency": 0.1039,
+      "weighted": 336.1,
+      "fidelity": 0.8865,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-09T07:17:02.031615+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
    }
   },
   {
@@ -9170,7 +9368,7 @@
     "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a"
    ],
    "applied": {
-    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "applied_at": "2026-09-09T08:22:33.592070+00:00",
     "predicted_window": "100-199",
     "predicted_p_hit": 0.3194,
     "band_width": 0,
@@ -9181,42 +9379,153 @@
     "played": true,
     "assignments": {
      "niome_hotkey1": [
-      100,
-      399
+      [
+       200,
+       299
+      ],
+      [
+       400,
+       499
+      ]
      ],
      "niome_hotkey2": [
-      200,
-      499
+      [
+       230,
+       299
+      ],
+      [
+       400,
+       499
+      ],
+      [
+       700,
+       729
+      ]
      ],
      "niome_hotkey3": [
-      300,
-      599
+      [
+       260,
+       299
+      ],
+      [
+       400,
+       499
+      ],
+      [
+       700,
+       759
+      ]
      ],
      "niome_hotkey4": [
-      400,
-      699
+      [
+       290,
+       299
+      ],
+      [
+       400,
+       499
+      ],
+      [
+       700,
+       789
+      ]
      ],
      "niome_hotkey5": [
-      500,
-      799
+      [
+       200,
+       219
+      ],
+      [
+       420,
+       499
+      ],
+      [
+       700,
+       799
+      ]
      ],
      "niome_hotkey6": [
-      600,
-      899
+      [
+       200,
+       249
+      ],
+      [
+       450,
+       499
+      ],
+      [
+       700,
+       799
+      ]
      ],
      "niome_hotkey7": [
-      700,
-      999
+      [
+       200,
+       279
+      ],
+      [
+       480,
+       499
+      ],
+      [
+       700,
+       799
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       200,
+       299
+      ],
+      [
+       400,
+       409
+      ],
+      [
+       710,
+       799
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       200,
+       299
+      ],
+      [
+       400,
+       439
+      ],
+      [
+       740,
+       799
+      ]
+     ],
+     "niome_hotkey10": [
+      [
+       200,
+       299
+      ],
+      [
+       400,
+       469
+      ],
+      [
+       770,
+       799
+      ]
      ]
     },
     "roles": {
-     "niome_hotkey1": "fixed",
-     "niome_hotkey2": "fixed",
-     "niome_hotkey3": "fixed",
-     "niome_hotkey4": "fixed",
-     "niome_hotkey5": "fixed",
-     "niome_hotkey6": "fixed",
-     "niome_hotkey7": "fixed",
+     "niome_hotkey1": "joined",
+     "niome_hotkey2": "joined",
+     "niome_hotkey3": "joined",
+     "niome_hotkey4": "joined",
+     "niome_hotkey5": "joined",
+     "niome_hotkey6": "joined",
+     "niome_hotkey7": "joined",
+     "niome_hotkey8": "joined",
+     "niome_hotkey9": "joined",
+     "niome_hotkey10": "joined",
      "niome_hotkey": "all-cut-hedge"
     }
    }
@@ -9283,7 +9592,7 @@
     "1eca4bf1-c91f-4291-93ff-4391d058d3dc"
    ],
    "applied": {
-    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "applied_at": "2026-09-09T08:22:33.592070+00:00",
     "predicted_window": "900-999",
     "predicted_p_hit": 0.3668,
     "band_width": 0,
@@ -9294,42 +9603,129 @@
     "played": true,
     "assignments": {
      "niome_hotkey1": [
-      100,
-      399
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       899
+      ]
      ],
      "niome_hotkey2": [
-      200,
-      499
+      [
+       630,
+       699
+      ],
+      [
+       800,
+       929
+      ]
      ],
      "niome_hotkey3": [
-      300,
-      599
+      [
+       660,
+       699
+      ],
+      [
+       800,
+       959
+      ]
      ],
      "niome_hotkey4": [
-      400,
-      699
+      [
+       690,
+       699
+      ],
+      [
+       800,
+       989
+      ]
      ],
      "niome_hotkey5": [
-      500,
-      799
+      [
+       600,
+       619
+      ],
+      [
+       820,
+       999
+      ]
      ],
      "niome_hotkey6": [
-      600,
-      899
+      [
+       600,
+       649
+      ],
+      [
+       850,
+       999
+      ]
      ],
      "niome_hotkey7": [
-      700,
-      999
+      [
+       600,
+       679
+      ],
+      [
+       880,
+       999
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       809
+      ],
+      [
+       910,
+       999
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       839
+      ],
+      [
+       940,
+       999
+      ]
+     ],
+     "niome_hotkey10": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       869
+      ],
+      [
+       970,
+       999
+      ]
      ]
     },
     "roles": {
-     "niome_hotkey1": "fixed",
-     "niome_hotkey2": "fixed",
-     "niome_hotkey3": "fixed",
-     "niome_hotkey4": "fixed",
-     "niome_hotkey5": "fixed",
-     "niome_hotkey6": "fixed",
-     "niome_hotkey7": "fixed",
+     "niome_hotkey1": "joined",
+     "niome_hotkey2": "joined",
+     "niome_hotkey3": "joined",
+     "niome_hotkey4": "joined",
+     "niome_hotkey5": "joined",
+     "niome_hotkey6": "joined",
+     "niome_hotkey7": "joined",
+     "niome_hotkey8": "joined",
+     "niome_hotkey9": "joined",
+     "niome_hotkey10": "joined",
      "niome_hotkey": "all-cut-hedge"
     }
    }
@@ -9403,7 +9799,7 @@
     "4725e952-50b0-4b39-a21b-8f9ae2e57b1a"
    ],
    "applied": {
-    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "applied_at": "2026-09-09T08:22:33.592070+00:00",
     "predicted_window": "800-899",
     "predicted_p_hit": 0.3805,
     "band_width": 0,
@@ -9414,42 +9810,357 @@
     "played": true,
     "assignments": {
      "niome_hotkey1": [
-      100,
-      399
+      [
+       100,
+       199
+      ],
+      [
+       500,
+       599
+      ]
      ],
      "niome_hotkey2": [
-      200,
-      499
+      [
+       130,
+       199
+      ],
+      [
+       500,
+       599
+      ],
+      [
+       800,
+       829
+      ]
      ],
      "niome_hotkey3": [
-      300,
-      599
+      [
+       160,
+       199
+      ],
+      [
+       500,
+       599
+      ],
+      [
+       800,
+       859
+      ]
      ],
      "niome_hotkey4": [
-      400,
-      699
+      [
+       190,
+       199
+      ],
+      [
+       500,
+       599
+      ],
+      [
+       800,
+       889
+      ]
      ],
      "niome_hotkey5": [
-      500,
-      799
+      [
+       100,
+       119
+      ],
+      [
+       520,
+       599
+      ],
+      [
+       800,
+       899
+      ]
      ],
      "niome_hotkey6": [
-      600,
-      899
+      [
+       100,
+       149
+      ],
+      [
+       550,
+       599
+      ],
+      [
+       800,
+       899
+      ]
      ],
      "niome_hotkey7": [
-      700,
-      999
+      [
+       100,
+       179
+      ],
+      [
+       580,
+       599
+      ],
+      [
+       800,
+       899
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       100,
+       199
+      ],
+      [
+       500,
+       509
+      ],
+      [
+       810,
+       899
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       100,
+       199
+      ],
+      [
+       500,
+       539
+      ],
+      [
+       840,
+       899
+      ]
+     ],
+     "niome_hotkey10": [
+      [
+       100,
+       199
+      ],
+      [
+       500,
+       569
+      ],
+      [
+       870,
+       899
+      ]
      ]
     },
     "roles": {
-     "niome_hotkey1": "fixed",
-     "niome_hotkey2": "fixed",
-     "niome_hotkey3": "fixed",
-     "niome_hotkey4": "fixed",
-     "niome_hotkey5": "fixed",
-     "niome_hotkey6": "fixed",
-     "niome_hotkey7": "fixed",
+     "niome_hotkey1": "joined",
+     "niome_hotkey2": "joined",
+     "niome_hotkey3": "joined",
+     "niome_hotkey4": "joined",
+     "niome_hotkey5": "joined",
+     "niome_hotkey6": "joined",
+     "niome_hotkey7": "joined",
+     "niome_hotkey8": "joined",
+     "niome_hotkey9": "joined",
+     "niome_hotkey10": "joined",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-09T07:17:02.031615+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    8,
+    10,
+    9,
+    10,
+    15,
+    6,
+    7,
+    12,
+    13
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "700-799",
+    "100-199"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20",
+    "445d95d2-55ec-4b36-a26e-58efeff789b0"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T08:22:33.592070+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      [
+       100,
+       299
+      ]
+     ],
+     "niome_hotkey2": [
+      [
+       130,
+       299
+      ],
+      [
+       500,
+       529
+      ]
+     ],
+     "niome_hotkey3": [
+      [
+       160,
+       299
+      ],
+      [
+       500,
+       559
+      ]
+     ],
+     "niome_hotkey4": [
+      [
+       190,
+       299
+      ],
+      [
+       500,
+       589
+      ]
+     ],
+     "niome_hotkey5": [
+      [
+       100,
+       119
+      ],
+      [
+       220,
+       299
+      ],
+      [
+       500,
+       599
+      ]
+     ],
+     "niome_hotkey6": [
+      [
+       100,
+       149
+      ],
+      [
+       250,
+       299
+      ],
+      [
+       500,
+       599
+      ]
+     ],
+     "niome_hotkey7": [
+      [
+       100,
+       179
+      ],
+      [
+       280,
+       299
+      ],
+      [
+       500,
+       599
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       100,
+       209
+      ],
+      [
+       510,
+       599
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       100,
+       239
+      ],
+      [
+       540,
+       599
+      ]
+     ],
+     "niome_hotkey10": [
+      [
+       100,
+       269
+      ],
+      [
+       570,
+       599
+      ]
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "joined",
+     "niome_hotkey2": "joined",
+     "niome_hotkey3": "joined",
+     "niome_hotkey4": "joined",
+     "niome_hotkey5": "joined",
+     "niome_hotkey6": "joined",
+     "niome_hotkey7": "joined",
+     "niome_hotkey8": "joined",
+     "niome_hotkey9": "joined",
+     "niome_hotkey10": "joined",
      "niome_hotkey": "all-cut-hedge"
     }
    }

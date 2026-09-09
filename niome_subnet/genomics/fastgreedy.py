@@ -33,7 +33,8 @@ except Exception:
 
 
 class FastGreedy:
-    def __init__(self, candidates, window_lo=100, window_hi=999, per_cell_min=8, caps=None):
+    def __init__(self, candidates, window_lo=100, window_hi=999, per_cell_min=8, caps=None,
+                 seeds=None):
         """``caps`` optionally bounds how many picks a (mutation, cas_system, strand) cell may take.
 
         The min-union objective is blind to ``mutation_weight``, so on a contract with a heavy and a
@@ -44,7 +45,17 @@ class FastGreedy:
         stage-5 cell. Passing None keeps the unconstrained selection.
         """
         self.n = len(candidates)
-        self.span = window_hi - window_lo + 1
+        # ``seeds`` makes the band space an explicit, possibly NON-CONTIGUOUS set (the joined
+        # window of several disjoint ranges). Fails are densified through a seed -> position map
+        # instead of a `- window_lo` shift; a fail outside the set lands on the sentinel slot and
+        # therefore costs nothing, which is correct because such a seed is not part of the band.
+        self.seeds = None if seeds is None else np.asarray(sorted(set(int(x) for x in seeds)),
+                                                           dtype=np.int64)
+        self.span = (window_hi - window_lo + 1) if self.seeds is None else int(self.seeds.size)
+        if self.seeds is not None:
+            hi = int(self.seeds.max()) + 1
+            self._pos = np.full(max(hi, 1000), self.span, dtype=np.int32)
+            self._pos[self.seeds] = np.arange(self.span, dtype=np.int32)
         self.per_cell_min = per_cell_min
         self.caps_by_key = dict(caps) if caps else None
         maxf = max(1, max(len(c["fails"]) for c in candidates))
@@ -52,15 +63,23 @@ class FastGreedy:
         # fail list contributes exactly its real length and nothing more.
         idx = np.full((self.n, maxf), self.span, dtype=np.int32)
         for i, c in enumerate(candidates):
-            f = c["fails"]
-            idx[i, :len(f)] = np.asarray(f, dtype=np.int32) - window_lo
+            f = np.asarray(c["fails"], dtype=np.int64)
+            if len(f):
+                idx[i, :len(f)] = (self._pos[f] if self.seeds is not None
+                                   else f.astype(np.int32) - window_lo)
         self.idx = xp.asarray(idx)
         cells = [(c["mutation"], c["cas_system"], c["strand"]) for c in candidates]
         order = {c: k for k, c in enumerate(sorted(set(cells)))}
         self.cell_id = xp.asarray(np.asarray([order[c] for c in cells], dtype=np.int32))
         self.n_cells = len(order)
         self.available = Counter(order[c] for c in cells)
-        self.fail_lists = [np.asarray(c["fails"], dtype=np.int32) - window_lo for c in candidates]
+        if self.seeds is not None:
+            self.fail_lists = [
+                (self._pos[np.asarray(c["fails"], dtype=np.int64)]
+                 if len(c["fails"]) else np.empty(0, dtype=np.int32)) for c in candidates]
+        else:
+            self.fail_lists = [np.asarray(c["fails"], dtype=np.int32) - window_lo
+                               for c in candidates]
         self.caps = ({order[k]: v for k, v in self.caps_by_key.items() if k in order}
                      if self.caps_by_key else None)
 

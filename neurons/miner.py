@@ -539,7 +539,8 @@ class Miner(BaseMinerNeuron):
         except Exception as exc:
             logger.debug(f"could not note the window outcome for {task_id}: {exc}")
 
-    def _window_for(self, cell_type: str, task_id: str | None = None) -> tuple[int, int] | None:
+    def _window_for(self, cell_type: str, task_id: str | None = None):
+        """-> (lo, hi) for a contiguous window, a sorted seed list for a joined one, or None."""
         """This hotkey's clean-band window for one round: the live plan if fresh, else the env pin.
 
         The plan concentrates several hotkeys onto the window a round is predicted to draw from.
@@ -574,15 +575,37 @@ class Miner(BaseMinerNeuron):
             raw = ((plan.get("assignments") or {}).get(cell_type) or {}).get(instance)
             if not raw:
                 return pin("env_pin_no_entry")
-            lo, hi = int(raw[0]), int(raw[1])
-            if not (100 <= lo < hi <= 999):
-                raise ValueError(f"window {lo}-{hi} outside 100-999 or non-increasing")
+            # Two forms. A flat [lo, hi] is one contiguous window and stays a tuple, which is what
+            # every layout before the joined-window scheme produced. A list of [lo, hi] pairs is a
+            # JOINED, possibly non-contiguous band space -- returned as an explicit seed list, which
+            # all_hdr.build_for_cell takes as `seed_list`. Both are validated the same way, so a
+            # malformed plan still falls back to the env pin rather than building on nonsense.
+            pairs = (raw if isinstance(raw[0], (list, tuple)) else [raw])
+            spans = []
+            for pr in pairs:
+                a, b = int(pr[0]), int(pr[1])
+                if not (100 <= a <= b <= 999):
+                    raise ValueError(f"window {a}-{b} outside 100-999 or non-increasing")
+                spans.append((a, b))
+            spans.sort()
+            for (a1, b1), (a2, b2) in zip(spans, spans[1:]):
+                if a2 <= b1:
+                    raise ValueError(f"joined window pieces {a1}-{b1} and {a2}-{b2} overlap")
             self._window_plan_warned = False
             plan_at = plan.get("generated_at")
-            logger.info(f"Build: window {lo}-{hi} from the round plan "
+            label = ",".join(f"{a}-{b}" for a, b in spans)
+            logger.info(f"Build: window {label} from the round plan "
                         f"(generated {(plan_at or '?')[:16]})")
-            self._record_window(task_id, cell_type, (lo, hi), "plan", plan_at)
-            return lo, hi
+            if len(spans) == 1:
+                lo, hi = spans[0]
+                if lo >= hi:
+                    raise ValueError(f"window {lo}-{hi} non-increasing")
+                self._record_window(task_id, cell_type, (lo, hi), "plan", plan_at)
+                return lo, hi
+            seeds = sorted({s for a, b in spans for s in range(a, b + 1)})
+            self._record_window(task_id, cell_type, (spans[0][0], spans[-1][1]), "plan_joined",
+                                plan_at)
+            return seeds
         except FileNotFoundError:
             return pin("env_pin_no_plan")
         except Exception as exc:
@@ -1536,9 +1559,12 @@ class Miner(BaseMinerNeuron):
             try:
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
+                        space = self._window_for(cell_type, task_id)
+                        # A list is a joined (non-contiguous) band space; a tuple is one window.
+                        kw = ({"seed_list": space} if isinstance(space, list)
+                              else {"hdr_range": space})
                         hdr_rows, hdr_meta = AH.build_for_cell(
-                            contract, reference, cell_types, budget_s=budget,
-                            hdr_range=self._window_for(cell_type, task_id))
+                            contract, reference, cell_types, budget_s=budget, **kw)
                     else:
                         hdr_rows, hdr_meta = None, {"reason": "another build holds the hedge slot"}
             except Exception as exc:

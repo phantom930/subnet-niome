@@ -145,6 +145,12 @@ class AllHdrConfig:
     # costs frequency on every round.
     group_size: int = 80
     hdr_range: tuple[int, int] = (500, 599)
+    # An explicit, possibly NON-CONTIGUOUS band space. When set it replaces `hdr_range` as the seed
+    # set the Cas12a group min-unions over, so several disjoint width-100 windows can be joined into
+    # one band space. `hdr_range` is still kept in step (min..max) for logging and for anything that
+    # only wants a coarse span. `bank_key` folds the set in, so a joined band never shares a bank
+    # with the contiguous range that spans it.
+    seed_list: tuple[int, ...] | None = None
     # Fails tolerated in the band when banking a Cas12a candidate. 45 of 100 is deliberately loose:
     # the min-union step is what produces the clean band, and a tighter screen shrinks the pool it
     # selects from without improving the group (the binomial tail is far steeper than the gain).
@@ -234,6 +240,12 @@ class AllHdrConfig:
         """
         return self.main_max_fail
 
+    def band_seeds(self) -> "np.ndarray":
+        """The seeds the band is searched over — the explicit set if given, else the range."""
+        if self.seed_list:
+            return np.asarray(sorted(set(int(x) for x in self.seed_list)), dtype=np.int64)
+        return np.arange(self.hdr_range[0], self.hdr_range[1] + 1, dtype=np.int64)
+
     @property
     def start_seed(self) -> int:
         return self.hdr_range[0]
@@ -314,6 +326,21 @@ def config_for(cell_type: str, cfg: AllHdrConfig | None = None) -> AllHdrConfig 
     return dataclasses.replace(cfg or AllHdrConfig(), **overrides)
 
 
+def _range_label(seeds) -> str:
+    """Compact "100-199,300-399" label for a possibly non-contiguous seed set."""
+    xs = sorted(set(int(x) for x in seeds))
+    if not xs:
+        return "-"
+    out, lo, prev = [], xs[0], xs[0]
+    for x in xs[1:]:
+        if x != prev + 1:
+            out.append((lo, prev))
+            lo = x
+        prev = x
+    out.append((lo, prev))
+    return ",".join(f"{a}-{b}" for a, b in out)
+
+
 def build_bank(contract: dict, reference: dict, cell_types: dict, ctx, sites,
                cfg: AllHdrConfig, deadline: float | None = None) -> list[dict]:
     """Cas12a guides reaching HDR on all but ``main_max_fail`` seeds of the band. ~35-40s.
@@ -325,7 +352,7 @@ def build_bank(contract: dict, reference: dict, cell_types: dict, ctx, sites,
     cell = contract.get("cell_type")
     accessibility = cell_types.get(cell, {}).get("accessibility", 1.0)
     regions = contract.get("mutation_regions") or {}
-    seeds = np.arange(cfg.start_seed, cfg.end_seed + 1, dtype=np.int64)
+    seeds = cfg.band_seeds()
     jobs = [(i, m) for i, s in enumerate(sites) if s.cas == "Cas12a" for m in ctx.mutations
             if abs(s.start - ctx.mutation_map[m]) <= cfg.max_distance]
     logger.info("all-hdr: banking Cas12a over %d targets, band %d-%d", len(jobs),
@@ -427,7 +454,9 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
     started = time.monotonic()
     deadline = None if budget_s is None else started + budget_s
     meta: dict = {"method": "all-hdr", "group_size": cfg.group_size,
-                  "band": f"{cfg.start_seed}-{cfg.end_seed}"}
+                  "band": (f"{cfg.start_seed}-{cfg.end_seed}" if not cfg.seed_list
+                           else f"joined {len(cfg.seed_list)} seeds "
+                                f"{_range_label(cfg.seed_list)}")}
 
     ctx = G.build_context(contract, reference, cell_types)
     sites = G.enumerate_sites(ctx, 3000, (20, 23))
@@ -449,7 +478,7 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
             else:
                 meta["reason"] = (
                     f"no Cas12a guide reaches HDR on all but {cfg.main_max_fail} of "
-                    f"{cfg.end_seed - cfg.start_seed + 1} band seeds")
+                    f"{cfg.band_seeds().size} band seeds")
             return None, meta
         save_bank(path, bank)
     records = load_bank(path)
@@ -458,16 +487,18 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         meta["reason"] = f"HDR bank {len(records)} short of group {cfg.group_size}"
         return None, meta
 
+    band_space = cfg.band_seeds()
     selector = FG.FastGreedy(records, window_lo=cfg.start_seed, window_hi=cfg.end_seed,
                              per_cell_min=cfg.per_cell_min,
-                             caps=_group_caps(contract, ctx, cfg))
+                             caps=_group_caps(contract, ctx, cfg),
+                             seeds=(band_space if cfg.seed_list else None))
     index, union = selector.best(cfg.group_size, restarts=cfg.restarts)
     group = [records[i] for i in index]
     bad: set[int] = set()
     for rec in group:
         bad.update(int(x) for x in rec["fails"])
-    clean = np.array(sorted(set(range(cfg.start_seed, cfg.end_seed + 1)) - bad), dtype=np.int64)
-    span = cfg.end_seed - cfg.start_seed + 1
+    clean = np.array(sorted(set(int(x) for x in band_space) - bad), dtype=np.int64)
+    span = int(band_space.size)
     meta.update(union=len(bad), clean=len(clean), clean_fraction=len(clean) / span)
     if clean.size == 0:
         meta["reason"] = "the group's HDR failures cover the whole band"
@@ -498,7 +529,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
 
 def build_for_cell(contract: dict, reference: dict, cell_types: dict,
                    budget_s: float | None = None,
-                   hdr_range: tuple[int, int] | None = None) -> tuple[list[dict] | None, dict]:
+                   hdr_range: tuple[int, int] | None = None,
+                   seed_list=None) -> tuple[list[dict] | None, dict]:
     """Build for whichever cell type this contract names, or decline where it is unmeasured.
 
     ``hdr_range`` overrides the cell type's default band. It is the per-hotkey decorrelation lever:
@@ -511,6 +543,17 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     cfg = config_for(cell)
     if cfg is None:
         return None, {"reason": f"no measured all-HDR config for {cell}"}
+    if seed_list:
+        # A joined, possibly non-contiguous band space. `hdr_range` is set to its min..max so the
+        # span-derived knobs (`_scaled_max_fail`, the wide-window variants cap) see the real size.
+        seeds = sorted(set(int(x) for x in seed_list))
+        hdr_range = (seeds[0], seeds[-1])
+        span = len(seeds)
+        cfg = dataclasses.replace(cfg, hdr_range=hdr_range, seed_list=tuple(seeds),
+                                  main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span))
+        if span > 100:
+            cfg = dataclasses.replace(cfg, variants=min(cfg.variants, WIDE_WINDOW_VARIANTS))
+        return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)
     if hdr_range is not None:
         # ``main_max_fail`` is calibrated per cell against a 100-seed band, so it has to scale with
         # the span or a wider window silently demands the impossible. Measured on K562 at 6 targets
