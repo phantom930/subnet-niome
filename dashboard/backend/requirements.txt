@@ -1,6 +1,6 @@
 # Standalone deps for the dashboard backend.
 # The repo's own .venv already satisfies these, so you can reuse it instead of
-# making a second environment.
+# making a second environment. Refreshing shells out to scripts/bench_task.py,
+# which needs the repo venv regardless (see DASHBOARD_PYTHON in config.py).
 fastapi>=0.115.0
 uvicorn>=0.30.0
-httpx>=0.27.0

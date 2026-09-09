@@ -74,11 +74,15 @@ src/
 into one table row. The dev server proxies `/api` there via `proxy.conf.json`,
 so both run same-origin in development and no CORS is involved.
 
-The Refresh button posts to `/api/tasks/refresh`, which makes the backend pull
-the upstream task history and merge it into its stored snapshot. The toast
-reports how many tasks were added and how many were newly stamped, then the
-table reloads. A refresh reporting `added: 0` can still have done something, if
-a previously unstamped task just got its seed.
+The Refresh button posts to `/api/tasks/refresh`, which makes the backend run
+`scripts/bench_task.py --fetch` as a subprocess. That writes `testing/task.json`
+and `testing/cell_types.json`, so a refresh from the dashboard is visible to the
+CLI harness and the other way round.
+
+The toast reports how many tasks were added and how many were newly stamped,
+then the table reloads. Both are reported because a refresh that adds nothing
+can still have done something: a task that was unstamped last time carries its
+real seed now.
 
 Two things about the data are worth knowing, both handled in `TaskService` and
 mirrored in the backend:

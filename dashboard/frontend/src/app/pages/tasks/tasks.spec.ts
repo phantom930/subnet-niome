@@ -175,12 +175,14 @@ describe('Tasks', () => {
 
     const result: RefreshResult = {
       added: 6,
-      restamped: 0,
-      fetched: 66,
+      restamped: 1,
+      removed: 0,
       count: 66,
       unstamped: 22,
       fetched_at: '2026-09-09T11:06:23+0000',
+      cell_types: 4,
       replaced: false,
+      output: 'testing/task.json: 66 tasks (+6 new, 1 newly stamped, 22 still unstamped)',
     };
     refreshRequest.flush(result);
     await fixture.whenStable();

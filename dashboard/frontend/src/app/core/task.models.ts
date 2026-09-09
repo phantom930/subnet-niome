@@ -69,15 +69,23 @@ export interface TaskRow {
   version: string;
 }
 
-/** What POST /api/tasks/refresh reports back. */
+/**
+ * What POST /api/tasks/refresh reports back.
+ *
+ * The backend runs scripts/bench_task.py --fetch and then diffs the snapshot
+ * on disk, so these counts come from the files rather than the script's
+ * stdout. `output` is what the script printed, for the details.
+ */
 export interface RefreshResult {
   added: number;
   restamped: number;
-  fetched: number;
+  removed: number;
   count: number;
   unstamped: number;
-  fetched_at: string;
+  fetched_at: string | null;
+  cell_types: number;
   replaced: boolean;
+  output: string;
 }
 
 /** Rule values shared by every task, shown once instead of as columns. */

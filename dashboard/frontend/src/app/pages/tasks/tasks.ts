@@ -15,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { TaskService } from '../../core/task.service';
-import { SnapshotMeta, TaskRow } from '../../core/task.models';
+import { RefreshResult, SnapshotMeta, TaskRow } from '../../core/task.models';
 
 type SeedFilter = 'stamped' | 'unstamped' | null;
 
@@ -133,11 +133,9 @@ export class Tasks {
       next: (result) => {
         this.refreshing.set(false);
         this.toast.add({
-          severity: result.added > 0 ? 'success' : 'info',
-          summary: result.added > 0 ? `${result.added} new tasks` : 'Already up to date',
-          detail:
-            `Fetched ${result.fetched}, now holding ${result.count}` +
-            (result.restamped > 0 ? `, ${result.restamped} newly stamped` : ''),
+          severity: this.changed(result) ? 'success' : 'info',
+          summary: this.refreshSummary(result),
+          detail: `Now holding ${result.count} tasks, ${result.unstamped} unstamped`,
           life: 5000,
         });
         this.reload();
@@ -152,6 +150,22 @@ export class Tasks {
         });
       },
     });
+  }
+
+  private changed(result: RefreshResult): boolean {
+    return result.added > 0 || result.restamped > 0 || result.removed > 0;
+  }
+
+  /**
+   * A refresh that adds nothing can still have done something: a task that was
+   * unstamped last time carries its real seed now. Both are worth saying.
+   */
+  private refreshSummary(result: RefreshResult): string {
+    const parts: string[] = [];
+    if (result.added > 0) parts.push(`${result.added} new`);
+    if (result.restamped > 0) parts.push(`${result.restamped} newly stamped`);
+    if (result.removed > 0) parts.push(`${result.removed} dropped`);
+    return parts.length ? parts.join(', ') : 'Already up to date';
   }
 
   protected setSearch(value: string): void {
