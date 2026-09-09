@@ -234,7 +234,9 @@ the band), against all-cut's ~560.
 
 **The "rank-10 cutoff of 62-86, which is why all-cut never places" claim that stood here is wrong
 on both halves.** Measured across 72 current-regime rounds the cutoff is a *distribution*, not a
-band: min 20.7, p10 45.9, **median 82.3**, p90 120.0, max 158.1 (per-cell medians HEK293 64.5,
+band: min 20.7, p10 45.9, **median 82.3**, p90 120.0, max 158.1 (per-cell medians HEK293 **76.4**
+— the 64.5 previously recorded here was on fewer rounds; re-measured over 31 HEK293 three-seed
+fields the spread is min 20.7 / p25 43.4 / median 76.4 / p75 95.2 / max 158.1 —
 CD34+ 81.4, HUDEP-2 83.8, K562 90.9). Against that, all-cut's E[final] of **46.1** — priced over
 the clean-seed distribution, not the single lucky seed that produced the old 57.4 — places on
 **11%** of rounds, not never. all-HDR's k=1 (~88) places on 60% and k=2 (~154) on 99%. The
@@ -318,15 +320,24 @@ the cas entropy to ~0.65. Nothing about accessibility bounds fidelity.
 `ALL_HDR_MIN_BUDGET_S` stays a single flat 190 s, unlike `ALL_CUT_MIN_BUDGET_S`: all four cell types
 build well inside the ~225 s in-TTL path.
 
-#### The fleet — four hotkeys on the predicted band windows
+#### The fleet — eight hotkeys, seven on overlapping width-300 windows
 
-**Read this before trusting anything below about windows.** As of 2026-09-08 the fleet runs
-**four** hotkeys (h0 uid 74, h1 uid 209, h2 uid 235, h3 uid 196; h4-h8 unregistered) and they are
-back on **bands**, not seed-depend. `Miner.SEED_DEPEND` is `bool(NIOME_SEED_DEPEND)` and
-`SEED_DEPEND_VARIANTS` is empty, so all four live processes carry `NIOME_SEED_DEPEND=` and skip that
-rung entirely; `window_plan.py`'s `RANK_BY_HOTKEY` gives h1/h2/h3 the model's rank-1/2/3 windows at
-`RANK_WIDTH` 100 and h0 the rank-4 window, with `ALL_CUT_HOTKEYS="niome_hotkey:K562"` putting h0 on
-all-cut for K562 (where it is therefore absent from that cell's assignments, as intended).
+**Read this before trusting anything below about windows.** As of 2026-09-09 the fleet runs
+**eight** hotkeys — h0 uid 74, h1 209, h2 235, h3 196, h4 189, h5 147, h6 136, h7 75; only h8 is
+unregistered — and they are on **bands**, not seed-depend (`SEED_DEPEND_VARIANTS` is empty, so every
+process carries `NIOME_SEED_DEPEND=` and skips that rung).
+
+The layout is `window_plan.FIXED_WINDOWS`, which overrides both `RANK_BY_HOTKEY` and the
+concentrate/spread code and consults no prediction: h1-h7 take **overlapping width-300 windows
+stepping by 100** (100-399, 200-499, … 700-999), and `ALL_CUT_HOTKEYS="niome_hotkey"` puts h0 on
+all-cut for **every** cell type, so it plays no window at all. `miner.sh` needs
+`ALLOW_OVERLAPPING_WINDOWS=1` for this: `assert_disjoint_windows` otherwise **exits** rather than
+warning, which is the right default for every other layout.
+
+Overlap is free but buys nothing on its own — what spikes is the ~8-12 seed clean BAND inside the
+window, not the window — so coverage is `sum(band)` over the fleet and **hotkey count is the only
+lever with headroom**. Measured: 7 hotkeys hold 56-84 band seeds (17-25% of rounds), against
+6 disjoint width-100 windows' 78 seeds (23.8%). See "What the top block actually buys" below.
 
 **Half of those windows are currently arbitrary, and the plan file will not tell you.** `fit_beta`
 returns **0.00 for CD34+_HSPC and HEK293**, so every window ties at `p_hit` 0.2977 and `predict`'s
@@ -404,6 +415,66 @@ or you will see nothing else.
 49 GB box, which is why the build is shared rather than repeated per hotkey. A 24000-variant build
 reaches ~24 GB and OOM-killed four research processes; the miners survived only because the kernel
 picked the larger victims.
+
+#### The Cas9 scan's per-cell floor — the one real defect found
+
+`scan_cas9` (in **both** [all_cut.py](niome_subnet/genomics/all_cut.py) and
+[all_hdr.py](niome_subnet/genomics/all_hdr.py)) walks Cas9 sites **nearest-first** and used to break
+on `len(found) >= want * pool_target and len({(mutation, strand)}) == 4`. That cell test only
+required each (mutation, strand) cell to be **non-empty** — one candidate satisfies it — while
+`assemble` then apportions `want` rows by mutation weight and asks for close to half of them on a
+single heavy strand. Measured on HEK293 a8b9f1bb at width 300: the break fired at **job 34 of 395**
+with HEAVY+ holding **4** candidates against **5531** available, so the quota backfilled with light
+rows and `mean_weight` came out **0.784** against a reachable 0.939.
+
+`cas9_cell_target(contract, ctx, cfg, want)` now derives the floor from whichever apportionment path
+the config uses — the hard `light_cell_rows` split gives `(want - 2*lcr + 1)//2` = **79** for
+all-HDR, the exponent path gives the heaviest mutation's share halved per strand (**65** on HEK293
+all-cut, **72** on K562) — and the break requires every cell to reach it:
+
+| cell | baseline Cas9 split | with the floor | cost |
+|---|---|---|---|
+| **HEK293** w300 | H+ **4**, H− 43, l+ 97, l− 26 | **weighted +16.2%, fidelity +2.1%**, band unchanged | +9 s |
+| CD34+_HSPC | H+ 79, H− 79, l+ 6, l− 6 | +0.0% | +2 s |
+| HUDEP-2 | H+ 79, H− 79, l+ 6, l− 6 | +0.0% | +3 s |
+| K562 | H+ 79, H− 79, l+ 6, l− 6 | +0.1% | +7 s |
+
+**HEK293 is the only cell that starves**, because its heavy-mutation Cas9 sites sit farther from the
+mutation than the light ones; the other three already reach the ideal 79/79/6/6 split unaided and
+the floor is inert there to four decimal places.
+
+**Why fidelity *rose* here, without contradicting the `light_cell_rows`-is-dead entry.** The starved
+split was badly strand-imbalanced (light+ 97 against light− 26), and that asymmetry was itself
+costing stage 5 entropy — so rebalancing gained more than cutting light rows to 6/6 lost. At width
+100, where the baseline was less pathological, fidelity does fall −2.5% exactly as that entry
+predicts, and weighted's +6.3% carries it anyway.
+
+Two related knobs shipped with the width-300 layout, both documented at their definitions:
+`WIDE_WINDOW_VARIANTS` (44000 — do **not** budget the GPU by summing per-build times, see the
+constant) and `_scaled_max_fail`, which holds the **z-score** of the tuned `main_max_fail` rather
+than its rate. Linear span scaling is wrong for HEK293: mf 48 sits at z −3.32 at span 100 and linear
+scaling to 144 lands at **z −5.66**, where only 53 of 60000 bank guides qualify against a group of
+80 — every band hotkey declined until this was fixed (HEK293 now uses **165** at width 300).
+
+#### What the top block actually buys
+
+Ranks 7-10 of HEK293 a8b9f1bb are one operator with 90+ slots (ip/coldkey grouping), and their
+scores are **single band hits**: cons 0.3854-0.3865, i.e. `(1 + 2*0.078)/3` at the same ~0.078 floor
+we measure. So the bar for a k=1 round to clear that field's 81.92 cutoff is
+
+    weighted * fidelity >= 81.92 / 0.3854 = 212.6
+
+They hold weighted **221** and fidelity **0.962**. We reach **179.0** after the Cas9 fix (0.84x),
+and **no lever tested reaches their combination** — the construction trades the two terms against
+each other. Group 125 reaches their *fidelity* (0.9639) at weighted 176; group 42 reaches their
+*weighted* (206) at fidelity 0.82; window width moves the product only within 177-185. Treat 212.6
+as a property of all-HDR rather than a tuning target, and do not spend more on it.
+
+What their slots buy is **frequency**, and that is the half worth copying. At band 8 a coldkey needs
+**36-45 disjoint windows** for a 78% chance some sibling hits a band seed; 90 slots is near-certain
+coverage every round, which is exactly what a block of 8-10 consecutive finishers looks like. Our 7
+band hotkeys cover 56-84 seeds (17-25%). Coverage is linear in hotkey count and every other lever
+measured this session is capped — **hotkey count is the only one with headroom left**.
 
 #### The seed-window prediction, and why it is dormant
 
@@ -557,6 +628,11 @@ wide the window it was searched in.
 | all-cut ∧ an HDR band on the same rows | dead at every setting tried: cut window 100 / 300 / 900 × group 42 / 50 / 80, k up to 8, on K562 and HEK293. HDR ⊂ cut, so this really is a sequential filter and not the falsified "combined construction" — but the filter shrinks the Cas12a pool, a smaller pool min-unions to a *larger* failed-seed union, and the clean-seed floor itself falls (0.2586 → 0.2291 → 0.2145 → 0.1668 at k=0-3, whole window, group 42). E[final] is monotone decreasing in k on every window. |
 | widening the conjunction's band | the Cas9 conditional fill caps it at **3 seeds**, against the 12-16 pure all-HDR reaches. Pool decay is ~0.55 per band seed: at group 42 over the whole window the Cas9 pool runs 1749 → 913 → 557 → 220 → **164** for k=0-4 against the 208 rows needed. Group 80 buys depth (170 needed, k=8 built at 206) and pays ~65 weighted for it. |
 | group 50 (200/50) as a middle point between 42 and 80 | weighted-identical to group 42 **on the same contract** (214.1 vs 214.4) while covering 36 fewer clean seeds. The 304.6-vs-214.1 gap that looked like a group effect is entirely the *contract*. |
+| the distance/GC route to `total_weighted_score` | the bound is **not** where it leaks — mean GC is already 0.505 and `offtarget_factor` a perfect 1.0, so structural sits at 0.85-0.91 of a possible 1.0. Tightening `cas12a_gc`/`cas9_gc` to 0.42-0.58 with `max_distance` 250 raises weighted 2-3% and **costs band on 3 of 4 conditions** (−1 to −3 seeds), net −6% to −18% on frequency×value. The one arm that held its band (CD34+ 100-399, +2.4%) did not reproduce at another window. Also **falsifies the note that this route "does not trade against fidelity"**: tightening GC costs fidelity monotonically (0.8933 → 0.8745), tightening distance *raises* it (0.9056). |
+| GC-aware tie-break inside `FastGreedy` | the greedy's `argmin` is tied on 71 of 80 picks (median 12 candidates, max 577), and preferring the tied guide nearest GC 0.50 does hold the band — but delivers only **+5.6%** on the group's `gc_score`, not the +44.7% the per-pick slack suggests, because ties are re-drawn after every pick and 12 restarts already sample them. Weighted +0.7%, fidelity −1.1%, net **−0.3%**. |
+| mutation-weight tie-break inside `FastGreedy` | same trick on `mutation_weight`: shifts 3 of 80 group rows on HEK293 (+1.6% freq×value) and 7 on CD34+, where the **1.8% fidelity drop** eats the 1.2% weighted gain (net −0.6%). CD34+ is already apportioned at `mean_weight` 1.10; only HEK293 was starved, and `cas9_cell_target` fixes that properly. |
+| narrowing the band window to buy Cas9 pool freedom | `weighted × fidelity` is **flat at 177-185 across widths 10 / 20 / 30 / 50 / 100 / 300** on HEK293 — a 4% spread over a 30x range. The mechanism fails because **narrowing the window grows the band toward the window size** rather than shrinking it (band **10 of 10** at width 10, against 7 at width 100), so the Cas9 conditional fill gets *harder* and the pool *falls* (1691 at width 10 vs 9290 at width 100). Width 50 is the best point and worth only +3.8% k=1 at equal band. |
+| `group_size` away from 80 (HEK293, re-tested after the Cas9 fix) | the two trends are real and cross exactly at 80: fidelity climbs 0.820 → 0.964 across group 42 → 125 while weighted falls 206 → 164, and the **product peaks at group 80** (179.0). Priced on 31 real HEK293 fields every arm is 0.0010-0.0014 E[share] with `P(place | k=1)` a flat **48%** — quality moves k=1 only between 60 and 69, so band size decides the ordering and group 42's band 9 edges it by 8%, inside noise. Group 80 stands. |
 
 `not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
 range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round
@@ -599,9 +675,47 @@ best regime". On 7287db6a all-cut's modelled best case was 49.9 and the real rou
 rank 11 of 245** — all three seeds drew clean *and* above the 0.2586 clean-seed mean
 (0.285 / 0.290 / 0.272). Per-seed spread within a regime is real and is not modelled.
 
-**So the K562 all-cut-vs-all-HDR question is open**, not settled as `price_cell.json` records it.
-Closing it needs all-HDR's `total_weighted_score` measured on the *same* contracts, so both arms can
-be priced against matched fields.
+**Measured, matched, and it confirms all-cut on K562 — by more than the pooled figure claimed.**
+[cmp_k562.py](cmp_k562.py) builds *both* arms on the same contract and prices each against the one
+field that played it, over six K562 contracts spanning the whole cutoff range:
+
+| contract | field cut10 | all-cut E[share] | all-HDR E[share] |
+|---|---|---|---|
+| 87411bfa | 45.9 | **0.0068** | 0.0006 |
+| b9051bc7 | 48.8 | **0.0024** | 0.0006 |
+| 7287db6a | 63.4 | 0.0000 | 0.0008 |
+| 9c26657e | 104.4 | 0.0000 | 0.0002 |
+| 83f430e9 | 116.0 | 0.0000 | 0.0002 |
+| f2d36f4d | 135.1 | 0.0000 | 0.0000 |
+| **mean** | | **0.0015** | **0.0004** |
+
+all-HDR wins 4 of the 6 contracts and still loses the mean **3.78x**: it collects 0.0002-0.0008
+reliably while all-cut collects nothing on four contracts and then 0.0068 on one soft field. Here
+the *flat* construction holds the fat tail, which is the reverse of the reasoning that justified
+all-HDR. The mechanism is a threshold: all-cut's ceiling (52-78) straddles the cutoff distribution,
+so it places on 24-68% of rounds where the field cuts below it and never where it does not, and
+about a quarter of K562 fields cut that low. **And 3.78x understates it** — the point-value model's
+blind spot above only ever helps all-cut, whose ceiling sits *at* the cutoff, never all-HDR, whose
+spike clears every field anyway.
+
+Two inputs to `price_cell.py` are wrong and matter beyond K562:
+
+- **all-HDR's `total_weighted_score` is not a contract-generic 258.** It tracks all-cut within
+  **3%** on all six contracts (333.3/330.3, 296.4/304.6, 260.1/267.8, 247.6/255.0, 255.3/246.6,
+  220.5/214.4) while the contract moves both by 54%. all-HDR gives up nothing measurable on term 1;
+  the entire trade is consistency structure. Pricing it at a fixed 258 against a varying all-cut is
+  what produced the wrong pooled answer.
+- **The off-band floor is 0.097-0.106, not 0.1256** (measured on the real submissions, six
+  contracts), which inflated all-HDR's E[final] by ~7%.
+
+The band itself is stable and is not the uncertain part: **13 of 900 on all six contracts, spike
+verified at exactly 1.0000 each time** (hunted, not assumed), against all-cut's clean set drifting
+549-570 and its hit consistency 0.2561-0.2940.
+
+**HEK293 has not had this treatment** and is the open case: `price_cell.py` puts it on all-HDR by
+0.0059 vs 0.0027, on the same pooled basis this section discredits, and it is the one cell type
+whose accessibility (0.35) makes the two arms structurally different. Run `cmp_k562.py` against
+HEK293 contracts before trusting that split.
 
 ### Validation pipeline — stages talk through files, not return values
 
@@ -745,6 +859,15 @@ path, so the old gate would start a build it could not complete, burn the window
 the ladder later and poorer than if it had never tried. Above 360 it only ever runs on the prefetch
 path (900s budget, >=600s of lead on 86% of rounds); a failed prefetch now skips seed-depend and
 lands on all-HDR/all-cut.
+
+**A trap that produced convincing wrong timings.** all-HDR banks live in
+`all_hdr.HDR_BANK_DIR` (`data/all_hdr`), **not** `all_cut.BANK_DIR` (`data/all_cut`). Research
+scripts that "force a cold scan" by deleting `data/all_cut/cas12a-<key>.npz` are no-ops for
+all-HDR, so any arm whose config matches something the live fleet already built silently loads that
+bank. It corrupts **timings only** — a bank is a pure function of its `bank_key`, so a cache hit and
+a cold build are the same object, and band/weighted/fidelity are unaffected (verified by
+reproducing a width-300 arm cold: identical to 4 decimals, 50.7 s against the 6 s the cache
+reported).
 
 **Research tooling** (none of it imported by the neurons): `sd_task.py` builds and scores one task
 against its real field, `sd_variants.py` sweeps variant indices, `sd_fleet.py` aggregates rounds,

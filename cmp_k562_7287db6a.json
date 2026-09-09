@@ -1,0 +1,35 @@
+{
+ "task": "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+ "seeds": "907,169,885",
+ "all_cut": {
+  "method": "all-cut",
+  "group": 42,
+  "hit": 570,
+  "union": 330,
+  "cells": 8,
+  "weighted": 214.4474812617932,
+  "fidelity": 0.8988742236040927,
+  "hit_cons": 0.2683388376566044,
+  "floor_cons": 0.11085159452659127,
+  "build_s": 102.5
+ },
+ "all_hdr": {
+  "method": "all-HDR",
+  "group": 80,
+  "band_range": [
+   700,
+   799
+  ],
+  "hit": 13,
+  "union": 87,
+  "cells": 8,
+  "cas9_pool": 1365,
+  "weighted": 220.45484671268702,
+  "fidelity": 0.8921174585616297,
+  "hit_cons": 1.0,
+  "hit_cons_verified": true,
+  "band_seed": 717,
+  "floor_cons": 0.0992764218392198,
+  "build_s": 128.0
+ }
+}

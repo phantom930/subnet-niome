@@ -1,0 +1,59 @@
+{
+ "task": "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+ "cell": "K562",
+ "window": [
+  150,
+  449
+ ],
+ "main_max_fail": 135,
+ "arms": [
+  {
+   "variants": 5000,
+   "bank": 12619,
+   "scan_s": 12.0,
+   "band": 9,
+   "union": 291,
+   "cas9": 1363,
+   "cells": 8,
+   "rows": 250,
+   "rest_s": 15.0,
+   "reason": null
+  },
+  {
+   "variants": 11000,
+   "bank": 25104,
+   "scan_s": 21.2,
+   "band": 10,
+   "union": 290,
+   "cas9": 1377,
+   "cells": 8,
+   "rows": 250,
+   "rest_s": 26.5,
+   "reason": null
+  },
+  {
+   "variants": 22000,
+   "bank": 43540,
+   "scan_s": 33.0,
+   "band": 11,
+   "union": 289,
+   "cas9": 1381,
+   "cells": 8,
+   "rows": 250,
+   "rest_s": 42.4,
+   "reason": null
+  },
+  {
+   "variants": 44000,
+   "bank": 62144,
+   "scan_s": 44.7,
+   "band": 12,
+   "union": 288,
+   "cas9": 1389,
+   "cells": 8,
+   "rows": 250,
+   "rest_s": 60.3,
+   "reason": null
+  }
+ ]
+}

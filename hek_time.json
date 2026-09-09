@@ -1,0 +1,28 @@
+{
+ "task": "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+ "cell": "HEK293",
+ "accessibility": 0.35,
+ "all_cut": {
+  "bank": 186399,
+  "clean": 140,
+  "clean_frac": 0.15555555555555556,
+  "cas9": 2680,
+  "rows": 250,
+  "cells": 8,
+  "bank_s": 107.5,
+  "greedy_s": 2.1,
+  "cas9_s": 2.9,
+  "assemble_s": 0.0,
+  "total_s": 112.6
+ },
+ "all_hdr": {
+  "band": null,
+  "cas9": null,
+  "cells": null,
+  "rows": 0,
+  "total_s": 47.5,
+  "reason": "HDR bank 53 short of group 80",
+  "main_max_fail": 144,
+  "variants": 44000
+ }
+}

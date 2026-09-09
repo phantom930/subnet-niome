@@ -32,14 +32,14 @@ EXTERNAL_IP=184.144.255.144
 # collapses toward a single hotkey's. 200-299 / 500-599 / 800-899 are evenly spread; any three
 # non-overlapping 100-seed windows in 100-999 are equivalent, since band position is otherwise free.
 HOTKEYS=(
-  "niome_hotkey   8091 52760 100-199"
-  "niome_hotkey1  8092 52096 200-299"
-  "niome_hotkey2  8093 52424 300-399"
-  "niome_hotkey3  8094 52069 400-499"
-  "niome_hotkey4  8095 52011 500-599"
-  "niome_hotkey5  8096 52079 600-699"
-  "niome_hotkey6  8097 52799 700-799"
-  "niome_hotkey7  8098 52240 800-899"
+  "niome_hotkey   8091 52760 100-399"
+  "niome_hotkey1  8092 52096 100-399"
+  "niome_hotkey2  8093 52424 200-499"
+  "niome_hotkey3  8094 52069 300-599"
+  "niome_hotkey4  8095 52011 400-699"
+  "niome_hotkey5  8096 52079 500-799"
+  "niome_hotkey6  8097 52799 600-899"
+  "niome_hotkey7  8098 52240 700-999"
   "niome_hotkey8  9001 52504 900-999"
 )
 
@@ -118,7 +118,12 @@ SEED_DEPEND_VARIANTS=""
 #
 # CD34+_HSPC and HUDEP-2 stay on bands — one marginal, one noise, and changing a config on a 76%
 # bootstrap is the error this session spent the day avoiding.
-ALL_CUT_HOTKEYS="niome_hotkey:K562"
+# 2026-09-08 (later): h0 moved to all-cut on EVERY cell type alongside the width-300 overlapping
+# band layout, so the fleet is 5 bands + 1 flat hedge. Note this puts h0 on the losing side for
+# HEK293 on the evidence available (pooled pricing 0.0059 all-HDR vs 0.0027 all-cut, and that
+# basis is itself discredited above — HEK293 has never had the matched treatment cmp_k562.py
+# gives K562, where all-cut wins 3.78x). Revert to "niome_hotkey:K562" for the measured split.
+ALL_CUT_HOTKEYS="niome_hotkey"
 
 # Hotkeys that are not registered on the subnet right now. They keep running (a deregistration is
 # usually temporary and re-registering is cheaper than a cold restart), but window_plan.py leaves
@@ -128,12 +133,13 @@ ALL_CUT_HOTKEYS="niome_hotkey:K562"
 #   2026-09-05: niome_hotkey (h0) deregistered; the other eight hold uids 175/8/110/79/81/124/36/92.
 #   2026-09-07: the whole fleet dropped off the metagraph — h0 09-04 20:58, h1 09-05 07:28,
 #   h8 09-05 16:39 — and was rebuilt smaller.
-#   2026-09-08: four registered, verified against the chain at block 9019325:
-#     niome_hotkey uid 74, niome_hotkey1 uid 209, niome_hotkey2 uid 235, niome_hotkey3 uid 196.
-#   h4-h8 remain off. Nothing here can register a hotkey — until `btcli subnet register` puts one
+#   2026-09-08: six registered, verified against the chain (256 uids on netuid 55):
+#     niome_hotkey uid 74, niome_hotkey1 uid 209, niome_hotkey2 uid 235, niome_hotkey3 uid 196,
+#     niome_hotkey4 uid 189, niome_hotkey5 uid 147, niome_hotkey6 uid 136, niome_hotkey7 uid 75.
+#   h8 remains off. Nothing here can register a hotkey — until `btcli subnet register` puts one
 #   back on netuid 55 its process exits at startup (base/neuron.check_registered calls exit()) and
 #   pm2 restarts it on a delay.
-DEREGISTERED="niome_hotkey4 niome_hotkey5 niome_hotkey6 niome_hotkey7 niome_hotkey8"
+DEREGISTERED="niome_hotkey8"
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so
@@ -185,6 +191,14 @@ run_one() {
 # 900-899 is silently rejected by the miner (falling back to the cell default and re-correlating),
 # so the guard parses ranges rather than comparing text. Both cost the whole decorrelation, so they
 # are launch-time errors, not warnings.
+# Overlapping windows are a deliberate configuration, not a mistake, so the guard below has to be
+# switchable. It stays ON by default because a silently-rejected or duplicated window
+# re-correlates two siblings and costs the entire decorrelation the fleet exists for. Set to 1
+# only when window_plan.FIXED_WINDOWS is the layout and the overlap is intended: the object that
+# spikes is the clean BAND inside the window, and two hotkeys screening overlapping ranges
+# min-union different guide groups, so their bands still land on different seeds.
+ALLOW_OVERLAPPING_WINDOWS=1
+
 assert_disjoint_windows() {
   local -a los=() his=() names=()
   for row in "${HOTKEYS[@]}"; do
@@ -199,8 +213,12 @@ assert_disjoint_windows() {
     local i
     for i in "${!los[@]}"; do
       if (( lo <= his[i] && los[i] <= hi )); then
-        echo "ERROR: $name window $win overlaps ${names[i]} window ${los[i]}-${his[i]} — siblings would correlate" >&2
-        exit 1
+        if [[ "${ALLOW_OVERLAPPING_WINDOWS:-0}" == "1" ]]; then
+          echo "NOTE: $name window $win overlaps ${names[i]} window ${los[i]}-${his[i]} — allowed by ALLOW_OVERLAPPING_WINDOWS" >&2
+        else
+          echo "ERROR: $name window $win overlaps ${names[i]} window ${los[i]}-${his[i]} — siblings would correlate" >&2
+          exit 1
+        fi
       fi
     done
     los+=("$lo"); his+=("$hi"); names+=("$name")

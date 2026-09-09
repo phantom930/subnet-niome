@@ -102,17 +102,44 @@ DEFAULT_RANK = 1
 #
 # The honest case for this is COVERAGE, not prediction. Per-rank exclusive hit rates over 38 scored
 # predictions put rank 1 at 1.33x chance (p=0.130), ranks 2-3 at 1.06x and rank 4 at 0.88x — so
-# ranks 2-4 are worth no more than any disjoint window, and that is fine, because four disjoint
-# width-100 bands cover 4 x 13 = 52 seeds of 900 and spike on 1-(1-52/900)**3 = 16.4% of rounds
-# whether the ordering means anything or not. Only rank 1 carries any edge, and h1 holds it.
+# ranks 2-6 are worth no more than any disjoint window, and that is fine, because six disjoint
+# width-100 bands cover 6 x 13 = 78 seeds of 900 and spike on 1-(1-78/900)**3 = 23.8% of rounds
+# whether the ordering means anything or not (five windows on K562, where h0 plays all-cut
+# instead: 65 seeds, 20.1%). Only rank 1 carries any edge, and h1 holds it.
 #
 # Width is deliberately the full 100 rather than the 16-seed band width used when several hotkeys
 # tile one window. The measured trade is real but small and points the other way: band is 14.70 at
 # width 16 against 13.00 at width 100, so four narrow slices would cover 58.8 seeds against 52
 # (+13%) — at the cost of leaving 84% of each predicted window uncovered, which throws away
 # whatever rank 1 is worth. Switch by giving RANK_WIDTH a value.
-RANK_BY_HOTKEY = {"niome_hotkey1": 1, "niome_hotkey2": 2, "niome_hotkey3": 3, "niome_hotkey": 4}
+RANK_BY_HOTKEY = {"niome_hotkey1": 1, "niome_hotkey2": 2, "niome_hotkey3": 3,
+                  "niome_hotkey4": 4, "niome_hotkey5": 5, "niome_hotkey": 6}
 RANK_WIDTH = 100
+
+# FIXED MODE — literal per-hotkey windows, overriding both layouts above and the prediction
+# entirely. Windows here MAY OVERLAP: the prediction is not consulted, so there is no ranked
+# ordering to preserve, and the object that spikes is the ~9-13 seed clean BAND found inside the
+# window, not the window itself. Two hotkeys screening overlapping ranges still min-union
+# different guide groups and land their bands on different seeds.
+#
+# What overlap does NOT do is buy coverage. Coverage is `sum(band sizes)` over the fleet, and band
+# size falls with window width — measured 13 / 12 / 11 / 9 at widths 100 / 150 / 200 / 300,
+# because band size is set by how many rows must agree, not by how wide a range was searched
+# (CLAUDE.md, "wider screening window -> wider band", falsified). Measured live at width 300 the
+# band is **11-12**, not the 9 on record, so seven width-300 hotkeys cover ~80 band seeds less
+# ~2.5 expected collisions in the overlaps = ~77.5, and spike on 1-(1-77.5/900)**3 = 23.7% of
+# rounds -- level with the six width-100 disjoint windows' 78 seeds and 23.8%. Hotkey COUNT is
+# what buys coverage here, not width: five width-300 hotkeys managed only ~57 seeds (17.8%).
+# Set this to {} to return to RANK_BY_HOTKEY.
+FIXED_WINDOWS = {
+    "niome_hotkey1": [100, 399],
+    "niome_hotkey2": [200, 499],
+    "niome_hotkey3": [300, 599],
+    "niome_hotkey4": [400, 699],
+    "niome_hotkey5": [500, 799],
+    "niome_hotkey6": [600, 899],
+    "niome_hotkey7": [700, 999],
+}
 TTL_HOURS = 6                      # survives a missed cron run, expires before it misleads
 
 
@@ -251,7 +278,17 @@ def main():
         # Hotkeys that run all-cut on *this* cell type play no window here, so they are out of the
         # allocation for this cell only and back in it for the next.
         avail = [m for m in members if m[0] not in hedged]
-        if RANK_BY_HOTKEY:
+        if FIXED_WINDOWS:
+            # Fixed mode: literal windows, same for every cell type, overlap permitted.
+            assign, slots = {}, []
+            for name, _default in avail:
+                w = FIXED_WINDOWS.get(name)
+                if w:
+                    assign[name] = list(w)
+            top = pr["ranked"][0]
+            width = None
+            rank = 0            # no ranked position is consulted in fixed mode
+        elif RANK_BY_HOTKEY:
             # Explicit mode: one hotkey per ranked window, same mapping for every cell type.
             assign, slots = {}, []
             for name, _default in avail:
@@ -282,17 +319,24 @@ def main():
                 assign[name] = [a, a + SPREAD_WIDTH - 1]
 
         spans = sorted(assign.values())
-        for (a1, b1), (a2, b2) in zip(spans, spans[1:]):
-            if a2 <= b1:
-                print(f"ERROR: {cell} windows {a1}-{b1} and {a2}-{b2} overlap", file=sys.stderr)
-                return 1
+        if not FIXED_WINDOWS:
+            # Every other layout is built to be disjoint, so an overlap there is a bug that would
+            # silently re-correlate two siblings and cost the whole decorrelation. In fixed mode
+            # the operator asked for the overlap, so it is reported and kept.
+            for (a1, b1), (a2, b2) in zip(spans, spans[1:]):
+                if a2 <= b1:
+                    print(f"ERROR: {cell} windows {a1}-{b1} and {a2}-{b2} overlap",
+                          file=sys.stderr)
+                    return 1
         plan["assignments"][cell] = assign
         # Record what was actually applied against this cell's pending prediction, so a resolved
         # round in seed_window_log.json shows predicted window, applied per-hotkey windows, the
         # task id and each hotkey's scored outcome together. Cells where every hotkey hedges still
         # get the block, with no assignments -- the prediction was live and its accuracy is still
         # scored, it just was not played.
-        if RANK_BY_HOTKEY:
+        if FIXED_WINDOWS:
+            roles = {n: "fixed" for n, _d in avail if n in FIXED_WINDOWS}
+        elif RANK_BY_HOTKEY:
             roles = {n: f"rank{RANK_BY_HOTKEY[n]}" for n, _d in avail if n in RANK_BY_HOTKEY}
         else:
             roles = {n: ("concentrated" if i < len(slots) else "spread")
@@ -319,6 +363,18 @@ def main():
             print(head + f"no window played ({why or 'no banded hotkey'})")
             continue
         ranks = {(r["window"] + 1) * 100: i for i, r in enumerate(pr["ranked"])}
+        if FIXED_WINDOWS:
+            spans = sorted(assign.values())
+            olap = sum(max(0, min(b1, b2) - max(a1, a2) + 1)
+                       for (a1, b1), (a2, b2) in zip(spans, spans[1:]))
+            covered = len({s for a, b in spans for s in range(a, b + 1)})
+            print(head + f"beta {pr['beta']:+.2f}  FIXED windows x{len(assign)}"
+                  f"  span {covered} of 900, {olap} seeds overlapped"
+                  + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
+            for name in sorted(assign, key=lambda n: assign[n][0]):
+                lo_, hi_ = assign[name]
+                print(f"    fixed  {name:<14} {lo_}-{hi_}  (width {hi_ - lo_ + 1})")
+            continue
         if RANK_BY_HOTKEY:
             print(head + f"beta {pr['beta']:+.2f}  width {RANK_WIDTH} x{len(assign)}"
                   + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))

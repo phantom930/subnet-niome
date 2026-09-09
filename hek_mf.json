@@ -1,0 +1,73 @@
+{
+ "task": "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+ "cell": "HEK293",
+ "window": [
+  100,
+  399
+ ],
+ "z_target": -3.321369183829413,
+ "mean_fails_300": 192.65825,
+ "sd_300": 8.591572824818902,
+ "arms": [
+  {
+   "mf": 144,
+   "z": -5.66,
+   "bank": 53,
+   "band": null,
+   "union": null,
+   "cas9": null,
+   "cells": null,
+   "rows": 0,
+   "build_s": 0.0,
+   "reason": "HDR bank 53 short of group 80"
+  },
+  {
+   "mf": 164,
+   "z": -3.34,
+   "bank": 30009,
+   "band": 8,
+   "union": 292,
+   "cas9": 1376,
+   "cells": 8,
+   "rows": 250,
+   "build_s": 56.6,
+   "reason": null
+  },
+  {
+   "mf": 184,
+   "z": -1.01,
+   "bank": 60000,
+   "band": 8,
+   "union": 292,
+   "cas9": 1473,
+   "cells": 8,
+   "rows": 250,
+   "build_s": 123.4,
+   "reason": null
+  },
+  {
+   "mf": 192,
+   "z": -0.08,
+   "bank": 60000,
+   "band": 8,
+   "union": 292,
+   "cas9": 1453,
+   "cells": 8,
+   "rows": 250,
+   "build_s": 190.2,
+   "reason": null
+  },
+  {
+   "mf": 204,
+   "z": 1.32,
+   "bank": 60000,
+   "band": 8,
+   "union": 292,
+   "cas9": 1473,
+   "cells": 8,
+   "rows": 250,
+   "build_s": 255.0,
+   "reason": null
+  }
+ ]
+}

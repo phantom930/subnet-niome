@@ -455,6 +455,38 @@ def load_bank(path: str, limit: int = 60_000) -> list[dict]:
              "fails": fails[i][:counts[i]]} for i in order]
 
 
+def cas9_cell_target(contract: dict, ctx, cfg, want: int) -> int:
+    """How many Cas9 candidates each (mutation, strand) cell needs before the scan may stop.
+
+    The early break in ``scan_cas9`` used to require only that every cell be NON-EMPTY, which one
+    candidate satisfies. ``assemble`` then apportions ``want`` rows by mutation weight and can ask
+    for close to half of them on a single heavy strand -- so if the nearest-first scan stopped
+    before reaching that mutation's sites, the quota silently backfilled with light rows and the
+    weight term collapsed.
+
+    Measured on HEK293 a8b9f1bb (width 300): the break fired at job **34 of 395** with HEAVY+
+    holding **4** candidates against **5531** available, giving mean ``mutation_weight`` 0.784
+    against a reachable 0.939 -- weighted 166.5 where the field median was 221. With this floor:
+    weighted **+16.2%**, fidelity **+2.1%** (the starved split was strand-imbalanced at light+ 97 /
+    light- 26, which was itself costing stage 5 entropy), band unchanged, +8s.
+
+    HEK293 is the only cell type that starves, because its heavy-mutation Cas9 sites sit farther
+    from the mutation than the light ones. CD34+_HSPC, HUDEP-2 and K562 already reach the ideal
+    79/79/6/6 split on their own and measured **+0.0%** here -- the floor is inert where it is not
+    needed, at a cost of 2-7s.
+    """
+    light_cell_rows = getattr(cfg, "light_cell_rows", None)
+    if light_cell_rows is not None:
+        # Hard split: the heaviest mutation takes `want - 2*light_cell_rows`, halved per strand.
+        return max(light_cell_rows, (want - 2 * light_cell_rows + 1) // 2)
+    # Exponent apportionment: the heaviest mutation's share, halved per strand.
+    weights = contract.get("mutation_weights", {})
+    exponent = getattr(cfg, "weight_exponent", 1.25)
+    shares = [max(weights.get(m, 1.0), 1e-9) ** exponent for m in ctx.mutations]
+    heavy = max(shares) / max(sum(shares), 1e-9)
+    return max(1, math.ceil(want * heavy / 2))
+
+
 def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
               cfg: AllCutConfig, want: int, deadline: float | None = None) -> list[dict]:
     """Cas9 guides strict over ``clean``, nearest targets first.
@@ -471,6 +503,8 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
             if abs(s.start - ctx.mutation_map[m]) <= cfg.max_distance]
     jobs.sort(key=lambda job: job[2])
     found: list[dict] = []
+    per_cell: dict[tuple, int] = {}
+    cell_target = cas9_cell_target(contract, ctx, cfg, want)
     for site_index, mutation, distance in jobs:
         if deadline is not None and time.monotonic() > deadline:
             logger.info("all-cut: Cas9 scan stopped on the deadline with %d candidates",
@@ -489,10 +523,13 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
             found.append({"guide": guide, "mutation": mutation, "cas_system": "Cas9",
                           "strand": site.strand, "start": site.start, "length": site.length,
                           "gc": gc, "distance": distance})
-        # Enough, and every cell represented: an empty (mutation, strand) cell would zero one of
-        # stage 5's six ratios and cost a ~0.03x multiplier on the whole score.
-        if len(found) >= want * cfg.pool_target and len({(f["mutation"], f["strand"])
-                                                          for f in found}) == 4:
+            key = (mutation, site.strand)
+            per_cell[key] = per_cell.get(key, 0) + 1
+        # Enough, and every cell filled to the quota `assemble` will ask for. A NON-EMPTY test is
+        # not sufficient: see cas9_cell_target -- one candidate satisfies it while the apportionment
+        # wants ~half of `want` on a single heavy strand.
+        if (len(found) >= want * cfg.pool_target and len(per_cell) == 4
+                and min(per_cell.values()) >= cell_target):
             break
     return found
 

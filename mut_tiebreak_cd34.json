@@ -1,0 +1,48 @@
+{
+ "task": "12be08f9-8e88-455d-aa18-3a995626df20",
+ "cell": "CD34+_HSPC",
+ "window": [
+  100,
+  399
+ ],
+ "arms": [
+  {
+   "arm": "baseline (tie = first index)",
+   "band": 12,
+   "union": 288,
+   "cas9": 1360,
+   "heavy_rows": 203,
+   "group_heavy": 45,
+   "mean_weight": 1.0966,
+   "weighted": 249.50974450710308,
+   "fidelity": 0.8926457556214685,
+   "gc_score": 0.9330260869565218,
+   "dist_score": 0.8467927960894299,
+   "gc_mean": 0.5050869565217392,
+   "gc_score_cas12a": 0.8407065217391304,
+   "gc_score_cas9": 0.9764705882352941,
+   "cells": 8,
+   "k1_final": 89.08952576818503,
+   "fleet_cov": 0.25467970370370385
+  },
+  {
+   "arm": "heavy-mutation tie-break",
+   "band": 12,
+   "union": 288,
+   "cas9": 1375,
+   "heavy_rows": 210,
+   "group_heavy": 52,
+   "mean_weight": 1.1119999999999999,
+   "weighted": 252.5630683514452,
+   "fidelity": 0.876475907944842,
+   "gc_score": 0.938191304347826,
+   "dist_score": 0.8416018436859752,
+   "gc_mean": 0.5075826086956522,
+   "gc_score_cas12a": 0.8579347826086957,
+   "gc_score_cas9": 0.9759590792838875,
+   "cells": 8,
+   "k1_final": 88.54617785866724,
+   "fleet_cov": 0.25467970370370385
+  }
+ ]
+}

@@ -67,6 +67,7 @@ accessibility 0.35 bounds fidelity.
 from __future__ import annotations
 
 import dataclasses
+import math
 import logging
 import os
 import time
@@ -79,7 +80,7 @@ import genExp as G
 from niome_subnet.genomics import fastgreedy as FG
 from niome_subnet.genomics import mt19937 as MT
 from niome_subnet.genomics import seed_agnostic as SA
-from niome_subnet.genomics.all_cut import (BANK_DIR, _params_fn, assemble, bank_key, load_bank,
+from niome_subnet.genomics.all_cut import (cas9_cell_target, BANK_DIR, _params_fn, assemble, bank_key, load_bank,
                                            save_bank)
 from niome_subnet.genomics.validation import stage3
 
@@ -242,6 +243,69 @@ class AllHdrConfig:
         return self.hdr_range[1]
 
 
+# `variants` for a band window wider than the 100 seeds CELL_CONFIG is calibrated at. The cap
+# exists because the Cas12a HDR bank scan grows with the span (cost ~`variants x seeds`), so a wide
+# window is the one place the tuned per-cell 44000 might not be affordable.
+#
+# Measured at width 300 on K562 (hdr_variants.py, cold scans, fleet idle; every arm built 250 rows
+# at 8/8 cells). Band is far less sensitive to `variants` than to window width -- an 8.8x cut in
+# variants costs only 3 band seeds:
+#
+#   variants |  bank  | scan s | band | build s | fleet coverage (7 hotkeys)
+#      5000  | 12619  |    12  |   9  |    27   | 63 seeds  19.6%
+#     11000  | 25104  |    21  |  10  |    48   | 70 seeds  21.6%
+#     22000  | 43540  |    33  |  11  |    75   | 77 seeds  23.5%
+#     44000  | 62144  |    45  |  12  |   105   | 84 seeds  25.5%
+#
+# **Do not budget this by summing per-build times.** That model said 7 x 105s + h0's 354s all-cut
+# = 1089s against the 900s prefetch budget, and it is wrong by ~3x: the builds are substantially
+# CPU-bound (variant enumeration, assembly, local scoring) on a 15-core box, so sibling processes
+# overlap rather than queue on the GPU. Measured wall clock with all seven concurrent: **~100s** at
+# variants 11000 (17:46:45 -> 17:48:25) and **~200s** at 44000 five-way (16:58:34 -> 17:01:55).
+# Both fit the budget with room to spare, so the cap is set to the tuned value and buys the band
+# back. The real constraint is h0's all-cut, which is heavier and more GPU-bound than any band
+# scan; if a round shows it declining alongside seven band builds, step this down to 22000 (band
+# 11) before giving up any more coverage.
+WIDE_WINDOW_VARIANTS = 44000
+
+# Mean Cas12a fail count over a 100-seed band window, measured per cell with the cap disabled
+# (hek_mf.py). Only needed to scale `main_max_fail` to a wider window correctly -- a cell absent
+# here falls back to linear scaling, which is what shipped before and is close enough wherever
+# `main_max_fail` sits near the mean.
+#
+# Linear scaling is WRONG for a cell whose P(HDR) is far from the threshold rate, because it scales
+# the offset from the mean linearly when that offset should grow as sqrt(span): the binomial
+# narrows as the window widens, so the same threshold *rate* is a much deeper tail cut at 300 than
+# at 100. On HEK293 (P(HDR) 0.358 measured, against ~0.49 on K562) the tuned mf 48 sits at
+# z -3.32 at span 100, and linear scaling to 144 lands at **z -5.66** -- only 53 of 60000 bank
+# guides qualified against a group of 80, so every band hotkey declined and the fleet shipped flat
+# builds on every HEK293 round. Holding z instead gives 164, which builds: bank 30009, band 8.
+#
+# Measured at span 300 on HEK293 (414dab89): band is FLAT at 8 for mf 164/184/192/204 while build
+# time runs 57/123/190/255s, because `bank_keep` caps the bank and the min-union takes the best
+# guides either way. So the z-matched value is both the cheapest that fills the group and the point
+# the band saturates -- there is nothing to buy above it.
+# K562 is deliberately ABSENT and stays on linear scaling. Its P(HDR) (~0.49) sits close enough to
+# the threshold rate that linear works, and measured head to head at span 300 on bba85ff0 the
+# z-matched value is slightly WORSE: mf 135 (linear) -> band 12, mf 143 (z-matched) -> band 11,
+# both with bank 60000 / 8-of-8 cells. So z-matching is a fix for a cell where linear scaling
+# fails outright, not a general improvement -- measure before adding a cell here.
+MEAN_FAIL_100 = {"HEK293": 64.2}
+
+
+def _scaled_max_fail(cell_type: str, mf_100: int, span: int) -> int:
+    """``main_max_fail`` for a band of ``span`` seeds, holding the z-score of the tuned value.
+
+    mf = mean*r + z*sd*sqrt(r) with r = span/100, which rearranges to the form below so only the
+    mean fail count at span 100 is needed. Falls back to linear when that is unmeasured.
+    """
+    r = span / 100.0
+    mean_100 = MEAN_FAIL_100.get(cell_type)
+    if not mean_100:
+        return max(1, round(mf_100 * r))
+    return max(1, round(mf_100 * r + (mean_100 - mf_100) * (r - math.sqrt(r))))
+
+
 def config_for(cell_type: str, cfg: AllHdrConfig | None = None) -> AllHdrConfig | None:
     """The tuned config for a cell type, or None where all-HDR has not been measured."""
     overrides = CELL_CONFIG.get(cell_type)
@@ -311,6 +375,8 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
             if abs(sites[i].start - ctx.mutation_map[m]) <= cfg.max_distance]
     jobs.sort(key=lambda job: job[2])
     found: list[dict] = []
+    per_cell: dict[tuple, int] = {}
+    cell_target = cas9_cell_target(contract, ctx, cfg, want)
     for site_index, mutation, distance in jobs:
         if deadline is not None and time.monotonic() > deadline:
             logger.info("all-hdr: Cas9 scan stopped on the deadline with %d candidates", len(found))
@@ -328,8 +394,12 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
             found.append({"guide": guide, "mutation": mutation, "cas_system": "Cas9",
                           "strand": site.strand, "start": site.start, "length": site.length,
                           "gc": gc, "distance": distance})
-        if len(found) >= want * cfg.pool_target and len({(f["mutation"], f["strand"])
-                                                         for f in found}) == 4:
+            key = (mutation, site.strand)
+            per_cell[key] = per_cell.get(key, 0) + 1
+        # Every cell filled to the quota `assemble` will ask for, not merely non-empty: see
+        # all_cut.cas9_cell_target for the HEK293 measurement that made this necessary.
+        if (len(found) >= want * cfg.pool_target and len(per_cell) == 4
+                and min(per_cell.values()) >= cell_target):
             break
     return found
 
@@ -371,7 +441,15 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         bank_deadline = None if deadline is None else deadline - 20.0
         bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
         if not bank:
-            meta["reason"] = "Cas12a HDR bank scan ran out of budget"
+            # An empty bank means either the deadline fired mid-scan or the scan finished and
+            # nothing qualified. Those need different fixes — more budget vs a reachable
+            # ``main_max_fail`` — so do not report them with one message.
+            if bank_deadline is not None and time.monotonic() >= bank_deadline:
+                meta["reason"] = "Cas12a HDR bank scan ran out of budget"
+            else:
+                meta["reason"] = (
+                    f"no Cas12a guide reaches HDR on all but {cfg.main_max_fail} of "
+                    f"{cfg.end_seed - cfg.start_seed + 1} band seeds")
             return None, meta
         save_bank(path, bank)
     records = load_bank(path)
@@ -434,5 +512,21 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     if cfg is None:
         return None, {"reason": f"no measured all-HDR config for {cell}"}
     if hdr_range is not None:
+        # ``main_max_fail`` is calibrated per cell against a 100-seed band, so it has to scale with
+        # the span or a wider window silently demands the impossible. Measured on K562 at 6 targets
+        # x 2000 variants: the median guide fails 51 of 100 seeds but 153 of 300, so a flat 45
+        # admits 1391 of 10000 guides at width 100 and **0** at width 300 — an empty bank, which
+        # build_submission then reports as "ran out of budget". Holding the ratio (45 -> 135) keeps
+        # 256 of 10000. Note the qualifying fraction still falls with width (13.9% -> 2.6%) because
+        # the binomial concentrates as the window grows; that is the same mechanism that shrinks
+        # the band itself from 13 seeds at width 100 to 9 at width 300.
+        span = hdr_range[1] - hdr_range[0] + 1
         cfg = dataclasses.replace(cfg, hdr_range=hdr_range)
+        if span != 100:
+            cfg = dataclasses.replace(
+                cfg, main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span))
+        if span > 100:
+            # The scan cost scales with the span, so a wide window has to give some of it back in
+            # `variants` or the fleet exceeds its GPU budget. See WIDE_WINDOW_VARIANTS.
+            cfg = dataclasses.replace(cfg, variants=min(cfg.variants, WIDE_WINDOW_VARIANTS))
     return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)

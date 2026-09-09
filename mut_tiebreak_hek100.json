@@ -1,0 +1,18 @@
+{
+ "task": "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+ "cell": "HEK293",
+ "window": [
+  300,
+  399
+ ],
+ "arms": [
+  {
+   "arm": "baseline (tie = first index)",
+   "reason": "union covers the window"
+  },
+  {
+   "arm": "heavy-mutation tie-break",
+   "reason": "union covers the window"
+  }
+ ]
+}

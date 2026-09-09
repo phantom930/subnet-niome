@@ -6809,7 +6809,7 @@
     "b08b59ff-3cf5-4b17-935d-5033b29ef13a"
    ],
    "applied": {
-    "applied_at": "2026-09-08T14:17:25.991297+00:00",
+    "applied_at": "2026-09-08T20:17:22.078745+00:00",
     "predicted_window": "100-199",
     "predicted_p_hit": 0.2977,
     "band_width": 0,
@@ -6819,29 +6819,199 @@
     "n_concentrated": 0,
     "played": true,
     "assignments": {
-     "niome_hotkey": [
-      400,
-      499
-     ],
      "niome_hotkey1": [
       100,
-      199
+      399
      ],
      "niome_hotkey2": [
       200,
-      299
+      499
      ],
      "niome_hotkey3": [
       300,
-      399
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
      ]
     },
     "roles": {
-     "niome_hotkey": "rank4",
-     "niome_hotkey1": "rank1",
-     "niome_hotkey2": "rank2",
-     "niome_hotkey3": "rank3"
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
     }
+   },
+   "resolved": {
+    "task_id": "12be08f9-8e88-455d-aa18-3a995626df20",
+    "at": "2026-09-08T19:06:32.768413",
+    "seeds": [
+     208,
+     239,
+     996
+    ],
+    "actual_windows": [
+     1,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       208,
+       239
+      ],
+      "all_hdr_built": true,
+      "rank": 231,
+      "final": 20.24,
+      "consistency": 0.0905,
+      "weighted": 250.4,
+      "fidelity": 0.8933,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       208,
+       239
+      ],
+      "all_hdr_built": true,
+      "rank": 218,
+      "final": 22.91,
+      "consistency": 0.1027,
+      "weighted": 248.9,
+      "fidelity": 0.8963,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 226,
+      "final": 21.61,
+      "consistency": 0.097,
+      "weighted": 248.6,
+      "fidelity": 0.8957,
+      "band_hit": false
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 222,
+      "final": 22.11,
+      "consistency": 0.0989,
+      "weighted": 251.1,
+      "fidelity": 0.8903,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 169,
+      "final": 29.22,
+      "consistency": 0.131,
+      "weighted": 247.0,
+      "fidelity": 0.9032,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 230,
+      "final": 20.64,
+      "consistency": 0.0933,
+      "weighted": 244.4,
+      "fidelity": 0.9052,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       996
+      ],
+      "all_hdr_built": true,
+      "rank": 13,
+      "final": 90.42,
+      "consistency": 0.404,
+      "weighted": 248.1,
+      "fidelity": 0.9019,
+      "band_hit": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": [
+     "niome_hotkey7"
+    ],
+    "scores_at": "2026-09-08T22:17:01.450197+00:00"
    }
   },
   {
@@ -7619,7 +7789,7 @@
     "634a512c-5760-402f-8b57-70d8e1dcc314"
    ],
    "applied": {
-    "applied_at": "2026-09-08T14:17:25.991297+00:00",
+    "applied_at": "2026-09-08T15:17:06.869262+00:00",
     "predicted_window": "100-199",
     "predicted_p_hit": 0.2977,
     "band_width": 0,
@@ -7652,6 +7822,100 @@
      "niome_hotkey2": "rank2",
      "niome_hotkey3": "rank3"
     }
+   },
+   "resolved": {
+    "task_id": "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "at": "2026-09-08T14:18:18.108191",
+    "seeds": [
+     152,
+     595,
+     972
+    ],
+    "actual_windows": [
+     0,
+     4,
+     8
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       400,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "rank4",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 131,
+      "final": 19.43,
+      "consistency": 0.0836,
+      "weighted": 253.9,
+      "fidelity": 0.9157,
+      "band_hit": false
+     },
+     "niome_hotkey1": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "rank1",
+      "seeds_in_window": [
+       152
+      ],
+      "all_hdr_built": true,
+      "rank": 66,
+      "final": 21.35,
+      "consistency": 0.0925,
+      "weighted": 251.9,
+      "fidelity": 0.9164,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "rank2",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 139,
+      "final": 18.96,
+      "consistency": 0.0819,
+      "weighted": 252.3,
+      "fidelity": 0.9172,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "rank3",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 127,
+      "final": 19.7,
+      "consistency": 0.0852,
+      "weighted": 251.9,
+      "fidelity": 0.9178,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1"
+    ],
+    "hotkeys_with_band_hit": [],
+    "scores_at": "2026-09-08T17:17:02.078632+00:00"
    }
   },
   {
@@ -7722,7 +7986,7 @@
     "4195cd32-4b9a-4b38-9835-9631ea75af08"
    ],
    "applied": {
-    "applied_at": "2026-09-08T14:17:25.991297+00:00",
+    "applied_at": "2026-09-09T03:17:02.497688+00:00",
     "predicted_window": "800-899",
     "predicted_p_hit": 0.3739,
     "band_width": 0,
@@ -7732,29 +7996,163 @@
     "n_concentrated": 0,
     "played": true,
     "assignments": {
-     "niome_hotkey": [
-      300,
+     "niome_hotkey1": [
+      100,
       399
      ],
-     "niome_hotkey1": [
-      800,
-      899
-     ],
      "niome_hotkey2": [
-      900,
-      999
+      200,
+      499
      ],
      "niome_hotkey3": [
-      100,
-      199
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
      ]
     },
     "roles": {
-     "niome_hotkey": "rank4",
-     "niome_hotkey1": "rank1",
-     "niome_hotkey2": "rank2",
-     "niome_hotkey3": "rank3"
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
     }
+   },
+   "resolved": {
+    "task_id": "4725e952-50b0-4b39-a21b-8f9ae2e57b1a",
+    "at": "2026-09-09T02:18:56.757236",
+    "seeds": [
+     126,
+     383,
+     694
+    ],
+    "actual_windows": [
+     0,
+     2,
+     5
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       126,
+       383
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       383
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       383
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       694
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       694
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       694
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6"
+    ],
+    "hotkeys_with_band_hit": []
    }
   },
   {
@@ -7817,7 +8215,7 @@
     "260f849f-47ff-4420-8619-fdef26947bf4"
    ],
    "applied": {
-    "applied_at": "2026-09-08T14:17:25.991297+00:00",
+    "applied_at": "2026-09-08T18:17:14.482899+00:00",
     "predicted_window": "900-999",
     "predicted_p_hit": 0.3813,
     "band_width": 0,
@@ -7828,22 +8226,1230 @@
     "played": true,
     "assignments": {
      "niome_hotkey1": [
-      900,
-      999
+      100,
+      399
      ],
      "niome_hotkey2": [
-      500,
-      599
+      200,
+      499
      ],
      "niome_hotkey3": [
-      800,
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
       899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
      ]
     },
     "roles": {
-     "niome_hotkey1": "rank1",
-     "niome_hotkey2": "rank2",
-     "niome_hotkey3": "rank3",
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "at": "2026-09-08T16:42:31.840834",
+    "seeds": [
+     718,
+     828,
+     949
+    ],
+    "actual_windows": [
+     6,
+     7,
+     8
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 228,
+      "final": 19.55,
+      "consistency": 0.0998,
+      "weighted": 222.5,
+      "fidelity": 0.8805,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 229,
+      "final": 19.45,
+      "consistency": 0.0981,
+      "weighted": 224.4,
+      "fidelity": 0.8843,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 203,
+      "final": 21.57,
+      "consistency": 0.1119,
+      "weighted": 206.4,
+      "fidelity": 0.9339,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "rank": 202,
+      "final": 21.57,
+      "consistency": 0.1119,
+      "weighted": 206.4,
+      "fidelity": 0.9339,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       718
+      ],
+      "rank": 201,
+      "final": 21.57,
+      "consistency": 0.1119,
+      "weighted": 206.4,
+      "fidelity": 0.9339,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       718,
+       828
+      ],
+      "rank": 179,
+      "final": 22.77,
+      "consistency": 0.1087,
+      "weighted": 233.4,
+      "fidelity": 0.8975,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       718,
+       828,
+       949
+      ],
+      "rank": 246,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-08T19:17:01.790106+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-08T16:17:02.166623+00:00",
+   "cell": "HEK293",
+   "beta": 0.0,
+   "counts": [
+    15,
+    8,
+    7,
+    15,
+    8,
+    6,
+    14,
+    10,
+    10
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "300-399",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf"
+   ],
+   "applied": {
+    "applied_at": "2026-09-08T22:17:21.129948+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "at": "2026-09-08T21:30:45.054220",
+    "seeds": [
+     186,
+     463,
+     561
+    ],
+    "actual_windows": [
+     0,
+     3,
+     4
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       186
+      ],
+      "all_hdr_built": true,
+      "rank": 176,
+      "final": 11.69,
+      "consistency": 0.0775,
+      "weighted": 166.5,
+      "fidelity": 0.906,
+      "band_hit": false
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       463
+      ],
+      "all_hdr_built": true,
+      "rank": 184,
+      "final": 10.85,
+      "consistency": 0.0721,
+      "weighted": 165.6,
+      "fidelity": 0.9086,
+      "band_hit": false
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       463,
+       561
+      ],
+      "all_hdr_built": true,
+      "rank": 11,
+      "final": 56.87,
+      "consistency": 0.3861,
+      "weighted": 163.7,
+      "fidelity": 0.8996,
+      "band_hit": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       463,
+       561
+      ],
+      "all_hdr_built": true,
+      "rank": 162,
+      "final": 12.69,
+      "consistency": 0.0829,
+      "weighted": 167.1,
+      "fidelity": 0.9167,
+      "band_hit": false
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       561
+      ],
+      "all_hdr_built": true,
+      "rank": 154,
+      "final": 13.77,
+      "consistency": 0.0911,
+      "weighted": 165.4,
+      "fidelity": 0.914,
+      "band_hit": false
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 167,
+      "final": 12.26,
+      "consistency": 0.0805,
+      "weighted": 167.1,
+      "fidelity": 0.9121,
+      "band_hit": false
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [],
+      "all_hdr_built": true,
+      "rank": 165,
+      "final": 12.39,
+      "consistency": 0.0813,
+      "weighted": 165.8,
+      "fidelity": 0.9196,
+      "band_hit": false
+     }
+    },
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5"
+    ],
+    "hotkeys_with_band_hit": [
+     "niome_hotkey3"
+    ],
+    "scores_at": "2026-09-09T00:17:01.416054+00:00"
+   }
+  },
+  {
+   "made_at": "2026-09-08T19:17:01.790106+00:00",
+   "cell": "K562",
+   "beta": 0.3,
+   "counts": [
+    8,
+    7,
+    6,
+    11,
+    5,
+    7,
+    8,
+    6,
+    5
+   ],
+   "ranked": [
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3568
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3568
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3235
+    }
+   ],
+   "heuristic": [
+    "500-599",
+    "900-999",
+    "300-399"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T01:17:05.233438+00:00",
+    "predicted_window": "500-599",
+    "predicted_p_hit": 0.3568,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "500-599",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   },
+   "resolved": {
+    "task_id": "1eca4bf1-c91f-4291-93ff-4391d058d3dc",
+    "at": "2026-09-08T23:55:09.313048",
+    "seeds": [
+     205,
+     533,
+     742
+    ],
+    "actual_windows": [
+     1,
+     4,
+     6
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       205
+      ],
+      "rank": 223,
+      "final": 22.44,
+      "consistency": 0.1033,
+      "weighted": 251.5,
+      "fidelity": 0.8638,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       200,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       205
+      ],
+      "rank": 218,
+      "final": 23.02,
+      "consistency": 0.1043,
+      "weighted": 248.9,
+      "fidelity": 0.8874,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       300,
+       599
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       533
+      ],
+      "rank": 229,
+      "final": 21.1,
+      "consistency": 0.0956,
+      "weighted": 249.7,
+      "fidelity": 0.8836,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       400,
+       699
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       533
+      ],
+      "rank": 224,
+      "final": 22.03,
+      "consistency": 0.1,
+      "weighted": 250.0,
+      "fidelity": 0.8807,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       500,
+       799
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       533,
+       742
+      ],
+      "rank": 226,
+      "final": 21.72,
+      "consistency": 0.0987,
+      "weighted": 247.9,
+      "fidelity": 0.888,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       600,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "fixed",
+      "seeds_in_window": [
+       742
+      ],
+      "rank": 220,
+      "final": 22.9,
+      "consistency": 0.1043,
+      "weighted": 251.1,
+      "fidelity": 0.8741,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan_file_unverified",
+      "window_confirmed": false,
+      "role": "fixed",
+      "seeds_in_window": [
+       742
+      ],
+      "rank": 231,
+      "final": 19.77,
+      "consistency": 0.0942,
+      "weighted": 228.1,
+      "fidelity": 0.9206,
+      "band_hit": false
+     }
+    },
+    "scores_at": "2026-09-09T02:17:06.786420+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-08T21:17:03.205983+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    8,
+    10,
+    9,
+    10,
+    15,
+    5,
+    7,
+    11,
+    12
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "700-799",
+    "100-199"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-08T23:17:01.429339+00:00",
+   "cell": "HEK293",
+   "beta": -0.05,
+   "counts": [
+    16,
+    8,
+    7,
+    16,
+    9,
+    6,
+    14,
+    10,
+    10
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3194
+    },
+    {
+     "window": 3,
+     "label": "400-499",
+     "p_hit": 0.3194
+    },
+    {
+     "window": 6,
+     "label": "700-799",
+     "p_hit": 0.311
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "300-399",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.3194,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-09T02:17:06.786420+00:00",
+   "cell": "K562",
+   "beta": 0.3,
+   "counts": [
+    8,
+    8,
+    6,
+    11,
+    6,
+    7,
+    9,
+    6,
+    5
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3668
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3335
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3335
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "300-399",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "1eca4bf1-c91f-4291-93ff-4391d058d3dc"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3668,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
+     "niome_hotkey": "all-cut-hedge"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-09T04:17:05.241602+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.25,
+   "counts": [
+    10,
+    10,
+    10,
+    11,
+    10,
+    12,
+    11,
+    6,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3805
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3553
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2878
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "100-199"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "4195cd32-4b9a-4b38-9835-9631ea75af08",
+    "4725e952-50b0-4b39-a21b-8f9ae2e57b1a"
+   ],
+   "applied": {
+    "applied_at": "2026-09-09T04:17:15.226582+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3805,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey1": [
+      100,
+      399
+     ],
+     "niome_hotkey2": [
+      200,
+      499
+     ],
+     "niome_hotkey3": [
+      300,
+      599
+     ],
+     "niome_hotkey4": [
+      400,
+      699
+     ],
+     "niome_hotkey5": [
+      500,
+      799
+     ],
+     "niome_hotkey6": [
+      600,
+      899
+     ],
+     "niome_hotkey7": [
+      700,
+      999
+     ]
+    },
+    "roles": {
+     "niome_hotkey1": "fixed",
+     "niome_hotkey2": "fixed",
+     "niome_hotkey3": "fixed",
+     "niome_hotkey4": "fixed",
+     "niome_hotkey5": "fixed",
+     "niome_hotkey6": "fixed",
+     "niome_hotkey7": "fixed",
      "niome_hotkey": "all-cut-hedge"
     }
    }
