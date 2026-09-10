@@ -81,6 +81,15 @@
   margin-bottom: 1.5rem;
 }
 
+/* Neither timeline has an #opposite template, but PrimeNG renders the div for
+   one anyway at flex: 1 — half of every row, blank, to the left of the markers.
+   Hiding it puts the markers on the container's own left edge, in line with the
+   headings above them, and gives each step the full width to read across. The
+   gap between a marker and its text is then the event content's own padding. */
+:host ::ng-deep .steps .p-timeline-event-opposite {
+  display: none;
+}
+
 .marker {
   display: grid;
   place-items: center;

@@ -47,7 +47,13 @@ any other harness run, so a synchronous request would sometimes time out.
 client polls `GET /api/benchmarks/{id}` until it reads `done` or `failed`.
 
 The body mirrors the script's flags: `task` (an id, or a list position with 0
-the newest), `seeds`, `rng`, `task_seed`, `per_seed` and `uid`.
+the newest), `seeds`, `rng`, `random_seeds`, `per_seed` and `uid`.
+
+A run scores the task under the seeds its round closed under, which is the
+harness's own default and needs no flag. `random_seeds` asks for random seeds
+instead, and `seeds`/`rng` size and repeat that draw — which is also the
+fallback for a task the backend has not stamped yet. The parsed result carries
+`seed_source`, so a report says which of the two it is.
 
 Jobs live in memory, capped at the last 50, so a restart forgets them. That is
 a deliberate trade against introducing a database: the authoritative output of

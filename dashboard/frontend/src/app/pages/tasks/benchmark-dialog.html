@@ -41,7 +41,10 @@
         </span>
       </div>
       <div class="run-meta text-muted">
-        <span>seeds {{ data.seeds.join(', ') }}</span>
+        <span class="seeds mono">seeds {{ data.seeds.join(', ') }}</span>
+        @if (seedTag(); as tag) {
+          <p-tag [value]="tag.label" [severity]="tag.severity" [attr.title]="tag.detail" />
+        }
         <span>{{ job()!.duration_seconds }}s</span>
         @if (data.spread != null) {
           <span>spread {{ data.spread | number: '1.4-4' }}</span>
@@ -50,16 +53,24 @@
     </div>
 
     @if (formula(); as f) {
+      <!-- Each term takes the hue of its rows in the table below, so the
+           product can be traced from here to the numbers it came from. -->
       <p class="formula mono text-muted">
-        {{ f.weighted | number: '1.3-3' }} &times; {{ f.consistency | number: '1.4-4' }} &times;
-        {{ f.fidelity | number: '1.4-4' }}
+        <span class="term" data-tone="weighted">{{ f.weighted | number: '1.3-3' }}</span>
+        &times;
+        <span class="term" data-tone="consistency">{{ f.consistency | number: '1.4-4' }}</span>
+        &times;
+        <span class="term" data-tone="fidelity">{{ f.fidelity | number: '1.4-4' }}</span>
       </p>
     }
 
+    <!-- A hue per pair: each raw stage output shares it with the factor beside
+         it. The three rows that are multiplied into the final score wear it,
+         and the rest stay muted. -->
     <table class="metrics">
       <tbody>
         @for (metric of validatorRows(); track metric.label) {
-          <tr>
+          <tr [attr.data-tone]="metric.tone" [class.in-product]="metric.inProduct">
             <th>{{ metric.label }}</th>
             <td class="numeric">
               {{ metric.value | number: '1.' + metric.digits + '-' + metric.digits }}
@@ -69,25 +80,29 @@
       </tbody>
     </table>
 
-    @if (data.per_seed.length > 1) {
+    @if (perSeedRows().length > 1) {
       <h3 class="section-title">Per seed</h3>
-      <p-table [value]="data.per_seed" [tableStyle]="{ 'min-width': '24rem' }">
+      <p-table [value]="perSeedRows()" [tableStyle]="{ 'min-width': '24rem' }">
+        <!-- Each column and its values share an alignment: the first three sit
+             on the left, and only the final score is right-aligned. Every cell
+             keeps tabular figures so the digits line up down the column. The
+             two middle headers carry their hue from the table above. -->
         <ng-template #header>
           <tr>
             <th>Seed</th>
-            <th>Consistency</th>
-            <th>Fidelity</th>
-            <th>Final</th>
+            <th data-tone="consistency">Consistency</th>
+            <th data-tone="fidelity">Fidelity</th>
+            <th class="numeric" data-tone="score">Final</th>
           </tr>
         </ng-template>
         <ng-template #body let-seedRow>
-          <tr>
-            <td class="numeric mono">{{ seedRow.seed }}</td>
-            <td class="numeric">{{ seedRow.consistency_factor | number: '1.4-4' }}</td>
-            <td class="numeric">
+          <tr [class.best]="seedRow.best" [class.worst]="seedRow.worst">
+            <td class="figure mono">{{ seedRow.seed }}</td>
+            <td class="figure">{{ seedRow.consistency_factor | number: '1.4-4' }}</td>
+            <td class="figure">
               {{ seedRow.distribution_fidelity_factor | number: '1.4-4' }}
             </td>
-            <td class="numeric">{{ seedRow.final_score | number: '1.4-4' }}</td>
+            <td class="numeric final-cell">{{ seedRow.final_score | number: '1.4-4' }}</td>
           </tr>
         </ng-template>
       </p-table>

@@ -36,9 +36,9 @@ class Request:
     """What the caller asked for. Mirrors bench_task.py's own flags."""
 
     task: str
-    seeds: int = 3
+    seeds: int = runner.DEFAULT_SEEDS
     rng: int | None = None
-    task_seed: bool = False
+    random_seeds: bool = False
     per_seed: bool = False
     uid: int = 0
 
@@ -47,7 +47,7 @@ class Request:
             "task": self.task,
             "seeds": self.seeds,
             "rng": self.rng,
-            "task_seed": self.task_seed,
+            "random_seeds": self.random_seeds,
             "per_seed": self.per_seed,
             "uid": self.uid,
         }
@@ -128,7 +128,7 @@ async def _run(job: Job) -> None:
                 task=job.request.task,
                 seeds=job.request.seeds,
                 rng=job.request.rng,
-                task_seed=job.request.task_seed,
+                random_seeds=job.request.random_seeds,
                 per_seed=job.request.per_seed,
                 uid=job.request.uid,
             )

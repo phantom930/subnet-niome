@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Run the miner against a recorded task and score it with the validator's own stages.
 
-    scripts/bench_task.py                      # newest task, 3 random seeds
-    scripts/bench_task.py --task 3 --seeds 5
+    scripts/bench_task.py                      # newest task, under the seeds it closed under
+    scripts/bench_task.py --task 3 --random-seeds --seeds 5
     scripts/bench_task.py --list
 
 The point of the harness is the asymmetry that the live subnet has and a naive test does not:
@@ -11,9 +11,13 @@ The point of the harness is the asymmetry that the live subnet has and a naive t
   which is what the backend actually broadcasts — the round seed is stamped after the task goes out.
   ``testing/task.json`` is a *closed-round* snapshot and its contracts do carry the real seed, so
   reading it straight into the miner would quietly hand the design an oracle it never has.
-* **the validator is run with seeds the miner never saw.** They are drawn at random from
-  ``design.SEED_SUPPORT`` and joined into the ``seed`` field the way the backend joins a multi-seed
-  round, so ``benchmark_submission`` averages several draws exactly as it does in production.
+* **the validator is run with the seeds the round closed under, which the miner never saw.** A
+  recorded task normally carries them, so scoring under them is what a validator actually paid for
+  those rows. A task whose ``seed`` is still 0 — the backend's placeholder for "not stamped yet" —
+  has nothing to score against, so seeds are drawn at random from ``design.SEED_SUPPORT`` instead;
+  ``--random-seeds`` forces that draw for a stamped task too. Either way they go into the ``seed``
+  field comma-joined, the way the backend joins a multi-seed round, so ``benchmark_submission``
+  averages several draws exactly as it does in production.
 
 Scoring goes through ``benchmark_submission`` itself rather than a reimplementation, so the number
 printed is the number a validator would compute. That entry point communicates through the fixed
@@ -52,6 +56,9 @@ TASK_SNAPSHOT = PROJECT_ROOT / "testing" / "task.json"
 CELL_TYPE_SNAPSHOT = PROJECT_ROOT / "testing" / "cell_types.json"
 SUBMISSION_OUTPUT = PROJECT_ROOT / "testing" / "submission.json"
 DEFAULT_CELL_TYPES = {"HEK293": {"accessibility": 0.35}}
+# How many seeds are drawn when there are none to score under. Only reached for an unstamped task,
+# or under --random-seeds.
+DEFAULT_SEED_COUNT = 3
 
 # The closed-round history, and the only task endpoint that needs no hotkey signature: /current is
 # what the validator signs for, and it answers "Missing required headers" to an unsigned GET. Both
@@ -273,6 +280,64 @@ def select_task(tasks: list[dict], selector: str) -> dict:
 
 
 # ---------------------------------------------------------------------------------------------
+# Which seeds the validator half gets
+# ---------------------------------------------------------------------------------------------
+
+def recorded_seeds(contract: dict) -> list[int]:
+    """The round seeds stamped on a task, in the order the backend recorded them, or ``[]``.
+
+    Parsed exactly as ``Context.seeds()`` parses it, zeros dropped: 0 is the backend's placeholder
+    for "not stamped yet", not a round seed. ``"0"`` therefore has to be filtered *before* the
+    emptiness test — a list holding only zeros is still a non-empty list, and treating it as seeds
+    would score every row under a seed no validator ever held.
+    """
+    try:
+        parsed = [
+            int(seed_text) for seed_text in str(contract.get("seed", "")).split(",")
+            if seed_text.strip()
+        ]
+    except (TypeError, ValueError):
+        return []
+    return [seed for seed in parsed if seed]
+
+
+def draw_seeds(count: int, rng_seed: int | None) -> list[int]:
+    """``count`` seeds the miner never saw, drawn from every seed the backend has been observed to
+    stamp. ``SEED_SUPPORT`` is ``range(100, 1000)``."""
+    rng = random.Random(rng_seed)
+    return sorted(rng.sample(design.SEED_SUPPORT, min(count, len(design.SEED_SUPPORT))))
+
+
+def choose_seeds(task: dict, args) -> tuple[list[int], str]:
+    """The seeds to score under, and one line saying where they came from.
+
+    The task's own seeds are the default because they are the ones the round closed under: the
+    resulting score is the one a validator computed, not an estimate of it. Random draws are the
+    fallback for a task that has no seeds — and, under ``--random-seeds``, a way to ask how the same
+    rows hold up against seeds that were never played.
+    """
+    contract = task["content"]["contract"]
+    recorded = recorded_seeds(contract)
+    seed_count = DEFAULT_SEED_COUNT if args.seeds is None else args.seeds
+
+    if args.random_seeds:
+        return draw_seeds(seed_count, args.rng), "drawn at random, not the task's own"
+
+    if recorded:
+        if args.seeds is not None or args.rng is not None:
+            print("! --seeds/--rng describe a random draw, and this task is stamped, so they are "
+                  "ignored. Add --random-seeds to draw seeds instead of using the task's own.")
+        return recorded, "the task's own, recorded after the round closed"
+
+    if args.task_seed:
+        raise SystemExit(
+            f"task {task['id']} is unstamped (seed {contract.get('seed')!r}) — it has no recorded "
+            "seed to score under. Drop --task-seed to fall back to random seeds."
+        )
+    return draw_seeds(seed_count, args.rng), "drawn at random — the task is unstamped"
+
+
+# ---------------------------------------------------------------------------------------------
 # The two halves
 # ---------------------------------------------------------------------------------------------
 
@@ -314,7 +379,8 @@ def write_json(path: Path, document) -> None:
 # ---------------------------------------------------------------------------------------------
 
 def print_report(task: dict, rows: list[dict], diagnostics: dict, seeds: list[int],
-                 breakdown: dict, per_seed: list[tuple[int, dict]], cell_types: dict) -> None:
+                 seed_source: str, breakdown: dict, per_seed: list[tuple[int, dict]],
+                 cell_types: dict) -> None:
     contract = task["content"]["contract"]
     rules = contract["rules"]
     accessibility = cell_types.get(contract["cell_type"], {}).get("accessibility")
@@ -344,7 +410,9 @@ def print_report(task: dict, rows: list[dict], diagnostics: dict, seeds: list[in
         print(f"  ! EMPTY CELLS   {diagnostics['empty_cells']}  (stage 5 geometric mean → ~1e-9)")
 
     print()
-    print(f"validator — seeds {seeds}")
+    # "seeds [...]" is what the dashboard's report parser looks for, so the source goes after the
+    # bracket rather than into the label.
+    print(f"validator — seeds {seeds}  ({seed_source})")
     # Every field benchmark_submission puts in MinerScore.breakdown, under its own name. The two
     # *_score fields are the raw stage outputs; the *_factor fields are those clamped to [0, 1],
     # and only the factors enter the product.
@@ -382,12 +450,21 @@ def main() -> int:
     )
     parser.add_argument("--task", default="0",
                         help="task list position (0 = newest) or task id. Default: 0")
-    parser.add_argument("--seeds", type=int, default=3,
-                        help="how many random round seeds the validator gets. Default: 3")
+    parser.add_argument("--seeds", type=int, default=None,
+                        help=f"how many seeds to draw when they are drawn at random — for an "
+                             f"unstamped task, or under --random-seeds. "
+                             f"Default: {DEFAULT_SEED_COUNT}")
     parser.add_argument("--rng", type=int, default=None,
-                        help="seed the RNG that *picks* the round seeds, to repeat a run exactly")
-    parser.add_argument("--task-seed", action="store_true",
-                        help="score under the task's own recorded seed instead of random ones")
+                        help="seed the RNG that *picks* random round seeds, to repeat a run exactly")
+    # Both of these only say what to do about the task's recorded seed, so asking for both at once
+    # is a contradiction rather than a precedence question.
+    seed_source = parser.add_mutually_exclusive_group()
+    seed_source.add_argument("--random-seeds", action="store_true",
+                             help="score under random seeds even though the task carries its own, "
+                                  "to see how the same rows hold up against seeds never played")
+    seed_source.add_argument("--task-seed", action="store_true",
+                             help="require the task's recorded seed: fail on an unstamped task "
+                                  "instead of falling back to random seeds")
     parser.add_argument("--per-seed", action="store_true",
                         help="also score each seed on its own, to show the spread")
     parser.add_argument("--uid", type=int, default=0, help="uid to report. Default: 0")
@@ -431,23 +508,7 @@ def main() -> int:
     cell_types = load_cell_types()
     check_cell_type(contract, cell_types)
 
-    if args.task_seed:
-        # Zeros are dropped for the same reason Context.seeds() drops them: 0 is the backend's
-        # placeholder for "not stamped yet", not a round seed. A list holding it is still a
-        # non-empty list, so filtering has to happen before the emptiness check.
-        seeds = [
-            int(seed) for seed in str(contract.get("seed", "")).split(",")
-            if seed.strip() and int(seed)
-        ]
-        if not seeds:
-            raise SystemExit(
-                f"task {task['id']} is unstamped (seed {contract.get('seed')!r}) — it has no "
-                "recorded seed to score under. Drop --task-seed to use random seeds instead."
-            )
-    else:
-        rng = random.Random(args.rng)
-        # SEED_SUPPORT is range(100, 1000): every seed the backend has been observed to stamp.
-        seeds = sorted(rng.sample(design.SEED_SUPPORT, min(args.seeds, len(design.SEED_SUPPORT))))
+    seeds, seed_source = choose_seeds(task, args)
 
     work_dir = Path(args.work_dir) if args.work_dir else Path(tempfile.mkdtemp(prefix="niome-bench-"))
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -475,7 +536,7 @@ def main() -> int:
                 for seed in seeds
             ]
 
-        print_report(task, rows, diagnostics, seeds, breakdown, per_seed, cell_types)
+        print_report(task, rows, diagnostics, seeds, seed_source, breakdown, per_seed, cell_types)
         print(f"\nsubmission: {SUBMISSION_OUTPUT.relative_to(PROJECT_ROOT)}  "
               f"({len(rows)} rows, as built)")
         if args.keep or args.work_dir:

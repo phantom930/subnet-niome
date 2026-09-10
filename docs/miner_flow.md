@@ -305,9 +305,9 @@ would then score every submission under `seed: 0`.
 ```
 scripts/bench_task.py --fetch                  # refresh the task history from the backend
 scripts/bench_task.py --list                   # the recorded task history
-scripts/bench_task.py                          # newest task, 3 random seeds
-scripts/bench_task.py --task de19c2e0 --task-seed   # reproduce a closed round exactly
-scripts/bench_task.py --seeds 5 --per-seed     # show the spread across seeds
+scripts/bench_task.py                          # newest task, under the seeds it closed under
+scripts/bench_task.py --task de19c2e0 --task-seed   # refuse to score an unstamped task at all
+scripts/bench_task.py --random-seeds --seeds 5 --per-seed   # 5 unplayed seeds, and their spread
 ```
 
 Select a task by id prefix rather than list position for anything you want to repeat: `--fetch`
@@ -329,8 +329,14 @@ two asymmetries the live subnet has:
 - **the miner is run blind.** `testing/task.json` is a *closed-round* snapshot, so its contracts
   carry the seed that was stamped after the round. The harness forces `seed: 0` before the build, and
   asserts `Context.seeds()` is empty, so the design cannot see an oracle it never has in production.
-- **the validator gets seeds the miner never saw**, drawn at random from `design.SEED_SUPPORT` and
-  comma-joined into the `seed` field the way the backend joins a multi-seed round.
+- **the validator gets seeds the miner never saw.** By default they are the task's own: a
+  closed-round snapshot carries the seeds the backend stamped after the round, so the score is the
+  one that round actually paid rather than an estimate of it. A task still showing `seed: 0` has
+  none, so seeds are drawn at random from `design.SEED_SUPPORT` instead — and `--random-seeds`
+  forces that draw for a stamped task, which answers a different question: how the same rows hold
+  up against seeds nobody played. `--task-seed` goes the other way and refuses the fallback.
+  Either way the seeds are comma-joined into the `seed` field the way the backend joins a
+  multi-seed round, and `--seeds`/`--rng` only ever size and repeat a random draw.
 
 `benchmark_submission` communicates through the fixed `data/` filenames, so the harness redirects
 every stage's path constant into a temporary directory instead. Note that the stages do

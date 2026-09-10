@@ -21,8 +21,11 @@ FIELD = re.compile(r"^ {2}(?P<key>[a-z_]+[a-z])\s{2,}(?P<value>\S.*?)\s*$")
 # "task 12be08f9-...  (2026-09-08T19:06:32.768413)"
 TASK_LINE = re.compile(r"^task\s+(?P<id>[0-9a-f-]{8,})\s+\((?P<created_at>[^)]*)\)")
 
-# "validator — seeds [929, 5001]"
-SEEDS_LINE = re.compile(r"^validator.*?seeds\s*\[(?P<seeds>[^\]]*)\]")
+# "validator — seeds [929, 5001]  (the task's own, recorded after the round closed)". The
+# parenthetical says where the seeds came from, and is optional so an older report still parses.
+SEEDS_LINE = re.compile(
+    r"^validator.*?seeds\s*\[(?P<seeds>[^\]]*)\](?:\s*\((?P<source>[^)]*)\))?"
+)
 
 # "  cell_type       CD34+_HSPC  (accessibility 0.87)"
 CELL_TYPE = re.compile(r"^(?P<cell_type>\S+)\s+\(accessibility\s+(?P<accessibility>[\d.]+)\)")
@@ -56,6 +59,7 @@ def parse(output: str) -> dict[str, Any]:
     validator: dict[str, Any] = {}
     per_seed: list[dict[str, float]] = []
     seeds: list[int] = []
+    seed_source: str | None = None
     spread: float | int | str | None = None
     section = "task"
 
@@ -83,6 +87,7 @@ def parse(output: str) -> dict[str, Any]:
                     for part in seeds_match.group("seeds").split(",")
                     if part.strip().isdigit()
                 ]
+                seed_source = seeds_match.group("source")
             continue
 
         if section == "validator" and per_seed is not None:
@@ -130,6 +135,10 @@ def parse(output: str) -> dict[str, Any]:
         "miner": miner,
         "validator": validator,
         "seeds": seeds,
+        # Whether the score is the one the round actually paid, or a draw the
+        # round never played. Absent from a report the harness printed before
+        # the source was named.
+        "seed_source": seed_source,
         "per_seed": per_seed,
         "spread": spread,
     }

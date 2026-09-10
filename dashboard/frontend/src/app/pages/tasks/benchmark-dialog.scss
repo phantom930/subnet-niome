@@ -1,3 +1,51 @@
+/* One hue per thing the numbers describe, so a value, its label and its term in
+   the formula are the same colour wherever they appear: the weighting indigo,
+   the consistency the seeds decide amber, the distribution fidelity sky, and
+   the score they multiply into the primary emerald.
+
+   Light mode takes the 600/700 steps, which hold contrast against a white card;
+   amber in particular is unreadable at 500 there. Dark mode steps up to the
+   400s for the same reason in the other direction. Both are theme tokens, so a
+   re-brand carries them. */
+:host {
+  --tone-count: var(--p-text-muted-color);
+  --tone-weighted: var(--p-indigo-600);
+  --tone-consistency: var(--p-amber-700);
+  --tone-fidelity: var(--p-sky-700);
+  --tone-score: var(--p-primary-color);
+  --tone-worst: var(--p-rose-600);
+}
+
+:host-context(html.app-dark) {
+  --tone-weighted: var(--p-indigo-400);
+  --tone-consistency: var(--p-amber-400);
+  --tone-fidelity: var(--p-sky-400);
+  --tone-worst: var(--p-rose-400);
+}
+
+/* The hue an element and its descendants draw in. Set from a data-tone, which
+   both tables and the formula carry, so every rule below reads one variable
+   rather than repeating the mapping. */
+[data-tone='weighted'] {
+  --tone: var(--tone-weighted);
+}
+
+[data-tone='consistency'] {
+  --tone: var(--tone-consistency);
+}
+
+[data-tone='fidelity'] {
+  --tone: var(--tone-fidelity);
+}
+
+[data-tone='score'] {
+  --tone: var(--tone-score);
+}
+
+[data-tone='count'] {
+  --tone: var(--tone-count);
+}
+
 .mono {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.8125rem;
@@ -24,12 +72,20 @@
   font-size: 0.8125rem;
 }
 
+/* The score and the run that produced it, on a wash of the score's own hue, so
+   the headline reads as one block rather than as the first two lines of text.
+   Mixing into transparent keeps it a tint of whatever surface it lands on, so
+   both themes fall out of the one declaration. */
 .headline {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  padding: 0.875rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--tone-score) 24%, transparent);
+  border-radius: var(--p-border-radius-md, 6px);
+  background-color: color-mix(in srgb, var(--tone-score) 8%, transparent);
 }
 
 .final {
@@ -49,18 +105,37 @@
   font-weight: 700;
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
+  color: var(--tone-score);
 }
 
 .run-meta {
   display: flex;
+  align-items: center;
   gap: 0.875rem;
   font-size: 0.8125rem;
   flex-wrap: wrap;
 }
 
+/* The seeds themselves, which the tag beside them says the provenance of. */
+.seeds {
+  color: var(--p-text-color);
+}
+
+/* Small enough that the tag should not shout; it is a label on the score, not a
+   button. */
+:host ::ng-deep .run-meta .p-tag {
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.4rem;
+}
+
 .formula {
   margin: 0.5rem 0 1rem;
   font-size: 0.75rem;
+}
+
+.formula .term {
+  color: var(--tone);
+  font-weight: 600;
 }
 
 .metrics {
@@ -69,12 +144,15 @@
   margin-bottom: 0.5rem;
 }
 
+/* The band down the left is what groups a raw stage output with its factor:
+   same hue, two rows. */
 .metrics th {
   text-align: left;
   font-weight: 500;
-  padding: 0.375rem 0;
+  padding: 0.375rem 0 0.375rem 0.5rem;
   color: var(--p-text-muted-color);
   border-bottom: 1px solid var(--p-content-border-color);
+  border-left: 3px solid var(--tone, transparent);
 }
 
 .metrics td {
@@ -82,9 +160,65 @@
   border-bottom: 1px solid var(--p-content-border-color);
 }
 
+/* Only three of these six are multiplied into the final score. They take their
+   hue and a tint of it; the raw stage outputs beside them stay muted, so the
+   product is readable straight off the table. */
+.metrics tr.in-product {
+  background-color: color-mix(in srgb, var(--tone) 8%, transparent);
+}
+
+.metrics tr.in-product th {
+  color: var(--tone);
+  font-weight: 600;
+}
+
+.metrics tr.in-product td {
+  font-weight: 600;
+}
+
 .numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+/* A number that stays under a left-aligned header. Tabular figures still line
+   the digits up down the column; only the alignment differs from .numeric. */
+.figure {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- The per-seed table ---- */
+
+/* The headers keep the hues the metrics table gave those same two factors, and
+   Final takes the score's. PrimeNG puts no class on a th from a header
+   template, so the colour has to come from here. */
+th[data-tone] {
+  color: var(--tone);
+}
+
+/* What the other three columns multiply into. */
+.final-cell {
+  font-weight: 600;
+}
+
+/* Which seed a round draws is the one thing a miner cannot design for, so the
+   ends of the spread are marked: the best draw in the score's own hue, the
+   worst in rose. Both tint the whole row, because the seed is as much the
+   answer as the score is. */
+tr.best {
+  background-color: color-mix(in srgb, var(--tone-score) 10%, transparent);
+}
+
+tr.worst {
+  background-color: color-mix(in srgb, var(--tone-worst) 10%, transparent);
+}
+
+tr.best .final-cell {
+  color: var(--tone-score);
+}
+
+tr.worst .final-cell {
+  color: var(--tone-worst);
 }
 
 .section-title {

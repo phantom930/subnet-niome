@@ -126,9 +126,14 @@ export type JobStatus = 'queued' | 'running' | 'done' | 'failed';
 
 export interface BenchmarkRequest {
   task: string;
+  /** How many seeds to draw when they are drawn: an unstamped task, or `random_seeds`. */
   seeds?: number;
   rng?: number | null;
-  task_seed?: boolean;
+  /**
+   * Score under random seeds even though the task carries its own. The
+   * default is the seeds the round actually closed under.
+   */
+  random_seeds?: boolean;
   per_seed?: boolean;
   uid?: number;
 }
@@ -170,6 +175,11 @@ export interface BenchmarkResult {
     final_score?: number;
   };
   seeds: number[];
+  /**
+   * Where those seeds came from: the task's own recorded ones, or a random
+   * draw. Absent on an older backend, or if the report's format changes.
+   */
+  seed_source?: string | null;
   per_seed: PerSeedScore[];
   /** Null for a single-seed run; absent on older backends. */
   spread?: number | null;

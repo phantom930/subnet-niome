@@ -8,7 +8,70 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
 import { BenchmarkService } from '../../core/benchmark.service';
-import { BenchmarkJob, TaskRow } from '../../core/task.models';
+import { BenchmarkJob, BenchmarkResult, TaskRow } from '../../core/task.models';
+
+/** The hue a number is drawn in, so a value and its label read as one thing. */
+type Tone = 'count' | 'weighted' | 'consistency' | 'fidelity';
+
+/**
+ * The validator's fields, ordered as the harness prints them: each raw stage
+ * output, then the factor clamped to [0, 1] beside it.
+ *
+ * `tone` groups a raw output with its factor and with the matching term in the
+ * formula, so the three colours are enough to read the product off the table.
+ * `inProduct` marks the three fields that are actually multiplied — the two
+ * raw scores are not.
+ */
+const VALIDATOR_FIELDS: ReadonlyArray<{
+  key: keyof BenchmarkResult['validator'];
+  label: string;
+  digits: number;
+  tone: Tone;
+  inProduct: boolean;
+}> = [
+  {
+    key: 'n_valid_experiments',
+    label: 'Valid experiments',
+    digits: 0,
+    tone: 'count',
+    inProduct: false,
+  },
+  {
+    key: 'total_weighted_score',
+    label: 'Total weighted score',
+    digits: 3,
+    tone: 'weighted',
+    inProduct: true,
+  },
+  {
+    key: 'consistency_score',
+    label: 'Consistency score',
+    digits: 4,
+    tone: 'consistency',
+    inProduct: false,
+  },
+  {
+    key: 'consistency_factor',
+    label: 'Consistency factor',
+    digits: 4,
+    tone: 'consistency',
+    inProduct: true,
+  },
+  {
+    key: 'distribution_fidelity_score',
+    label: 'Fidelity score',
+    digits: 4,
+    tone: 'fidelity',
+    inProduct: false,
+  },
+  {
+    key: 'distribution_fidelity_factor',
+    label: 'Fidelity factor',
+    digits: 4,
+    tone: 'fidelity',
+    inProduct: true,
+  },
+];
 
 @Component({
   selector: 'app-benchmark-dialog',
@@ -45,19 +108,54 @@ export class BenchmarkDialog {
   protected readonly validatorRows = computed(() => {
     const validator = this.result()?.validator;
     if (!validator) return [];
-    // Ordered as the harness prints them: raw stage outputs, then the factors
-    // clamped to [0, 1], and only the factors enter the product.
-    const order: Array<[keyof typeof validator, string, number]> = [
-      ['n_valid_experiments', 'Valid experiments', 0],
-      ['total_weighted_score', 'Total weighted score', 3],
-      ['consistency_score', 'Consistency score', 4],
-      ['consistency_factor', 'Consistency factor', 4],
-      ['distribution_fidelity_score', 'Fidelity score', 4],
-      ['distribution_fidelity_factor', 'Fidelity factor', 4],
-    ];
-    return order
-      .filter(([key]) => validator[key] !== undefined)
-      .map(([key, label, digits]) => ({ label, value: validator[key] as number, digits }));
+    return VALIDATOR_FIELDS.filter((field) => validator[field.key] !== undefined).map((field) => ({
+      ...field,
+      value: validator[field.key] as number,
+    }));
+  });
+
+  /**
+   * The per-seed rows, with the ends of the spread marked.
+   *
+   * Which seed a round draws is the one thing a miner cannot design for, so the
+   * best and worst draws are the numbers worth finding first. A single seed, or
+   * seeds that all scored the same, has no spread to point at — marking a row
+   * there would be colour that means nothing.
+   */
+  protected readonly perSeedRows = computed(() => {
+    const rows = this.result()?.per_seed ?? [];
+    const finals = rows.map((row) => row.final_score);
+    const best = Math.max(...finals);
+    const worst = Math.min(...finals);
+    const hasSpread = rows.length > 1 && best !== worst;
+    return rows.map((row) => ({
+      ...row,
+      best: hasSpread && row.final_score === best,
+      worst: hasSpread && row.final_score === worst,
+    }));
+  });
+
+  /**
+   * Where the seeds came from, as a tag.
+   *
+   * A score under the seeds the round closed under is the one that round paid;
+   * a score under a random draw is a hypothetical. That difference changes what
+   * the number means, so it reads as a caveat rather than as a detail — amber
+   * for a draw nobody played, the score's own emerald for the real thing.
+   *
+   * The harness says it in a full phrase, which is too long to sit beside the
+   * score. Only the one distinction matters here, so the phrase becomes the
+   * tooltip and the tag carries a couple of words.
+   */
+  protected readonly seedTag = computed(() => {
+    const source = this.result()?.seed_source;
+    if (!source) return null;
+    const random = source.includes('random');
+    return {
+      label: random ? 'random draw' : "the round's own",
+      severity: random ? ('warn' as const) : ('success' as const),
+      detail: source,
+    };
   });
 
   /** final_score = weighted x consistency_factor x fidelity_factor. */

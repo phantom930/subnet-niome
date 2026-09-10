@@ -29,6 +29,11 @@ class FetchTimeout(FetchError):
 # would clobber each other's rows.
 harness_lock = asyncio.Lock()
 
+# bench_task.py's own default draw size. Mirrored rather than imported, because
+# importing the harness into this process is exactly what the module docstring
+# above rules out. Only used to decide whether --seeds is worth passing.
+DEFAULT_SEEDS = 3
+
 
 async def fetch_snapshot(replace: bool = False) -> str:
     """Run ``bench_task.py --fetch`` and return what it printed.
@@ -46,9 +51,9 @@ async def fetch_snapshot(replace: bool = False) -> str:
 
 async def run_benchmark(
     task: str,
-    seeds: int = 3,
+    seeds: int = DEFAULT_SEEDS,
     rng: int | None = None,
-    task_seed: bool = False,
+    random_seeds: bool = False,
     per_seed: bool = False,
     uid: int = 0,
 ) -> str:
@@ -56,14 +61,23 @@ async def run_benchmark(
 
     Slower than a fetch: the miner builds a submission and the validator puts
     it through five stages once per seed.
+
+    A stamped task is scored under the seeds it closed under, which is the
+    harness's default and needs no flag. ``seeds`` and ``rng`` describe the
+    random draw the harness falls back to for an unstamped task, or performs
+    outright under ``random_seeds``.
     """
     command = [str(config.PYTHON), str(config.BENCH_SCRIPT), "--task", str(task)]
-    if task_seed:
-        command.append("--task-seed")
-    else:
+    if random_seeds:
+        command.append("--random-seeds")
+    # Both only describe a random draw, and the harness says so out loud when
+    # it ignores them for a stamped task. So they are passed only when they ask
+    # for something its own defaults would not do, which keeps that note off an
+    # ordinary run.
+    if random_seeds or seeds != DEFAULT_SEEDS:
         command += ["--seeds", str(seeds)]
-        if rng is not None:
-            command += ["--rng", str(rng)]
+    if rng is not None:
+        command += ["--rng", str(rng)]
     if per_seed:
         command.append("--per-seed")
     if uid:

@@ -48,10 +48,16 @@ class BenchmarkBody(BaseModel):
     """Mirrors bench_task.py's flags."""
 
     task: str = Field(..., description="Task id, or list position with 0 the newest")
-    seeds: int = Field(3, ge=1, le=20, description="How many random round seeds")
+    seeds: int = Field(
+        runner.DEFAULT_SEEDS, ge=1, le=20,
+        description="How many seeds to draw when they are drawn at random: for an unstamped "
+                    "task, or with random_seeds",
+    )
     rng: int | None = Field(None, description="Seed the RNG that picks the seeds, to repeat a run")
-    task_seed: bool = Field(
-        False, description="Score under the task's own recorded seed instead of random ones"
+    random_seeds: bool = Field(
+        False,
+        description="Score under random seeds even though the task carries its own. The default "
+                    "is the seeds the round closed under",
     )
     per_seed: bool = Field(False, description="Also score each seed alone, to show the spread")
     uid: int = Field(0, ge=0, description="uid to report")
@@ -128,7 +134,7 @@ async def start_benchmark(body: BenchmarkBody) -> dict[str, Any]:
             task=body.task,
             seeds=body.seeds,
             rng=body.rng,
-            task_seed=body.task_seed,
+            random_seeds=body.random_seeds,
             per_seed=body.per_seed,
             uid=body.uid,
         )

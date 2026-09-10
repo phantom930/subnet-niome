@@ -48,7 +48,7 @@ function job(status: BenchmarkJob['status'], extra: Partial<BenchmarkJob> = {}):
   return {
     id: 'dabe0fd9c7c2',
     status,
-    request: { task: ROW.id, seeds: 2, rng: null, task_seed: false, per_seed: true, uid: 0 },
+    request: { task: ROW.id, seeds: 2, rng: null, random_seeds: true, per_seed: true, uid: 0 },
     created_at: 0,
     started_at: 0,
     finished_at: null,
@@ -78,6 +78,9 @@ const DONE = job('done', {
       final_score: 26.3847,
     },
     seeds: [214, 754],
+    // Two seeds the task never carried, so this fixture is a --random-seeds run
+    // rather than the default one under the task's own recorded seeds.
+    seed_source: "drawn at random, not the task's own",
     per_seed: [
       {
         seed: 214,
@@ -148,6 +151,20 @@ describe('BenchmarkDialog', () => {
     expect(text()).toContain('Final score');
   });
 
+  it('should say where the seeds came from', async () => {
+    const fixture = await open();
+    http.expectOne('/api/benchmarks').flush(DONE);
+    await fixture.whenStable();
+
+    // A score under seeds the round never played means something different
+    // from one under the seeds it closed under, so the dialog names which. The
+    // harness's full phrase stays as the tag's tooltip.
+    expect(text()).toContain('random draw');
+    expect(document.querySelector('.p-tag[title]')?.getAttribute('title')).toContain(
+      'drawn at random',
+    );
+  });
+
   it('should list a row per seed', async () => {
     const fixture = await open();
     http.expectOne('/api/benchmarks').flush(DONE);
@@ -157,6 +174,17 @@ describe('BenchmarkDialog', () => {
     expect(seedRows.length).toBe(2);
     expect(text()).toContain('214');
     expect(text()).toContain('754');
+  });
+
+  it('should mark the ends of the spread', async () => {
+    const fixture = await open();
+    http.expectOne('/api/benchmarks').flush(DONE);
+    await fixture.whenStable();
+
+    // 754 scored 26.613 and 214 scored 26.1564, so the colour has to land that
+    // way round: the tint is the only thing saying which draw was which.
+    expect(document.querySelector('.p-datatable tbody tr.best')?.textContent).toContain('754');
+    expect(document.querySelector('.p-datatable tbody tr.worst')?.textContent).toContain('214');
   });
 
   it('should surface a failed run', async () => {

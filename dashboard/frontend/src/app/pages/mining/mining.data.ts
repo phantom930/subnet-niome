@@ -357,14 +357,18 @@ export const HARNESS_COMMANDS: HarnessCommand[] = [
     purpose: 'Refresh the task history from the backend.',
   },
   { command: 'scripts/bench_task.py --list', purpose: 'List the recorded task history.' },
-  { command: 'scripts/bench_task.py', purpose: 'Newest task, three random seeds.' },
   {
-    command: 'scripts/bench_task.py --task de19c2e0 --task-seed',
-    purpose: 'Reproduce a closed round exactly, under its own recorded seed.',
+    command: 'scripts/bench_task.py',
+    purpose:
+      'Newest task, scored under the seeds it closed under. An unstamped task (seed 0) falls back to three random ones.',
   },
   {
-    command: 'scripts/bench_task.py --seeds 5 --per-seed',
-    purpose: 'Show the spread across seeds.',
+    command: 'scripts/bench_task.py --task de19c2e0 --task-seed',
+    purpose: 'Reproduce a closed round exactly, refusing to fall back to random seeds.',
+  },
+  {
+    command: 'scripts/bench_task.py --random-seeds --seeds 5 --per-seed',
+    purpose: 'Five seeds the round never played, and the spread across them.',
   },
 ];
 

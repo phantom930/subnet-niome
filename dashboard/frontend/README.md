@@ -143,6 +143,11 @@ Two API changes bite when copying older PrimeNG examples:
   directive. Write `<ng-template #header>` and `<ng-template #body let-row>`
   rather than `<ng-template pTemplate="header">`.
 
+One layout gotcha, in `Timeline`: it renders the div for an `#opposite`
+template whether or not you supply one, at `flex: 1`. Left unstyled that is
+half of every row sitting blank beside the markers, so the mining page hides
+`.p-timeline-event-opposite`. A timeline that does use both sides should not.
+
 `provideHttpClient(withFetch())` is already configured for when you start
 calling an API.
 
@@ -153,8 +158,22 @@ and shows the result in a dialog. The backend runs it as a subprocess and the
 dialog polls until it finishes, roughly 7 seconds for one seed and 15 for the
 default three.
 
+The run scores the task under the seeds its round closed under, so the number
+is the one that round actually paid. A task the backend has not stamped yet has
+none, and falls back to three random seeds. The dialog prints which of the two
+it was next to the seeds themselves.
+
 The dialog leads with the final score and the product it comes from, then the
-validator's fields, then a row per seed when more than one was used. The
+validator's fields, then a row per seed when more than one was used.
+
+Colour does the grouping. One hue per family of numbers — the weighting indigo,
+consistency amber, fidelity sky — so a raw stage output, the factor beside it
+and its term in the product all read as the same thing. Only the three numbers
+that are actually multiplied wear their hue; the raw scores stay muted. The
+score itself takes the theme's emerald, and the per-seed table tints the best
+draw in it and the worst in rose, since which seed a round draws is the one
+thing a miner cannot design for. Light mode uses the 600/700 steps and dark the
+400s, because amber in particular is unreadable at 500 on white. The
 harness's full printed report is behind "Show full report".
 
 The numbers are parsed out of that report, because `bench_task.py` has no JSON
