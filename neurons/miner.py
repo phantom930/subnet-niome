@@ -553,9 +553,30 @@ class Miner(BaseMinerNeuron):
         Every failure path returns ``self.hdr_window``, the behaviour the fleet had before.
         """
         def pin(source: str) -> tuple[int, int] | None:
-            self._record_window(task_id, cell_type, self.hdr_window,
-                                source if self.hdr_window else "cell_default", None)
-            return self.hdr_window
+            """The env pin's START at the CELL's validated width.
+
+            NIOME_HDR_WINDOW is one window per hotkey, but the right WIDTH is per cell type --
+            validated over 5 contracts each: 100 for K562 and HUDEP-2, 150 for CD34+_HSPC, 75 for
+            HEK293 (`all_hdr.CELL_CONFIG`). A single env var cannot carry that, and the width is
+            not a free choice: `group_size` is tuned at it (HEK293 measured group 100 ahead at
+            width 75 and group 80 ahead at 100-225), so a fallback that keeps the pin's width would
+            pair the new group with the wrong window.
+
+            So the pin supplies the OFFSET, which is what decorrelates sibling hotkeys, and the
+            cell supplies the width. Clamped to keep the window inside 100-999.
+            """
+            window = self.hdr_window
+            if window:
+                try:
+                    lo_c, hi_c = AH.CELL_CONFIG[cell_type]["hdr_range"]
+                    width = hi_c - lo_c + 1
+                    lo = min(window[0], 1000 - width)
+                    window = (lo, lo + width - 1)
+                except (KeyError, TypeError, ValueError):
+                    window = self.hdr_window
+            self._record_window(task_id, cell_type, window,
+                                source if window else "cell_default", None)
+            return window
 
         instance = os.getenv("NIOME_INSTANCE")
         if not instance:

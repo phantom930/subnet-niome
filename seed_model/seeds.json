@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-09T18:28:24.974070+00:00",
+  "generated_at": "2026-09-11T16:17:11.223985+00:00",
   "source": "https://niome-api.genomes.io/api/v3/tasks",
   "window": {
     "start": "2026-08-27T00:00:00",
-    "end": "2026-09-09T18:28:22.990436"
+    "end": "2026-09-11T16:17:09.058504"
   },
   "classes": [
     "100-199",
@@ -17,29 +17,31 @@
     "900-999"
   ],
   "totals": {
-    "tasks_in_window": 136,
+    "tasks_in_window": 155,
     "task_seed_formats": {
-      "triple": 118,
+      "triple": 137,
       "single": 18
     },
-    "seeds_binned": 353,
+    "seeds_binned": 410,
     "seeds_out_of_range": 19,
     "tasks_without_seed": 0,
-    "distinct_seeds": 289,
+    "distinct_seeds": 326,
     "repeated_seeds": {
       "121": 3,
-      "283": 2,
+      "283": 3,
       "546": 3,
       "498": 3,
       "916": 2,
       "217": 2,
+      "675": 2,
       "274": 2,
       "841": 2,
-      "869": 2,
+      "869": 3,
       "252": 3,
       "515": 2,
       "341": 2,
       "667": 2,
+      "130": 2,
       "671": 2,
       "922": 2,
       "567": 2,
@@ -50,59 +52,74 @@
       "225": 3,
       "775": 3,
       "380": 2,
+      "356": 2,
       "516": 2,
       "404": 2,
+      "647": 2,
       "452": 2,
       "540": 2,
+      "287": 2,
+      "802": 2,
       "572": 2,
       "482": 2,
-      "763": 2,
+      "763": 3,
       "809": 2,
       "597": 2,
       "169": 2,
+      "264": 2,
       "718": 2,
       "968": 2,
       "490": 2,
+      "710": 2,
       "780": 3,
+      "934": 2,
       "845": 2,
       "100": 3,
+      "431": 2,
       "383": 2,
       "363": 2,
       "518": 2,
       "343": 2,
+      "371": 2,
       "774": 2,
       "208": 2,
+      "713": 2,
       "201": 2,
       "463": 3,
+      "171": 2,
       "523": 2,
       "867": 2,
       "119": 2,
       "166": 2,
       "907": 2,
+      "170": 2,
       "432": 2,
       "966": 2,
-      "635": 2
+      "635": 2,
+      "642": 2,
+      "561": 2,
+      "742": 2
     },
     "seed_min": 100,
     "seed_max": 996
   },
   "min_gap": {
     "definition": "per task: min(|a-b|, |a-c|, |b-c|) over its 3 seeds",
-    "tasks_measured": 118,
+    "tasks_measured": 137,
     "min": 2,
     "max": 377,
-    "mean": 114.52,
-    "median": 101,
+    "mean": 111.72,
+    "median": 99,
     "uniform_expectation": {
       "mean": 112.5,
       "median": 92.8
     },
     "histogram": {
-      "0-49": 35,
-      "50-99": 24,
-      "100-149": 19,
-      "150-199": 21,
-      "200-249": 12,
+      "0-49": 39,
+      "50-99": 31,
+      "100-149": 23,
+      "150-199": 24,
+      "200-249": 13,
       "250-299": 3,
       "300-349": 2,
       "350-399": 2,
@@ -160,6 +177,40 @@
       ],
       "min_gap": 4,
       "max_gap": 56
+    },
+    {
+      "task_id": "fbde9cc4-bd00-48a9-8a43-555528950729",
+      "created_at": "2026-09-10T07:09:23.330954",
+      "cell_type": "K562",
+      "seeds": [
+        298,
+        426,
+        303
+      ],
+      "distances": [
+        5,
+        123,
+        128
+      ],
+      "min_gap": 5,
+      "max_gap": 128
+    },
+    {
+      "task_id": "571f4843-1671-49c3-951c-47d16a9418b0",
+      "created_at": "2026-09-09T21:32:45.298209",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        408,
+        293,
+        287
+      ],
+      "distances": [
+        6,
+        115,
+        121
+      ],
+      "min_gap": 6,
+      "max_gap": 121
     },
     {
       "task_id": "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
@@ -381,6 +432,23 @@
       ],
       "min_gap": 23,
       "max_gap": 567
+    },
+    {
+      "task_id": "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+      "created_at": "2026-09-10T16:46:24.454869",
+      "cell_type": "HUDEP-2",
+      "seeds": [
+        304,
+        193,
+        330
+      ],
+      "distances": [
+        26,
+        111,
+        137
+      ],
+      "min_gap": 26,
+      "max_gap": 137
     },
     {
       "task_id": "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
@@ -672,6 +740,23 @@
       "max_gap": 273
     },
     {
+      "task_id": "50e9259a-c10f-4273-9501-86c61147ea8c",
+      "created_at": "2026-09-11T07:12:25.689086",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        195,
+        147,
+        302
+      ],
+      "distances": [
+        48,
+        107,
+        155
+      ],
+      "min_gap": 48,
+      "max_gap": 155
+    },
+    {
       "task_id": "65786823-abc0-4288-849b-fce1d35fcb47",
       "created_at": "2026-09-07T07:03:36.742587",
       "cell_type": "K562",
@@ -791,6 +876,57 @@
       "max_gap": 151
     },
     {
+      "task_id": "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+      "created_at": "2026-09-10T19:10:49.772644",
+      "cell_type": "K562",
+      "seeds": [
+        858,
+        914,
+        171
+      ],
+      "distances": [
+        56,
+        687,
+        743
+      ],
+      "min_gap": 56,
+      "max_gap": 743
+    },
+    {
+      "task_id": "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+      "created_at": "2026-09-11T02:23:16.462872",
+      "cell_type": "HUDEP-2",
+      "seeds": [
+        170,
+        228,
+        557
+      ],
+      "distances": [
+        58,
+        329,
+        387
+      ],
+      "min_gap": 58,
+      "max_gap": 387
+    },
+    {
+      "task_id": "442591a9-ddc4-4f96-8e27-be58186ed76a",
+      "created_at": "2026-09-10T09:33:22.733431",
+      "cell_type": "HUDEP-2",
+      "seeds": [
+        970,
+        710,
+        772
+      ],
+      "distances": [
+        62,
+        198,
+        260
+      ],
+      "min_gap": 62,
+      "max_gap": 260
+    },
+    {
       "task_id": "42bec26a-7482-4dcd-9b20-1577fcabe0f6",
       "created_at": "2026-09-09T16:44:07.935886",
       "cell_type": "K562",
@@ -893,6 +1029,40 @@
       "max_gap": 219
     },
     {
+      "task_id": "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+      "created_at": "2026-09-10T04:45:09.813115",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        222,
+        297,
+        911
+      ],
+      "distances": [
+        75,
+        614,
+        689
+      ],
+      "min_gap": 75,
+      "max_gap": 689
+    },
+    {
+      "task_id": "430543e8-59b3-453d-8756-888cb393cf26",
+      "created_at": "2026-09-11T14:25:04.113934",
+      "cell_type": "K562",
+      "seeds": [
+        724,
+        647,
+        264
+      ],
+      "distances": [
+        77,
+        383,
+        460
+      ],
+      "min_gap": 77,
+      "max_gap": 460
+    },
+    {
       "task_id": "999dc89d-7896-4666-a19d-e695047044f2",
       "created_at": "2026-09-03T21:19:11.171429",
       "cell_type": "CD34+_HSPC",
@@ -961,6 +1131,23 @@
       "max_gap": 472
     },
     {
+      "task_id": "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+      "created_at": "2026-09-09T23:56:33.365367",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        283,
+        371,
+        869
+      ],
+      "distances": [
+        88,
+        498,
+        586
+      ],
+      "min_gap": 88,
+      "max_gap": 586
+    },
+    {
       "task_id": "8002146e-63fd-41f6-815a-a04e87bb0403",
       "created_at": "2026-08-29T02:06:53.385297",
       "cell_type": "K562",
@@ -976,6 +1163,23 @@
       ],
       "min_gap": 88,
       "max_gap": 247
+    },
+    {
+      "task_id": "7306c626-df05-420f-8ee1-093c301eb4ba",
+      "created_at": "2026-09-10T21:35:23.406761",
+      "cell_type": "K562",
+      "seeds": [
+        356,
+        561,
+        450
+      ],
+      "distances": [
+        94,
+        111,
+        205
+      ],
+      "min_gap": 94,
+      "max_gap": 205
     },
     {
       "task_id": "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
@@ -1182,6 +1386,23 @@
       "max_gap": 231
     },
     {
+      "task_id": "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+      "created_at": "2026-09-11T09:36:36.804766",
+      "cell_type": "HEK293",
+      "seeds": [
+        934,
+        642,
+        753
+      ],
+      "distances": [
+        111,
+        181,
+        292
+      ],
+      "min_gap": 111,
+      "max_gap": 292
+    },
+    {
       "task_id": "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
       "created_at": "2026-09-06T02:11:23.013563",
       "cell_type": "HUDEP-2",
@@ -1284,6 +1505,23 @@
       "max_gap": 497
     },
     {
+      "task_id": "3008c42e-396c-4e99-b430-2cca1581b268",
+      "created_at": "2026-09-10T23:59:12.601844",
+      "cell_type": "HEK293",
+      "seeds": [
+        802,
+        675,
+        431
+      ],
+      "distances": [
+        127,
+        244,
+        371
+      ],
+      "min_gap": 127,
+      "max_gap": 371
+    },
+    {
       "task_id": "f3caa161-17fc-41a0-9a8a-851876718b65",
       "created_at": "2026-09-06T07:01:14.917300",
       "cell_type": "CD34+_HSPC",
@@ -1350,6 +1588,40 @@
       ],
       "min_gap": 128,
       "max_gap": 603
+    },
+    {
+      "task_id": "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+      "created_at": "2026-09-11T12:00:45.900655",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        605,
+        754,
+        474
+      ],
+      "distances": [
+        131,
+        149,
+        280
+      ],
+      "min_gap": 131,
+      "max_gap": 280
+    },
+    {
+      "task_id": "b162020b-274c-460d-b4e6-e480038549ac",
+      "created_at": "2026-09-11T04:47:46.166224",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        894,
+        386,
+        763
+      ],
+      "distances": [
+        131,
+        377,
+        508
+      ],
+      "min_gap": 131,
+      "max_gap": 508
     },
     {
       "task_id": "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
@@ -1437,6 +1709,23 @@
       "max_gap": 335
     },
     {
+      "task_id": "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+      "created_at": "2026-09-09T19:08:34.179746",
+      "cell_type": "HUDEP-2",
+      "seeds": [
+        713,
+        562,
+        130
+      ],
+      "distances": [
+        151,
+        432,
+        583
+      ],
+      "min_gap": 151,
+      "max_gap": 583
+    },
+    {
       "task_id": "4aef74cb-3baf-4517-9837-efd4db069492",
       "created_at": "2026-08-31T16:30:43.082707",
       "cell_type": "HEK293",
@@ -1469,6 +1758,23 @@
       ],
       "min_gap": 151,
       "max_gap": 483
+    },
+    {
+      "task_id": "1c973596-860c-4a31-a122-3a3827ce4998",
+      "created_at": "2026-09-10T02:20:57.003914",
+      "cell_type": "K562",
+      "seeds": [
+        530,
+        378,
+        800
+      ],
+      "distances": [
+        152,
+        270,
+        422
+      ],
+      "min_gap": 152,
+      "max_gap": 422
     },
     {
       "task_id": "92280006-3fe8-4d80-ba26-57380770eb54",
@@ -1656,6 +1962,23 @@
       ],
       "min_gap": 176,
       "max_gap": 369
+    },
+    {
+      "task_id": "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+      "created_at": "2026-09-10T11:57:38.693874",
+      "cell_type": "HEK293",
+      "seeds": [
+        412,
+        233,
+        665
+      ],
+      "distances": [
+        179,
+        253,
+        432
+      ],
+      "min_gap": 179,
+      "max_gap": 432
     },
     {
       "task_id": "db327875-11d4-4b57-9c43-5c015fdd3895",
@@ -1860,6 +2183,23 @@
       ],
       "min_gap": 209,
       "max_gap": 558
+    },
+    {
+      "task_id": "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+      "created_at": "2026-09-10T14:22:25.054017",
+      "cell_type": "CD34+_HSPC",
+      "seeds": [
+        406,
+        958,
+        742
+      ],
+      "distances": [
+        216,
+        336,
+        552
+      ],
+      "min_gap": 216,
+      "max_gap": 552
     },
     {
       "task_id": "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
@@ -2119,59 +2459,59 @@
   ],
   "matrix": {
     "CD34+_HSPC": {
-      "100-199": 8,
-      "200-299": 11,
-      "300-399": 9,
-      "400-499": 10,
+      "100-199": 10,
+      "200-299": 16,
+      "300-399": 12,
+      "400-499": 13,
       "500-599": 17,
-      "600-699": 6,
-      "700-799": 7,
-      "800-899": 12,
-      "900-999": 13
+      "600-699": 7,
+      "700-799": 10,
+      "800-899": 14,
+      "900-999": 15
     },
     "HEK293": {
       "100-199": 17,
-      "200-299": 8,
+      "200-299": 9,
       "300-399": 7,
-      "400-499": 16,
+      "400-499": 18,
       "500-599": 9,
-      "600-699": 8,
-      "700-799": 14,
-      "800-899": 10,
-      "900-999": 10
+      "600-699": 11,
+      "700-799": 15,
+      "800-899": 11,
+      "900-999": 11
     },
     "HUDEP-2": {
-      "100-199": 11,
-      "200-299": 11,
-      "300-399": 10,
+      "100-199": 14,
+      "200-299": 12,
+      "300-399": 12,
       "400-499": 11,
-      "500-599": 11,
+      "500-599": 13,
       "600-699": 12,
-      "700-799": 11,
+      "700-799": 14,
       "800-899": 6,
-      "900-999": 6
+      "900-999": 7
     },
     "K562": {
-      "100-199": 8,
-      "200-299": 9,
-      "300-399": 8,
-      "400-499": 11,
-      "500-599": 8,
-      "600-699": 8,
-      "700-799": 9,
-      "800-899": 6,
-      "900-999": 5
+      "100-199": 9,
+      "200-299": 11,
+      "300-399": 11,
+      "400-499": 13,
+      "500-599": 10,
+      "600-699": 9,
+      "700-799": 10,
+      "800-899": 8,
+      "900-999": 6
     },
     "TOTAL": {
-      "100-199": 44,
-      "200-299": 39,
-      "300-399": 34,
-      "400-499": 48,
-      "500-599": 45,
-      "600-699": 34,
-      "700-799": 41,
-      "800-899": 34,
-      "900-999": 34
+      "100-199": 50,
+      "200-299": 48,
+      "300-399": 42,
+      "400-499": 55,
+      "500-599": 49,
+      "600-699": 39,
+      "700-799": 49,
+      "800-899": 39,
+      "900-999": 39
     }
   },
   "out_of_range": [
@@ -5858,84 +6198,654 @@
       "seeds_in_task": 3,
       "bin": "600-699",
       "bin_index": 5
+    },
+    {
+      "task_id": "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+      "created_at": "2026-09-09T19:08:34.179746",
+      "cell_type": "HUDEP-2",
+      "seed": 713,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+      "created_at": "2026-09-09T19:08:34.179746",
+      "cell_type": "HUDEP-2",
+      "seed": 562,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "500-599",
+      "bin_index": 4
+    },
+    {
+      "task_id": "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+      "created_at": "2026-09-09T19:08:34.179746",
+      "cell_type": "HUDEP-2",
+      "seed": 130,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "571f4843-1671-49c3-951c-47d16a9418b0",
+      "created_at": "2026-09-09T21:32:45.298209",
+      "cell_type": "CD34+_HSPC",
+      "seed": 408,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "571f4843-1671-49c3-951c-47d16a9418b0",
+      "created_at": "2026-09-09T21:32:45.298209",
+      "cell_type": "CD34+_HSPC",
+      "seed": 293,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "571f4843-1671-49c3-951c-47d16a9418b0",
+      "created_at": "2026-09-09T21:32:45.298209",
+      "cell_type": "CD34+_HSPC",
+      "seed": 287,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+      "created_at": "2026-09-09T23:56:33.365367",
+      "cell_type": "CD34+_HSPC",
+      "seed": 283,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+      "created_at": "2026-09-09T23:56:33.365367",
+      "cell_type": "CD34+_HSPC",
+      "seed": 371,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+      "created_at": "2026-09-09T23:56:33.365367",
+      "cell_type": "CD34+_HSPC",
+      "seed": 869,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "800-899",
+      "bin_index": 7
+    },
+    {
+      "task_id": "1c973596-860c-4a31-a122-3a3827ce4998",
+      "created_at": "2026-09-10T02:20:57.003914",
+      "cell_type": "K562",
+      "seed": 530,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "500-599",
+      "bin_index": 4
+    },
+    {
+      "task_id": "1c973596-860c-4a31-a122-3a3827ce4998",
+      "created_at": "2026-09-10T02:20:57.003914",
+      "cell_type": "K562",
+      "seed": 378,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "1c973596-860c-4a31-a122-3a3827ce4998",
+      "created_at": "2026-09-10T02:20:57.003914",
+      "cell_type": "K562",
+      "seed": 800,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "800-899",
+      "bin_index": 7
+    },
+    {
+      "task_id": "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+      "created_at": "2026-09-10T04:45:09.813115",
+      "cell_type": "CD34+_HSPC",
+      "seed": 222,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+      "created_at": "2026-09-10T04:45:09.813115",
+      "cell_type": "CD34+_HSPC",
+      "seed": 297,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+      "created_at": "2026-09-10T04:45:09.813115",
+      "cell_type": "CD34+_HSPC",
+      "seed": 911,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "900-999",
+      "bin_index": 8
+    },
+    {
+      "task_id": "fbde9cc4-bd00-48a9-8a43-555528950729",
+      "created_at": "2026-09-10T07:09:23.330954",
+      "cell_type": "K562",
+      "seed": 298,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "fbde9cc4-bd00-48a9-8a43-555528950729",
+      "created_at": "2026-09-10T07:09:23.330954",
+      "cell_type": "K562",
+      "seed": 426,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "fbde9cc4-bd00-48a9-8a43-555528950729",
+      "created_at": "2026-09-10T07:09:23.330954",
+      "cell_type": "K562",
+      "seed": 303,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "442591a9-ddc4-4f96-8e27-be58186ed76a",
+      "created_at": "2026-09-10T09:33:22.733431",
+      "cell_type": "HUDEP-2",
+      "seed": 970,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "900-999",
+      "bin_index": 8
+    },
+    {
+      "task_id": "442591a9-ddc4-4f96-8e27-be58186ed76a",
+      "created_at": "2026-09-10T09:33:22.733431",
+      "cell_type": "HUDEP-2",
+      "seed": 710,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "442591a9-ddc4-4f96-8e27-be58186ed76a",
+      "created_at": "2026-09-10T09:33:22.733431",
+      "cell_type": "HUDEP-2",
+      "seed": 772,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+      "created_at": "2026-09-10T11:57:38.693874",
+      "cell_type": "HEK293",
+      "seed": 412,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+      "created_at": "2026-09-10T11:57:38.693874",
+      "cell_type": "HEK293",
+      "seed": 233,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+      "created_at": "2026-09-10T11:57:38.693874",
+      "cell_type": "HEK293",
+      "seed": 665,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "600-699",
+      "bin_index": 5
+    },
+    {
+      "task_id": "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+      "created_at": "2026-09-10T14:22:25.054017",
+      "cell_type": "CD34+_HSPC",
+      "seed": 406,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+      "created_at": "2026-09-10T14:22:25.054017",
+      "cell_type": "CD34+_HSPC",
+      "seed": 958,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "900-999",
+      "bin_index": 8
+    },
+    {
+      "task_id": "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+      "created_at": "2026-09-10T14:22:25.054017",
+      "cell_type": "CD34+_HSPC",
+      "seed": 742,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+      "created_at": "2026-09-10T16:46:24.454869",
+      "cell_type": "HUDEP-2",
+      "seed": 304,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+      "created_at": "2026-09-10T16:46:24.454869",
+      "cell_type": "HUDEP-2",
+      "seed": 193,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+      "created_at": "2026-09-10T16:46:24.454869",
+      "cell_type": "HUDEP-2",
+      "seed": 330,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+      "created_at": "2026-09-10T19:10:49.772644",
+      "cell_type": "K562",
+      "seed": 858,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "800-899",
+      "bin_index": 7
+    },
+    {
+      "task_id": "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+      "created_at": "2026-09-10T19:10:49.772644",
+      "cell_type": "K562",
+      "seed": 914,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "900-999",
+      "bin_index": 8
+    },
+    {
+      "task_id": "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+      "created_at": "2026-09-10T19:10:49.772644",
+      "cell_type": "K562",
+      "seed": 171,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "7306c626-df05-420f-8ee1-093c301eb4ba",
+      "created_at": "2026-09-10T21:35:23.406761",
+      "cell_type": "K562",
+      "seed": 356,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "7306c626-df05-420f-8ee1-093c301eb4ba",
+      "created_at": "2026-09-10T21:35:23.406761",
+      "cell_type": "K562",
+      "seed": 561,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "500-599",
+      "bin_index": 4
+    },
+    {
+      "task_id": "7306c626-df05-420f-8ee1-093c301eb4ba",
+      "created_at": "2026-09-10T21:35:23.406761",
+      "cell_type": "K562",
+      "seed": 450,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "3008c42e-396c-4e99-b430-2cca1581b268",
+      "created_at": "2026-09-10T23:59:12.601844",
+      "cell_type": "HEK293",
+      "seed": 802,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "800-899",
+      "bin_index": 7
+    },
+    {
+      "task_id": "3008c42e-396c-4e99-b430-2cca1581b268",
+      "created_at": "2026-09-10T23:59:12.601844",
+      "cell_type": "HEK293",
+      "seed": 675,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "600-699",
+      "bin_index": 5
+    },
+    {
+      "task_id": "3008c42e-396c-4e99-b430-2cca1581b268",
+      "created_at": "2026-09-10T23:59:12.601844",
+      "cell_type": "HEK293",
+      "seed": 431,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+      "created_at": "2026-09-11T02:23:16.462872",
+      "cell_type": "HUDEP-2",
+      "seed": 170,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+      "created_at": "2026-09-11T02:23:16.462872",
+      "cell_type": "HUDEP-2",
+      "seed": 228,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
+    },
+    {
+      "task_id": "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+      "created_at": "2026-09-11T02:23:16.462872",
+      "cell_type": "HUDEP-2",
+      "seed": 557,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "500-599",
+      "bin_index": 4
+    },
+    {
+      "task_id": "b162020b-274c-460d-b4e6-e480038549ac",
+      "created_at": "2026-09-11T04:47:46.166224",
+      "cell_type": "CD34+_HSPC",
+      "seed": 894,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "800-899",
+      "bin_index": 7
+    },
+    {
+      "task_id": "b162020b-274c-460d-b4e6-e480038549ac",
+      "created_at": "2026-09-11T04:47:46.166224",
+      "cell_type": "CD34+_HSPC",
+      "seed": 386,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "b162020b-274c-460d-b4e6-e480038549ac",
+      "created_at": "2026-09-11T04:47:46.166224",
+      "cell_type": "CD34+_HSPC",
+      "seed": 763,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "50e9259a-c10f-4273-9501-86c61147ea8c",
+      "created_at": "2026-09-11T07:12:25.689086",
+      "cell_type": "CD34+_HSPC",
+      "seed": 195,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "50e9259a-c10f-4273-9501-86c61147ea8c",
+      "created_at": "2026-09-11T07:12:25.689086",
+      "cell_type": "CD34+_HSPC",
+      "seed": 147,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "100-199",
+      "bin_index": 0
+    },
+    {
+      "task_id": "50e9259a-c10f-4273-9501-86c61147ea8c",
+      "created_at": "2026-09-11T07:12:25.689086",
+      "cell_type": "CD34+_HSPC",
+      "seed": 302,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "300-399",
+      "bin_index": 2
+    },
+    {
+      "task_id": "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+      "created_at": "2026-09-11T09:36:36.804766",
+      "cell_type": "HEK293",
+      "seed": 934,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "900-999",
+      "bin_index": 8
+    },
+    {
+      "task_id": "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+      "created_at": "2026-09-11T09:36:36.804766",
+      "cell_type": "HEK293",
+      "seed": 642,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "600-699",
+      "bin_index": 5
+    },
+    {
+      "task_id": "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+      "created_at": "2026-09-11T09:36:36.804766",
+      "cell_type": "HEK293",
+      "seed": 753,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+      "created_at": "2026-09-11T12:00:45.900655",
+      "cell_type": "CD34+_HSPC",
+      "seed": 605,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "600-699",
+      "bin_index": 5
+    },
+    {
+      "task_id": "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+      "created_at": "2026-09-11T12:00:45.900655",
+      "cell_type": "CD34+_HSPC",
+      "seed": 754,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+      "created_at": "2026-09-11T12:00:45.900655",
+      "cell_type": "CD34+_HSPC",
+      "seed": 474,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "400-499",
+      "bin_index": 3
+    },
+    {
+      "task_id": "430543e8-59b3-453d-8756-888cb393cf26",
+      "created_at": "2026-09-11T14:25:04.113934",
+      "cell_type": "K562",
+      "seed": 724,
+      "position": 0,
+      "seeds_in_task": 3,
+      "bin": "700-799",
+      "bin_index": 6
+    },
+    {
+      "task_id": "430543e8-59b3-453d-8756-888cb393cf26",
+      "created_at": "2026-09-11T14:25:04.113934",
+      "cell_type": "K562",
+      "seed": 647,
+      "position": 1,
+      "seeds_in_task": 3,
+      "bin": "600-699",
+      "bin_index": 5
+    },
+    {
+      "task_id": "430543e8-59b3-453d-8756-888cb393cf26",
+      "created_at": "2026-09-11T14:25:04.113934",
+      "cell_type": "K562",
+      "seed": 264,
+      "position": 2,
+      "seeds_in_task": 3,
+      "bin": "200-299",
+      "bin_index": 1
     }
   ],
   "rounds": {
     "definition": "per cell type, one row per 3-seed task in order: the nine class counts accumulated over all previous rounds, and the rank each of this round's seeds' classes held in that same prior state (rank 1 = most-selected class so far, ties shared)",
     "window": {
       "start": "2026-08-27T00:00:00",
-      "end": "2026-09-09T18:28:22.990443"
+      "end": "2026-09-11T16:17:09.058510"
     },
     "stats": {
       "K562": {
-        "ranked_seeds": 69,
-        "mean_rank": 5.275,
-        "top3": 19,
-        "bottom3": 26,
-        "rank_tally_through_penultimate_round": [
-          7,
-          6,
-          6,
-          5,
-          12,
-          5,
-          9,
-          7,
-          9,
-          3
-        ]
-      },
-      "HEK293": {
-        "ranked_seeds": 96,
-        "mean_rank": 4.865,
-        "top3": 36,
-        "bottom3": 32,
-        "rank_tally_through_penultimate_round": [
-          7,
-          16,
-          12,
-          11,
-          11,
-          6,
-          14,
-          4,
-          12,
-          3
-        ]
-      },
-      "CD34+_HSPC": {
-        "ranked_seeds": 90,
-        "mean_rank": 4.867,
-        "top3": 29,
+        "ranked_seeds": 84,
+        "mean_rank": 5.238,
+        "top3": 23,
         "bottom3": 31,
         "rank_tally_through_penultimate_round": [
-          11,
-          7,
           9,
-          16,
+          7,
+          7,
           8,
-          5,
-          12,
+          13,
+          7,
+          11,
           9,
           10,
           3
         ]
       },
+      "CD34+_HSPC": {
+        "ranked_seeds": 111,
+        "mean_rank": 4.946,
+        "top3": 33,
+        "bottom3": 37,
+        "rank_tally_through_penultimate_round": [
+          13,
+          10,
+          10,
+          22,
+          10,
+          8,
+          13,
+          12,
+          10,
+          3
+        ]
+      },
+      "HEK293": {
+        "ranked_seeds": 105,
+        "mean_rank": 4.867,
+        "top3": 39,
+        "bottom3": 35,
+        "rank_tally_through_penultimate_round": [
+          9,
+          17,
+          12,
+          11,
+          12,
+          6,
+          16,
+          5,
+          14,
+          3
+        ]
+      },
       "HUDEP-2": {
-        "ranked_seeds": 86,
-        "mean_rank": 5.256,
-        "top3": 23,
-        "bottom3": 32,
+        "ranked_seeds": 98,
+        "mean_rank": 5.163,
+        "top3": 28,
+        "bottom3": 35,
         "rank_tally_through_penultimate_round": [
           8,
-          9,
-          6,
-          12,
-          5,
-          12,
-          13,
-          7,
           11,
+          8,
+          14,
+          6,
+          13,
+          16,
+          7,
+          12,
           4
         ]
       }
@@ -7499,6 +8409,2803 @@
             9,
             7,
             9,
+            3
+          ]
+        },
+        {
+          "round": 25,
+          "created_at": "2026-09-10T02:20:57.003914",
+          "task_id": "1c973596-860c-4a31-a122-3a3827ce4998",
+          "seeds": [
+            530,
+            378,
+            800
+          ],
+          "seed_classes": [
+            "500-599",
+            "300-399",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            8,
+            9,
+            8,
+            11,
+            8,
+            8,
+            9,
+            6,
+            5
+          ],
+          "class_ranks": [
+            7,
+            2,
+            6,
+            1,
+            4,
+            5,
+            3,
+            8,
+            9
+          ],
+          "class_last_updated": [
+            20,
+            24,
+            23,
+            19,
+            24,
+            24,
+            22,
+            21,
+            21
+          ],
+          "seed_ranks": [
+            4,
+            6,
+            8
+          ],
+          "rank_cumulative_counts": [
+            7,
+            6,
+            6,
+            6,
+            12,
+            6,
+            10,
+            7,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 26,
+          "created_at": "2026-09-10T07:09:23.330954",
+          "task_id": "fbde9cc4-bd00-48a9-8a43-555528950729",
+          "seeds": [
+            298,
+            426,
+            303
+          ],
+          "seed_classes": [
+            "200-299",
+            "400-499",
+            "300-399"
+          ],
+          "cumulative_counts": [
+            8,
+            9,
+            9,
+            11,
+            9,
+            8,
+            9,
+            7,
+            5
+          ],
+          "class_ranks": [
+            7,
+            4,
+            2,
+            1,
+            3,
+            6,
+            5,
+            8,
+            9
+          ],
+          "class_last_updated": [
+            20,
+            24,
+            25,
+            19,
+            25,
+            24,
+            22,
+            25,
+            21
+          ],
+          "seed_ranks": [
+            4,
+            1,
+            2
+          ],
+          "rank_cumulative_counts": [
+            7,
+            6,
+            6,
+            7,
+            12,
+            7,
+            10,
+            8,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 27,
+          "created_at": "2026-09-10T19:10:49.772644",
+          "task_id": "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+          "seeds": [
+            858,
+            914,
+            171
+          ],
+          "seed_classes": [
+            "800-899",
+            "900-999",
+            "100-199"
+          ],
+          "cumulative_counts": [
+            8,
+            10,
+            10,
+            12,
+            9,
+            8,
+            9,
+            7,
+            5
+          ],
+          "class_ranks": [
+            7,
+            2,
+            3,
+            1,
+            4,
+            6,
+            5,
+            8,
+            9
+          ],
+          "class_last_updated": [
+            20,
+            26,
+            26,
+            26,
+            25,
+            24,
+            22,
+            25,
+            21
+          ],
+          "seed_ranks": [
+            8,
+            9,
+            7
+          ],
+          "rank_cumulative_counts": [
+            8,
+            7,
+            6,
+            8,
+            12,
+            7,
+            10,
+            8,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 28,
+          "created_at": "2026-09-10T21:35:23.406761",
+          "task_id": "7306c626-df05-420f-8ee1-093c301eb4ba",
+          "seeds": [
+            356,
+            561,
+            450
+          ],
+          "seed_classes": [
+            "300-399",
+            "500-599",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            9,
+            10,
+            10,
+            12,
+            9,
+            8,
+            9,
+            8,
+            6
+          ],
+          "class_ranks": [
+            4,
+            2,
+            3,
+            1,
+            5,
+            8,
+            6,
+            7,
+            9
+          ],
+          "class_last_updated": [
+            27,
+            26,
+            26,
+            26,
+            25,
+            24,
+            22,
+            27,
+            27
+          ],
+          "seed_ranks": [
+            3,
+            5,
+            1
+          ],
+          "rank_cumulative_counts": [
+            8,
+            7,
+            6,
+            8,
+            12,
+            7,
+            11,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 29,
+          "created_at": "2026-09-11T14:25:04.113934",
+          "task_id": "430543e8-59b3-453d-8756-888cb393cf26",
+          "seeds": [
+            724,
+            647,
+            264
+          ],
+          "seed_classes": [
+            "700-799",
+            "600-699",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            9,
+            10,
+            11,
+            13,
+            10,
+            8,
+            9,
+            8,
+            6
+          ],
+          "class_ranks": [
+            5,
+            4,
+            2,
+            1,
+            3,
+            8,
+            6,
+            7,
+            9
+          ],
+          "class_last_updated": [
+            27,
+            26,
+            28,
+            28,
+            28,
+            24,
+            22,
+            27,
+            27
+          ],
+          "seed_ranks": [
+            6,
+            8,
+            4
+          ],
+          "rank_cumulative_counts": [
+            9,
+            7,
+            7,
+            8,
+            13,
+            7,
+            11,
+            9,
+            10,
+            3
+          ]
+        }
+      ],
+      "CD34+_HSPC": [
+        {
+          "round": 1,
+          "created_at": "2026-08-27T14:13:56.784587",
+          "task_id": "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+          "seeds": [
+            524,
+            979,
+            546
+          ],
+          "seed_classes": [
+            "500-599",
+            "900-999",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "class_ranks": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "seed_ranks": [
+            0,
+            0,
+            0
+          ],
+          "rank_cumulative_counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "round": 2,
+          "created_at": "2026-08-27T21:18:42.870688",
+          "task_id": "dd07ff28-7a6c-4af6-9098-a035533b8074",
+          "seeds": [
+            916,
+            334,
+            874
+          ],
+          "seed_classes": [
+            "900-999",
+            "300-399",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            1
+          ],
+          "class_ranks": [
+            3,
+            4,
+            5,
+            6,
+            1,
+            7,
+            8,
+            9,
+            2
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          "seed_ranks": [
+            2,
+            5,
+            9
+          ],
+          "rank_cumulative_counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        },
+        {
+          "round": 3,
+          "created_at": "2026-08-28T06:54:50.531564",
+          "task_id": "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+          "seeds": [
+            870,
+            353,
+            578
+          ],
+          "seed_classes": [
+            "800-899",
+            "300-399",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            1,
+            0,
+            2,
+            0,
+            0,
+            1,
+            2
+          ],
+          "class_ranks": [
+            5,
+            6,
+            3,
+            7,
+            2,
+            8,
+            9,
+            4,
+            1
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            2,
+            2
+          ],
+          "seed_ranks": [
+            4,
+            3,
+            2
+          ],
+          "rank_cumulative_counts": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "round": 4,
+          "created_at": "2026-08-28T11:42:49.254023",
+          "task_id": "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+          "seeds": [
+            477,
+            515,
+            705
+          ],
+          "seed_classes": [
+            "400-499",
+            "500-599",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            2,
+            0,
+            3,
+            0,
+            0,
+            2,
+            2
+          ],
+          "class_ranks": [
+            5,
+            6,
+            2,
+            7,
+            1,
+            8,
+            9,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            3,
+            0,
+            3,
+            0,
+            0,
+            3,
+            2
+          ],
+          "seed_ranks": [
+            7,
+            1,
+            9
+          ],
+          "rank_cumulative_counts": [
+            0,
+            2,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            3
+          ]
+        },
+        {
+          "round": 5,
+          "created_at": "2026-08-28T14:06:43.212513",
+          "task_id": "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+          "seeds": [
+            503,
+            835,
+            986
+          ],
+          "seed_classes": [
+            "500-599",
+            "800-899",
+            "900-999"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            2,
+            1,
+            4,
+            0,
+            1,
+            2,
+            2
+          ],
+          "class_ranks": [
+            7,
+            8,
+            2,
+            5,
+            1,
+            9,
+            6,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            3,
+            4,
+            4,
+            0,
+            4,
+            3,
+            2
+          ],
+          "seed_ranks": [
+            1,
+            3,
+            4
+          ],
+          "rank_cumulative_counts": [
+            1,
+            2,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "round": 6,
+          "created_at": "2026-08-28T18:54:44.927366",
+          "task_id": "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+          "seeds": [
+            341,
+            310,
+            667
+          ],
+          "seed_classes": [
+            "300-399",
+            "300-399",
+            "600-699"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            2,
+            1,
+            5,
+            0,
+            1,
+            3,
+            3
+          ],
+          "class_ranks": [
+            7,
+            8,
+            4,
+            5,
+            1,
+            9,
+            6,
+            2,
+            3
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            3,
+            4,
+            5,
+            0,
+            4,
+            5,
+            5
+          ],
+          "seed_ranks": [
+            4,
+            4,
+            9
+          ],
+          "rank_cumulative_counts": [
+            2,
+            2,
+            2,
+            2,
+            1,
+            0,
+            1,
+            0,
+            2,
+            3
+          ]
+        },
+        {
+          "round": 7,
+          "created_at": "2026-08-29T09:18:43.503015",
+          "task_id": "60f5f6a1-142f-49bd-a192-74ee28861f37",
+          "seeds": [
+            140,
+            567,
+            473
+          ],
+          "seed_classes": [
+            "100-199",
+            "500-599",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            0,
+            0,
+            4,
+            1,
+            5,
+            1,
+            1,
+            3,
+            3
+          ],
+          "class_ranks": [
+            8,
+            9,
+            2,
+            6,
+            1,
+            5,
+            7,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            0,
+            0,
+            6,
+            4,
+            5,
+            6,
+            4,
+            5,
+            5
+          ],
+          "seed_ranks": [
+            8,
+            1,
+            6
+          ],
+          "rank_cumulative_counts": [
+            2,
+            2,
+            2,
+            4,
+            1,
+            0,
+            1,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "round": 8,
+          "created_at": "2026-08-29T23:43:02.665898",
+          "task_id": "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+          "seeds": [
+            872,
+            400,
+            764
+          ],
+          "seed_classes": [
+            "800-899",
+            "400-499",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            1,
+            0,
+            4,
+            2,
+            6,
+            1,
+            1,
+            3,
+            3
+          ],
+          "class_ranks": [
+            6,
+            9,
+            2,
+            5,
+            1,
+            7,
+            8,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            7,
+            0,
+            6,
+            7,
+            7,
+            6,
+            4,
+            5,
+            5
+          ],
+          "seed_ranks": [
+            3,
+            5,
+            8
+          ],
+          "rank_cumulative_counts": [
+            3,
+            2,
+            2,
+            4,
+            1,
+            1,
+            1,
+            1,
+            3,
+            3
+          ]
+        },
+        {
+          "round": 9,
+          "created_at": "2026-08-30T04:30:42.600139",
+          "task_id": "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+          "seeds": [
+            248,
+            929,
+            198
+          ],
+          "seed_classes": [
+            "200-299",
+            "900-999",
+            "100-199"
+          ],
+          "cumulative_counts": [
+            1,
+            0,
+            4,
+            3,
+            6,
+            1,
+            2,
+            4,
+            3
+          ],
+          "class_ranks": [
+            7,
+            9,
+            3,
+            4,
+            1,
+            8,
+            6,
+            2,
+            5
+          ],
+          "class_last_updated": [
+            7,
+            0,
+            6,
+            8,
+            7,
+            6,
+            8,
+            8,
+            5
+          ],
+          "seed_ranks": [
+            9,
+            5,
+            7
+          ],
+          "rank_cumulative_counts": [
+            3,
+            2,
+            3,
+            4,
+            2,
+            1,
+            1,
+            2,
+            3,
+            3
+          ]
+        },
+        {
+          "round": 10,
+          "created_at": "2026-08-30T14:06:44.020037",
+          "task_id": "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+          "seeds": [
+            498,
+            455,
+            225
+          ],
+          "seed_classes": [
+            "400-499",
+            "400-499",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            2,
+            1,
+            4,
+            3,
+            6,
+            1,
+            2,
+            4,
+            4
+          ],
+          "class_ranks": [
+            6,
+            8,
+            4,
+            5,
+            1,
+            9,
+            7,
+            3,
+            2
+          ],
+          "class_last_updated": [
+            9,
+            9,
+            6,
+            8,
+            7,
+            6,
+            8,
+            8,
+            9
+          ],
+          "seed_ranks": [
+            5,
+            5,
+            8
+          ],
+          "rank_cumulative_counts": [
+            3,
+            2,
+            3,
+            4,
+            3,
+            1,
+            2,
+            2,
+            4,
+            3
+          ]
+        },
+        {
+          "round": 11,
+          "created_at": "2026-08-30T21:18:53.732341",
+          "task_id": "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+          "seeds": [
+            859,
+            516,
+            284
+          ],
+          "seed_classes": [
+            "800-899",
+            "500-599",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            2,
+            2,
+            4,
+            5,
+            6,
+            1,
+            2,
+            4,
+            4
+          ],
+          "class_ranks": [
+            7,
+            6,
+            5,
+            2,
+            1,
+            9,
+            8,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            9,
+            10,
+            6,
+            10,
+            7,
+            6,
+            8,
+            8,
+            9
+          ],
+          "seed_ranks": [
+            4,
+            1,
+            6
+          ],
+          "rank_cumulative_counts": [
+            3,
+            2,
+            3,
+            4,
+            5,
+            1,
+            2,
+            3,
+            4,
+            3
+          ]
+        },
+        {
+          "round": 12,
+          "created_at": "2026-08-31T02:06:44.165839",
+          "task_id": "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+          "seeds": [
+            969,
+            647,
+            452
+          ],
+          "seed_classes": [
+            "900-999",
+            "600-699",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            2,
+            3,
+            4,
+            5,
+            7,
+            1,
+            2,
+            5,
+            4
+          ],
+          "class_ranks": [
+            7,
+            6,
+            5,
+            3,
+            1,
+            9,
+            8,
+            2,
+            4
+          ],
+          "class_last_updated": [
+            9,
+            11,
+            6,
+            10,
+            11,
+            6,
+            8,
+            11,
+            9
+          ],
+          "seed_ranks": [
+            4,
+            9,
+            3
+          ],
+          "rank_cumulative_counts": [
+            4,
+            2,
+            3,
+            5,
+            5,
+            2,
+            2,
+            3,
+            4,
+            3
+          ]
+        },
+        {
+          "round": 13,
+          "created_at": "2026-08-31T14:06:52.490567",
+          "task_id": "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+          "seeds": [
+            150,
+            124,
+            400
+          ],
+          "seed_classes": [
+            "100-199",
+            "100-199",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            2,
+            3,
+            4,
+            6,
+            7,
+            2,
+            2,
+            5,
+            5
+          ],
+          "class_ranks": [
+            8,
+            6,
+            5,
+            2,
+            1,
+            7,
+            9,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            9,
+            11,
+            6,
+            12,
+            11,
+            12,
+            8,
+            11,
+            12
+          ],
+          "seed_ranks": [
+            8,
+            8,
+            2
+          ],
+          "rank_cumulative_counts": [
+            4,
+            2,
+            4,
+            6,
+            5,
+            2,
+            2,
+            3,
+            5,
+            3
+          ]
+        },
+        {
+          "round": 14,
+          "created_at": "2026-08-31T23:42:43.552936",
+          "task_id": "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+          "seeds": [
+            809,
+            637,
+            597
+          ],
+          "seed_classes": [
+            "800-899",
+            "600-699",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            4,
+            3,
+            4,
+            7,
+            7,
+            2,
+            2,
+            5,
+            5
+          ],
+          "class_ranks": [
+            5,
+            7,
+            6,
+            1,
+            2,
+            8,
+            9,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            13,
+            11,
+            6,
+            13,
+            11,
+            12,
+            8,
+            11,
+            12
+          ],
+          "seed_ranks": [
+            4,
+            8,
+            2
+          ],
+          "rank_cumulative_counts": [
+            4,
+            3,
+            4,
+            6,
+            5,
+            2,
+            2,
+            5,
+            5,
+            3
+          ]
+        },
+        {
+          "round": 15,
+          "created_at": "2026-09-01T04:30:53.545765",
+          "task_id": "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+          "seeds": [
+            558,
+            543,
+            937
+          ],
+          "seed_classes": [
+            "500-599",
+            "500-599",
+            "900-999"
+          ],
+          "cumulative_counts": [
+            4,
+            3,
+            4,
+            7,
+            8,
+            3,
+            2,
+            6,
+            5
+          ],
+          "class_ranks": [
+            5,
+            8,
+            6,
+            2,
+            1,
+            7,
+            9,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            13,
+            11,
+            6,
+            13,
+            14,
+            14,
+            8,
+            14,
+            12
+          ],
+          "seed_ranks": [
+            1,
+            1,
+            4
+          ],
+          "rank_cumulative_counts": [
+            4,
+            4,
+            4,
+            7,
+            5,
+            2,
+            2,
+            6,
+            5,
+            3
+          ]
+        },
+        {
+          "round": 16,
+          "created_at": "2026-09-02T14:06:56.355824",
+          "task_id": "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+          "seeds": [
+            845,
+            815,
+            308
+          ],
+          "seed_classes": [
+            "800-899",
+            "800-899",
+            "300-399"
+          ],
+          "cumulative_counts": [
+            4,
+            3,
+            4,
+            7,
+            10,
+            3,
+            2,
+            6,
+            6
+          ],
+          "class_ranks": [
+            5,
+            8,
+            6,
+            2,
+            1,
+            7,
+            9,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            13,
+            11,
+            6,
+            13,
+            15,
+            14,
+            8,
+            14,
+            15
+          ],
+          "seed_ranks": [
+            4,
+            4,
+            6
+          ],
+          "rank_cumulative_counts": [
+            6,
+            4,
+            4,
+            8,
+            5,
+            2,
+            2,
+            6,
+            5,
+            3
+          ]
+        },
+        {
+          "round": 17,
+          "created_at": "2026-09-03T06:55:13.677106",
+          "task_id": "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+          "seeds": [
+            674,
+            363,
+            768
+          ],
+          "seed_classes": [
+            "600-699",
+            "300-399",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            4,
+            3,
+            5,
+            7,
+            10,
+            3,
+            2,
+            8,
+            6
+          ],
+          "class_ranks": [
+            6,
+            8,
+            5,
+            3,
+            1,
+            7,
+            9,
+            2,
+            4
+          ],
+          "class_last_updated": [
+            13,
+            11,
+            16,
+            13,
+            15,
+            14,
+            8,
+            16,
+            15
+          ],
+          "seed_ranks": [
+            7,
+            5,
+            9
+          ],
+          "rank_cumulative_counts": [
+            6,
+            4,
+            4,
+            10,
+            5,
+            3,
+            2,
+            6,
+            5,
+            3
+          ]
+        },
+        {
+          "round": 18,
+          "created_at": "2026-09-03T11:43:12.501088",
+          "task_id": "10a08d2c-7772-4780-80be-badaf73d9622",
+          "seeds": [
+            572,
+            100,
+            491
+          ],
+          "seed_classes": [
+            "500-599",
+            "100-199",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            4,
+            3,
+            6,
+            7,
+            10,
+            4,
+            3,
+            8,
+            6
+          ],
+          "class_ranks": [
+            7,
+            9,
+            4,
+            3,
+            1,
+            6,
+            8,
+            2,
+            5
+          ],
+          "class_last_updated": [
+            13,
+            11,
+            17,
+            13,
+            15,
+            17,
+            17,
+            16,
+            15
+          ],
+          "seed_ranks": [
+            1,
+            7,
+            3
+          ],
+          "rank_cumulative_counts": [
+            6,
+            4,
+            4,
+            10,
+            6,
+            3,
+            3,
+            6,
+            6,
+            3
+          ]
+        },
+        {
+          "round": 19,
+          "created_at": "2026-09-03T18:55:10.784320",
+          "task_id": "59e1c168-f11d-4caf-95fa-52d82d347a49",
+          "seeds": [
+            923,
+            372,
+            496
+          ],
+          "seed_classes": [
+            "900-999",
+            "300-399",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            5,
+            3,
+            6,
+            8,
+            11,
+            4,
+            3,
+            8,
+            6
+          ],
+          "class_ranks": [
+            6,
+            9,
+            4,
+            2,
+            1,
+            7,
+            8,
+            3,
+            5
+          ],
+          "class_last_updated": [
+            18,
+            11,
+            17,
+            18,
+            18,
+            17,
+            17,
+            16,
+            15
+          ],
+          "seed_ranks": [
+            5,
+            4,
+            2
+          ],
+          "rank_cumulative_counts": [
+            7,
+            4,
+            5,
+            10,
+            6,
+            3,
+            4,
+            6,
+            6,
+            3
+          ]
+        },
+        {
+          "round": 20,
+          "created_at": "2026-09-03T21:19:11.171429",
+          "task_id": "999dc89d-7896-4666-a19d-e695047044f2",
+          "seeds": [
+            246,
+            323,
+            546
+          ],
+          "seed_classes": [
+            "200-299",
+            "300-399",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            5,
+            3,
+            7,
+            9,
+            11,
+            4,
+            3,
+            8,
+            7
+          ],
+          "class_ranks": [
+            6,
+            9,
+            4,
+            2,
+            1,
+            7,
+            8,
+            3,
+            5
+          ],
+          "class_last_updated": [
+            18,
+            11,
+            19,
+            19,
+            18,
+            17,
+            17,
+            16,
+            19
+          ],
+          "seed_ranks": [
+            9,
+            4,
+            1
+          ],
+          "rank_cumulative_counts": [
+            7,
+            5,
+            5,
+            11,
+            7,
+            3,
+            4,
+            6,
+            6,
+            3
+          ]
+        },
+        {
+          "round": 21,
+          "created_at": "2026-09-04T02:08:26.508478",
+          "task_id": "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+          "seeds": [
+            343,
+            567,
+            845
+          ],
+          "seed_classes": [
+            "300-399",
+            "500-599",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            5,
+            4,
+            8,
+            9,
+            12,
+            4,
+            3,
+            8,
+            7
+          ],
+          "class_ranks": [
+            6,
+            7,
+            3,
+            2,
+            1,
+            8,
+            9,
+            4,
+            5
+          ],
+          "class_last_updated": [
+            18,
+            20,
+            20,
+            19,
+            20,
+            17,
+            17,
+            16,
+            19
+          ],
+          "seed_ranks": [
+            3,
+            1,
+            4
+          ],
+          "rank_cumulative_counts": [
+            8,
+            5,
+            5,
+            12,
+            7,
+            3,
+            4,
+            6,
+            7,
+            3
+          ]
+        },
+        {
+          "round": 22,
+          "created_at": "2026-09-04T04:31:23.813872",
+          "task_id": "4d385215-547a-46a1-84da-78d63af4e04a",
+          "seeds": [
+            518,
+            589,
+            111
+          ],
+          "seed_classes": [
+            "500-599",
+            "500-599",
+            "100-199"
+          ],
+          "cumulative_counts": [
+            5,
+            4,
+            9,
+            9,
+            13,
+            4,
+            3,
+            9,
+            7
+          ],
+          "class_ranks": [
+            6,
+            7,
+            2,
+            4,
+            1,
+            8,
+            9,
+            3,
+            5
+          ],
+          "class_last_updated": [
+            18,
+            20,
+            21,
+            19,
+            21,
+            17,
+            17,
+            21,
+            19
+          ],
+          "seed_ranks": [
+            1,
+            1,
+            6
+          ],
+          "rank_cumulative_counts": [
+            9,
+            5,
+            6,
+            13,
+            7,
+            3,
+            4,
+            6,
+            7,
+            3
+          ]
+        },
+        {
+          "round": 23,
+          "created_at": "2026-09-04T09:19:22.021613",
+          "task_id": "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+          "seeds": [
+            895,
+            288,
+            774
+          ],
+          "seed_classes": [
+            "800-899",
+            "200-299",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            6,
+            4,
+            9,
+            9,
+            15,
+            4,
+            3,
+            9,
+            7
+          ],
+          "class_ranks": [
+            6,
+            7,
+            2,
+            4,
+            1,
+            8,
+            9,
+            3,
+            5
+          ],
+          "class_last_updated": [
+            22,
+            20,
+            21,
+            19,
+            22,
+            17,
+            17,
+            21,
+            19
+          ],
+          "seed_ranks": [
+            3,
+            7,
+            9
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            6,
+            13,
+            7,
+            4,
+            4,
+            6,
+            7,
+            3
+          ]
+        },
+        {
+          "round": 24,
+          "created_at": "2026-09-05T02:08:10.659631",
+          "task_id": "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+          "seeds": [
+            234,
+            775,
+            271
+          ],
+          "seed_classes": [
+            "200-299",
+            "700-799",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            6,
+            5,
+            9,
+            9,
+            15,
+            4,
+            4,
+            10,
+            7
+          ],
+          "class_ranks": [
+            6,
+            7,
+            3,
+            4,
+            1,
+            9,
+            8,
+            2,
+            5
+          ],
+          "class_last_updated": [
+            22,
+            23,
+            21,
+            19,
+            22,
+            17,
+            23,
+            23,
+            19
+          ],
+          "seed_ranks": [
+            7,
+            8,
+            7
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            7,
+            13,
+            7,
+            4,
+            5,
+            6,
+            8,
+            3
+          ]
+        },
+        {
+          "round": 25,
+          "created_at": "2026-09-06T07:01:14.917300",
+          "task_id": "f3caa161-17fc-41a0-9a8a-851876718b65",
+          "seeds": [
+            780,
+            646,
+            907
+          ],
+          "seed_classes": [
+            "700-799",
+            "600-699",
+            "900-999"
+          ],
+          "cumulative_counts": [
+            6,
+            7,
+            9,
+            9,
+            15,
+            4,
+            5,
+            10,
+            7
+          ],
+          "class_ranks": [
+            7,
+            5,
+            3,
+            4,
+            1,
+            9,
+            8,
+            2,
+            6
+          ],
+          "class_last_updated": [
+            22,
+            24,
+            21,
+            19,
+            22,
+            17,
+            24,
+            23,
+            19
+          ],
+          "seed_ranks": [
+            8,
+            9,
+            6
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            7,
+            13,
+            7,
+            4,
+            7,
+            7,
+            8,
+            3
+          ]
+        },
+        {
+          "round": 26,
+          "created_at": "2026-09-06T23:51:15.705366",
+          "task_id": "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+          "seeds": [
+            968,
+            796,
+            432
+          ],
+          "seed_classes": [
+            "900-999",
+            "700-799",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            6,
+            7,
+            9,
+            9,
+            15,
+            5,
+            6,
+            10,
+            8
+          ],
+          "class_ranks": [
+            8,
+            6,
+            3,
+            4,
+            1,
+            9,
+            7,
+            2,
+            5
+          ],
+          "class_last_updated": [
+            22,
+            24,
+            21,
+            19,
+            22,
+            25,
+            25,
+            23,
+            25
+          ],
+          "seed_ranks": [
+            5,
+            7,
+            4
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            7,
+            13,
+            7,
+            5,
+            7,
+            8,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 27,
+          "created_at": "2026-09-07T02:16:29.123215",
+          "task_id": "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+          "seeds": [
+            166,
+            283,
+            915
+          ],
+          "seed_classes": [
+            "100-199",
+            "200-299",
+            "900-999"
+          ],
+          "cumulative_counts": [
+            6,
+            7,
+            9,
+            10,
+            15,
+            5,
+            7,
+            10,
+            9
+          ],
+          "class_ranks": [
+            8,
+            7,
+            5,
+            2,
+            1,
+            9,
+            6,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            22,
+            24,
+            21,
+            26,
+            22,
+            25,
+            26,
+            23,
+            26
+          ],
+          "seed_ranks": [
+            8,
+            7,
+            4
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            7,
+            14,
+            8,
+            5,
+            8,
+            8,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 28,
+          "created_at": "2026-09-07T04:39:37.714736",
+          "task_id": "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+          "seeds": [
+            976,
+            137,
+            837
+          ],
+          "seed_classes": [
+            "900-999",
+            "100-199",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            7,
+            8,
+            9,
+            10,
+            15,
+            5,
+            7,
+            10,
+            10
+          ],
+          "class_ranks": [
+            7,
+            6,
+            5,
+            3,
+            1,
+            9,
+            8,
+            4,
+            2
+          ],
+          "class_last_updated": [
+            27,
+            27,
+            21,
+            26,
+            22,
+            25,
+            26,
+            23,
+            27
+          ],
+          "seed_ranks": [
+            2,
+            7,
+            4
+          ],
+          "rank_cumulative_counts": [
+            11,
+            5,
+            7,
+            15,
+            8,
+            5,
+            9,
+            9,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 29,
+          "created_at": "2026-09-08T19:06:32.768413",
+          "task_id": "12be08f9-8e88-455d-aa18-3a995626df20",
+          "seeds": [
+            239,
+            996,
+            208
+          ],
+          "seed_classes": [
+            "200-299",
+            "900-999",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            8,
+            8,
+            9,
+            10,
+            15,
+            5,
+            7,
+            11,
+            11
+          ],
+          "class_ranks": [
+            6,
+            7,
+            5,
+            4,
+            1,
+            9,
+            8,
+            2,
+            3
+          ],
+          "class_last_updated": [
+            28,
+            27,
+            21,
+            26,
+            22,
+            25,
+            26,
+            28,
+            28
+          ],
+          "seed_ranks": [
+            7,
+            3,
+            7
+          ],
+          "rank_cumulative_counts": [
+            11,
+            6,
+            7,
+            16,
+            8,
+            5,
+            10,
+            9,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 30,
+          "created_at": "2026-09-09T04:42:56.062946",
+          "task_id": "445d95d2-55ec-4b36-a26e-58efeff789b0",
+          "seeds": [
+            622,
+            966,
+            867
+          ],
+          "seed_classes": [
+            "600-699",
+            "900-999",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            8,
+            10,
+            9,
+            10,
+            15,
+            5,
+            7,
+            11,
+            12
+          ],
+          "class_ranks": [
+            7,
+            4,
+            6,
+            5,
+            1,
+            9,
+            8,
+            3,
+            2
+          ],
+          "class_last_updated": [
+            28,
+            29,
+            21,
+            26,
+            22,
+            25,
+            26,
+            28,
+            29
+          ],
+          "seed_ranks": [
+            9,
+            2,
+            3
+          ],
+          "rank_cumulative_counts": [
+            11,
+            6,
+            8,
+            16,
+            8,
+            5,
+            12,
+            9,
+            9,
+            3
+          ]
+        },
+        {
+          "round": 31,
+          "created_at": "2026-09-09T11:56:32.291967",
+          "task_id": "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+          "seeds": [
+            523,
+            201,
+            525
+          ],
+          "seed_classes": [
+            "500-599",
+            "200-299",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            8,
+            10,
+            9,
+            10,
+            15,
+            6,
+            7,
+            12,
+            13
+          ],
+          "class_ranks": [
+            7,
+            4,
+            6,
+            5,
+            1,
+            9,
+            8,
+            3,
+            2
+          ],
+          "class_last_updated": [
+            28,
+            29,
+            21,
+            26,
+            22,
+            30,
+            26,
+            30,
+            30
+          ],
+          "seed_ranks": [
+            1,
+            4,
+            1
+          ],
+          "rank_cumulative_counts": [
+            11,
+            7,
+            9,
+            16,
+            8,
+            5,
+            12,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 32,
+          "created_at": "2026-09-09T21:32:45.298209",
+          "task_id": "571f4843-1671-49c3-951c-47d16a9418b0",
+          "seeds": [
+            408,
+            293,
+            287
+          ],
+          "seed_classes": [
+            "400-499",
+            "200-299",
+            "200-299"
+          ],
+          "cumulative_counts": [
+            8,
+            11,
+            9,
+            10,
+            17,
+            6,
+            7,
+            12,
+            13
+          ],
+          "class_ranks": [
+            7,
+            4,
+            6,
+            5,
+            1,
+            9,
+            8,
+            3,
+            2
+          ],
+          "class_last_updated": [
+            28,
+            31,
+            21,
+            26,
+            31,
+            30,
+            26,
+            30,
+            30
+          ],
+          "seed_ranks": [
+            5,
+            4,
+            4
+          ],
+          "rank_cumulative_counts": [
+            13,
+            7,
+            9,
+            17,
+            8,
+            5,
+            12,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 33,
+          "created_at": "2026-09-09T23:56:33.365367",
+          "task_id": "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+          "seeds": [
+            283,
+            371,
+            869
+          ],
+          "seed_classes": [
+            "200-299",
+            "300-399",
+            "800-899"
+          ],
+          "cumulative_counts": [
+            8,
+            13,
+            9,
+            11,
+            17,
+            6,
+            7,
+            12,
+            13
+          ],
+          "class_ranks": [
+            7,
+            2,
+            6,
+            5,
+            1,
+            9,
+            8,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            28,
+            32,
+            21,
+            32,
+            31,
+            30,
+            26,
+            30,
+            30
+          ],
+          "seed_ranks": [
+            2,
+            6,
+            4
+          ],
+          "rank_cumulative_counts": [
+            13,
+            7,
+            9,
+            19,
+            9,
+            5,
+            12,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 34,
+          "created_at": "2026-09-10T04:45:09.813115",
+          "task_id": "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+          "seeds": [
+            222,
+            297,
+            911
+          ],
+          "seed_classes": [
+            "200-299",
+            "200-299",
+            "900-999"
+          ],
+          "cumulative_counts": [
+            8,
+            14,
+            10,
+            11,
+            17,
+            6,
+            7,
+            13,
+            13
+          ],
+          "class_ranks": [
+            7,
+            2,
+            6,
+            5,
+            1,
+            9,
+            8,
+            3,
+            4
+          ],
+          "class_last_updated": [
+            28,
+            33,
+            33,
+            32,
+            31,
+            30,
+            26,
+            33,
+            30
+          ],
+          "seed_ranks": [
+            2,
+            2,
+            4
+          ],
+          "rank_cumulative_counts": [
+            13,
+            8,
+            9,
+            20,
+            9,
+            6,
+            12,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 35,
+          "created_at": "2026-09-10T14:22:25.054017",
+          "task_id": "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+          "seeds": [
+            406,
+            958,
+            742
+          ],
+          "seed_classes": [
+            "400-499",
+            "900-999",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            8,
+            16,
+            10,
+            11,
+            17,
+            6,
+            7,
+            13,
+            14
+          ],
+          "class_ranks": [
+            7,
+            2,
+            6,
+            5,
+            1,
+            9,
+            8,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            28,
+            34,
+            33,
+            32,
+            31,
+            30,
+            26,
+            33,
+            34
+          ],
+          "seed_ranks": [
+            5,
+            3,
+            8
+          ],
+          "rank_cumulative_counts": [
+            13,
+            10,
+            9,
+            21,
+            9,
+            6,
+            12,
+            9,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 36,
+          "created_at": "2026-09-11T04:47:46.166224",
+          "task_id": "b162020b-274c-460d-b4e6-e480038549ac",
+          "seeds": [
+            894,
+            386,
+            763
+          ],
+          "seed_classes": [
+            "800-899",
+            "300-399",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            8,
+            16,
+            10,
+            12,
+            17,
+            6,
+            8,
+            13,
+            15
+          ],
+          "class_ranks": [
+            8,
+            2,
+            6,
+            5,
+            1,
+            9,
+            7,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            28,
+            34,
+            33,
+            35,
+            31,
+            30,
+            35,
+            33,
+            35
+          ],
+          "seed_ranks": [
+            4,
+            6,
+            7
+          ],
+          "rank_cumulative_counts": [
+            13,
+            10,
+            10,
+            21,
+            10,
+            6,
+            12,
+            10,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 37,
+          "created_at": "2026-09-11T07:12:25.689086",
+          "task_id": "50e9259a-c10f-4273-9501-86c61147ea8c",
+          "seeds": [
+            195,
+            147,
+            302
+          ],
+          "seed_classes": [
+            "100-199",
+            "100-199",
+            "300-399"
+          ],
+          "cumulative_counts": [
+            8,
+            16,
+            11,
+            12,
+            17,
+            6,
+            9,
+            14,
+            15
+          ],
+          "class_ranks": [
+            8,
+            2,
+            6,
+            5,
+            1,
+            9,
+            7,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            28,
+            34,
+            36,
+            35,
+            31,
+            30,
+            36,
+            36,
+            35
+          ],
+          "seed_ranks": [
+            8,
+            8,
+            6
+          ],
+          "rank_cumulative_counts": [
+            13,
+            10,
+            10,
+            22,
+            10,
+            7,
+            13,
+            10,
+            10,
+            3
+          ]
+        },
+        {
+          "round": 38,
+          "created_at": "2026-09-11T12:00:45.900655",
+          "task_id": "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+          "seeds": [
+            605,
+            754,
+            474
+          ],
+          "seed_classes": [
+            "600-699",
+            "700-799",
+            "400-499"
+          ],
+          "cumulative_counts": [
+            10,
+            16,
+            12,
+            12,
+            17,
+            6,
+            9,
+            14,
+            15
+          ],
+          "class_ranks": [
+            7,
+            2,
+            5,
+            6,
+            1,
+            9,
+            8,
+            4,
+            3
+          ],
+          "class_last_updated": [
+            37,
+            34,
+            37,
+            35,
+            31,
+            30,
+            36,
+            36,
+            35
+          ],
+          "seed_ranks": [
+            9,
+            8,
+            6
+          ],
+          "rank_cumulative_counts": [
+            13,
+            10,
+            10,
+            22,
+            10,
+            8,
+            13,
+            12,
+            10,
             3
           ]
         }
@@ -9648,2021 +13355,199 @@
             12,
             3
           ]
-        }
-      ],
-      "CD34+_HSPC": [
-        {
-          "round": 1,
-          "created_at": "2026-08-27T14:13:56.784587",
-          "task_id": "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
-          "seeds": [
-            524,
-            979,
-            546
-          ],
-          "seed_classes": [
-            "500-599",
-            "900-999",
-            "500-599"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "class_ranks": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "seed_ranks": [
-            0,
-            0,
-            0
-          ],
-          "rank_cumulative_counts": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
         },
         {
-          "round": 2,
-          "created_at": "2026-08-27T21:18:42.870688",
-          "task_id": "dd07ff28-7a6c-4af6-9098-a035533b8074",
+          "round": 34,
+          "created_at": "2026-09-10T11:57:38.693874",
+          "task_id": "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
           "seeds": [
-            916,
-            334,
-            874
-          ],
-          "seed_classes": [
-            "900-999",
-            "300-399",
-            "800-899"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            0,
-            0,
-            2,
-            0,
-            0,
-            0,
-            1
-          ],
-          "class_ranks": [
-            3,
-            4,
-            5,
-            6,
-            1,
-            7,
-            8,
-            9,
-            2
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1
-          ],
-          "seed_ranks": [
-            2,
-            5,
-            9
-          ],
-          "rank_cumulative_counts": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            3
-          ]
-        },
-        {
-          "round": 3,
-          "created_at": "2026-08-28T06:54:50.531564",
-          "task_id": "470d6d3c-8372-4979-bcf3-81816e5cbab0",
-          "seeds": [
-            870,
-            353,
-            578
-          ],
-          "seed_classes": [
-            "800-899",
-            "300-399",
-            "500-599"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            1,
-            0,
-            2,
-            0,
-            0,
-            1,
-            2
-          ],
-          "class_ranks": [
-            5,
-            6,
-            3,
-            7,
-            2,
-            8,
-            9,
-            4,
-            1
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            2,
-            0,
-            1,
-            0,
-            0,
-            2,
-            2
-          ],
-          "seed_ranks": [
-            4,
-            3,
-            2
-          ],
-          "rank_cumulative_counts": [
-            0,
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            3
-          ]
-        },
-        {
-          "round": 4,
-          "created_at": "2026-08-28T11:42:49.254023",
-          "task_id": "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
-          "seeds": [
-            477,
-            515,
-            705
+            412,
+            233,
+            665
           ],
           "seed_classes": [
             "400-499",
-            "500-599",
-            "700-799"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            2,
-            0,
-            3,
-            0,
-            0,
-            2,
-            2
-          ],
-          "class_ranks": [
-            5,
-            6,
-            2,
-            7,
-            1,
-            8,
-            9,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            3,
-            0,
-            3,
-            0,
-            0,
-            3,
-            2
-          ],
-          "seed_ranks": [
-            7,
-            1,
-            9
-          ],
-          "rank_cumulative_counts": [
-            0,
-            2,
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            1,
-            3
-          ]
-        },
-        {
-          "round": 5,
-          "created_at": "2026-08-28T14:06:43.212513",
-          "task_id": "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
-          "seeds": [
-            503,
-            835,
-            986
-          ],
-          "seed_classes": [
-            "500-599",
-            "800-899",
-            "900-999"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            2,
-            1,
-            4,
-            0,
-            1,
-            2,
-            2
-          ],
-          "class_ranks": [
-            7,
-            8,
-            2,
-            5,
-            1,
-            9,
-            6,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            3,
-            4,
-            4,
-            0,
-            4,
-            3,
-            2
-          ],
-          "seed_ranks": [
-            1,
-            3,
-            4
-          ],
-          "rank_cumulative_counts": [
-            1,
-            2,
-            1,
-            1,
-            1,
-            0,
-            1,
-            0,
-            2,
-            3
-          ]
-        },
-        {
-          "round": 6,
-          "created_at": "2026-08-28T18:54:44.927366",
-          "task_id": "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
-          "seeds": [
-            341,
-            310,
-            667
-          ],
-          "seed_classes": [
-            "300-399",
-            "300-399",
+            "200-299",
             "600-699"
           ],
           "cumulative_counts": [
-            0,
-            0,
-            2,
-            1,
-            5,
-            0,
-            1,
-            3,
-            3
-          ],
-          "class_ranks": [
-            7,
-            8,
-            4,
-            5,
-            1,
-            9,
-            6,
-            2,
-            3
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            3,
-            4,
-            5,
-            0,
-            4,
-            5,
-            5
-          ],
-          "seed_ranks": [
-            4,
-            4,
-            9
-          ],
-          "rank_cumulative_counts": [
-            2,
-            2,
-            2,
-            2,
-            1,
-            0,
-            1,
-            0,
-            2,
-            3
-          ]
-        },
-        {
-          "round": 7,
-          "created_at": "2026-08-29T09:18:43.503015",
-          "task_id": "60f5f6a1-142f-49bd-a192-74ee28861f37",
-          "seeds": [
-            140,
-            567,
-            473
-          ],
-          "seed_classes": [
-            "100-199",
-            "500-599",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            0,
-            0,
-            4,
-            1,
-            5,
-            1,
-            1,
-            3,
-            3
-          ],
-          "class_ranks": [
-            8,
-            9,
-            2,
-            6,
-            1,
-            5,
-            7,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            0,
-            0,
-            6,
-            4,
-            5,
-            6,
-            4,
-            5,
-            5
-          ],
-          "seed_ranks": [
-            8,
-            1,
-            6
-          ],
-          "rank_cumulative_counts": [
-            2,
-            2,
-            2,
-            4,
-            1,
-            0,
-            1,
-            0,
-            3,
-            3
-          ]
-        },
-        {
-          "round": 8,
-          "created_at": "2026-08-29T23:43:02.665898",
-          "task_id": "d03c7439-0855-47fc-ac46-6872d7a83c8f",
-          "seeds": [
-            872,
-            400,
-            764
-          ],
-          "seed_classes": [
-            "800-899",
-            "400-499",
-            "700-799"
-          ],
-          "cumulative_counts": [
-            1,
-            0,
-            4,
-            2,
-            6,
-            1,
-            1,
-            3,
-            3
-          ],
-          "class_ranks": [
-            6,
-            9,
-            2,
-            5,
-            1,
-            7,
-            8,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            7,
-            0,
-            6,
-            7,
-            7,
-            6,
-            4,
-            5,
-            5
-          ],
-          "seed_ranks": [
-            3,
-            5,
-            8
-          ],
-          "rank_cumulative_counts": [
-            3,
-            2,
-            2,
-            4,
-            1,
-            1,
-            1,
-            1,
-            3,
-            3
-          ]
-        },
-        {
-          "round": 9,
-          "created_at": "2026-08-30T04:30:42.600139",
-          "task_id": "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
-          "seeds": [
-            248,
-            929,
-            198
-          ],
-          "seed_classes": [
-            "200-299",
-            "900-999",
-            "100-199"
-          ],
-          "cumulative_counts": [
-            1,
-            0,
-            4,
-            3,
-            6,
-            1,
-            2,
-            4,
-            3
-          ],
-          "class_ranks": [
-            7,
-            9,
-            3,
-            4,
-            1,
-            8,
-            6,
-            2,
-            5
-          ],
-          "class_last_updated": [
-            7,
-            0,
-            6,
+            17,
             8,
             7,
-            6,
-            8,
-            8,
-            5
-          ],
-          "seed_ranks": [
-            9,
-            5,
-            7
-          ],
-          "rank_cumulative_counts": [
-            3,
-            2,
-            3,
-            4,
-            2,
-            1,
-            1,
-            2,
-            3,
-            3
-          ]
-        },
-        {
-          "round": 10,
-          "created_at": "2026-08-30T14:06:44.020037",
-          "task_id": "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
-          "seeds": [
-            498,
-            455,
-            225
-          ],
-          "seed_classes": [
-            "400-499",
-            "400-499",
-            "200-299"
-          ],
-          "cumulative_counts": [
-            2,
-            1,
-            4,
-            3,
-            6,
-            1,
-            2,
-            4,
-            4
-          ],
-          "class_ranks": [
-            6,
-            8,
-            4,
-            5,
-            1,
-            9,
-            7,
-            3,
-            2
-          ],
-          "class_last_updated": [
-            9,
-            9,
-            6,
-            8,
-            7,
-            6,
-            8,
-            8,
-            9
-          ],
-          "seed_ranks": [
-            5,
-            5,
-            8
-          ],
-          "rank_cumulative_counts": [
-            3,
-            2,
-            3,
-            4,
-            3,
-            1,
-            2,
-            2,
-            4,
-            3
-          ]
-        },
-        {
-          "round": 11,
-          "created_at": "2026-08-30T21:18:53.732341",
-          "task_id": "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
-          "seeds": [
-            859,
-            516,
-            284
-          ],
-          "seed_classes": [
-            "800-899",
-            "500-599",
-            "200-299"
-          ],
-          "cumulative_counts": [
-            2,
-            2,
-            4,
-            5,
-            6,
-            1,
-            2,
-            4,
-            4
-          ],
-          "class_ranks": [
-            7,
-            6,
-            5,
-            2,
-            1,
-            9,
-            8,
-            4,
-            3
-          ],
-          "class_last_updated": [
-            9,
-            10,
-            6,
-            10,
-            7,
-            6,
-            8,
-            8,
-            9
-          ],
-          "seed_ranks": [
-            4,
-            1,
-            6
-          ],
-          "rank_cumulative_counts": [
-            3,
-            2,
-            3,
-            4,
-            5,
-            1,
-            2,
-            3,
-            4,
-            3
-          ]
-        },
-        {
-          "round": 12,
-          "created_at": "2026-08-31T02:06:44.165839",
-          "task_id": "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
-          "seeds": [
-            969,
-            647,
-            452
-          ],
-          "seed_classes": [
-            "900-999",
-            "600-699",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            2,
-            3,
-            4,
-            5,
-            7,
-            1,
-            2,
-            5,
-            4
-          ],
-          "class_ranks": [
-            7,
-            6,
-            5,
-            3,
-            1,
-            9,
-            8,
-            2,
-            4
-          ],
-          "class_last_updated": [
-            9,
-            11,
-            6,
-            10,
-            11,
-            6,
-            8,
-            11,
-            9
-          ],
-          "seed_ranks": [
-            4,
-            9,
-            3
-          ],
-          "rank_cumulative_counts": [
-            4,
-            2,
-            3,
-            5,
-            5,
-            2,
-            2,
-            3,
-            4,
-            3
-          ]
-        },
-        {
-          "round": 13,
-          "created_at": "2026-08-31T14:06:52.490567",
-          "task_id": "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
-          "seeds": [
-            150,
-            124,
-            400
-          ],
-          "seed_classes": [
-            "100-199",
-            "100-199",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            2,
-            3,
-            4,
-            6,
-            7,
-            2,
-            2,
-            5,
-            5
-          ],
-          "class_ranks": [
-            8,
-            6,
-            5,
-            2,
-            1,
-            7,
-            9,
-            4,
-            3
-          ],
-          "class_last_updated": [
-            9,
-            11,
-            6,
-            12,
-            11,
-            12,
-            8,
-            11,
-            12
-          ],
-          "seed_ranks": [
-            8,
-            8,
-            2
-          ],
-          "rank_cumulative_counts": [
-            4,
-            2,
-            4,
-            6,
-            5,
-            2,
-            2,
-            3,
-            5,
-            3
-          ]
-        },
-        {
-          "round": 14,
-          "created_at": "2026-08-31T23:42:43.552936",
-          "task_id": "51c26d0a-bd5b-435c-ac48-1224487e7e55",
-          "seeds": [
-            809,
-            637,
-            597
-          ],
-          "seed_classes": [
-            "800-899",
-            "600-699",
-            "500-599"
-          ],
-          "cumulative_counts": [
-            4,
-            3,
-            4,
-            7,
-            7,
-            2,
-            2,
-            5,
-            5
-          ],
-          "class_ranks": [
-            5,
-            7,
-            6,
-            1,
-            2,
-            8,
-            9,
-            4,
-            3
-          ],
-          "class_last_updated": [
-            13,
-            11,
-            6,
-            13,
-            11,
-            12,
-            8,
-            11,
-            12
-          ],
-          "seed_ranks": [
-            4,
-            8,
-            2
-          ],
-          "rank_cumulative_counts": [
-            4,
-            3,
-            4,
-            6,
-            5,
-            2,
-            2,
-            5,
-            5,
-            3
-          ]
-        },
-        {
-          "round": 15,
-          "created_at": "2026-09-01T04:30:53.545765",
-          "task_id": "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
-          "seeds": [
-            558,
-            543,
-            937
-          ],
-          "seed_classes": [
-            "500-599",
-            "500-599",
-            "900-999"
-          ],
-          "cumulative_counts": [
-            4,
-            3,
-            4,
-            7,
-            8,
-            3,
-            2,
-            6,
-            5
-          ],
-          "class_ranks": [
-            5,
-            8,
-            6,
-            2,
-            1,
-            7,
-            9,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            13,
-            11,
-            6,
-            13,
-            14,
-            14,
-            8,
-            14,
-            12
-          ],
-          "seed_ranks": [
-            1,
-            1,
-            4
-          ],
-          "rank_cumulative_counts": [
-            4,
-            4,
-            4,
-            7,
-            5,
-            2,
-            2,
-            6,
-            5,
-            3
-          ]
-        },
-        {
-          "round": 16,
-          "created_at": "2026-09-02T14:06:56.355824",
-          "task_id": "cec7f783-dd9d-4e0a-899f-e11172f341b8",
-          "seeds": [
-            845,
-            815,
-            308
-          ],
-          "seed_classes": [
-            "800-899",
-            "800-899",
-            "300-399"
-          ],
-          "cumulative_counts": [
-            4,
-            3,
-            4,
-            7,
-            10,
-            3,
-            2,
-            6,
-            6
-          ],
-          "class_ranks": [
-            5,
-            8,
-            6,
-            2,
-            1,
-            7,
-            9,
-            4,
-            3
-          ],
-          "class_last_updated": [
-            13,
-            11,
-            6,
-            13,
-            15,
-            14,
-            8,
-            14,
-            15
-          ],
-          "seed_ranks": [
-            4,
-            4,
-            6
-          ],
-          "rank_cumulative_counts": [
-            6,
-            4,
-            4,
-            8,
-            5,
-            2,
-            2,
-            6,
-            5,
-            3
-          ]
-        },
-        {
-          "round": 17,
-          "created_at": "2026-09-03T06:55:13.677106",
-          "task_id": "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
-          "seeds": [
-            674,
-            363,
-            768
-          ],
-          "seed_classes": [
-            "600-699",
-            "300-399",
-            "700-799"
-          ],
-          "cumulative_counts": [
-            4,
-            3,
-            5,
-            7,
-            10,
-            3,
-            2,
-            8,
-            6
-          ],
-          "class_ranks": [
-            6,
-            8,
-            5,
-            3,
-            1,
-            7,
-            9,
-            2,
-            4
-          ],
-          "class_last_updated": [
-            13,
-            11,
             16,
-            13,
-            15,
+            9,
+            8,
             14,
-            8,
-            16,
-            15
-          ],
-          "seed_ranks": [
-            7,
-            5,
-            9
-          ],
-          "rank_cumulative_counts": [
-            6,
-            4,
-            4,
-            10,
-            5,
-            3,
-            2,
-            6,
-            5,
-            3
-          ]
-        },
-        {
-          "round": 18,
-          "created_at": "2026-09-03T11:43:12.501088",
-          "task_id": "10a08d2c-7772-4780-80be-badaf73d9622",
-          "seeds": [
-            572,
-            100,
-            491
-          ],
-          "seed_classes": [
-            "500-599",
-            "100-199",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            4,
-            3,
-            6,
-            7,
-            10,
-            4,
-            3,
-            8,
-            6
-          ],
-          "class_ranks": [
-            7,
-            9,
-            4,
-            3,
-            1,
-            6,
-            8,
-            2,
-            5
-          ],
-          "class_last_updated": [
-            13,
-            11,
-            17,
-            13,
-            15,
-            17,
-            17,
-            16,
-            15
-          ],
-          "seed_ranks": [
-            1,
-            7,
-            3
-          ],
-          "rank_cumulative_counts": [
-            6,
-            4,
-            4,
-            10,
-            6,
-            3,
-            3,
-            6,
-            6,
-            3
-          ]
-        },
-        {
-          "round": 19,
-          "created_at": "2026-09-03T18:55:10.784320",
-          "task_id": "59e1c168-f11d-4caf-95fa-52d82d347a49",
-          "seeds": [
-            923,
-            372,
-            496
-          ],
-          "seed_classes": [
-            "900-999",
-            "300-399",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            5,
-            3,
-            6,
-            8,
-            11,
-            4,
-            3,
-            8,
-            6
-          ],
-          "class_ranks": [
-            6,
-            9,
-            4,
-            2,
-            1,
-            7,
-            8,
-            3,
-            5
-          ],
-          "class_last_updated": [
-            18,
-            11,
-            17,
-            18,
-            18,
-            17,
-            17,
-            16,
-            15
-          ],
-          "seed_ranks": [
-            5,
-            4,
-            2
-          ],
-          "rank_cumulative_counts": [
-            7,
-            4,
-            5,
-            10,
-            6,
-            3,
-            4,
-            6,
-            6,
-            3
-          ]
-        },
-        {
-          "round": 20,
-          "created_at": "2026-09-03T21:19:11.171429",
-          "task_id": "999dc89d-7896-4666-a19d-e695047044f2",
-          "seeds": [
-            246,
-            323,
-            546
-          ],
-          "seed_classes": [
-            "200-299",
-            "300-399",
-            "500-599"
-          ],
-          "cumulative_counts": [
-            5,
-            3,
-            7,
-            9,
-            11,
-            4,
-            3,
-            8,
-            7
-          ],
-          "class_ranks": [
-            6,
-            9,
-            4,
-            2,
-            1,
-            7,
-            8,
-            3,
-            5
-          ],
-          "class_last_updated": [
-            18,
-            11,
-            19,
-            19,
-            18,
-            17,
-            17,
-            16,
-            19
-          ],
-          "seed_ranks": [
-            9,
-            4,
-            1
-          ],
-          "rank_cumulative_counts": [
-            7,
-            5,
-            5,
-            11,
-            7,
-            3,
-            4,
-            6,
-            6,
-            3
-          ]
-        },
-        {
-          "round": 21,
-          "created_at": "2026-09-04T02:08:26.508478",
-          "task_id": "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
-          "seeds": [
-            343,
-            567,
-            845
-          ],
-          "seed_classes": [
-            "300-399",
-            "500-599",
-            "800-899"
-          ],
-          "cumulative_counts": [
-            5,
-            4,
-            8,
-            9,
-            12,
-            4,
-            3,
-            8,
-            7
-          ],
-          "class_ranks": [
-            6,
-            7,
-            3,
-            2,
-            1,
-            8,
-            9,
-            4,
-            5
-          ],
-          "class_last_updated": [
-            18,
-            20,
-            20,
-            19,
-            20,
-            17,
-            17,
-            16,
-            19
-          ],
-          "seed_ranks": [
-            3,
-            1,
-            4
-          ],
-          "rank_cumulative_counts": [
-            8,
-            5,
-            5,
-            12,
-            7,
-            3,
-            4,
-            6,
-            7,
-            3
-          ]
-        },
-        {
-          "round": 22,
-          "created_at": "2026-09-04T04:31:23.813872",
-          "task_id": "4d385215-547a-46a1-84da-78d63af4e04a",
-          "seeds": [
-            518,
-            589,
-            111
-          ],
-          "seed_classes": [
-            "500-599",
-            "500-599",
-            "100-199"
-          ],
-          "cumulative_counts": [
-            5,
-            4,
-            9,
-            9,
-            13,
-            4,
-            3,
-            9,
-            7
-          ],
-          "class_ranks": [
-            6,
-            7,
-            2,
-            4,
-            1,
-            8,
-            9,
-            3,
-            5
-          ],
-          "class_last_updated": [
-            18,
-            20,
-            21,
-            19,
-            21,
-            17,
-            17,
-            21,
-            19
-          ],
-          "seed_ranks": [
-            1,
-            1,
-            6
-          ],
-          "rank_cumulative_counts": [
-            9,
-            5,
-            6,
-            13,
-            7,
-            3,
-            4,
-            6,
-            7,
-            3
-          ]
-        },
-        {
-          "round": 23,
-          "created_at": "2026-09-04T09:19:22.021613",
-          "task_id": "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
-          "seeds": [
-            895,
-            288,
-            774
-          ],
-          "seed_classes": [
-            "800-899",
-            "200-299",
-            "700-799"
-          ],
-          "cumulative_counts": [
-            6,
-            4,
-            9,
-            9,
-            15,
-            4,
-            3,
-            9,
-            7
-          ],
-          "class_ranks": [
-            6,
-            7,
-            2,
-            4,
-            1,
-            8,
-            9,
-            3,
-            5
-          ],
-          "class_last_updated": [
-            22,
-            20,
-            21,
-            19,
-            22,
-            17,
-            17,
-            21,
-            19
-          ],
-          "seed_ranks": [
-            3,
-            7,
-            9
-          ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            6,
-            13,
-            7,
-            4,
-            4,
-            6,
-            7,
-            3
-          ]
-        },
-        {
-          "round": 24,
-          "created_at": "2026-09-05T02:08:10.659631",
-          "task_id": "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
-          "seeds": [
-            234,
-            775,
-            271
-          ],
-          "seed_classes": [
-            "200-299",
-            "700-799",
-            "200-299"
-          ],
-          "cumulative_counts": [
-            6,
-            5,
-            9,
-            9,
-            15,
-            4,
-            4,
-            10,
-            7
-          ],
-          "class_ranks": [
-            6,
-            7,
-            3,
-            4,
-            1,
-            9,
-            8,
-            2,
-            5
-          ],
-          "class_last_updated": [
-            22,
-            23,
-            21,
-            19,
-            22,
-            17,
-            23,
-            23,
-            19
-          ],
-          "seed_ranks": [
-            7,
-            8,
-            7
-          ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            7,
-            13,
-            7,
-            4,
-            5,
-            6,
-            8,
-            3
-          ]
-        },
-        {
-          "round": 25,
-          "created_at": "2026-09-06T07:01:14.917300",
-          "task_id": "f3caa161-17fc-41a0-9a8a-851876718b65",
-          "seeds": [
-            780,
-            646,
-            907
-          ],
-          "seed_classes": [
-            "700-799",
-            "600-699",
-            "900-999"
-          ],
-          "cumulative_counts": [
-            6,
-            7,
-            9,
-            9,
-            15,
-            4,
-            5,
-            10,
-            7
-          ],
-          "class_ranks": [
-            7,
-            5,
-            3,
-            4,
-            1,
-            9,
-            8,
-            2,
-            6
-          ],
-          "class_last_updated": [
-            22,
-            24,
-            21,
-            19,
-            22,
-            17,
-            24,
-            23,
-            19
-          ],
-          "seed_ranks": [
-            8,
-            9,
-            6
-          ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            7,
-            13,
-            7,
-            4,
-            7,
-            7,
-            8,
-            3
-          ]
-        },
-        {
-          "round": 26,
-          "created_at": "2026-09-06T23:51:15.705366",
-          "task_id": "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
-          "seeds": [
-            968,
-            796,
-            432
-          ],
-          "seed_classes": [
-            "900-999",
-            "700-799",
-            "400-499"
-          ],
-          "cumulative_counts": [
-            6,
-            7,
-            9,
-            9,
-            15,
-            5,
-            6,
-            10,
-            8
-          ],
-          "class_ranks": [
-            8,
-            6,
-            3,
-            4,
-            1,
-            9,
-            7,
-            2,
-            5
-          ],
-          "class_last_updated": [
-            22,
-            24,
-            21,
-            19,
-            22,
-            25,
-            25,
-            23,
-            25
-          ],
-          "seed_ranks": [
-            5,
-            7,
-            4
-          ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            7,
-            13,
-            7,
-            5,
-            7,
-            8,
-            9,
-            3
-          ]
-        },
-        {
-          "round": 27,
-          "created_at": "2026-09-07T02:16:29.123215",
-          "task_id": "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
-          "seeds": [
-            166,
-            283,
-            915
-          ],
-          "seed_classes": [
-            "100-199",
-            "200-299",
-            "900-999"
-          ],
-          "cumulative_counts": [
-            6,
-            7,
-            9,
-            10,
-            15,
-            5,
-            7,
-            10,
-            9
-          ],
-          "class_ranks": [
-            8,
-            7,
-            5,
-            2,
-            1,
-            9,
-            6,
-            3,
-            4
-          ],
-          "class_last_updated": [
-            22,
-            24,
-            21,
-            26,
-            22,
-            25,
-            26,
-            23,
-            26
-          ],
-          "seed_ranks": [
-            8,
-            7,
-            4
-          ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            7,
-            14,
-            8,
-            5,
-            8,
-            8,
-            9,
-            3
-          ]
-        },
-        {
-          "round": 28,
-          "created_at": "2026-09-07T04:39:37.714736",
-          "task_id": "8bf17022-38ca-4a7c-9e46-a36c757478e1",
-          "seeds": [
-            976,
-            137,
-            837
-          ],
-          "seed_classes": [
-            "900-999",
-            "100-199",
-            "800-899"
-          ],
-          "cumulative_counts": [
-            7,
-            8,
-            9,
-            10,
-            15,
-            5,
-            7,
             10,
             10
           ],
           "class_ranks": [
-            7,
-            6,
-            5,
-            3,
             1,
-            9,
             8,
-            4,
-            2
-          ],
-          "class_last_updated": [
-            27,
-            27,
-            21,
-            26,
-            22,
-            25,
-            26,
-            23,
-            27
-          ],
-          "seed_ranks": [
+            9,
             2,
+            6,
             7,
+            3,
+            5,
             4
           ],
-          "rank_cumulative_counts": [
-            11,
-            5,
-            7,
-            15,
-            8,
-            5,
-            9,
-            9,
-            9,
-            3
-          ]
-        },
-        {
-          "round": 29,
-          "created_at": "2026-09-08T19:06:32.768413",
-          "task_id": "12be08f9-8e88-455d-aa18-3a995626df20",
-          "seeds": [
-            239,
-            996,
-            208
-          ],
-          "seed_classes": [
-            "200-299",
-            "900-999",
-            "200-299"
-          ],
-          "cumulative_counts": [
-            8,
-            8,
-            9,
-            10,
-            15,
-            5,
-            7,
-            11,
-            11
-          ],
-          "class_ranks": [
-            6,
-            7,
-            5,
-            4,
-            1,
-            9,
-            8,
-            2,
-            3
-          ],
           "class_last_updated": [
+            33,
+            29,
+            24,
+            32,
+            32,
+            33,
+            30,
             28,
-            27,
-            21,
-            26,
-            22,
-            25,
-            26,
-            28,
-            28
+            31
           ],
           "seed_ranks": [
-            7,
-            3,
+            2,
+            8,
             7
           ],
           "rank_cumulative_counts": [
+            8,
+            16,
+            12,
+            11,
             11,
             6,
-            7,
-            16,
-            8,
-            5,
-            10,
-            9,
-            9,
+            14,
+            4,
+            14,
             3
           ]
         },
         {
-          "round": 30,
-          "created_at": "2026-09-09T04:42:56.062946",
-          "task_id": "445d95d2-55ec-4b36-a26e-58efeff789b0",
+          "round": 35,
+          "created_at": "2026-09-10T23:59:12.601844",
+          "task_id": "3008c42e-396c-4e99-b430-2cca1581b268",
           "seeds": [
-            622,
-            966,
-            867
+            802,
+            675,
+            431
           ],
           "seed_classes": [
+            "800-899",
             "600-699",
-            "900-999",
-            "800-899"
+            "400-499"
           ],
           "cumulative_counts": [
-            8,
-            10,
+            17,
             9,
-            10,
-            15,
-            5,
             7,
-            11,
-            12
+            17,
+            9,
+            9,
+            14,
+            10,
+            10
           ],
           "class_ranks": [
-            7,
-            4,
-            6,
-            5,
-            1,
-            9,
-            8,
-            3,
-            2
-          ],
-          "class_last_updated": [
-            28,
-            29,
-            21,
-            26,
-            22,
-            25,
-            26,
-            28,
-            29
-          ],
-          "seed_ranks": [
-            9,
             2,
-            3
-          ],
-          "rank_cumulative_counts": [
-            11,
             6,
-            8,
-            16,
-            8,
-            5,
-            12,
             9,
-            9,
-            3
-          ]
-        },
-        {
-          "round": 31,
-          "created_at": "2026-09-09T11:56:32.291967",
-          "task_id": "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
-          "seeds": [
-            523,
-            201,
-            525
-          ],
-          "seed_classes": [
-            "500-599",
-            "200-299",
-            "500-599"
-          ],
-          "cumulative_counts": [
-            8,
-            10,
-            9,
-            10,
-            15,
-            6,
-            7,
-            12,
-            13
-          ],
-          "class_ranks": [
-            7,
-            4,
-            6,
-            5,
             1,
-            9,
             8,
+            7,
             3,
-            2
+            5,
+            4
           ],
           "class_last_updated": [
+            33,
+            34,
+            24,
+            34,
+            32,
+            34,
+            30,
             28,
-            29,
-            21,
-            26,
-            22,
-            30,
-            26,
-            30,
-            30
+            31
           ],
           "seed_ranks": [
-            1,
-            4,
+            5,
+            7,
             1
           ],
           "rank_cumulative_counts": [
-            11,
-            7,
-            9,
-            16,
             8,
-            5,
+            17,
             12,
+            11,
+            11,
+            6,
+            15,
+            5,
+            14,
+            3
+          ]
+        },
+        {
+          "round": 36,
+          "created_at": "2026-09-11T09:36:36.804766",
+          "task_id": "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+          "seeds": [
+            934,
+            642,
+            753
+          ],
+          "seed_classes": [
+            "900-999",
+            "600-699",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            17,
+            9,
+            7,
+            18,
             9,
             10,
+            14,
+            11,
+            10
+          ],
+          "class_ranks": [
+            2,
+            7,
+            9,
+            1,
+            8,
+            5,
+            3,
+            4,
+            6
+          ],
+          "class_last_updated": [
+            33,
+            34,
+            24,
+            35,
+            32,
+            35,
+            30,
+            35,
+            31
+          ],
+          "seed_ranks": [
+            6,
+            5,
+            3
+          ],
+          "rank_cumulative_counts": [
+            9,
+            17,
+            12,
+            11,
+            12,
+            6,
+            16,
+            5,
+            14,
             3
           ]
         }
@@ -13615,6 +15500,266 @@
             13,
             7,
             11,
+            4
+          ]
+        },
+        {
+          "round": 31,
+          "created_at": "2026-09-09T19:08:34.179746",
+          "task_id": "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+          "seeds": [
+            713,
+            562,
+            130
+          ],
+          "seed_classes": [
+            "700-799",
+            "500-599",
+            "100-199"
+          ],
+          "cumulative_counts": [
+            11,
+            11,
+            10,
+            11,
+            11,
+            12,
+            11,
+            6,
+            6
+          ],
+          "class_ranks": [
+            2,
+            3,
+            7,
+            6,
+            4,
+            1,
+            5,
+            8,
+            9
+          ],
+          "class_last_updated": [
+            30,
+            30,
+            29,
+            27,
+            30,
+            29,
+            28,
+            22,
+            22
+          ],
+          "seed_ranks": [
+            5,
+            4,
+            2
+          ],
+          "rank_cumulative_counts": [
+            8,
+            9,
+            6,
+            13,
+            5,
+            13,
+            14,
+            7,
+            11,
+            4
+          ]
+        },
+        {
+          "round": 32,
+          "created_at": "2026-09-10T09:33:22.733431",
+          "task_id": "442591a9-ddc4-4f96-8e27-be58186ed76a",
+          "seeds": [
+            970,
+            710,
+            772
+          ],
+          "seed_classes": [
+            "900-999",
+            "700-799",
+            "700-799"
+          ],
+          "cumulative_counts": [
+            12,
+            11,
+            10,
+            11,
+            12,
+            12,
+            12,
+            6,
+            6
+          ],
+          "class_ranks": [
+            1,
+            5,
+            7,
+            6,
+            2,
+            4,
+            3,
+            8,
+            9
+          ],
+          "class_last_updated": [
+            31,
+            30,
+            29,
+            27,
+            31,
+            29,
+            31,
+            22,
+            22
+          ],
+          "seed_ranks": [
+            9,
+            3,
+            3
+          ],
+          "rank_cumulative_counts": [
+            8,
+            10,
+            6,
+            14,
+            6,
+            13,
+            14,
+            7,
+            11,
+            4
+          ]
+        },
+        {
+          "round": 33,
+          "created_at": "2026-09-10T16:46:24.454869",
+          "task_id": "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+          "seeds": [
+            304,
+            193,
+            330
+          ],
+          "seed_classes": [
+            "300-399",
+            "100-199",
+            "300-399"
+          ],
+          "cumulative_counts": [
+            12,
+            11,
+            10,
+            11,
+            12,
+            12,
+            14,
+            6,
+            7
+          ],
+          "class_ranks": [
+            2,
+            5,
+            7,
+            6,
+            3,
+            4,
+            1,
+            9,
+            8
+          ],
+          "class_last_updated": [
+            31,
+            30,
+            29,
+            27,
+            31,
+            29,
+            32,
+            22,
+            32
+          ],
+          "seed_ranks": [
+            7,
+            2,
+            7
+          ],
+          "rank_cumulative_counts": [
+            8,
+            10,
+            8,
+            14,
+            6,
+            13,
+            14,
+            7,
+            12,
+            4
+          ]
+        },
+        {
+          "round": 34,
+          "created_at": "2026-09-11T02:23:16.462872",
+          "task_id": "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+          "seeds": [
+            170,
+            228,
+            557
+          ],
+          "seed_classes": [
+            "100-199",
+            "200-299",
+            "500-599"
+          ],
+          "cumulative_counts": [
+            13,
+            11,
+            12,
+            11,
+            12,
+            12,
+            14,
+            6,
+            7
+          ],
+          "class_ranks": [
+            2,
+            6,
+            3,
+            7,
+            4,
+            5,
+            1,
+            9,
+            8
+          ],
+          "class_last_updated": [
+            33,
+            30,
+            33,
+            27,
+            31,
+            29,
+            32,
+            22,
+            32
+          ],
+          "seed_ranks": [
+            2,
+            6,
+            4
+          ],
+          "rank_cumulative_counts": [
+            8,
+            11,
+            8,
+            14,
+            6,
+            13,
+            16,
+            7,
+            12,
             4
           ]
         }

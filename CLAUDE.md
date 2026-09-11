@@ -275,8 +275,36 @@ against stage 5's cas-coverage entropy (spike *score*):
 |---|---|---|---|---|
 | band, erythroid mean (56/56 pairs, monotone) | 14.6 | 13.7 | **13.0** | 12.1 |
 | band, HEK293 | 8.3 | 7.3 | **7.2** | 6.5 |
-| fidelity | 0.89 | 0.93 | **0.96** | 0.976 |
+| fidelity (**`light_cell_rows` OFF** — see below) | 0.89 | 0.93 | **0.96** | 0.976 |
 | **E[pay] aggregate** | 0.0490 | 0.0583 | **0.0598** | 0.0524 |
+
+**That fidelity row is not what the fleet ships, and reading it as a target wastes a day.** It was
+measured with `light_cell_rows` off. With the shipped `light_cell_rows = 6`, group 80's fidelity is
+**0.889** — the trade is documented at `AllHdrConfig.light_cell_rows` (fidelity 0.948 -> 0.889 for
++15.7% E[pay], on 210 configs) and it is deliberate. Rebuilt to check, on 571f4843 CD34+ at the
+*contiguous 100-seed window this row was measured at*, fidelity comes out **0.8956** — so 0.96 is
+unreproducible at its own stated configuration once the shipped apportionment is on. The live fleet
+measures 0.877-0.912 on every hotkey and every round, which is that 0.889, not a shortfall.
+
+**Where the 0.11 actually sits, decomposed.** `distribution_fidelity_score` is the geometric mean of
+six ratios, all computed from stage 12's design fields alone — `cas_shift` (repair-mode JS
+divergence, indel Wasserstein) is a **diagnostic and does not enter the score**, so fidelity is
+seed-independent (verified: 0.895552 at seeds 500 and 731). On the shipped build five of six terms
+are near-perfect and one is not:
+
+| term | value |
+|---|---|
+| **mutation coverage entropy** | **0.722** |
+| **joint coverage entropy** | **0.808** |
+| cas system coverage entropy | 0.904 |
+| strand coverage entropy | 0.987 |
+| k-mer diversity | 0.991 |
+| distinct guide ratio | 1.000 |
+
+Every backend contract carries exactly 2 mutations, so the 79/79/6/6 Cas9 split drives the mutation
+axis to near its floor and drags the joint term with it. Taking those two to 1.0 would give 0.980 —
+that is the *whole* fidelity headroom, and it is the same knob E[pay] already decided. Do not
+re-open it without beating 0.0242 E[eff].
 
 Priced over 54 current-regime fields × 25 contracts at the k=1 case, group 80 is **+14.2%** on
 expected payout over group 100, and best on K562, HUDEP-2 and CD34+_HSPC (HEK293's g42 edge is +2%,
@@ -349,17 +377,58 @@ entirely on consistency structure.
 
 **Read this before trusting anything below about windows.** As of 2026-09-09 the fleet runs
 **eleven** hotkeys, all registered — h0 uid 74, h1 209, h2 235, h3 196, h4 189, h5 147, h6 136,
-h7 75, h8 151, h9 224, h10 10 — and they are on **bands**, not seed-depend
+h7 75, h8 151, h9 224, h10 10 — and **all eleven play a band**, not seed-depend
 (`SEED_DEPEND_VARIANTS` is empty, so every process carries `NIOME_SEED_DEPEND=` and skips that
-rung). h0 is all-cut on every cell type, so **ten** hotkeys play a band. All eleven pm2 apps carry
-`--restart-delay 60000`, and axons are bound on 8091-8099, 9001 and 9002.
+rung). `ALL_CUT_HOTKEYS` is now **empty**: h0 came off all-cut on the fleet-level pricing below, so
+all-cut is the ladder's fallback for every hotkey and the dedicated flat-score hedge is gone. All
+eleven pm2 apps carry `--restart-delay 60000`, and axons are bound on 8091-8099, 9001 and 9002.
 
-The layout is `window_plan.FIXED_WINDOWS`, which overrides both `RANK_BY_HOTKEY` and the
-concentrate/spread code and consults no prediction: h1-h7 take **overlapping width-300 windows
-stepping by 100** (100-399, 200-499, … 700-999), and `ALL_CUT_HOTKEYS="niome_hotkey"` puts h0 on
-all-cut for **every** cell type, so it plays no window at all. `miner.sh` needs
+The layout is the **joined window**, in `window_plan.py`, and it has two tiers:
+
+| | hotkeys | window | band measured |
+|---|---|---|---|
+| rotated slices | h1-h10 | `JOINED_SUB_WIDTH` 225 at `JOINED_STRIDE` 30, circular | 12 (K562), 7 (HEK293) |
+| full width | h0 (`JOINED_FULL_HK`) | the whole 300-seed joined space, no offset | 11 (K562), 7 (HEK293) |
+
+Every seed in the joined space sits in 7.5 of the ten slices on average, plus h0. `miner.sh` needs
 `ALLOW_OVERLAPPING_WINDOWS=1` for this: `assert_disjoint_windows` otherwise **exits** rather than
 warning, which is the right default for every other layout.
+
+**Width is nearly free, and the contiguous width sweep does not predict the joined case.** The
+falsified table's row records band 13/12/11/9 at contiguous widths 100/150/200/300. Measured on the
+live fleet at joined widths, the band is **12 at 225 and 11 at 300** on K562, and **flat at 7** at
+100/200/225/300 on HEK293. So going 200 -> 225 cost no band at all and bought 6.67 -> 7.5 slices of
+depth per seed, and h0's full 300 costs one seed on K562 and none on HEK293 against that table's
+predicted 9. Do not price a joined window off the contiguous sweep.
+
+**Where the three joined classes come from.** `JOINED_SOURCE` selects between `_rank_freq_windows`
+(the cumulative-rank-frequency scheme) and `"seed_model"`, which reads `predicted_classes` from
+[seed_model/next_prediction.json](seed_model/next_prediction.json) — a 152k-param SeedFormer
+transformer, one finetuned checkpoint per cell type. It is currently on `"seed_model"`.
+**Both are arbitrary and that is measured, so the switch is EV-neutral rather than an
+improvement.** SeedFormer's own walk-forward series across four cycles reads 0.899 / 0.950 / 1.000
+/ 0.976 hits-of-3 against **chance's 1.000** and cold_hand's 0.988 (p = 0.50-0.80), and its
+log-loss 2.202-2.210 is *worse* than uniform's ln 9 = 2.197 — it learned to emit the uniform
+distribution, deviating at most 0.024 in any class. `_rank_freq_windows` is no better
+(z = -0.71 over 108 rounds). Band position is free under a uniform generator, so three arbitrary
+classes are worth exactly as many as three others. It is wired up because the prediction accrues a
+scored record either way and the walk-forward number is what would move first if the generator ever
+stopped being uniform. `round_plan.sh` refreshes it, guarded by `seed_refresh_guard.py` so it only
+retrains when a round has actually stamped (the cron is hourly, rounds stamp every ~2h24m), niced
+and capped to 4 threads so a 65 s torch run cannot slow a CPU-bound miner build. Torch lives in
+`.venv-ml`, never the subnet's `.venv`.
+
+**A reboot takes the whole fleet down, silently.** On 2026-09-09 the box rebooted twice (15:39,
+15:42) after a ~30-minute outbound-network outage. There is **no pm2 systemd unit**, so nothing
+resurrected: eleven apps stayed down until restarted by hand, and the pm2 daemon that answered the
+first `pm2 jlist` was a fresh empty one spawned by that very command. `pm2 save` has since been run,
+so `dump.pm2` holds all eleven with h0's current config — but without `pm2 startup` that only helps
+someone who runs `pm2 resurrect` by hand. The stale dump it replaced was from 08:26 and still had
+h0 on all-cut, so a blind resurrect would have silently reverted a config change. Two failure modes
+to keep apart when reading a dead fleet: the network outage cost 7 of 11 hotkeys their submission on
+4390d969 (every hotkey called at or before 15:02 submitted; every one called at 15:08 or later
+failed `GET contract` after `MAX_TASK_RETRIES = 3` with 219-283 s of TTL still unused), while the
+reboot cost the fleet's existence.
 
 Overlap is free but buys nothing on its own — what spikes is the ~8-12 seed clean BAND inside the
 window, not the window — so coverage is `sum(band)` over the fleet and **hotkey count is the only
@@ -497,6 +566,50 @@ each other. Group 125 reaches their *fidelity* (0.9639) at weighted 176; group 4
 *weighted* (206) at fidelity 0.82; window width moves the product only within 177-185. Treat 212.6
 as a property of all-HDR rather than a tuning target, and do not spend more on it.
 
+**A high-consistency block appears in 6 of 119 rounds and nothing here explains it.** This
+subsection claimed a **min-gap** mechanism — that whether any miner reaches `consistency_factor`
+>= 0.70 is decided by the distance between the two closest of the three seeds — and **round
+56a9f4cb falsified it on 2026-09-10** with seven such miners at min-gap **75**. The re-run over 119
+current-regime rounds, against what this file previously recorded:
+
+| min-gap | rounds | mean miners at cons >= 0.70 | max | previously recorded |
+|---|---|---|---|---|
+| <=5 | 3 | 7.00 | 7 | 7.00 / max 7 |
+| 6-15 | 9 | 1.33 | 6 | 1.50 / max 6 |
+| 16-50 | 24 | 0.00 | 0 | 0.00 / max 0 |
+| **51-150** | 42 | **0.17** | **7** | **0.00 / max 0** — broken |
+| >150 | 41 | 0.00 | 0 | 0.00 / max 0 |
+
+What the data actually supports is much weaker, and is about **rarity, not geometry**. Only **six of
+119 rounds** contain any miner at cons >= 0.70 at all, and when one does the count is **6 or 7**,
+never 1-5 — bimodal, so whatever produces it produces the whole block at once:
+
+| round | date | cell | min-gap | miners >= 0.70 |
+|---|---|---|---|---|
+| b743244d | 09-01 06:54 | HEK293 | 10 | 6 |
+| f2d36f4d | 09-04 14:07 | K562 | 6 | 6 |
+| f9511be6 | 09-05 11:44 | HUDEP-2 | 4 | 7 |
+| a155b953 | 09-09 09:30 | K562 | 3 | 7 |
+| d4a8f8b8 | 09-09 11:56 | CD34+_HSPC | 2 | 7 |
+| **56a9f4cb** | **09-10 04:45** | **CD34+_HSPC** | **75** | **7** |
+
+Five of six had a small gap, which is what made the mechanism look measured; with n = 6 that is not
+enough to be one, and the sixth round produces the identical seven-miner block with no close pair.
+**Do not re-derive their window width from seed geometry** — the inference "their window is ~10
+seeds, because at width 10 the band IS the window" rested entirely on the broken separation. It is
+still true that our width-225 slices cannot do it (our band is 12 *scattered* seeds of 225, so two
+seeds 2 apart are no likelier to both land in it than two seeds 300 apart — on d4a8f8b8 h7's window
+held **both** 523 and 525 and its band caught one), but that is a fact about us, not evidence about
+them.
+
+The block's own shape is the remaining lead, and it is beyond the measured value ladder: on
+56a9f4cb the seven ran cons **0.7004-0.8747** at fidelity 0.9435-0.9749 and weighted 225-271. The
+ladder's best reachable k=1 round is 0.491 (one band hit on an all-cut clean floor) and the
+conjunction caps at 0.409 — **0.87 needs roughly 2.6 of 3 seeds' worth of pinned targets**, which no
+construction in this file reaches at any k. This is the same unexplained ~0.50-and-above floor noted
+on the leaders' rounds. It is a construction, not luck (chi2 = 382 on 6 df), and it is **not a
+stage-12 knob**.
+
 What their slots buy is **frequency**, and that is the half worth copying. At band 8 a coldkey needs
 **36-45 disjoint windows** for a 78% chance some sibling hits a band seed; 90 slots is near-certain
 coverage every round, which is exactly what a block of 8-10 consecutive finishers looks like. Our 7
@@ -605,8 +718,74 @@ constant-probability Bernoulli noise, the forest overfits to *negative* R² (mea
 [0.33, 0.59] because `hdr_w = HDR_BASE + 0.35·energy` with energy clamped at 1.0, so that target is
 always near a fair coin and its nmae is ~0.94. That forces `avg_nmae ≈ 0.63` and a floor of
 `0.3 × 0.37 ≈ 0.11`. Measured 0.092-0.101 for *every* 250-row submission tried — all-HDR, `mh`,
-`mh_any`, `shaped` at any `gc_spread`, and the naive baseline. The population median for 250-row
-submissions in the 3-seed regime is **0.101**, i.e. identical to ours. **Nobody has a better floor.**
+`mh_any`, `shaped` at any `gc_spread`, and the naive baseline.
+
+**"Nobody has a better floor" was true until 2026-09-08 and is now false on the erythroid types.**
+The arithmetic above still holds for *our* rows — it bounds a submission whose targets are
+Bernoulli noise — but it never bounded the field, and the field left it. Between the 09-07 and 09-08
+rounds **205 of 252 hotkeys (81%)** lifted their median erythroid `consistency_factor` from
+**0.1079 to 0.1857** (per-hotkey medians, >=8 pre and >=5 post rounds each; the shift distribution
+is centred on +0.08 with nothing below -0.02). Pooled over every deduped erythroid row:
+
+| | pre 09-08 | post 09-08 | |
+|---|---|---|---|
+| `consistency_factor` | 0.1079 | **0.1857** | **+72.1%** |
+| `total_weighted_score` | 276.3 | 269.3 | -2.5% |
+| `distribution_fidelity_score` | 0.9199 | **0.8739** | -5.0% |
+| `final_score` | 31.0 | **44.5** | **+43.5%** |
+
+So they bought +72% consistency for 2.5% of weighted and 5.0% of fidelity — **the same trade this
+file prices as expensive, and their fidelity is now BELOW ours** (0.874 against our live 0.877-0.912).
+**HEK293 did not move** (field median 0.0758-0.0790 before and after), which is the strongest hint
+about the mechanism: it is the one cell type where a wide cut-clean set is not available.
+
+**It is one shared CONSTRUCTION, and it is not one build — an earlier draft of this entry said
+"byte-identical weighted 279.1, 153 of 161 rows" and that was a rounding artefact.** At full
+precision that cluster is 188 hotkeys spanning **278.730704 to 279.104859** — 58 distinct weighted
+values and **165 distinct fidelities of 188**. The rows are not identical, so "one deterministic
+build" does not follow. What the numbers actually support, measured on all 19 post-shift erythroid
+rounds:
+
+| | |
+|---|---|
+| share of the field in the cluster | **73-84%**, mean **78%** |
+| weighted spread inside it | **0.0099 to 1.53** (0.004%-0.6%) |
+| `consistency_factor` inside it | **0.098 to 0.708** |
+| fidelity inside it | 0.78-0.93, and *varies* row to row |
+
+**Weighted nearly invariant while fidelity and consistency vary is the signature of a shared SITE
+selection with per-hotkey guide variants.** `total_weighted_score` is a sum over the site multiset
+(mutation, cas, strand, gc, distance); stage 3 hashes the actual `guideRNA`. So two builds that pick
+the same sites and then search different guide variants at each site — which is exactly what
+`assemble` then `all_hdr`/`all_cut` do — score identical weighted and completely different
+consistency. **That is our own architecture, run by ~180 hotkeys instead of 11.**
+
+**So this is not a floor-only construction: it reaches k=2.** Cluster members hit cons 0.708 on
+a155b953 and 0.707 on d4a8f8b8, and 37 cluster rows across the 19 rounds sit at cons >= 0.44. Its
+elevated *floor* (the 0.20-0.25 mode) is the same construction on a round where its band misses.
+
+**Two competing families, separated by fidelity rather than by weighted.** Of the 6-9 rows per round
+at cons >= 0.44:
+
+| family | n | fidelity | weighted | where it finishes |
+|---|---|---|---|---|
+| **outside** the cluster | 114 | **0.9429** (0.834-0.980) | 242.0 | ranks 1-6 |
+| inside the cluster | 37 | 0.8726 (0.801-0.926) | **278.8** | ranks 7-10 |
+
+The top family gives up 13% of weighted to gain 8% of fidelity and out-ranks the cluster on the
+product. On fbde9cc4 that is ranks 1-6 at fidelity 0.908-0.979 against the cluster's 0.8996-0.8999
+at ranks 7-10.
+
+**"The field adopted all-cut" is now the WEAKER hypothesis** and should not be carried forward. It
+was proposed here on three fits — the 0.237 clean-seed value, determinism-per-contract, and the
+HEK293 exemption — and the middle one is gone with the tie. A band construction on an elevated floor
+fits everything all-cut fitted *and* explains the cons reaching 0.71, which all-cut cannot. What the
+HEK293 exemption then says is that whatever lifts the floor needs a wide cut-clean set, which HEK293
+does not have; that part survives either way.
+
+Two consequences that change how to read everything below. **Our 0.101 is now the worst floor in the
+erythroid field, not the universal one** — and the round table that follows is *our* ladder, not the
+field's. And the floor is what decides whether our spike places: see "Pricing a floor change".
 
 Round score averages the three seeds, so with a floor of 0.10 the only reachable values are:
 
@@ -646,16 +825,39 @@ recorded 0.299, which is the top of the range rather than the mean. This does no
 "nobody has a better floor" line above: the *dirty* floor really is ~0.10 for everyone. The
 difference between us and the field is how many seeds are not dirty.
 
-**What the field's top actually is, and why it is not two band hits.** Across 110 current-regime
-rounds, 2.52% of deduped miner-rows (≈6 per round) land in a **flat plateau** of round-cons
-0.44-0.70 — flat, with no mode, against sharp modes at 0.10, 0.16-0.18, 0.26 and 0.40. Two band hits
-cannot produce it: at band 12-16 `P(k>=2)` predicts **0.13-0.23** miners per round out of 248, and
-matching the observed rate needs a band of **~55 seeds**, against the 12-16 all-HDR reaches and the
-~12 that `pool * P**B >= group_size` allows. What does produce it is **one band hit sitting on an
-all-cut clean floor**: `(1 + 2*0.237)/3 = 0.491`, and the mixed case at all-cut's 62% clean fraction
-gives 0.459 — both inside the plateau. And it is a construction rather than luck: 17 hotkeys reach
-the plateau 6+ times while 248 never do (chi2 = 382 on 6 df against an i.i.d. lottery at the same
-base rate).
+**What the field's top actually is: a top block present in EVERY round, and the plateau
+reading of it was wrong twice.** The mechanism `(1 + 2*0.237)/3 = 0.491` is right and the framing
+around it was not. Re-measured over 119 current-regime rounds:
+
+| | |
+|---|---|
+| rounds carrying at least one row at cons >= 0.44 | **118 of 119** |
+| rows at cons >= 0.44 per round | **4-9** (median 6, one round at 14, one at 0) |
+| total such rows | 740 |
+| distinct hotkeys holding at least one | **157** of 528 seen |
+| busiest single hotkey | 16 of its 119 rounds |
+
+So the "2.52% of rows" is not an occasional construction — it is a **permanent per-round block of
+4-9 miners**, and no round is free of it. Two corrections follow:
+
+* **It is not one operator.** Membership rotates: ~157 hotkeys each reach it on ~4% of their rounds,
+  which lands 6-7 per round by arithmetic alone. The chi2 = 382 figure below is still the right test
+  against an i.i.d. lottery over *all* 248 miners, but it identifies a **population** of ~157 that
+  run the construction, not a block that recurs by hotkey.
+* **The value the plateau sits on has moved.** At the field's new erythroid floor of 0.19-0.24,
+  `(1 + 2*0.24)/3 = 0.493` — so the same one-band-hit arithmetic now reproduces the plateau *without
+  needing all-cut's row composition*, which is what the top block's rows actually look like (7 of 7
+  distinct weighted values and fidelity 0.955 on 56a9f4cb, against the shared build's tied 279.1 /
+  0.874). **This also explains the ~0.50 "off-band floor" flagged elsewhere as unexplained.**
+
+**And any row at cons >= 0.44 has a genuinely positive `avg_r2`, which ours never does.** From
+`cons = 0.7*max(avg_r2, 0) + 0.3*(1 - avg_nmae)`, the nmae term alone caps at **0.30**, so
+cons >= 0.44 forces `avg_r2 >= 0.2`. All 740 of those rows clear it. Ours measures **-0.249** off
+band. That is the gap in one number, and it is not a stage-12 quantity.
+
+Two band hits remain ruled out as the explanation: at band 12-16 `P(k>=2)` predicts **0.13-0.23**
+miners per round out of 248, and matching the observed rate needs a band of **~55 seeds**, against
+the 12-16 all-HDR reaches and the ~12 that `pool * P**B >= group_size` allows.
 
 **That is the whole prize, and the Cas9 conditional fill is what blocks it.** Priced against
 9ac1d178's real field (rank-10 cutoff 126.32) at our own `weighted x fidelity` of 303.6:
@@ -719,15 +921,138 @@ wide the window it was searched in.
 | mutation-weight tie-break inside `FastGreedy` | same trick on `mutation_weight`: shifts 3 of 80 group rows on HEK293 (+1.6% freq×value) and 7 on CD34+, where the **1.8% fidelity drop** eats the 1.2% weighted gain (net −0.6%). CD34+ is already apportioned at `mean_weight` 1.10; only HEK293 was starved, and `cas9_cell_target` fixes that properly. |
 | narrowing the band window to buy Cas9 pool freedom | `weighted × fidelity` is **flat at 177-185 across widths 10 / 20 / 30 / 50 / 100 / 300** on HEK293 — a 4% spread over a 30x range. The mechanism fails because **narrowing the window grows the band toward the window size** rather than shrinking it (band **10 of 10** at width 10, against 7 at width 100), so the Cas9 conditional fill gets *harder* and the pool *falls* (1691 at width 10 vs 9290 at width 100). Width 50 is the best point and worth only +3.8% k=1 at equal band. |
 | `group_size` away from 80 (HEK293, re-tested after the Cas9 fix) | the two trends are real and cross exactly at 80: fidelity climbs 0.820 → 0.964 across group 42 → 125 while weighted falls 206 → 164, and the **product peaks at group 80** (179.0). Priced on 31 real HEK293 fields every arm is 0.0010-0.0014 E[share] with `P(place \| k=1)` a flat **48%** — quality moves k=1 only between 60 and 69, so band size decides the ordering and group 42's band 9 edges it by 8%, inside noise. Group 80 stands. |
-| two band hits as the explanation for the field's top block | needs a band of **~55 seeds** to produce the observed 2.52% plateau rate; at band 12-16 the prediction is 0.13-0.23 miners per round against ~6 observed, 6-40x short. The plateau is one hit on an all-cut floor, not two hits. |
+| two band hits as the explanation for the field's top block | needs a band of **~55 seeds** to produce the observed rate (4-9 such rows in **118 of 119** rounds); at band 12-16 the prediction is 0.13-0.23 miners per round against ~6 observed, 6-40x short. It is one hit on an elevated floor, not two hits. |
 | stage 4's overfitting as an exploit (degenerate feature vectors) | **real but not buildable.** Collapsing the feature matrix moves off-band `avg_r2` from **-0.249 to -0.032**, confirming the negative R² is pure overfitting — but `max(avg_r2, 0)` discards it, so cons moves only 0.1036 → 0.1052. Combined with a pinned `is_cut` it *is* worth 0.135 → **0.350**, except that the recovery needs `distance` cardinality **<=8** (flat from 61 down to 16: 0.1346 / 0.1359 / 0.1345), and 250 rows admit only ~8 per distance value (2 offsets x 2 mutations x 2 cas x 2 strands), forcing ~31 distinct. |
 | a cut-robustness tie-break inside all-HDR's Cas12a greedy | ceiling **+2.2 final points** (121.7 → 123.9), still under the cutoff. Two measured facts compound: perfecting the Cas12a half caps cut-clean at 162 of 900 because the Cas9 rows independently cover 738, and a cut-clean seed in an all-HDR composition is worth 0.162 rather than all-cut's 0.237. Priced before implementing — the go/no-go was `cutunion`, not a build. |
 | feature concentration (gc at 0.50, distance clustered) to buy all-cut's composition | **noise-dominated.** Concentrating gc at 0.50 for 79% of rows helped seed 373 (+0.051) and hurt seed 161 (-0.006); clustering distance to 39 levels did the reverse (+0.030 / -0.022). The R² on the two live targets is noise around a negative mean, so composition cannot be tuned seed-by-seed. |
 | the conjunction's clean set, measured at both of its bounds (`cas12a_union.py`) | **caps at 52-80 of 900 against the 559 the prize needs, and which bound binds depends on `group_size`.** (a) The HDR min-union buys **zero** cut-coincidence — the group's cut-fail union is **714** at group 42 against **724** for independent failures (848 at group 80), where all-cut reaches **341** with the same 42 rows by optimising cut instead. The two objectives are orthogonal, so a group selected for one gets nothing free on the other. (b) The HDR-on-band Cas9 pool costs `P(HDR)**2` per extra band seed (**906** candidates at band 15 against **3118** at band 13), and cut-strictness over `C` costs a further `0.99**\|C\|`. So group 42 is Cas9-bound at `\|C\|` = 80 and group 80 is Cas12a-bound at `\|C\|` = 52, worth **+0.7 to +2.4** round final (121.7 -> 122.4-124.1) against a 126.32 cutoff. **The scan's early exit is not the cause** — at group 42 the *full* pool (906) is smaller than the exit target (1664), though at group 80 it does truncate (3118 vs 1360). |
+| the joined window as the cause of our 0.89 fidelity (`fidelity_window.py`) | **mostly not it, and free on the product.** Four arms on one contract, group and everything else fixed: contiguous 100 -> **0.8956**, contiguous 225 -> 0.8916, joined 225 -> 0.8880, joined 300 -> 0.8773. So the contiguous window *this fidelity was measured at* already gives 0.8956, and non-contiguity costs only 0.9% at width 225 / 2.0% at width 300, entirely through the mutation term (0.722 -> 0.689 -> 0.653). Width alone costs ~nothing. And weighted rises as fidelity falls, so `weighted x fidelity` is **flat at 221.6-223.4 across all four**, independently reproducing the `narrow_width` result. The window is exonerated; h0's full 300 is free net. |
+| `max_distance` alone, at the band-preserving end (`dist_sweep.py`) | **the term improves and the product does not.** Distance only, GC bounds untouched, one contract, joined 225, group 80: `dist_score` climbs monotonically 0.8555 -> 0.9294 and `base structural` with it, 0.9088 -> **0.9464** (+4.1%) across maxd 400 -> 100. But `weighted` **oscillates** (251.6 / 248.6 / 257.6 / 248.8 / 255.9 / 256.7) instead of following, and `weighted x fidelity` is **flat at 223.0-228.3 — a 2.4% spread over a 4x range**. Mechanism: a tighter bound restricts eligible sites, shifting the mutation mix and dropping mean `mutation_weight`, which absorbs the base gain — fidelity moves the *other* way as it does so and the two largely cancel. Including band, `band x w x fid` peaks at maxd 200 (2700) and 300 (2698) against shipped 400's 2681 (**+0.7%, noise**) and falls 7% below maxd 150 where the band drops 12 -> 11. This also explains why the 210-config sweep read non-monotone across 400/150/100: it was sampling a flat surface. **Do not extrapolate base linearly** — a 4.1% base gain returned 2.0% weighted and 2.2% product, so even base = 1.000 reaches ~+5%, not the +10.5% that rank 10 requires. |
+| min-gap as the mechanism behind the field's high-consistency block | **broken by one round.** Five of the first six rounds carrying a cons >= 0.70 block had min-gap <= 10, which read as a clean separation (zero of 101 rounds at gap >= 16). **56a9f4cb (2026-09-10, CD34+, gap 75) produced the identical seven-miner block**, moving the 51-150 bucket from mean 0.00 / max 0 to 0.17 / max 7. The inference that drew their window width at ~10 seeds from this is withdrawn: with only 6 positive rounds of 119 the gap association was never separable from chance. What survives is that the block is **bimodal (0 or 6-7 miners), rare (5% of rounds), and reaches cons 0.87** — above everything the per-seed value ladder can build. Don't re-run the geometry; the open question is what the rows are. |
+| raising the off-band floor by row DISTRIBUTION rather than pinning (`floor_bound.py`) | **the ceiling is our current floor.** Give the stage-4 regressor an ORACLE -- predicting each row's true conditional mean, so `r2 = Var(p)/(E[p(1-p)]+Var(p))` and `nmae = mean(2p(1-p))/sqrt(...)`, the best any regressor could do -- and the most heterogeneous 250 rows the design space allows reach cons **0.085-0.111**, against our live 0.095-0.113. The bound reproduces the shipped floor (0.1114 erythroid / 0.0894 HEK293 predicted) which is the check that the formulas are right. Heterogeneity raises `avg_r2` 0.004 -> 0.027 and `avg_nmae` 0.638 -> 0.705 **together**, so cons falls. Two structural reasons: **`is_hdr`'s nmae is 0.997** (`P(HDR\|cut)` is confined near 0.5 by `hdr = hdr_base + 0.35*energy` against fixed `mh_nhej`/`blunt`, so it is a fair coin no design reaches outside), and **energy is CLAMPED at 1.0 on every erythroid row** -- at accessibility 0.77-0.87, `1.8*gc + 0.6*exp(-d/1500)` exceeds the clamp above gc ~0.33. That clamp is why the falsified `gc_spread` row moved the floor only 0.095 -> 0.099: it varied a saturated quantity. **Distance is the only lever that unclamps energy**, and it is worse (0.1097 against 0.1114) because unclamping moves rows off `cut_p` 0.99 toward 0.5 where nmae is maximal. **So an elevated floor REQUIRES pinning `is_cut`** -- there is no distributional route, and this closes the question from the other side to `cas12a_union.py`. |
+| narrowing the HDR band to buy Cas12a pool freedom for a cut min-union (`hdr_pool.py`, `band_floor.py`) | **the freedom is not there, and the two requirements never overlap.** The plan was: an elevated floor needs a wide cut-clean set; that is blocked because only ~82 bank guides are HDR-clean on a 13-seed band against the 80 a group needs; the pool grows as the band narrows, so trade band width for min-union freedom. `band_floor.py` priced the trade against the 19 post-shift erythroid fields and gave **break-even floors** of 0.157 (band 10, needing 371 of 900 cut-clean), 0.170 (band 8, 457), 0.186 (band 7, 562), 0.192 (band 6, 602), with band 4 losing **-33.9%** even at a perfect 0.237. Then `hdr_pool.py` measured the pool over six live banks -- pure set arithmetic on the `fails` each bank already stores, no GPU -- and it is **10-14x below the extrapolation**: best-band pool **847 / 230 / 126 / 72 / 29 / 11** at width 4 / 6 / 7 / 8 / 10 / 13, against all-cut's **41.6x** freedom (group 42 from a pool of ~1749) to reach union 341. So band 10, the arm with the most reachable break-even, has a pool of **29 against a group of 42** and cannot form a group at all; bands 6-7 hold 3.0-5.5x freedom and need a union of 298-338, i.e. **at or better than all-cut's 341 from an eighth of the freedom**; band 4 has the freedom and cannot pay. Two input errors produced the optimism, both from reading one datapoint: the per-seed HDR-clean rate is **0.476, not the 0.602** inferred from "82 of 60,000", and live banks hold **14,000 guides, not 60,000**. Note what did NOT go wrong -- random-band pools match the independence model at the measured rate (1 against 1 at band 13, 33 against 37 at band 8), so there is **no guide-heterogeneity bonus**; the best-band greedy's 11x edge is from choosing seeds, nothing more. Bank size is the only remaining lever (pool is linear in it) and matching all-cut's freedom at band 6 needs a **~106k guide bank, 7.6x the current build**, for a **+17.1%** upside and still a union better than all-cut manages. Not worth it against the memory constraint. |
+| whether the HDR filter DESTROYS cut-failure coincidence or merely fails to select for it | **still open, and now unmeasurable where it would matter.** `cas12a_union.py` found a group selected for HDR has a cut-fail union of **714** against **724** for independent failures -- zero coincidence. The obvious next test is to reverse the objective: filter to HDR-clean-on-band first, then min-union on CUT over what survives. The pool measurement above says that pool is 29-126 at every band width whose floor could pay, which is too small to ask the question. Band 4 (pool 847) is the only arm with enough freedom to measure it and is the one band that cannot pay at any floor. Left here because it is the mechanism behind two falsified rows, not because it is actionable. |
+
+**Read the table as a whole before proposing a sixth knob.** Five independent levers have now been
+swept — GC tie-break, mutation-weight tie-break, band-window width, `group_size`, and `max_distance`
+— and every one shows the same shape: **the term it targets improves measurably and
+`weighted x fidelity` does not move.** GC tie-break +5.6% on `gc_score` -> -0.3% net; window width
+flat 177-185 over a 30x range; group size a product peaking exactly at the shipped 80;
+`max_distance` +4.1% on base structural -> +0.7% on frequency x value. The mechanism differs each
+time (ties re-drawn per pick, band growing toward the window, fidelity/weighted crossing, mutation
+mix shifting with site availability) but the outcome does not. Treat `weighted x fidelity` as at a
+local optimum **of this construction** that per-term tuning does not escape, and note that the two
+terms are *coupled through row composition* — which is why improving either in isolation returns
+almost nothing. The levers with measured headroom are elsewhere: hotkey count (linear, uncapped) and
+consistency structure (where the plateau lives). Anything that only moves a stage-12 term is very
+likely already priced at zero.
+
+**"Local optimum" means local, and the qualifier matters — but the comparison against the field
+must be made PER CELL TYPE, and pooled it is wrong.** Our live `weighted x fidelity`, medians over
+post-09-08 rows identified by ss58 address:
+
+| cell | weighted | fidelity | `w x fid` | vs the shared build's **244.0** |
+|---|---|---|---|---|
+| HUDEP-2 | 336.0 | 0.8931 | **298.3** | **we are +22.3% ahead** |
+| CD34+_HSPC | 260.0 | 0.8936 | 233.3 | -4.4% |
+| K562 | 244.3 | 0.8994 | **220.1** | -9.8% |
+
+A 36% spread across cells, so pooling these to 225.8 and reading "the field beats us by 8.1%" is the
+same error as pooling fields across contracts — **an earlier draft of this entry said exactly that
+and it is withdrawn.** We are *ahead* of the shared build on HUDEP-2 and behind on K562, and the
+sweeps' flat 221-228 band was measured on the cells where we are behind. What survives: the flatness
+is a property of the all-HDR row composition rather than of stage 12, and the shared build reaches
+its number by going the *other* way on the trade than every arm swept here (more weighted, less
+fidelity). It does not license re-running the five levers, and **`floor_price.py` arm B measures
+that adopting the shared build's product at our current floor is worth -48.8%** — because it would
+cost HUDEP-2 its 298.3.
+
+**The same defect is live in [fleet_price.py](fleet_price.py)**, whose `AH_WXF` is the single
+constant `339.9 * 0.8931 = 303.6`: right for HUDEP-2 (298.3 measured) and **38% too high for K562**
+(220.1). Both arms carry the inflation, so it compresses rather than reverses the all-cut/all-HDR
+comparison — but the h0 decision rests on a +6.5% margin computed with the K562 arm scored 38%
+high. **Re-run and resolved** — see the corrected table under "Per-hotkey P(place) is the wrong
+unit for a fleet": the ordering and the h0 decision survive, the E[share] levels are wrong by up to
+11x, and the monotonicity claim turns out to hold only at all-cut's live clean fraction.
 
 `not_hdr`'s **0.577** is the one number worth remembering: two pinned targets lands exactly in the
 range the leaders' placing rounds occupy, which is the arithmetic confirmation that a placing round
 is one band hit plus two floor seeds — not a flat construction.
+
+#### Pricing a floor change
+
+[floor_price.py](floor_price.py) prices the off-band per-seed floor `f` as a free parameter, against
+the **19 post-2026-09-08 erythroid fields** — the shift above changed the field, so pre-shift fields
+price a field that no longer exists, which is this section's own rule applied to the time axis. Each
+cell is scored at **its own** `weighted x fidelity` (HUDEP-2 298.3, CD34+ 233.3, K562 220.1); a
+first pass pooled them at 225.8 and overstated the answer by **2.3x**, so do not pool them.
+
+**The floor never pays directly. It pays by moving k=1 up the curve.** Per cell, against that cell's
+own fields, `cons = (k + (3-k)*f)/3`:
+
+| cell | cutoff med | k=0 at f=0.237 | k=1 at f=0.101 | k=1 at f=0.198 | k=2, any f |
+|---|---|---|---|---|---|
+| CD34+_HSPC | 99.5 | 55.3 (**0%**) | 93.5 (33%) | 108.6 (100%) | 100% |
+| HUDEP-2 | 112.1 | 70.7 (**0%**) | 119.5 (50%) | 138.8 (100%) | 100% |
+| K562 | 80.9 | 52.2 (**0%**) | 88.2 (67%) | 102.4 (89%) | 100% |
+
+k=2 already places everywhere and k=0 places nowhere even at f=0.237, so the floor's whole value is
+in k=1 rounds — and mostly as **rank**, not frequency: rank 3 pays 0.20 against rank 9's 0.015.
+
+| arm | E[share] | vs shipped | |
+|---|---|---|---|
+| **A** f=0.101, band 12 (**shipped**) | 0.00832 | — | |
+| A f=0.150 | 0.01016 | +22.2% | 9/19 rounds, m/SE 3.0 |
+| A f=0.198 | 0.01588 | +90.9% | 15/19, m/SE 1.7 |
+| A f=0.237 | 0.01773 | **+113.2%** | 16/19, m/SE 2.1 |
+| A f=0.300 | 0.06015 | +623.3% | 19/19, m/SE 4.8 — above any measured per-seed value |
+| **B** f=0.101 at the shared build's 244.0 | 0.00426 | **-48.8%** | costs HUDEP-2 its 298.3 |
+| B f=0.237 at 244.0 | 0.03404 | +309.4% | |
+| ~~**C** the field's cluster modelled as flat, no band~~ | ~~0.00000~~ | ~~-100.0%~~ | **premise false, see below** |
+
+Three results, in order of what they settle:
+
+**Arm C is WRONG and is kept only as a worked example of a modelling error.** It priced the field's
+cluster as *flat* at cons 0.198 with no band — `279.1 x 0.874 x 0.198 = 48.3` every round, which
+never reaches a cutoff whose minimum is 63.4, hence the 0.00000. **The premise is false:** that
+cluster is a band construction whose consistency runs 0.098-0.708, not a flat floor (see "Nobody has
+a better floor" above). Measured directly against the same 19 fields, the cluster **captures curve
+share on 19 of 19 rounds** — mean **0.077**, min 0.025, max 0.360, taking ranks 7-10 on a typical
+round. So the correct reading is the opposite of what arm C printed: the *floor-only members* of
+that construction do not place, and the construction itself places every round.
+
+What survives from arm C, and it is worth keeping: **a flat 48.3 really would earn zero**, because
+the post-shift erythroid cutoff minimum is 63.4. That is still the demonstration that
+**`final_score` is not the objective** under `SCORING_SYSTEM = "top"` — the field's +43.5% on
+`final_score` would buy nothing on its own. It is their band, not their floor, that pays.
+
+Arms A and B are unaffected: they model *our* construction, whose floor is measured at 0.101 and
+whose band is measured at 12.
+
+**The rebuild that arms A and B describe was attempted and it aborted at its first measurement.**
+See the two `floor_bound.py` / `hdr_pool.py` rows in the falsified table: the floor cannot be raised
+distributionally (oracle ceiling 0.111), and narrowing the band to buy min-union freedom for a
+pinned floor finds pools of 29-126 where 1749 was extrapolated. **Read arms A and B as the price of
+a prize, not as a plan.**
+
+**A's 2.13x at f=0.237 is a bound, not an option.** Both routes to floor-and-spike are already
+falsified: the conjunction puts both rules on the same rows and caps the clean set at 52-80 of 900,
+and the hybrid split puts them on different rows and measures *below* the pure floor. The reason is
+structural — stage 4 computes each target over all 250 rows, so half the rows repairing by HDR
+leaves `is_hdr` unpinned even on a band seed. **At the reachable floor the prize is ~nothing:** the
+conjunction's 52-80 clean seeds give `f ~ 0.105`, which sits between the 0.101 and 0.150 rows, i.e.
+under +22% and probably under +5% — independently reconfirming `cas12a_union.py`'s "+0.7 to +2.4
+round final points".
+
+**Where the floor would be worth most is not where we are weakest.** Per cell at f=0.237: K562
+**+278%**, CD34+ **+209%**, HUDEP-2 only **+18.8%** — HUDEP-2's `w x fid` of 298.3 already puts its
+k=1 at 119.5 against a 112.1 cutoff, so it needs no floor. Any future floor work is a K562/CD34+
+question.
+
+**What this promotes instead.** k=2 places on 100% of fields at every floor and every cell, and the
+floor cannot touch that. So the two levers this leaves are the ones already flagged as uncapped:
+**hotkey count**, and **band size** — the only quantity that moves `P(k>=2)`. Neither is a stage-12
+term, which is the same conclusion the five-lever table reaches from the other direction.
 
 #### Pricing a construction — the field must match the contract
 
@@ -802,6 +1127,82 @@ Two inputs to `price_cell.py` are wrong and matter beyond K562:
 The band itself is stable and is not the uncertain part: **13 of 900 on all six contracts, spike
 verified at exactly 1.0000 each time** (hunted, not assumed), against all-cut's clean set drifting
 549-570 and its hit consistency 0.2561-0.2940.
+
+**Per-hotkey P(place) is the wrong unit for a fleet, and it inverts the answer.** Both matched
+single-hotkey measurements are correct — `cmp_k562.py`'s all-cut 3.78x on K562, and a second
+independent method (P(place) over 28 real HUDEP-2 cutoffs: all-cut **10.38%** against all-HDR's
+**3.26%**, 3.18x) — and **both are inapplicable to a fleet decision**, because the two
+constructions differ in whether siblings can be decorrelated at all. all-cut is a deterministic
+function of the contract (no window, no band), so every hotkey running it submits **identical
+rows**: ten of them hold one score and take ranks r..r+9, collecting the *tail* of
+`SCORE_DISTRIBUTION`, and all miss together. all-HDR carries a per-hotkey band window, so one hit
+places **alone** near the top. Rank 1 pays 30x rank 10, and that asymmetry decides it.
+[fleet_price.py](fleet_price.py) prices whole compositions against the real fields, Monte-Carlo over
+seed draws and band placements, at the measured per-seed value ladder:
+
+**The first run of this used one `weighted x fidelity` for every cell type and its E[share]
+levels are wrong by up to 11x. Re-run per cell, the ORDERING survives and the levels do not:**
+
+| all-cut / all-HDR | HUDEP-2 | CD34+_HSPC | K562 | vs 1/10 |
+|---|---|---|---|---|
+| 0 / 11 | **0.03773** | **0.01034** | **0.00436** | **+8.2% / +5.3% / +10.3%** |
+| 1 / 10 | 0.03488 | 0.00981 | 0.00396 | — |
+| 2 / 9 | 0.03257 | 0.00951 | 0.00369 | -6.6% / -3.1% / -6.6% |
+| 4 / 7 | 0.02840 | 0.00934 | 0.00317 | -18.6% / -4.8% / -19.8% |
+| 6 / 5 | 0.02431 | 0.00923 | 0.00288 | -30.3% / -5.9% / -27.2% |
+| 11 / 0 | 0.01589 | **0.01001** | 0.00211 | -54.4% / **+1.9%** / -46.7% |
+
+The superseded row, kept so the size of the error is on record: HUDEP-2 0.03887 and K562 **0.04969**
+at 0/11, against the corrected **0.00436** on K562 — the single `AH_WXF` of `339.9 * 0.8931` = 303.6
+is HUDEP-2's number (298.3 measured live) and **38% above K562's** (220.1), and all-HDR's whole case
+is that its k=1 spike clears the cutoff, so inflating it clears fields it cannot reach. **Cite no
+absolute E[share] from this section's earlier form.**
+
+**`ALL_CUT_HOTKEYS = ""` is confirmed, on a wider basis than before.** 1/10 -> 0/11 is positive in
+**9 of 9** measurements (three cells; CD34+ at three RNG seeds x two clean fractions), margin
+**+0.4% to +10.3%**. The old +6.48% +/- 0.69 sits inside that, so the decision is unchanged — but
+CD34+'s margin runs as low as **+0.4%**, so it is not the mean/SE-21 result that figure implied.
+
+**"Monotone on both cell types: every hotkey moved to all-cut costs share" is conditionally false,
+and the condition is all-cut's clean fraction.** It was only ever run on HUDEP-2 and K562. CD34+ is
+**U-shaped** — worst in the middle and *better* than the shipped mix at the extreme:
+
+| CD34+_HSPC, `FP_AC_CLEAN` | 6 / 5 | 11 / 0 (three RNG seeds) |
+|---|---|---|
+| **569**/900 (build-time, what this file records) | -3.2 to -5.9% | **+1.9% / +2.1% / +4.3%** |
+| **477**/900 (implied by h0's live all-cut rounds) | -13.3 to -16.0% | -20.4% / -19.8% / -18.6% |
+
+At 569 an all-cut *fleet* beats the shipped mix on CD34+, sign-consistent across RNG seeds, so the
+inversion is arithmetic and not noise. At 477 it collapses and monotonicity returns. CD34+ is the
+one cell where all-cut's `weighted x fidelity` **exceeds** all-HDR's (249.1 against 233.3, ratio
+1.068), which is what gives correlated siblings something worth stacking; the lower clean fraction
+removes enough consistency to erase it. **So the monotonicity claim rests entirely on all-cut's
+clean fraction being ~0.53 rather than ~0.63, and that is measured at n = 6.** Treat it as one
+input away from flipping on one cell type.
+
+**Two of the three constants this section was priced on were wrong, all in all-cut's favour.**
+Measured from h0's own rounds while `ALL_CUT_HOTKEYS` still named it, isolated by the cons signature
+(all-cut 0.16-0.21 against all-HDR's 0.09-0.10):
+
+| | script assumed | live |
+|---|---|---|
+| all-cut / all-HDR `w x fid` ratio | 0.943 (all-cut lower) | **1.014** — all-cut gives up nothing |
+| all-cut clean fraction | 569/900 = 0.632 | **477/900 = 0.530** (round-cons 0.1774 against a predicted 0.1911) |
+| `AH_WXF` | one constant, 303.6 | **per cell: 298.3 / 233.3 / 220.1** |
+
+The 1.014 ratio independently reproduces this file's "all-HDR tracks all-cut within 3% on term 1".
+The model's band crowding still matches measurement (11 independent 12-seed bands in a 300-seed
+joined space give a union of 108 against `band_overlap.py`'s 104).
+
+`fleet_price.py` now takes `FP_CELL`, `FP_AC_CLEAN`, `FP_RNG` and `FP_SINCE`, and filters our own
+hotkeys **by ss58 address**: uids are recycled, and 7 of our 11 carried another operator's hotkey
+during the 2026-09-08 reboot window, which is worth 57 contaminated rows of 228 if identification
+goes through uid.
+Two live confirmations of the h0 half: its all-HDR K562 build takes **344 s** against all-cut's
+**606 s**, and on the two rounds where its all-cut prepare was still running when a validator called
+(9ac1d178 at 149 s, d4a8f8b8 at 409 s) it shipped the emergency ordinary construction and scored the
+floor. What is given up is the only construction that scores anything when every band misses
+(45.46 on a155b953) — worth zero at rank 99, but it was the fleet's sole signal on those rounds.
 
 **HEK293 has not had this treatment** and is the open case: `price_cell.py` puts it on all-HDR by
 0.0059 vs 0.0027, on the same pooled basis this section discredits, and it is the one cell type

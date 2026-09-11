@@ -1,0 +1,1481 @@
+{
+  "generated_at": "2026-09-10T15:30:59.163344+00:00",
+  "window": {
+    "start": "2026-08-27T00:00:00",
+    "end": "2026-09-10T14:17:27.867876"
+  },
+  "protocol": "one-step-ahead walk-forward: each task is predicted by a model refit on strictly earlier rounds only, warm-started from the previous step",
+  "n_tasks": 50,
+  "model": {
+    "n": 50,
+    "logloss": 2.9161,
+    "uniform_logloss": 2.8904,
+    "max_prob": 0.124,
+    "max_deviation_from_uniform": 0.1176,
+    "1_window": 27,
+    "2_windows": 5,
+    "3_windows": 1,
+    "duplication": {
+      "tasks_with_duplicate": 7,
+      "hit": 1
+    },
+    "mean_windows_matched": 0.64,
+    "mean_seeds_covered": 0.66
+  },
+  "baselines": {
+    "uniform": {
+      "n": 50,
+      "1_window": 30,
+      "2_windows": 3,
+      "3_windows": 0,
+      "duplication": {
+        "tasks_with_duplicate": 7,
+        "hit": 1
+      },
+      "mean_windows_matched": 0.64,
+      "mean_seeds_covered": 0.66
+    },
+    "marginal": {
+      "n": 50,
+      "1_window": 19,
+      "2_windows": 4,
+      "3_windows": 1,
+      "duplication": {
+        "tasks_with_duplicate": 7,
+        "hit": 2
+      },
+      "mean_windows_matched": 0.44,
+      "mean_seeds_covered": 0.48
+    },
+    "hot_hand": {
+      "n": 50,
+      "1_window": 18,
+      "2_windows": 5,
+      "3_windows": 0,
+      "duplication": {
+        "tasks_with_duplicate": 7,
+        "hit": 2
+      },
+      "mean_windows_matched": 0.42,
+      "mean_seeds_covered": 0.46
+    },
+    "cold_hand": {
+      "n": 50,
+      "1_window": 22,
+      "2_windows": 1,
+      "3_windows": 0,
+      "duplication": {
+        "tasks_with_duplicate": 7,
+        "hit": 0
+      },
+      "mean_windows_matched": 0.46,
+      "mean_seeds_covered": 0.46
+    },
+    "repeat_last": {
+      "n": 50,
+      "1_window": 27,
+      "2_windows": 3,
+      "3_windows": 0,
+      "duplication": {
+        "tasks_with_duplicate": 7,
+        "hit": 0
+      },
+      "mean_windows_matched": 0.6,
+      "mean_seeds_covered": 0.6
+    }
+  },
+  "chance": {
+    "1_window": 0.4244,
+    "2_windows": 0.0718,
+    "3_windows": 0.0038,
+    "duplication": 0.1667
+  },
+  "tasks": [
+    {
+      "created_at": "2026-09-04T21:19:20",
+      "cell_type": "HUDEP-2",
+      "round": 20,
+      "n_train": 72,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "400-449",
+        "550-599",
+        "700-749"
+      ],
+      "actual_counts": {
+        "400-449": 1,
+        "550-599": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "450-499",
+        "250-299"
+      ],
+      "logloss": 2.777637481689453,
+      "max_prob": 0.07081416994333267,
+      "deviation": 0.01752857118844986
+    },
+    {
+      "created_at": "2026-09-04T23:43:57",
+      "cell_type": "HEK293",
+      "round": 21,
+      "n_train": 73,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "350-399",
+        "700-749"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "350-399": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "450-499",
+        "250-299"
+      ],
+      "logloss": 2.8424572944641113,
+      "max_prob": 0.08462931960821152,
+      "deviation": 0.029073763638734818
+    },
+    {
+      "created_at": "2026-09-05T02:08:10",
+      "cell_type": "CD34+_HSPC",
+      "round": 24,
+      "n_train": 74,
+      "windows_matched": 2,
+      "seeds_covered": 2,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "250-299",
+        "750-799"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "250-299": 1,
+        "750-799": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "750-799",
+        "250-299"
+      ],
+      "logloss": 2.848093032836914,
+      "max_prob": 0.1260402500629425,
+      "deviation": 0.0704846978187561
+    },
+    {
+      "created_at": "2026-09-05T06:56:33",
+      "cell_type": "HEK293",
+      "round": 22,
+      "n_train": 75,
+      "windows_matched": 3,
+      "seeds_covered": 3,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "450-499",
+        "700-749"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "450-499": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "450-499",
+        "150-199"
+      ],
+      "logloss": 2.171724796295166,
+      "max_prob": 0.12149474769830704,
+      "deviation": 0.06593918800354004
+    },
+    {
+      "created_at": "2026-09-05T09:21:14",
+      "cell_type": "K562",
+      "round": 15,
+      "n_train": 76,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "650-699",
+        "750-799",
+        "900-949"
+      ],
+      "actual_counts": {
+        "650-699": 1,
+        "750-799": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "450-499",
+        "150-199"
+      ],
+      "logloss": 3.1171257495880127,
+      "max_prob": 0.11635865271091461,
+      "deviation": 0.06080309674143791
+    },
+    {
+      "created_at": "2026-09-05T11:44:48",
+      "cell_type": "HUDEP-2",
+      "round": 21,
+      "n_train": 77,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "450-499",
+        "500-549"
+      ],
+      "actual_counts": {
+        "450-499": 1,
+        "500-549": 2
+      },
+      "predicted_windows": [
+        "150-199",
+        "450-499",
+        "700-749"
+      ],
+      "logloss": 2.5975756645202637,
+      "max_prob": 0.10452790558338165,
+      "deviation": 0.04897234961390495
+    },
+    {
+      "created_at": "2026-09-05T15:29:09",
+      "cell_type": "HUDEP-2",
+      "round": 22,
+      "n_train": 78,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "800-849",
+        "900-949"
+      ],
+      "actual_counts": {
+        "800-849": 1,
+        "900-949": 2
+      },
+      "predicted_windows": [
+        "150-199",
+        "450-499",
+        "700-749"
+      ],
+      "logloss": 3.0990495681762695,
+      "max_prob": 0.10604984313249588,
+      "deviation": 0.05049428716301918
+    },
+    {
+      "created_at": "2026-09-05T16:33:15",
+      "cell_type": "HUDEP-2",
+      "round": 23,
+      "n_train": 79,
+      "windows_matched": 2,
+      "seeds_covered": 2,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "350-399",
+        "700-749"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "350-399": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "150-199",
+        "450-499",
+        "700-749"
+      ],
+      "logloss": 2.434678077697754,
+      "max_prob": 0.10633594542741776,
+      "deviation": 0.050780389457941055
+    },
+    {
+      "created_at": "2026-09-05T18:57:39",
+      "cell_type": "HEK293",
+      "round": 23,
+      "n_train": 80,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "350-399",
+        "500-549",
+        "550-599"
+      ],
+      "actual_counts": {
+        "350-399": 1,
+        "500-549": 1,
+        "550-599": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "450-499",
+        "350-399"
+      ],
+      "logloss": 2.8897593021392822,
+      "max_prob": 0.1183345690369606,
+      "deviation": 0.0627790093421936
+    },
+    {
+      "created_at": "2026-09-05T21:22:45",
+      "cell_type": "HEK293",
+      "round": 24,
+      "n_train": 81,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "300-349",
+        "400-449"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "300-349": 1,
+        "400-449": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "350-399",
+        "450-499"
+      ],
+      "logloss": 2.968576431274414,
+      "max_prob": 0.11697947978973389,
+      "deviation": 0.06142392382025719
+    },
+    {
+      "created_at": "2026-09-05T23:46:56",
+      "cell_type": "HEK293",
+      "round": 25,
+      "n_train": 82,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "500-549",
+        "850-899"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "500-549": 1,
+        "850-899": 1
+      },
+      "predicted_windows": [
+        "350-399",
+        "700-749",
+        "450-499"
+      ],
+      "logloss": 3.206580400466919,
+      "max_prob": 0.11822179704904556,
+      "deviation": 0.06266623735427856
+    },
+    {
+      "created_at": "2026-09-06T02:11:23",
+      "cell_type": "HUDEP-2",
+      "round": 24,
+      "n_train": 83,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "250-299",
+        "750-799"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "250-299": 1,
+        "750-799": 1
+      },
+      "predicted_windows": [
+        "450-499",
+        "150-199",
+        "700-749"
+      ],
+      "logloss": 2.533252239227295,
+      "max_prob": 0.11378375440835953,
+      "deviation": 0.05822819843888283
+    },
+    {
+      "created_at": "2026-09-06T04:35:44",
+      "cell_type": "HEK293",
+      "round": 26,
+      "n_train": 84,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "400-449",
+        "700-749",
+        "850-899"
+      ],
+      "actual_counts": {
+        "400-449": 1,
+        "700-749": 1,
+        "850-899": 1
+      },
+      "predicted_windows": [
+        "350-399",
+        "700-749",
+        "450-499"
+      ],
+      "logloss": 3.127518653869629,
+      "max_prob": 0.1204167976975441,
+      "deviation": 0.0648612380027771
+    },
+    {
+      "created_at": "2026-09-06T07:01:14",
+      "cell_type": "CD34+_HSPC",
+      "round": 25,
+      "n_train": 85,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "600-649",
+        "750-799",
+        "900-949"
+      ],
+      "actual_counts": {
+        "600-649": 1,
+        "750-799": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "750-799",
+        "250-299"
+      ],
+      "logloss": 2.716974973678589,
+      "max_prob": 0.11714741587638855,
+      "deviation": 0.06159185990691185
+    },
+    {
+      "created_at": "2026-09-06T09:24:34",
+      "cell_type": "HUDEP-2",
+      "round": 25,
+      "n_train": 86,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "250-299",
+        "450-499",
+        "650-699"
+      ],
+      "actual_counts": {
+        "250-299": 1,
+        "450-499": 1,
+        "650-699": 1
+      },
+      "predicted_windows": [
+        "450-499",
+        "150-199",
+        "700-749"
+      ],
+      "logloss": 2.5926339626312256,
+      "max_prob": 0.12291739881038666,
+      "deviation": 0.06736184656620026
+    },
+    {
+      "created_at": "2026-09-06T11:49:09",
+      "cell_type": "HUDEP-2",
+      "round": 26,
+      "n_train": 87,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "150-199",
+        "350-399"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "150-199": 1,
+        "350-399": 1
+      },
+      "predicted_windows": [
+        "450-499",
+        "700-749",
+        "150-199"
+      ],
+      "logloss": 2.5587549209594727,
+      "max_prob": 0.1137380599975586,
+      "deviation": 0.058182504028081894
+    },
+    {
+      "created_at": "2026-09-06T14:13:20",
+      "cell_type": "HUDEP-2",
+      "round": 27,
+      "n_train": 88,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "350-399",
+        "450-499"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "350-399": 1,
+        "450-499": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "450-499"
+      ],
+      "logloss": 2.582930564880371,
+      "max_prob": 0.12282181531190872,
+      "deviation": 0.06726625561714172
+    },
+    {
+      "created_at": "2026-09-06T19:02:32",
+      "cell_type": "HEK293",
+      "round": 27,
+      "n_train": 89,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "450-499",
+        "800-849"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "450-499": 1,
+        "800-849": 1
+      },
+      "predicted_windows": [
+        "350-399",
+        "700-749",
+        "300-349"
+      ],
+      "logloss": 3.0658113956451416,
+      "max_prob": 0.12790100276470184,
+      "deviation": 0.07234545052051544
+    },
+    {
+      "created_at": "2026-09-06T21:27:30",
+      "cell_type": "HEK293",
+      "round": 28,
+      "n_train": 90,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "850-899"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "850-899": 2
+      },
+      "predicted_windows": [
+        "350-399",
+        "300-349",
+        "700-749"
+      ],
+      "logloss": 3.0692713260650635,
+      "max_prob": 0.11651362478733063,
+      "deviation": 0.06095806881785393
+    },
+    {
+      "created_at": "2026-09-06T23:51:15",
+      "cell_type": "CD34+_HSPC",
+      "round": 26,
+      "n_train": 91,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "400-449",
+        "750-799",
+        "950-999"
+      ],
+      "actual_counts": {
+        "400-449": 1,
+        "750-799": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 2.8397538661956787,
+      "max_prob": 0.14271676540374756,
+      "deviation": 0.08716121315956116
+    },
+    {
+      "created_at": "2026-09-07T02:16:29",
+      "cell_type": "CD34+_HSPC",
+      "round": 27,
+      "n_train": 92,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "250-299",
+        "900-949"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "250-299": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 2.7600221633911133,
+      "max_prob": 0.15288598835468292,
+      "deviation": 0.09733043611049652
+    },
+    {
+      "created_at": "2026-09-07T04:39:37",
+      "cell_type": "CD34+_HSPC",
+      "round": 28,
+      "n_train": 93,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "800-849",
+        "950-999"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "800-849": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 2.8235011100769043,
+      "max_prob": 0.15591415762901306,
+      "deviation": 0.10035860538482666
+    },
+    {
+      "created_at": "2026-09-07T07:03:36",
+      "cell_type": "K562",
+      "round": 16,
+      "n_train": 94,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "400-449",
+        "450-499",
+        "750-799"
+      ],
+      "actual_counts": {
+        "400-449": 1,
+        "450-499": 1,
+        "750-799": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "350-399"
+      ],
+      "logloss": 2.9457781314849854,
+      "max_prob": 0.12307261675596237,
+      "deviation": 0.06751705706119537
+    },
+    {
+      "created_at": "2026-09-07T09:28:08",
+      "cell_type": "HEK293",
+      "round": 29,
+      "n_train": 95,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "450-499",
+        "950-999"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "450-499": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "350-399",
+        "300-349",
+        "700-749"
+      ],
+      "logloss": 3.045914888381958,
+      "max_prob": 0.1075085699558258,
+      "deviation": 0.051953013986349106
+    },
+    {
+      "created_at": "2026-09-07T11:52:57",
+      "cell_type": "K562",
+      "round": 17,
+      "n_train": 96,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "400-449",
+        "600-649",
+        "850-899"
+      ],
+      "actual_counts": {
+        "400-449": 1,
+        "600-649": 1,
+        "850-899": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "350-399",
+        "150-199"
+      ],
+      "logloss": 3.5833024978637695,
+      "max_prob": 0.12620288133621216,
+      "deviation": 0.07064732909202576
+    },
+    {
+      "created_at": "2026-09-08T02:30:32",
+      "cell_type": "K562",
+      "round": 18,
+      "n_train": 97,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "850-899",
+        "900-949"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "850-899": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "350-399"
+      ],
+      "logloss": 2.818871021270752,
+      "max_prob": 0.12797555327415466,
+      "deviation": 0.07242000102996826
+    },
+    {
+      "created_at": "2026-09-08T04:42:15",
+      "cell_type": "K562",
+      "round": 19,
+      "n_train": 98,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "250-299",
+        "450-499",
+        "600-649"
+      ],
+      "actual_counts": {
+        "250-299": 1,
+        "450-499": 1,
+        "600-649": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "900-949",
+        "150-199"
+      ],
+      "logloss": 2.9852304458618164,
+      "max_prob": 0.1291934847831726,
+      "deviation": 0.0736379325389862
+    },
+    {
+      "created_at": "2026-09-08T07:06:13",
+      "cell_type": "HEK293",
+      "round": 30,
+      "n_train": 99,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "700-749",
+        "950-999"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "700-749": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "350-399",
+        "700-749"
+      ],
+      "logloss": 3.0492284297943115,
+      "max_prob": 0.10164522379636765,
+      "deviation": 0.046089667826890945
+    },
+    {
+      "created_at": "2026-09-08T09:30:21",
+      "cell_type": "HUDEP-2",
+      "round": 28,
+      "n_train": 100,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "600-649",
+        "750-799"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "600-649": 1,
+        "750-799": 1
+      },
+      "predicted_windows": [
+        "450-499",
+        "150-199",
+        "700-749"
+      ],
+      "logloss": 3.186816453933716,
+      "max_prob": 0.11853756755590439,
+      "deviation": 0.06298200786113739
+    },
+    {
+      "created_at": "2026-09-08T11:54:12",
+      "cell_type": "K562",
+      "round": 20,
+      "n_train": 101,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "350-399",
+        "750-799"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "350-399": 1,
+        "750-799": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "300-349",
+        "900-949"
+      ],
+      "logloss": 2.7198562622070312,
+      "max_prob": 0.12403549998998642,
+      "deviation": 0.06847994029521942
+    },
+    {
+      "created_at": "2026-09-08T14:18:18",
+      "cell_type": "HEK293",
+      "round": 31,
+      "n_train": 102,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "550-599",
+        "950-999"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "550-599": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "700-749",
+        "350-399"
+      ],
+      "logloss": 2.997854709625244,
+      "max_prob": 0.09831938147544861,
+      "deviation": 0.04276382550597191
+    },
+    {
+      "created_at": "2026-09-08T16:42:31",
+      "cell_type": "K562",
+      "round": 21,
+      "n_train": 103,
+      "windows_matched": 2,
+      "seeds_covered": 2,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "700-749",
+        "800-849",
+        "900-949"
+      ],
+      "actual_counts": {
+        "700-749": 1,
+        "800-849": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "300-349",
+        "900-949"
+      ],
+      "logloss": 2.3839645385742188,
+      "max_prob": 0.13418810069561005,
+      "deviation": 0.07863254845142365
+    },
+    {
+      "created_at": "2026-09-08T19:06:32",
+      "cell_type": "CD34+_HSPC",
+      "round": 29,
+      "n_train": 104,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "950-999"
+      ],
+      "actual_counts": {
+        "200-249": 2,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 3.585019588470459,
+      "max_prob": 0.16405582427978516,
+      "deviation": 0.10850027203559875
+    },
+    {
+      "created_at": "2026-09-08T21:30:45",
+      "cell_type": "HEK293",
+      "round": 32,
+      "n_train": 105,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "150-199",
+        "450-499",
+        "550-599"
+      ],
+      "actual_counts": {
+        "150-199": 1,
+        "450-499": 1,
+        "550-599": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "900-949",
+        "650-699"
+      ],
+      "logloss": 2.853849172592163,
+      "max_prob": 0.09551917016506195,
+      "deviation": 0.03996361419558525
+    },
+    {
+      "created_at": "2026-09-08T23:55:09",
+      "cell_type": "K562",
+      "round": 22,
+      "n_train": 106,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "500-549",
+        "700-749"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "500-549": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "300-349",
+        "900-949"
+      ],
+      "logloss": 2.919847011566162,
+      "max_prob": 0.12980353832244873,
+      "deviation": 0.07424798607826233
+    },
+    {
+      "created_at": "2026-09-09T02:18:56",
+      "cell_type": "HUDEP-2",
+      "round": 29,
+      "n_train": 107,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "350-399",
+        "650-699"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "350-399": 1,
+        "650-699": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "450-499"
+      ],
+      "logloss": 2.8108608722686768,
+      "max_prob": 0.1257808953523636,
+      "deviation": 0.07022534310817719
+    },
+    {
+      "created_at": "2026-09-09T04:42:56",
+      "cell_type": "CD34+_HSPC",
+      "round": 30,
+      "n_train": 108,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "600-649",
+        "850-899",
+        "950-999"
+      ],
+      "actual_counts": {
+        "600-649": 1,
+        "850-899": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 3.289435863494873,
+      "max_prob": 0.1672067791223526,
+      "deviation": 0.1116512268781662
+    },
+    {
+      "created_at": "2026-09-09T07:07:09",
+      "cell_type": "HUDEP-2",
+      "round": 30,
+      "n_train": 109,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "200-249",
+        "550-599"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "200-249": 1,
+        "550-599": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "450-499"
+      ],
+      "logloss": 3.2941091060638428,
+      "max_prob": 0.13035480678081512,
+      "deviation": 0.07479925453662872
+    },
+    {
+      "created_at": "2026-09-09T09:30:55",
+      "cell_type": "K562",
+      "round": 23,
+      "n_train": 110,
+      "windows_matched": 1,
+      "seeds_covered": 2,
+      "has_duplicate": true,
+      "duplicate_hit": true,
+      "actual_windows": [
+        "300-349",
+        "500-549"
+      ],
+      "actual_counts": {
+        "300-349": 2,
+        "500-549": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "300-349",
+        "900-949"
+      ],
+      "logloss": 2.4102208614349365,
+      "max_prob": 0.12544213235378265,
+      "deviation": 0.06988658010959625
+    },
+    {
+      "created_at": "2026-09-09T11:56:32",
+      "cell_type": "CD34+_HSPC",
+      "round": 31,
+      "n_train": 111,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "500-549"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "500-549": 2
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 3.2660088539123535,
+      "max_prob": 0.1678561121225357,
+      "deviation": 0.1123005598783493
+    },
+    {
+      "created_at": "2026-09-09T14:20:45",
+      "cell_type": "HEK293",
+      "round": 33,
+      "n_train": 112,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "600-649",
+        "650-699"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "600-649": 1,
+        "650-699": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "900-949",
+        "650-699"
+      ],
+      "logloss": 2.9641566276550293,
+      "max_prob": 0.09446613490581512,
+      "deviation": 0.038910578936338425
+    },
+    {
+      "created_at": "2026-09-09T16:44:07",
+      "cell_type": "K562",
+      "round": 24,
+      "n_train": 113,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "500-549",
+        "600-649"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "500-549": 1,
+        "600-649": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "700-749",
+        "900-949"
+      ],
+      "logloss": 3.3796253204345703,
+      "max_prob": 0.11697227507829666,
+      "deviation": 0.06141671910881996
+    },
+    {
+      "created_at": "2026-09-09T19:08:34",
+      "cell_type": "HUDEP-2",
+      "round": 31,
+      "n_train": 114,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "100-149",
+        "550-599",
+        "700-749"
+      ],
+      "actual_counts": {
+        "100-149": 1,
+        "550-599": 1,
+        "700-749": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "450-499"
+      ],
+      "logloss": 2.9288806915283203,
+      "max_prob": 0.13133327662944794,
+      "deviation": 0.07577772438526154
+    },
+    {
+      "created_at": "2026-09-09T21:32:45",
+      "cell_type": "CD34+_HSPC",
+      "round": 32,
+      "n_train": 115,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": true,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "250-299",
+        "400-449"
+      ],
+      "actual_counts": {
+        "250-299": 2,
+        "400-449": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "750-799"
+      ],
+      "logloss": 2.9741711616516113,
+      "max_prob": 0.16802345216274261,
+      "deviation": 0.11246789991855621
+    },
+    {
+      "created_at": "2026-09-09T23:56:33",
+      "cell_type": "CD34+_HSPC",
+      "round": 33,
+      "n_train": 116,
+      "windows_matched": 0,
+      "seeds_covered": 0,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "250-299",
+        "350-399",
+        "850-899"
+      ],
+      "actual_counts": {
+        "250-299": 1,
+        "350-399": 1,
+        "850-899": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "900-949"
+      ],
+      "logloss": 3.4805243015289307,
+      "max_prob": 0.17277120053768158,
+      "deviation": 0.11721564829349518
+    },
+    {
+      "created_at": "2026-09-10T02:20:57",
+      "cell_type": "K562",
+      "round": 25,
+      "n_train": 117,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "350-399",
+        "500-549",
+        "800-849"
+      ],
+      "actual_counts": {
+        "350-399": 1,
+        "500-549": 1,
+        "800-849": 1
+      },
+      "predicted_windows": [
+        "300-349",
+        "900-949",
+        "800-849"
+      ],
+      "logloss": 2.982501745223999,
+      "max_prob": 0.11205823719501495,
+      "deviation": 0.056502681225538254
+    },
+    {
+      "created_at": "2026-09-10T04:45:09",
+      "cell_type": "CD34+_HSPC",
+      "round": 34,
+      "n_train": 118,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "250-299",
+        "900-949"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "250-299": 1,
+        "900-949": 1
+      },
+      "predicted_windows": [
+        "800-849",
+        "550-599",
+        "900-949"
+      ],
+      "logloss": 3.251591205596924,
+      "max_prob": 0.17320185899734497,
+      "deviation": 0.11764630675315857
+    },
+    {
+      "created_at": "2026-09-10T07:09:23",
+      "cell_type": "K562",
+      "round": 26,
+      "n_train": 119,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "250-299",
+        "300-349",
+        "400-449"
+      ],
+      "actual_counts": {
+        "250-299": 1,
+        "300-349": 1,
+        "400-449": 1
+      },
+      "predicted_windows": [
+        "900-949",
+        "300-349",
+        "800-849"
+      ],
+      "logloss": 2.5974783897399902,
+      "max_prob": 0.10991577059030533,
+      "deviation": 0.05436021462082863
+    },
+    {
+      "created_at": "2026-09-10T09:33:22",
+      "cell_type": "HUDEP-2",
+      "round": 32,
+      "n_train": 120,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "700-749",
+        "750-799",
+        "950-999"
+      ],
+      "actual_counts": {
+        "700-749": 1,
+        "750-799": 1,
+        "950-999": 1
+      },
+      "predicted_windows": [
+        "700-749",
+        "150-199",
+        "450-499"
+      ],
+      "logloss": 2.6874518394470215,
+      "max_prob": 0.1310785412788391,
+      "deviation": 0.07552298903465271
+    },
+    {
+      "created_at": "2026-09-10T11:57:38",
+      "cell_type": "HEK293",
+      "round": 34,
+      "n_train": 121,
+      "windows_matched": 1,
+      "seeds_covered": 1,
+      "has_duplicate": false,
+      "duplicate_hit": false,
+      "actual_windows": [
+        "200-249",
+        "400-449",
+        "650-699"
+      ],
+      "actual_counts": {
+        "200-249": 1,
+        "400-449": 1,
+        "650-699": 1
+      },
+      "predicted_windows": [
+        "900-949",
+        "650-699",
+        "300-349"
+      ],
+      "logloss": 2.788609027862549,
+      "max_prob": 0.0989246740937233,
+      "deviation": 0.0433691181242466
+    }
+  ]
+}

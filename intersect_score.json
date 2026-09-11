@@ -1,0 +1,128 @@
+[
+ {
+  "split": "125/125",
+  "cas9_group": 125,
+  "cas12a_group": 125,
+  "rows": 250,
+  "cells": 8,
+  "cas_mix": {
+   "Cas9": 125,
+   "Cas12a": 125
+  },
+  "band_cas9": 18,
+  "band_cas12a": 14,
+  "band_shared": 10,
+  "band_true": 10,
+  "band_seeds": [
+   105,
+   108,
+   109,
+   110,
+   114,
+   116,
+   120,
+   124,
+   125,
+   127
+  ],
+  "weighted": 194.90573863122748,
+  "fidelity": 0.9832865311513866,
+  "wxfid": 191.64818764019847,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9944066525627802,
+   "cas_system_coverage_entropy_ratio": 1.0,
+   "strand_coverage_entropy_ratio": 0.9580420222262995,
+   "joint_coverage_entropy_ratio": 0.9504125138948697,
+   "kmer_diversity_entropy_ratio": 0.9982051730028214,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 191.64818764019847,
+  "cons_off_band": 0.13289896764398584,
+  "final_off_band": 25.469846288223266
+ },
+ {
+  "split": "80/170",
+  "cas9_group": 80,
+  "cas12a_group": 170,
+  "rows": 250,
+  "cells": 8,
+  "cas_mix": {
+   "Cas9": 80,
+   "Cas12a": 170
+  },
+  "band_cas9": 19,
+  "band_cas12a": 14,
+  "band_shared": 10,
+  "band_true": 10,
+  "band_seeds": [
+   100,
+   109,
+   110,
+   114,
+   116,
+   117,
+   120,
+   125,
+   127,
+   128
+  ],
+  "weighted": 188.2038114310186,
+  "fidelity": 0.959740830972486,
+  "wxfid": 180.62688237499486,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9998153271549207,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9491240519851774,
+   "joint_coverage_entropy_ratio": 0.9142924545774215,
+   "kmer_diversity_entropy_ratio": 0.995965456283149,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 180.62688237499486,
+  "cons_off_band": 0.18242336100171397,
+  "final_off_band": 32.95056297010782
+ },
+ {
+  "split": "170/80",
+  "cas9_group": 170,
+  "cas12a_group": 80,
+  "rows": 250,
+  "cells": 8,
+  "cas_mix": {
+   "Cas9": 170,
+   "Cas12a": 80
+  },
+  "band_cas9": 17,
+  "band_cas12a": 15,
+  "band_shared": 10,
+  "band_true": 10,
+  "band_seeds": [
+   100,
+   109,
+   110,
+   114,
+   116,
+   117,
+   120,
+   125,
+   127,
+   128
+  ],
+  "weighted": 194.65499533321656,
+  "fidelity": 0.9679339194397718,
+  "wxfid": 188.4131725714108,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9944066525627802,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9754383526853787,
+   "joint_coverage_entropy_ratio": 0.9398278753367951,
+   "kmer_diversity_entropy_ratio": 0.997494328201845,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 188.4131725714108,
+  "cons_off_band": 0.13371963029382294,
+  "final_off_band": 25.194539778735315
+ }
+]

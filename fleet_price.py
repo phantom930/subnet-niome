@@ -37,17 +37,57 @@ import numpy as np
 DIST = np.array([0.30, 0.20, 0.20, 0.15, 0.05, 0.03, 0.025, 0.02, 0.015, 0.01])
 CELL = os.environ.get("FP_CELL", "HUDEP-2")
 TRIALS = int(os.environ.get("FP_TRIALS", "4000"))
+# The field lifted its own consistency floor on 2026-09-08 (see CLAUDE.md). Fields before
+# that date price a field that no longer exists; "" keeps all current-regime rounds.
+SINCE = os.environ.get("FP_SINCE", "")
+RNG = int(os.environ.get("FP_RNG", "12345"))
 SCORES = os.environ.get("FP_SCORES",
                         "/tmp/claude-0/-root-workspace-subnet-niome/"
                         "0f021db5-a874-4419-a235-ebcda9baabeb/scratchpad/s2.json")
 OURS = os.environ.get("FP_OURS",
                       "/tmp/claude-0/-root-workspace-subnet-niome/"
-                      "0f021db5-a874-4419-a235-ebcda9baabeb/scratchpad/ours.json")
+                      "0f021db5-a874-4419-a235-ebcda9baabeb/scratchpad/real.json")
 
 # --- measured construction parameters -------------------------------------------------
-AC_CLEAN, AC_VCLEAN, AC_VDIRTY, AC_WXF = 569, 0.2404, 0.1064, 329.7 * 0.8686
-AH_BAND, AH_CLEAN, AH_VCLEAN, AH_VDIRTY, AH_WXF = 12, 17, 0.162, 0.101, 339.9 * 0.8931
+# `weighted x fidelity` is PER CELL TYPE. The first version of this script used single constants
+# (AC 329.7*0.8686 = 286.4, AH 339.9*0.8931 = 303.6) taken from research builds on HUDEP-2, and
+# applied them to K562 as well -- where the live fleet measures 220. That is a 38% inflation of
+# BOTH arms on K562, and it matters because all-cut's whole case is that its flat score sometimes
+# clears the cutoff: inflate it and it clears fields it cannot actually reach.
+#
+# These are live medians from the scored feed, identified by ss58 address (uids are recycled).
+# all-HDR: every band hotkey, post-2026-09-08. all-cut: h0's own rounds while ALL_CUT_HOTKEYS
+# still named it, isolated by the cons signature (all-cut 0.16-0.21 against all-HDR's 0.09-0.10)
+# -- n is only 1-3 per cell, so the ratio matters more than the level:
+#
+#   cell         all-cut   all-HDR   ratio      script previously assumed 0.943
+#   HUDEP-2        291.7     298.3   0.978
+#   CD34+_HSPC     249.1     233.3   1.068
+#   K562           219.4     220.1   0.997      mean 1.014
+#
+# So all-cut does NOT give up weighted x fidelity, matching CLAUDE.md's "tracks all-cut within 3%".
+# AC_WXF is therefore set to the cell's own measured all-cut value where it exists.
+AH_WXF_CELL = {"HUDEP-2": 298.3, "CD34+_HSPC": 233.3, "K562": 220.1, "HEK293": 231.3}
+AC_WXF_CELL = {"HUDEP-2": 291.7, "CD34+_HSPC": 249.1, "K562": 219.4, "HEK293": 231.3}
+
+# all-cut's clean fraction. 569/900 is the build-time measurement; h0's six live all-cut rounds
+# averaged round-cons 0.1774 against the 0.1911 that 569/900 predicts, implying 477/900. Both are
+# run -- AC_CLEAN is the shipped assumption, FP_AC_CLEAN=477 the live-implied one.
+AC_CLEAN = int(os.environ.get("FP_AC_CLEAN", "569"))
+AC_VCLEAN, AC_VDIRTY = 0.2404, 0.1064
+AH_BAND, AH_CLEAN, AH_VCLEAN, AH_VDIRTY = 12, 17, 0.162, 0.101
+AC_WXF = AC_WXF_CELL[CELL]
+AH_WXF = AH_WXF_CELL[CELL]
 JOINED = 300          # the joined band space the plan confines all-HDR hotkeys to
+
+# Band size and band SPACE are the two quantities the window layout sets, so both are overridable:
+# joined300.py measures the band per cell type at each window width, and the layout question --
+# confine every hotkey to a joined 300, or spread them over the whole 900 -- is exactly
+# `FP_JOINED=300` against `FP_JOINED=900` at that cell's measured band. `FP_AH_WXF` carries the
+# matching `weighted x fidelity`, since a wider window changes it too (measured, not assumed).
+AH_BAND = int(os.environ.get("FP_BAND", AH_BAND))
+JOINED = int(os.environ.get("FP_JOINED", JOINED))
+AH_WXF = float(os.environ.get("FP_AH_WXF", AH_WXF))
 SEED_LO, SEED_HI = 100, 999
 NSEED = SEED_HI - SEED_LO + 1
 
@@ -62,12 +102,14 @@ def fields():
         tid = t.get("task_id") or t.get("id")
         c = (t.get("content") or {}).get("contract", {})
         s = str(c.get("seed", "") or "")
-        meta[tid] = (c.get("cell_type"), [int(x) for x in s.split(",") if x.strip().isdigit()])
+        meta[tid] = (c.get("cell_type") or t.get("cell_type"),
+                     [int(x) for x in s.split(",") if x.strip().isdigit()],
+                     (t.get("created_at") or "")[:10])
     ours = set(json.load(open(OURS)).values())
     best = defaultdict(dict)
     for r in sc:
-        cell, seeds = meta.get(r["task_id"], (None, []))
-        if cell != CELL or len(seeds) != 3:
+        cell, seeds, created = meta.get(r["task_id"], (None, [], ""))
+        if cell != CELL or len(seeds) != 3 or created < SINCE:
             continue
         hk = r["miner_hotkey"]
         if hk in ours:
@@ -83,11 +125,19 @@ def fields():
 
 
 def shares(field, mine):
-    """Curve share our fleet captures. Ties resolve to consecutive ranks, as the validator's sort does."""
+    """Curve share our fleet captures. Ties resolve to consecutive ranks, as the validator's sort does.
+
+    Siblings holding the SAME score take consecutive ranks r..r+n, not the same rank n+1 times.
+    Counting only strictly-greater siblings gave every tied row the best of the tied ranks, which
+    paid four tied rows 1.20 of a curve that sums to 1.00. The overcount scales with how
+    CORRELATED a composition is -- identical all-cut submissions, or band hotkeys sharing a seed
+    because their windows overlap -- which is exactly the quantity a layout or composition
+    comparison is measuring, so it is not a wash between arms.
+    """
     total = 0.0
-    for s in mine:
-        # strictly-greater competitors, plus siblings that outrank this one
-        rank = int(np.sum(field > s)) + 1 + sum(1 for o in mine if o > s)
+    for i, s in enumerate(sorted(mine, reverse=True)):
+        # competitors strictly above, plus every sibling already placed above this one
+        rank = int(np.sum(field > s)) + 1 + i
         if rank <= 10:
             total += DIST[rank - 1]
     return total
@@ -132,10 +182,9 @@ def main():
     print("%d trials per round per composition\n" % TRIALS)
     comps = [(0, 11), (1, 10), (2, 9), (4, 7), (6, 5), (8, 3), (11, 0)]
     print("%-14s %-12s %-12s %-10s" % ("all-cut/all-HDR", "E[share]", "vs current", "ratio"))
-    rng0 = np.random.default_rng(12345)
     res = {}
     for comp in comps:
-        rng = np.random.default_rng(12345)
+        rng = np.random.default_rng(RNG)
         vals = [simulate(f, comp, rng, TRIALS) for _tid, f in fs]
         res[comp] = float(np.mean(vals))
     cur = res[(1, 10)]

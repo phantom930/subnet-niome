@@ -198,11 +198,14 @@ JOINED_MODE = True
 # so a hotkey past the end wraps to the front. 10 x 30 = 300 tiles the space exactly once, and every
 # seed sits in 225/300 x 10 = 7.5 slices on average. h0 stays on all-cut for every cell type.
 #
-# Width 200 -> 225 trades band size for per-seed slice depth, and the two nearly cancel: the band
-# narrows as the window widens (measured 13/12/11/9 at widths 100/150/200/300, so ~10-11 at 225
-# against 12 at 200), while each seed gains 0.83 more slices that could hold it. Raised anyway
-# because a seed missed by every band is the failure mode that costs a whole round, and depth is
-# the term that reduces it.
+# Width 200 -> 225 was taken to trade band size for per-seed slice depth. **It costs no band at
+# all**, measured on the live fleet: at width 225 every slice returns band 12 on K562 (42bec26a)
+# and band 7 on HEK293 (4390d969) -- identical to what width 200 was returning. The prediction
+# behind the change ("~10-11 at 225") came from the CONTIGUOUS width sweep in CLAUDE.md's falsified
+# table (13/12/11/9 at widths 100/150/200/300) and does not transfer: a joined, non-contiguous
+# window of the same span holds its band far better. h0 at full width 300 returns band 11 on K562
+# and 7 on HEK293, against that table's prediction of 9. So the depth gain (6.67 -> 7.5 slices per
+# seed) is free rather than paid for.
 JOINED_HK = ["niome_hotkey1", "niome_hotkey2", "niome_hotkey3", "niome_hotkey4",
              "niome_hotkey5", "niome_hotkey6", "niome_hotkey7", "niome_hotkey8",
              "niome_hotkey9", "niome_hotkey10"]
@@ -222,19 +225,35 @@ JOINED_STRIDE = 30
 JOINED_FULL_HK = ["niome_hotkey"]
 
 
-# Where the joined window's three classes come from. "seed_model" reads seed_model's
-# next_prediction.json (a SeedFormer transformer, one finetuned checkpoint per cell type);
-# "rank_freq" uses _rank_freq_windows below. Both are arbitrary picks and that is measured:
-# SeedFormer scores 0.886 hits/3 in walk-forward against chance's 1.000 and cold_hand's 1.000
-# (p = 0.869), and its log-loss 2.228 is WORSE than uniform's ln 9 = 2.197 -- it learned to emit
-# the uniform distribution, which is the correct answer to an unpredictable target. See
-# seed_model/README.md. _rank_freq_windows is no better (z = -0.71 over 108 rounds).
+# Where the joined window's three classes come from.
 #
-# So this switch is EV-neutral, not an improvement: band position is free under a uniform
-# generator, so three arbitrary classes are worth exactly as much as three others. It is wired up
-# because the prediction file accrues a scored record either way, and if the generator ever stops
-# being uniform the walk-forward number in seed_model/state.json moves off chance first.
-JOINED_SOURCE = "seed_model"
+#   "repeat_last"  bet the three width-100 classes this cell type's PREVIOUS round drew. Shipped.
+#   "seed_model"   seed_model/next_prediction.json -- a SeedFormer transformer, one finetuned
+#                  checkpoint per cell type.
+#   "rank_freq"    _rank_freq_windows below, the cumulative-rank-frequency scheme.
+#
+# **Width 100 is the resolution that matters here and repeat_last is the best of the three at it.**
+# The joined space is 3 x 100 seeds (JOINED = 300), so the choice is over nine width-100 classes and
+# nothing finer -- which makes width 100 pre-specified by the layout rather than picked after the
+# fact. Measured on the latest 50 tasks, one-step-ahead, predictions held fixed and each task's
+# three seeds resampled uniformly 20,000 times (`baseline_cmp.py`, `seed_model_report.py`):
+#
+#   width 100          seeds covered   chance   lift    z      p
+#   repeat_last            1.240        1.000   1.24x  +2.09  0.023
+#   uniform (lowest 3)     1.120        1.000   1.12x  +1.05  0.168
+#   SeedFormer             1.040        1.000   1.04x  +0.35  0.393
+#
+# **Read that p as suggestive, not established, and do not expect it to convert.** It is one cell of
+# a sweep over eight widths, repeat_last's own z decays to +0.01 by width 60, and SeedFormer's
+# log-loss is above ln(N) at all eight widths (0 of 8 carried information). More to the point, the
+# "seed-window prediction" section of CLAUDE.md measured that width-100 accuracy does NOT convert to
+# payout: the band is ~12 SCATTERED seeds inside the window, so naming the right 100-seed class does
+# not put a band seed on a drawn seed. Treat this as EV-neutral like the others.
+#
+# What it does buy is simplicity, and that part is not marginal: repeat_last reads the task feed the
+# plan already loads, so it takes torch, `.venv-ml`, the retraining cron, `seed_refresh_guard.py`
+# and the staleness window off the critical path entirely. There is nothing to go stale.
+JOINED_SOURCE = "repeat_last"
 SEED_MODEL_PREDICTION = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      "seed_model", "next_prediction.json")
 
@@ -276,6 +295,43 @@ def _seed_model_windows(cell, rows):
     return sorted(wins), note
 
 
+def _repeat_last_windows(cell, rows):
+    """The three window indices this cell type's previous round drew, or None to fall back.
+
+    Reproduces `seed_model.evaluate.baseline_repeat` fed through `top3_from_probs` exactly, because
+    that pairing is what measured z = +2.09 at width 100 and a different tie-break would not be the
+    same strategy. That means the duplicate case matters: baseline_repeat weights each class by the
+    previous round's count (+1e-3) and the stable argsort then takes the top three, so a round that
+    drew only two distinct classes is filled with the LOWEST-INDEX undrawn class, i.e. 100-199.
+
+    That fill is arbitrary and it is not rare -- 14 of the latest 50 rounds drew a duplicate class
+    at width 100, so roughly a quarter of rounds have one of their three windows chosen this way.
+    Filling from the round before instead is the obvious alternative and is NOT what was measured,
+    so it is left alone; if it is ever tried, re-measure rather than assume it transfers.
+    """
+    mine = sorted((t for t in rows if t.get("cell") == cell), key=lambda t: t.get("at") or "")
+    if not mine:
+        return None, "no earlier round for this cell type"
+    prev = mine[-1]
+    seeds = prev.get("seeds") or []
+    if len(seeds) != 3:
+        return None, f"previous round has {len(seeds)} seeds, not 3"
+    counts = [0] * 9
+    for sd in seeds:
+        w = _sw_window(sd)
+        if not (0 <= w < 9):
+            return None, f"seed {sd} falls outside 100-999"
+        counts[w] += 1
+    # stable argsort on (count desc), which for the all-zero tail is index order
+    order = sorted(range(9), key=lambda w: (-counts[w], w))
+    wins = sorted(order[:3])
+    drawn = sum(1 for c in counts if c)
+    note = (f"repeats {prev.get('at', '')[:16]} "
+            + (f"({drawn} distinct classes, filled to 3 from the lowest index)"
+               if drawn < 3 else "(3 distinct classes)"))
+    return wins, note
+
+
 def _rank_freq_windows(history, cell):
     """The three windows holding the three most frequent ranks, per the scheme above."""
     counts = [0] * 9
@@ -301,7 +357,24 @@ def _rank_freq_windows(history, cell):
     return sorted(holder[k] for k in top3 if k in holder), top3
 
 
-def _joined_slices(windows):
+# The slice width is now PER CELL TYPE, because `all_hdr.CELL_CONFIG` is: validated over 5
+# contracts per cell (20 in total), the payout optimum is width 100 for K562 and HUDEP-2, 150 for
+# CD34+_HSPC and 75 for HEK293. It is read from CELL_CONFIG rather than restated here so the two
+# files cannot drift — `group_size` is tuned AT that width (HEK293 measured group 100 ahead at
+# width 75 and group 80 ahead at 100/150/225), so a plan that hands a cell the wrong width also
+# hands it the wrong group.
+#
+# Falls back to JOINED_SUB_WIDTH if all_hdr cannot be imported, so a cron run never dies on it.
+def _sub_width(cell):
+    try:
+        from niome_subnet.genomics import all_hdr as _AH
+        lo, hi = _AH.CELL_CONFIG[cell]["hdr_range"]
+        return hi - lo + 1
+    except Exception:
+        return JOINED_SUB_WIDTH
+
+
+def _joined_slices(windows, width=None):
     """Rotated width-`JOINED_SUB_WIDTH` slices at `JOINED_STRIDE` over the sorted joined seeds.
 
     The slice is CIRCULAR: hotkey h takes indices (h*stride + k) mod n for k < width, so a slice
@@ -311,7 +384,7 @@ def _joined_slices(windows):
     """
     seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
     n = len(seeds)
-    width = min(JOINED_SUB_WIDTH, n)
+    width = min(width or JOINED_SUB_WIDTH, n)
     out = []
     for h in range(len(JOINED_HK)):
         off = (h * JOINED_STRIDE) % max(1, n)
@@ -326,9 +399,22 @@ def _joined_slices(windows):
         out.append(spans)
     return out
 
-def _joined_full(windows):
-    """The entire joined space as ascending [lo, hi] ranges — width 300, no rotation."""
+def _joined_full(windows, width=None):
+    """h0's window: the whole joined space, or a width-`width` slice at a HALF-STRIDE offset.
+
+    h0 used to take the entire 300 unconditionally. That is now wrong whenever the cell's
+    validated width is narrower, because `group_size` is tuned at the width: HEK293 at width 300
+    would run group 100 where group 80 measured ahead.
+
+    The offset is `JOINED_STRIDE // 2` rather than 0 so h0 lands BETWEEN h1 and h2. At offset 0 it
+    would be byte-identical to h1's slice, and two hotkeys on one window draw correlated bands —
+    which throws away the decorrelation the whole layout exists for.
+    """
     seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
+    if width and width < len(seeds):
+        n = len(seeds)
+        off = (JOINED_STRIDE // 2) % n
+        seeds = sorted({seeds[(off + k) % n] for k in range(width)})
     spans, lo, prev = [], seeds[0], seeds[0]
     for x in seeds[1:]:
         if x != prev + 1:
@@ -477,22 +563,25 @@ def main():
         if JOINED_MODE:
             wins3, top3 = _rank_freq_windows(rows, cell)
             src = "rank_freq"
-            if JOINED_SOURCE == "seed_model":
-                got, note = _seed_model_windows(cell, rows)
+            picker = {"seed_model": _seed_model_windows,
+                      "repeat_last": _repeat_last_windows}.get(JOINED_SOURCE)
+            if picker:
+                got, note = picker(cell, rows)
                 if got:
-                    wins3, top3, src = got, None, f"seed_model ({note})"
+                    wins3, top3, src = got, None, f"{JOINED_SOURCE} ({note})"
                 else:
-                    src = f"rank_freq (seed_model unusable: {note})"
-            slices = _joined_slices(wins3)
+                    src = f"rank_freq ({JOINED_SOURCE} unusable: {note})"
+            sub_w = _sub_width(cell)
+            slices = _joined_slices(wins3, sub_w)
             assign, slots = {}, []
-            full = _joined_full(wins3)
+            full = _joined_full(wins3, sub_w)
             for name, _default in avail:
                 if name in JOINED_FULL_HK:
                     assign[name] = full
                 elif name in JOINED_HK:
                     assign[name] = slices[JOINED_HK.index(name)]
             top = pr["ranked"][0]
-            width = JOINED_SUB_WIDTH
+            width = sub_w
             rank = 0
         elif FIXED_WINDOWS:
             # Fixed mode: literal windows, same for every cell type, overlap permitted.
@@ -585,20 +674,22 @@ def main():
         if JOINED_MODE:
             wins3, top3 = _rank_freq_windows(rows, cell)
             src = "rank_freq"
-            if JOINED_SOURCE == "seed_model":
-                got, note = _seed_model_windows(cell, rows)
+            picker = {"seed_model": _seed_model_windows,
+                      "repeat_last": _repeat_last_windows}.get(JOINED_SOURCE)
+            if picker:
+                got, note = picker(cell, rows)
                 if got:
-                    wins3, top3, src = got, None, f"seed_model ({note})"
+                    wins3, top3, src = got, None, f"{JOINED_SOURCE} ({note})"
                 else:
-                    src = f"rank_freq (seed_model unusable: {note})"
+                    src = f"rank_freq ({JOINED_SOURCE} unusable: {note})"
             covered = len({s for spans in assign.values() for a, b in spans
                            for s in range(a, b + 1)})
             print(head + f"beta {pr['beta']:+.2f}  JOINED "
                   + (f"ranks {top3}" if top3 else src) + " -> "
                   + ",".join(f"{w*100+100}-{w*100+199}" for w in wins3)
-                  + f"  x{len(assign)} hotkeys, width {JOINED_SUB_WIDTH} stride {JOINED_STRIDE}"
+                  + f"  x{len(assign)} hotkeys, width {sub_w} stride {JOINED_STRIDE}"
                   f" rotated"
-                  + (f" + {len([n for n in assign if n in JOINED_FULL_HK])} at full width 300"
+                  + (f" + {len([n for n in assign if n in JOINED_FULL_HK])} at half-stride offset"
                      if any(n in JOINED_FULL_HK for n in assign) else "")
                   + f", span {covered} of 900"
                   + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))

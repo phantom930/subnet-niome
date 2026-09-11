@@ -1,0 +1,65 @@
+[
+ {
+  "cell": "HUDEP-2",
+  "arm": "contig50",
+  "task": "442591a9",
+  "span": 50,
+  "window": "800-849",
+  "main_max_fail": 22,
+  "group_size": 80,
+  "build_s": 90.9,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "800-849",
+   "bank": 60000,
+   "union": 36,
+   "clean": 14,
+   "clean_fraction": 0.28,
+   "cas9_pool": 1367,
+   "rows": 250,
+   "elapsed_s": 90.6,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "rows": 250,
+  "valid": 250,
+  "band": 14,
+  "band_in_window": 14,
+  "leak": 0,
+  "band_seeds": [
+   802,
+   804,
+   807,
+   814,
+   816,
+   818,
+   820,
+   826,
+   827,
+   829,
+   833,
+   839,
+   841,
+   844
+  ],
+  "group_clean": 14,
+  "bank": 60000,
+  "cas9_pool": 1367,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 80,
+   "Cas9": 170
+  },
+  "scan_s": 1.0,
+  "band_seed": 826,
+  "weighted": 299.64462046410745,
+  "fidelity": 0.9094195691364514,
+  "wxfid": 272.5026816365241,
+  "spike_cons": 1.0,
+  "floor_cons": 0.09812942410326989
+ }
+]

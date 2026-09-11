@@ -1,0 +1,78 @@
+[
+ {
+  "arm": "all-HDR  Cas12a-only",
+  "mf": 12,
+  "group": 250,
+  "rows": 250,
+  "cells": 4,
+  "cas_mix": {
+   "Cas12a": 250
+  },
+  "band_in_window": 13,
+  "band": 13,
+  "band_seeds": [
+   105,
+   107,
+   108,
+   109,
+   110,
+   112,
+   116,
+   120,
+   121,
+   122,
+   124,
+   125,
+   127
+  ],
+  "weighted": 179.88104854130057,
+  "fidelity": 0.028703982942360776,
+  "wxfid": 5.163302548983462,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9881489563064276,
+   "cas_system_coverage_entropy_ratio": 0.0,
+   "strand_coverage_entropy_ratio": 0.9660780975952254,
+   "joint_coverage_entropy_ratio": 0.5882317994047014,
+   "kmer_diversity_entropy_ratio": 0.996024058682238,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 5.163302548983462,
+  "cons_off_band": 0.08735767243670477,
+  "final_off_band": 0.4510540927657001
+ },
+ {
+  "arm": "no-cut   Cas12a-only",
+  "mf": 24,
+  "group": 250,
+  "rows": 250,
+  "cells": 4,
+  "cas_mix": {
+   "Cas12a": 250
+  },
+  "band_in_window": 5,
+  "band": 5,
+  "band_seeds": [
+   101,
+   103,
+   108,
+   125,
+   126
+  ],
+  "weighted": 53.017738630333625,
+  "fidelity": 0.029361734539956375,
+  "wxfid": 1.5566927675726463,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9849900098451574,
+   "cas_system_coverage_entropy_ratio": 0.0,
+   "strand_coverage_entropy_ratio": 0.9988455359952018,
+   "joint_coverage_entropy_ratio": 0.660567047506505,
+   "kmer_diversity_entropy_ratio": 0.9859234208110117,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 1.5566927675726463,
+  "cons_off_band": 0.060317280949410496,
+  "final_off_band": 0.09389547501359467
+ }
+]

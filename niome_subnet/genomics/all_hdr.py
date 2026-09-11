@@ -91,14 +91,30 @@ HDR_BANK_DIR = "data/all_hdr"
 # The pinned band per cell type. Position is free (see the module docstring); distinct ranges keep
 # the on-disk banks from colliding and make a log line say which cell type it came from.
 CELL_CONFIG: dict[str, dict] = {
-    "CD34+_HSPC": {"hdr_range": (500, 599), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
+    # CD34+_HSPC: width 150 at group 100, validated over 5 contracts (spread 1.50-2.71) at
+    # E[share] 0.00236 against the shared width-100/group-80 default's 0.00227 (+3.8%). Carries
+    # its own `main_max_fail` because `build_for_cell` only rescales the screen for a window
+    # passed IN by the caller: 78 is the measured plateau entry at span 150 (the adaptive search
+    # had to loosen past the linear 68, unlike K562/HUDEP-2, so this is cell-specific).
+    "CD34+_HSPC": {"hdr_range": (500, 649), "main_max_fail": 78, "group_size": 100,
+                   "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
+    # K562 stays at the shared 100-seed band. A 150-seed default was set earlier in this
+    # session on a SINGLE contract (7306c626) and is withdrawn: validated across 5 contracts
+    # spanning weight spread 1.50-2.54, width 100 prices at E[share] 0.00204 against width 150's
+    # 0.00181 and width 75's 0.00181 — the single-contract grid picked a width that came LAST.
     "K562": {"hdr_range": (700, 799), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "HUDEP-2": {"hdr_range": (800, 899), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
-    # HEK293 carries its own screen: main_max_fail 48 of 100 rather than 45 is what its sweep
-    # measured at, and the bank is thin enough here (0.041% of guides) that tightening it further
-    # starves the min-union step. Its group_size is the shared 80.
-    "HEK293": {"hdr_range": (300, 399), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95),
-               "main_max_fail": 48},
+    # HEK293: width 75 at group 100, the largest validated gain of the four cells — E[share]
+    # 0.00228 over 5 contracts (spread 1.50-3.93) against the width-100/group-80 default's
+    # 0.00205 (+10.8%). `main_max_fail` 45 is the measured plateau entry at span 75; the z-rule
+    # predicted 34 and the adaptive search had to loosen twice, so HEK293 needs a looser screen
+    # than its own P(HDR) implies.
+    #
+    # **group_size 100 is specific to width 75.** At widths 100/150/225 this cell measured group
+    # 80 ahead (230.2/228.6/228.2 against 229.2/228.1/224.8), so a build that overrides the window
+    # to a wider one should use 80. See the note on CELL_CONFIG below.
+    "HEK293": {"hdr_range": (300, 374), "main_max_fail": 45, "group_size": 100,
+               "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
 }
 
 
@@ -226,7 +242,9 @@ class AllHdrConfig:
     # base at 1.0, light_cell_rows=6 then reaches 99.2 on 9ed335da — rank 10 — so these knobs are
     # worth revisiting in that order, and only in that order.
     light_group_cells: int | None = None
-    light_cell_rows: int = 6
+    # "auto" resolves per contract from the mutation-weight spread — see `resolve_light`. An int
+    # or None pins it, which is what every research script and `all_cut` still pass.
+    light_cell_rows: "int | str | None" = "auto"
     weight_exponent: float = 1.25
 
     @property
@@ -316,6 +334,38 @@ def _scaled_max_fail(cell_type: str, mf_100: int, span: int) -> int:
     if not mean_100:
         return max(1, round(mf_100 * r))
     return max(1, round(mf_100 * r + (mean_100 - mf_100) * (r - math.sqrt(r))))
+
+
+# `light_cell_rows` is not one number: the right value depends on the CONTRACT, because the knob
+# trades `total_weighted_score` against stage 5's mutation-coverage entropy and every backend
+# contract carries exactly 2 mutations at a different weight ratio. Measured three ways:
+#
+#   * 26 distinct K562 contracts, joined-150 band, group 80 (`light_vs_weight.py`): regressing
+#     (L12 - L6) on the weight spread gives slope -4.69 per unit spread, r = -0.810, t = -6.76,
+#     and a crossover at spread **2.06**. Below it L12 wins 15 of 18; above it L6 wins 5 of 8.
+#   * 20 validation contracts across all four cell types: L6 wins every contract at spread >= 2.18,
+#     L12 or L25 wins every contract below ~1.9.
+#   * The shipped constant 6 is therefore right only for the high-spread half of the distribution;
+#     K562's spreads run 1.50-2.54 with a median of 1.85, i.e. mostly BELOW the crossover.
+#
+# Worth +0.35% on `weighted x fidelity` over a fixed 6 (paired +0.83 +/- 0.22, t = 3.80, winning 16
+# of 26 contracts and losing 2). Small, but it is the best-replicated result of the sweep and it
+# costs nothing at build time.
+#
+# Two tiers, not three: L25 beat L12 at spread 1.50 on HUDEP-2/CD34+/HEK293 but LOST to it on
+# K562, so the sub-1.6 tier is unresolved and 12 is the safe choice there.
+LIGHT_CROSSOVER = 2.06
+
+
+def resolve_light(value, contract: dict):
+    """Turn a ``light_cell_rows`` of ``"auto"`` into a number using the contract's weight spread."""
+    if value != "auto":
+        return value
+    weights = contract.get("mutation_weights") or {}
+    if len(weights) != 2 or min(weights.values()) <= 0:
+        return 6
+    spread = max(weights.values()) / min(weights.values())
+    return 12 if spread < LIGHT_CROSSOVER else 6
 
 
 def config_for(cell_type: str, cfg: AllHdrConfig | None = None) -> AllHdrConfig | None:
@@ -451,9 +501,15 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
                      budget_s: float | None = None) -> tuple[list[dict] | None, dict]:
     """The all-HDR submission, or ``(None, meta)`` when the caller should fall back."""
     cfg = cfg or AllHdrConfig()
+    # Resolve "auto" BEFORE anything reads the field. It is not only `assemble` that does:
+    # `scan_cas9` calls `all_cut.cas9_cell_target`, which does arithmetic on light_cell_rows to
+    # derive the per-cell Cas9 floor. Resolving late raised TypeError there and would have
+    # crash-looped every hotkey on its next restart.
+    cfg = dataclasses.replace(cfg, light_cell_rows=resolve_light(cfg.light_cell_rows, contract))
     started = time.monotonic()
     deadline = None if budget_s is None else started + budget_s
     meta: dict = {"method": "all-hdr", "group_size": cfg.group_size,
+                  "light_cell_rows": cfg.light_cell_rows,
                   "band": (f"{cfg.start_seed}-{cfg.end_seed}" if not cfg.seed_list
                            else f"joined {len(cfg.seed_list)} seeds "
                                 f"{_range_label(cfg.seed_list)}")}

@@ -1,0 +1,18 @@
+[
+ {
+  "load_limit": 60000,
+  "clean": 2,
+  "cas9_pool": 843,
+  "built": true,
+  "reason": null,
+  "build_s": 50.2
+ },
+ {
+  "load_limit": 300000,
+  "clean": 3,
+  "cas9_pool": 8,
+  "built": false,
+  "reason": "Cas9 pool 8 over 4 cells is short of 208",
+  "build_s": 50.2
+ }
+]

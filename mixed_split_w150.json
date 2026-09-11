@@ -1,0 +1,370 @@
+[
+ {
+  "split": "125/125",
+  "group_cas12a": 125,
+  "light_cell_rows": 6,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 125,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 139,
+   "clean": 11,
+   "clean_fraction": 0.07333333333333333,
+   "cas9_pool": 1011,
+   "rows": 250,
+   "elapsed_s": 6.8,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 125,
+    "Cas9": 125
+   }
+  },
+  "build_s": 6.9,
+  "rows": 250,
+  "valid": 250,
+  "band": 11,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 1011,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 125,
+   "Cas9": 125
+  },
+  "heavy_rows": 169,
+  "weighted": 234.31553853124953,
+  "fidelity": 0.9595410426292136,
+  "wxfid": 224.83537614650083,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.908678384800712,
+   "cas_system_coverage_entropy_ratio": 1.0,
+   "strand_coverage_entropy_ratio": 0.9944066525627802,
+   "joint_coverage_entropy_ratio": 0.8768054620647513,
+   "kmer_diversity_entropy_ratio": 0.9851534185798759,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 224.83537614650083,
+  "cons_off_band": 0.09043814946401847
+ },
+ {
+  "split": "125/125",
+  "group_cas12a": 125,
+  "light_cell_rows": null,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 125,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 139,
+   "clean": 11,
+   "clean_fraction": 0.07333333333333333,
+   "cas9_pool": 1011,
+   "rows": 250,
+   "elapsed_s": 6.7,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 125,
+    "Cas9": 125
+   }
+  },
+  "build_s": 6.7,
+  "rows": 250,
+  "valid": 250,
+  "band": 11,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 1011,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 125,
+   "Cas9": 125
+  },
+  "heavy_rows": 143,
+  "weighted": 221.06563456027212,
+  "fidelity": 0.9859866399791222,
+  "wxfid": 217.9677622349352,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9849900098451574,
+   "cas_system_coverage_entropy_ratio": 1.0,
+   "strand_coverage_entropy_ratio": 0.9944066525627802,
+   "joint_coverage_entropy_ratio": 0.9484595090889946,
+   "kmer_diversity_entropy_ratio": 0.9890347254836593,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 217.9677622349352,
+  "cons_off_band": 0.09352919769797044
+ },
+ {
+  "split": "170/80",
+  "group_cas12a": 80,
+  "light_cell_rows": 6,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 138,
+   "clean": 12,
+   "clean_fraction": 0.08,
+   "cas9_pool": 1376,
+   "rows": 250,
+   "elapsed_s": 15.2,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "build_s": 15.2,
+  "rows": 250,
+  "valid": 250,
+  "band": 12,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   142,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 1376,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 80,
+   "Cas9": 170
+  },
+  "heavy_rows": 194,
+  "weighted": 257.4796063453091,
+  "fidelity": 0.9060625102230373,
+  "wxfid": 233.29261845647025,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.7674044165839726,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9995844639313985,
+   "joint_coverage_entropy_ratio": 0.8084512231125937,
+   "kmer_diversity_entropy_ratio": 0.9865059366939152,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 233.29261845647025,
+  "cons_off_band": 0.08829864904131708
+ },
+ {
+  "split": "170/80",
+  "group_cas12a": 80,
+  "light_cell_rows": null,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 138,
+   "clean": 12,
+   "clean_fraction": 0.08,
+   "cas9_pool": 1376,
+   "rows": 250,
+   "elapsed_s": 15.0,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "build_s": 15.0,
+  "rows": 250,
+  "valid": 250,
+  "band": 12,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   142,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 1376,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 80,
+   "Cas9": 170
+  },
+  "heavy_rows": 154,
+  "weighted": 235.37305036367377,
+  "fidelity": 0.9629634543840645,
+  "wxfid": 226.6556456471177,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9608181753171039,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9995844639313985,
+   "joint_coverage_entropy_ratio": 0.9263741071827299,
+   "kmer_diversity_entropy_ratio": 0.9909689982593917,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 226.6556456471177,
+  "cons_off_band": 0.0825424387624322
+ },
+ {
+  "split": "80/170",
+  "group_cas12a": 170,
+  "light_cell_rows": 6,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 170,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 139,
+   "clean": 11,
+   "clean_fraction": 0.07333333333333333,
+   "cas9_pool": 656,
+   "rows": 250,
+   "elapsed_s": 5.1,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 170,
+    "Cas9": 80
+   }
+  },
+  "build_s": 5.1,
+  "rows": 250,
+  "valid": 250,
+  "band": 11,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 656,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 170,
+   "Cas9": 80
+  },
+  "heavy_rows": 144,
+  "weighted": 214.2735573344264,
+  "fidelity": 0.9585807717696531,
+  "wxfid": 205.39851195946346,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9832692110965187,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9933418121880535,
+   "joint_coverage_entropy_ratio": 0.8872200830581729,
+   "kmer_diversity_entropy_ratio": 0.989961053091126,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 205.39851195946346,
+  "cons_off_band": 0.0913439298169167
+ },
+ {
+  "split": "80/170",
+  "group_cas12a": 170,
+  "light_cell_rows": null,
+  "mf": 69,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 170,
+   "band": "100-249",
+   "bank": 60000,
+   "union": 139,
+   "clean": 11,
+   "clean_fraction": 0.07333333333333333,
+   "cas9_pool": 656,
+   "rows": 250,
+   "elapsed_s": 5.1,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 170,
+    "Cas9": 80
+   }
+  },
+  "build_s": 5.1,
+  "rows": 250,
+  "valid": 250,
+  "band": 11,
+  "band_seeds": [
+   101,
+   107,
+   108,
+   114,
+   118,
+   121,
+   130,
+   152,
+   178,
+   203,
+   233
+  ],
+  "cas9_pool": 656,
+  "cells": 8,
+  "cas_mix": {
+   "Cas12a": 170,
+   "Cas9": 80
+  },
+  "heavy_rows": 132,
+  "weighted": 207.7602210192012,
+  "fidelity": 0.9663857539999295,
+  "wxfid": 200.77651784083275,
+  "terms": {
+   "mutation_coverage_entropy_ratio": 0.9977366703420345,
+   "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+   "strand_coverage_entropy_ratio": 0.9933418121880535,
+   "joint_coverage_entropy_ratio": 0.9161748131396975,
+   "kmer_diversity_entropy_ratio": 0.9918784767660618,
+   "distinct_guide_ratio": 1.0
+  },
+  "cons_on_band": 1.0,
+  "final_on_band": 200.77651784083275,
+  "cons_off_band": 0.08507541533371617
+ }
+]

@@ -14,6 +14,7 @@ before training; that step, not this module, is what talks to the API.
 """
 
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime
@@ -25,7 +26,20 @@ ROOT = Path(__file__).resolve().parents[1]
 SEEDS_JSON = ROOT / "seed_model" / "seeds.json"
 SUBNET_PYTHON = ROOT / ".venv" / "bin" / "python"     # has the subnet deps
 
-N_CLASSES = 9                  # 100-199 ... 900-999
+# Class width is a parameter, set once per process by SM_WIDTH. The default 100 reproduces the
+# original nine classes (100-199 ... 900-999) exactly, including reading seeds.json's stored
+# cumulative_counts/class_ranks/class_last_updated rather than recomputing them -- so the live
+# refresh path in round_plan.sh is byte-identical to before this became configurable.
+#
+# Any other width is REBINNED from each round's raw `seeds`, because those stored fields are
+# 100-wide and cannot be reused. 900 must divide by the width: 90/75/60/50/30/20/10 give
+# 10/12/15/18/30/45/90 classes.
+SEED_LO, SEED_HI = 100, 999
+N_SEEDS = SEED_HI - SEED_LO + 1
+WIDTH = int(os.environ.get("SM_WIDTH", "100"))
+if WIDTH <= 0 or N_SEEDS % WIDTH:
+    raise SystemExit(f"SM_WIDTH={WIDTH} does not divide {N_SEEDS} seeds evenly")
+N_CLASSES = N_SEEDS // WIDTH
 SEEDS_PER_TASK = 3
 CONTEXT = 12                   # rounds of history fed to the model
 # per-round feature block, in order; this list is the single source of truth
@@ -58,6 +72,61 @@ def refresh_seeds(start, end, rounds_start=None, rounds_end=None,
     return load_rounds(path)
 
 
+def class_name(i):
+    """Canonical name of class i at the active width. '100-199' at WIDTH 100."""
+    lo = SEED_LO + i * WIDTH
+    return f"{lo}-{lo + WIDTH - 1}"
+
+
+def class_of(seed):
+    """Class index of a raw seed, or None if it falls outside 100-999."""
+    i = (int(seed) - SEED_LO) // WIDTH
+    return i if 0 <= i < N_CLASSES else None
+
+
+def rebin(by_cell):
+    """Recompute the per-round class fields at the active WIDTH from raw `seeds`.
+
+    seeds.json stores seed_classes/cumulative_counts/class_ranks/class_last_updated at width 100
+    only, so every other width has to derive them. Semantics are copied from what seed_bins.py
+    writes, verified against a stored row: counts and last-drawn are the state BEFORE the round
+    (K562 round 26's counts sum to 75 = 25 prior rounds x 3, and its own classes do not appear in
+    its class_last_updated), and rank 1 is the highest count.
+
+    The tie-break among equal counts is ours, not seed_bins.py's -- that file's ordering could not
+    be reproduced from its output and does not need to be, because a model trained at this width
+    only ever sees this function's ranks. It is deterministic (count desc, then most recently drawn,
+    then index) which is what matters. Round 1 emits all-zero ranks, matching the stored files, so
+    _round_features maps it to the flat middle.
+    """
+    out = {}
+    for cell, rows in by_cell.items():
+        rows = sorted(rows, key=lambda r: (r["created_at"], r.get("round", 0)))
+        counts = np.zeros(N_CLASSES, dtype=np.int64)
+        last = np.zeros(N_CLASSES, dtype=np.int64)
+        new = []
+        for row in rows:
+            drawn = [c for c in (class_of(s) for s in row.get("seeds") or []) if c is not None]
+            if counts.sum() == 0:
+                ranks = np.zeros(N_CLASSES, dtype=np.int64)
+            else:
+                order = sorted(range(N_CLASSES),
+                               key=lambda i: (-int(counts[i]), -int(last[i]), i))
+                ranks = np.zeros(N_CLASSES, dtype=np.int64)
+                for pos, i in enumerate(order, start=1):
+                    ranks[i] = pos
+            new.append({**row,
+                        "seed_classes": [class_name(c) for c in drawn],
+                        "cumulative_counts": counts.tolist(),
+                        "class_ranks": ranks.tolist(),
+                        "class_last_updated": last.tolist()})
+            for c in drawn:
+                counts[c] += 1
+                last[c] = int(row.get("round", 0))
+        out[cell] = new
+    return out
+
+
 def load_rounds(path=SEEDS_JSON):
     """-> ({cell_type: [round, ...]}, meta) from seeds.json's rounds block."""
     payload = json.loads(Path(path).read_text())
@@ -65,13 +134,20 @@ def load_rounds(path=SEEDS_JSON):
     if not block:
         raise SystemExit(f"{path} carries no 'rounds' block - regenerate it with "
                          "scripts/seed_bins.py (needs --rounds-start/--rounds-end)")
-    return block["by_cell_type"], {"window": block["window"],
-                                   "generated_at": payload.get("generated_at")}
+    by_cell = block["by_cell_type"]
+    if WIDTH != 100:
+        by_cell = rebin(by_cell)
+    return by_cell, {"window": block["window"],
+                     "generated_at": payload.get("generated_at"),
+                     "width": WIDTH, "n_classes": N_CLASSES}
 
 
 def _class_index(name):
-    """'400-499' -> 3; None for a seed that fell outside the classes."""
-    return None if not name else int(name.split("-")[0]) // 100 - 1
+    """'400-499' -> 3 at WIDTH 100; None for a seed that fell outside the classes."""
+    if not name:
+        return None
+    i = (int(name.split("-")[0]) - SEED_LO) // WIDTH
+    return i if 0 <= i < N_CLASSES else None
 
 
 def _drawn_vector(row):

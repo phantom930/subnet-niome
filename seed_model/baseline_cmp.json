@@ -1,0 +1,10865 @@
+[
+ {
+  "width": 100,
+  "n_classes": 9,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     0,
+     1
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     4,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 3,
+    "repeat_last_pred": [
+     1,
+     6,
+     7
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     2,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 3,
+    "repeat_last_pred": [
+     3,
+     4,
+     6
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 1,
+     "4": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     3,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "7": 1,
+     "8": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     7,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     3,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 1,
+     "4": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     4,
+     2,
+     0
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     3
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     2,
+     6
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "6": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     6,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     1,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 3,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     5
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 2,
+     "2": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     2,
+     1
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     3,
+     6,
+     7
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 3,
+    "repeat_last_pred": [
+     0,
+     3,
+     7
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "7": 2
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     5,
+     6,
+     8
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     6,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     8
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     5,
+     6,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 2,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     7,
+     0,
+     1
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     6,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     5,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     7,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     3,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     2,
+     3
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     5
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     6,
+     8
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     4,
+     8
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     5,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     8,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     7,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "4": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     4
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "5": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     4,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     4
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     4,
+     1,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     3,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     1,
+     2,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     4,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 1.0,
+    "has_duplicate": true,
+    "actual_counts": {
+     "6": 2,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     5,
+     0,
+     1
+    ],
+    "repeat_last_matched": 2,
+    "chance": 1.0,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "5": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 38,
+   "2_windows": 17,
+   "3_windows": 1,
+   "duplication": {
+    "tasks_with_duplicate": 14,
+    "hit": 6
+   },
+   "mean_windows_matched": 1.0,
+   "mean_seeds_covered": 1.12
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 43,
+   "2_windows": 16,
+   "3_windows": 3,
+   "duplication": {
+    "tasks_with_duplicate": 14,
+    "hit": 6
+   },
+   "mean_windows_matched": 1.12,
+   "mean_seeds_covered": 1.24
+  },
+  "chance": {
+   "1_window": 0.7119,
+   "2_windows": 0.2562,
+   "3_windows": 0.0319,
+   "duplication": 0.3333,
+   "mean_seeds_covered": 1.0
+  },
+  "paired": {
+   "repeat_last_minus_uniform": 0.12,
+   "sd": 1.1364,
+   "se": 0.1607,
+   "wins": 19,
+   "losses": 14,
+   "ties": 17,
+   "p_repeat_better": 0.2657867106644668,
+   "p_uniform_better": 0.8092595370231488
+  },
+  "uniform_null": {
+   "observed": 1.12,
+   "null_mean": 0.9987,
+   "null_sd": 0.1159,
+   "z": 1.05,
+   "p_above": 0.16829158542072897,
+   "p_below": 0.871956402179891,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 1.24,
+   "null_mean": 0.9992,
+   "null_sd": 0.115,
+   "z": 2.09,
+   "p_above": 0.022898855057247137,
+   "p_below": 0.9850507474626269,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 90,
+  "n_classes": 10,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     4,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "7": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     5,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "4": 3
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "8": 2,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     9,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     4,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     3
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 3,
+    "repeat_last_pred": [
+     0,
+     2,
+     7
+    ],
+    "repeat_last_matched": 3,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     4,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     7,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     2,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 3,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 2,
+     "2": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     2,
+     1
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 3,
+    "repeat_last_pred": [
+     0,
+     4,
+     8
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "8": 2
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "7": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     7,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     2,
+     9
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "8": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     7,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     0,
+     1
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     3,
+     5,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "8": 2
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     0,
+     1
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     2,
+     4
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     7,
+     9
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     3,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "8": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     8,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     5,
+     9
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     8,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     5,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     9,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "8": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     8,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "4": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     4,
+     5
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     4,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     5
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     2,
+     3,
+     0
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "3": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     3,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     4,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     5,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "7": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     5,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.9,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "6": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 36,
+   "2_windows": 13,
+   "3_windows": 1,
+   "duplication": {
+    "tasks_with_duplicate": 11,
+    "hit": 6
+   },
+   "mean_windows_matched": 0.88,
+   "mean_seeds_covered": 1.0
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 37,
+   "2_windows": 10,
+   "3_windows": 2,
+   "duplication": {
+    "tasks_with_duplicate": 11,
+    "hit": 2
+   },
+   "mean_windows_matched": 0.94,
+   "mean_seeds_covered": 0.98
+  },
+  "chance": {
+   "1_window": 0.6652,
+   "2_windows": 0.209,
+   "3_windows": 0.0258,
+   "duplication": 0.3,
+   "mean_seeds_covered": 0.9
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.02,
+   "sd": 1.02,
+   "se": 0.1443,
+   "wins": 19,
+   "losses": 18,
+   "ties": 13,
+   "p_repeat_better": 0.6101694915254238,
+   "p_uniform_better": 0.4978751062446878
+  },
+  "uniform_null": {
+   "observed": 1.0,
+   "null_mean": 0.8992,
+   "null_sd": 0.113,
+   "z": 0.89,
+   "p_above": 0.2073396330183491,
+   "p_below": 0.8378581070946453,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.98,
+   "null_mean": 0.8994,
+   "null_sd": 0.1116,
+   "z": 0.72,
+   "p_above": 0.26273686315684214,
+   "p_below": 0.7915604219789011,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 75,
+  "n_classes": 12,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     5,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     8,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     3,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "9": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     6,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "4": 1,
+     "5": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     4,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "10": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     9,
+     10,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     5,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     5,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     4
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     5,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "8": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     2,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "9": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     5,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 2,
+     "3": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     3,
+     1
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     8,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     4,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "10": 2
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     7,
+     9,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "9": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     9,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "9": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     9,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "5": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     10,
+     0,
+     1
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     5,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "7": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     4,
+     7,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "10": 2
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     5,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "8": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     3,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     5,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     8,
+     11
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "6": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "8": 1,
+     "9": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     9,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 2,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     6,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     9,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     6,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     11,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "10": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     5,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 2,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     10,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "5": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "0": 1,
+     "7": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     5,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     6
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "6": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     4,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "3": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     5,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     2,
+     3,
+     10
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     5,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     6,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.75,
+    "has_duplicate": true,
+    "actual_counts": {
+     "8": 2,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     7,
+     0,
+     1
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.75,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "7": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 35,
+   "2_windows": 10,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 11,
+    "hit": 4
+   },
+   "mean_windows_matched": 0.82,
+   "mean_seeds_covered": 0.9
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 33,
+   "2_windows": 7,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 11,
+    "hit": 2
+   },
+   "mean_windows_matched": 0.76,
+   "mean_seeds_covered": 0.8
+  },
+  "chance": {
+   "1_window": 0.5822,
+   "2_windows": 0.1543,
+   "3_windows": 0.0135,
+   "duplication": 0.25,
+   "mean_seeds_covered": 0.75
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.1,
+   "sd": 1.0351,
+   "se": 0.1464,
+   "wins": 16,
+   "losses": 16,
+   "ties": 18,
+   "p_repeat_better": 0.7991100444977751,
+   "p_uniform_better": 0.2854357282135893
+  },
+  "uniform_null": {
+   "observed": 0.9,
+   "null_mean": 0.7492,
+   "null_sd": 0.1065,
+   "z": 1.42,
+   "p_above": 0.09494525273736314,
+   "p_below": 0.9331033448327584,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.8,
+   "null_mean": 0.7491,
+   "null_sd": 0.1059,
+   "z": 0.48,
+   "p_above": 0.3455327233638318,
+   "p_below": 0.7215639218039098,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 60,
+  "n_classes": 15,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "7": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     6,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     11,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "6": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     4,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "11": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     7,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "6": 3
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "12": 1,
+     "13": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     12,
+     13,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     6,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     7,
+     8
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     5
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     7,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "10": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     11,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "11": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     6,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "4": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     4
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     5,
+     10,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "6": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     6,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "12": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     9,
+     11,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "11": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     11,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     13
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "12": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     9,
+     11,
+     14
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "6": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     12,
+     13
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     5,
+     6,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "8": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     8,
+     12
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "13": 2
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     6,
+     14
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "10": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "8": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     6,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     10,
+     14
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "8": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     4,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "12": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     12,
+     14
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "2": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     8,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "6": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     10,
+     12,
+     14
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "7": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     8,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "4": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     2,
+     14
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "8": 1,
+     "12": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     4,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     7,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "4": 2,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     8,
+     12,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "7": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     6,
+     7
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "8": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     7,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "7": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     1,
+     7
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 2,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     5,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     7,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "7": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     4,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "3": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     7,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.6,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 2,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     7,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "11": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     8,
+     9
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.6,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "5": 1,
+     "9": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 32,
+   "2_windows": 4,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 7,
+    "hit": 1
+   },
+   "mean_windows_matched": 0.7,
+   "mean_seeds_covered": 0.72
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 27,
+   "2_windows": 3,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 7,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.6,
+   "mean_seeds_covered": 0.6
+  },
+  "chance": {
+   "1_window": 0.4927,
+   "2_windows": 0.0979,
+   "3_windows": 0.0093,
+   "duplication": 0.2,
+   "mean_seeds_covered": 0.6
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.12,
+   "sd": 0.8241,
+   "se": 0.1165,
+   "wins": 13,
+   "losses": 18,
+   "ties": 19,
+   "p_repeat_better": 0.888205589720514,
+   "p_uniform_better": 0.1926903654817259
+  },
+  "uniform_null": {
+   "observed": 0.72,
+   "null_mean": 0.5997,
+   "null_sd": 0.0978,
+   "z": 1.23,
+   "p_above": 0.13054347282635867,
+   "p_below": 0.9070546472676366,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.6,
+   "null_mean": 0.5992,
+   "null_sd": 0.0984,
+   "z": 0.01,
+   "p_above": 0.528523573821309,
+   "p_below": 0.5495725213739313,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 50,
+  "n_classes": 18,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     8,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "9": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     8,
+     16
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "5": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     3,
+     13,
+     15
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "3": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     5,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "7": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     5,
+     12
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "11": 1,
+     "13": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     9,
+     12
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "7": 1,
+     "8": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     8,
+     7,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "14": 1,
+     "16": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     16,
+     14,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     7,
+     12
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "8": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     8,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     4,
+     6
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "8": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     5,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     8,
+     15
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "12": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     3,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "13": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     3,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "7": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     7,
+     11
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "1": 1,
+     "5": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     1,
+     5
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "5": 1,
+     "7": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     12,
+     15
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "7": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     7,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "1": 1,
+     "15": 2
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     10,
+     13,
+     16
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "13": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     13,
+     17
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "3": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     3,
+     16
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "14": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     11,
+     13,
+     16
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "7": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     15,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "7": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     7,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "10": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     10,
+     15
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "15": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     15,
+     16
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "7": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     7,
+     17
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "12": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     5,
+     7
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "10": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     7,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     12,
+     17
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "9": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     5,
+     13
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "12": 1,
+     "14": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     14,
+     17
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 2,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     1,
+     9,
+     17
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "7": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     12,
+     14,
+     16
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "8": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     10,
+     13
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "5": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     17,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "15": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     5,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "9": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     8,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "4": 2,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     15,
+     17
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 1,
+     "8": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     7,
+     9
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "10": 1,
+     "11": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     8,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "8": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     0,
+     2,
+     9
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "9": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     8,
+     2,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 2,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     6,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "5": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     8,
+     10
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "8": 1,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     5,
+     15
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "3": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     8,
+     14
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "6": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     9,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "12": 1,
+     "13": 1,
+     "17": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     10,
+     11
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.5,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "11": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 30,
+   "2_windows": 3,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 7,
+    "hit": 1
+   },
+   "mean_windows_matched": 0.64,
+   "mean_seeds_covered": 0.66
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 27,
+   "2_windows": 3,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 7,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.6,
+   "mean_seeds_covered": 0.6
+  },
+  "chance": {
+   "1_window": 0.4244,
+   "2_windows": 0.0718,
+   "3_windows": 0.0038,
+   "duplication": 0.1667,
+   "mean_seeds_covered": 0.5
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.06,
+   "sd": 0.8184,
+   "se": 0.1157,
+   "wins": 14,
+   "losses": 16,
+   "ties": 20,
+   "p_repeat_better": 0.7604619769011549,
+   "p_uniform_better": 0.35883205839708016
+  },
+  "uniform_null": {
+   "observed": 0.66,
+   "null_mean": 0.4997,
+   "null_sd": 0.0911,
+   "z": 1.76,
+   "p_above": 0.053147342632868355,
+   "p_below": 0.9663016849157542,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.6,
+   "null_mean": 0.4994,
+   "null_sd": 0.0915,
+   "z": 1.1,
+   "p_above": 0.1614919254037298,
+   "p_below": 0.8829058547072647,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 30,
+  "n_classes": 30,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     0,
+     1
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "11": 1,
+     "15": 1,
+     "21": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     13,
+     26
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "9": 1,
+     "20": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     22,
+     26
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "5": 1,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     9,
+     20
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "13": 1,
+     "21": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     8,
+     20
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "19": 1,
+     "23": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     11,
+     15,
+     21
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "12": 1,
+     "13": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     12,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "24": 1,
+     "26": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     24,
+     26,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "8": 1,
+     "21": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     13,
+     21
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "14": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     9,
+     14,
+     16
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     6,
+     10
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "14": 1,
+     "25": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     8,
+     21
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     14,
+     25
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "21": 1,
+     "25": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     5,
+     22
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "18": 1,
+     "22": 1,
+     "26": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     6,
+     22
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "12": 1,
+     "19": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 2,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 2,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     12,
+     19
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "2": 1,
+     "8": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     2,
+     8
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "8": 1,
+     "12": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     21,
+     25
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "12": 1,
+     "24": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     12,
+     24
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "25": 1,
+     "26": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     18,
+     22,
+     26
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "11": 1,
+     "23": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     11,
+     23,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "6": 1,
+     "27": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     6,
+     27
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "24": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     19,
+     23,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "11": 1,
+     "12": 1,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     25,
+     26
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "12": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     11,
+     12,
+     22
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "17": 1,
+     "25": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     17,
+     25
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "2": 1,
+     "26": 2
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     26,
+     2,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "12": 1,
+     "18": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     12,
+     28
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "21": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     8,
+     12
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "17": 1,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     12,
+     18
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "9": 1,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     21,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "16": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     9,
+     22
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "20": 1,
+     "24": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     24,
+     29
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "4": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     16,
+     29
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "12": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     20,
+     24,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "14": 1,
+     "21": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     17,
+     22
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "9": 1,
+     "19": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     4,
+     29
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "17": 1,
+     "25": 1,
+     "28": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     9,
+     19
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     14,
+     21
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "8": 2,
+     "14": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     17,
+     25,
+     28
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "3": 1,
+     "14": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     12,
+     15
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "17": 1,
+     "18": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     8,
+     14,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "14": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     15
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "15": 1,
+     "20": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     14,
+     3,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "6": 2,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     10,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "9": 1,
+     "25": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     4,
+     14,
+     16
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "14": 1,
+     "23": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     6,
+     9,
+     25
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "6": 1,
+     "27": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     9,
+     14,
+     23
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.3,
+    "has_duplicate": true,
+    "actual_counts": {
+     "6": 2,
+     "10": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     15,
+     20
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "20": 1,
+     "22": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     17,
+     18
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.3,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "10": 1,
+     "18": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 19,
+   "2_windows": 1,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 6,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.4,
+   "mean_seeds_covered": 0.4
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 17,
+   "2_windows": 0,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 6,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.34,
+   "mean_seeds_covered": 0.34
+  },
+  "chance": {
+   "1_window": 0.2692,
+   "2_windows": 0.0298,
+   "3_windows": 0.001,
+   "duplication": 0.1,
+   "mean_seeds_covered": 0.3
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.06,
+   "sd": 0.7931,
+   "se": 0.1122,
+   "wins": 13,
+   "losses": 15,
+   "ties": 22,
+   "p_repeat_better": 0.767861606919654,
+   "p_uniform_better": 0.3561821908904555
+  },
+  "uniform_null": {
+   "observed": 0.4,
+   "null_mean": 0.2997,
+   "null_sd": 0.0732,
+   "z": 1.37,
+   "p_above": 0.111994400279986,
+   "p_below": 0.9295035248237589,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.34,
+   "null_mean": 0.2993,
+   "null_sd": 0.0734,
+   "z": 0.56,
+   "p_above": 0.32523373831308433,
+   "p_below": 0.7623118844057797,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 20,
+  "n_classes": 45,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     20,
+     1,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "16": 1,
+     "23": 1,
+     "31": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     20,
+     40
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "14": 1,
+     "31": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     9,
+     33,
+     39
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "8": 1,
+     "33": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     5,
+     14,
+     31
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "19": 1,
+     "31": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     13,
+     30
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "29": 1,
+     "34": 1,
+     "42": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     16,
+     23,
+     31
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": true,
+    "actual_counts": {
+     "18": 1,
+     "20": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     20,
+     18,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "37": 1,
+     "40": 1,
+     "42": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     37,
+     40,
+     42
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "13": 1,
+     "32": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     19,
+     31
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "14": 1,
+     "21": 1,
+     "24": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     14,
+     21,
+     24
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "10": 1,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     10,
+     15
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "21": 1,
+     "38": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     13,
+     32
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "9": 1,
+     "33": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     21,
+     38
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "15": 1,
+     "32": 1,
+     "38": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     8,
+     33
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "27": 1,
+     "34": 1,
+     "40": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     9,
+     33
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "18": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     18,
+     29
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "3": 1,
+     "13": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     0,
+     3,
+     13
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "13": 1,
+     "19": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     15,
+     32,
+     38
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "18": 1,
+     "36": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     18,
+     36
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "37": 1,
+     "39": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     27,
+     34,
+     40
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "16": 1,
+     "34": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     16,
+     34,
+     43
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "9": 1,
+     "40": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     9,
+     40
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "36": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     29,
+     34,
+     42
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "16": 1,
+     "19": 1,
+     "33": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     37,
+     39
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "19": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     16,
+     19,
+     33
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "15": 1,
+     "26": 1,
+     "37": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     15,
+     26,
+     37
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "39": 1,
+     "40": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     39,
+     40
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "19": 1,
+     "27": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     19,
+     43
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "31": 1,
+     "42": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     5,
+     13,
+     19
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "25": 1,
+     "33": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     19,
+     27
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "14": 1,
+     "34": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     31,
+     42
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "24": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     14,
+     34
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "30": 1,
+     "36": 1,
+     "42": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     36,
+     43
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "6": 1,
+     "44": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     24,
+     43
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "4": 1,
+     "18": 1,
+     "23": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     30,
+     36,
+     42
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "21": 1,
+     "32": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     25,
+     33
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "14": 1,
+     "29": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     6,
+     44
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "26": 1,
+     "38": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     14,
+     29
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "5": 1,
+     "23": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     21,
+     32
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": true,
+    "actual_counts": {
+     "12": 2,
+     "22": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     26,
+     38,
+     43
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": true,
+    "actual_counts": {
+     "5": 1,
+     "21": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     4,
+     18,
+     23
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "26": 1,
+     "27": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     12,
+     22,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "22": 1,
+     "25": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 2,
+    "repeat_last_pred": [
+     1,
+     5,
+     23
+    ],
+    "repeat_last_matched": 2,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "23": 1,
+     "30": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     21,
+     5,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": true,
+    "actual_counts": {
+     "9": 2,
+     "15": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     9,
+     15,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "13": 1,
+     "38": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     22,
+     25
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "13": 1,
+     "21": 1,
+     "35": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     9,
+     13,
+     38
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "9": 1,
+     "40": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     21,
+     35
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "9": 1,
+     "10": 1,
+     "16": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     23,
+     30
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "30": 1,
+     "33": 1,
+     "43": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     26,
+     27
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.2,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "15": 1,
+     "28": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 12,
+   "2_windows": 0,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 4,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.24,
+   "mean_seeds_covered": 0.24
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 13,
+   "2_windows": 1,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 4,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.28,
+   "mean_seeds_covered": 0.28
+  },
+  "chance": {
+   "1_window": 0.1861,
+   "2_windows": 0.0136,
+   "3_windows": 0.0003,
+   "duplication": 0.0667,
+   "mean_seeds_covered": 0.2
+  },
+  "paired": {
+   "repeat_last_minus_uniform": 0.04,
+   "sd": 0.6376,
+   "se": 0.0902,
+   "wins": 11,
+   "losses": 9,
+   "ties": 30,
+   "p_repeat_better": 0.41812909354532274,
+   "p_uniform_better": 0.7448627568621569
+  },
+  "uniform_null": {
+   "observed": 0.24,
+   "null_mean": 0.2003,
+   "null_sd": 0.0609,
+   "z": 0.65,
+   "p_above": 0.30443477826108695,
+   "p_below": 0.7933603319834008,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.28,
+   "null_mean": 0.1996,
+   "null_sd": 0.0616,
+   "z": 1.31,
+   "p_above": 0.13104344782760863,
+   "p_below": 0.9235538223088846,
+   "n_iter": 20000
+  }
+ },
+ {
+  "width": 10,
+  "n_classes": 90,
+  "n": 50,
+  "per_task": [
+   {
+    "created_at": "2026-09-04T21:19:20",
+    "cell_type": "HUDEP-2",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     40,
+     41
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "33": 1,
+     "46": 1,
+     "63": 1
+    }
+   },
+   {
+    "created_at": "2026-09-04T23:43:57",
+    "cell_type": "HEK293",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     41,
+     80
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "29": 1,
+     "62": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T02:08:10",
+    "cell_type": "CD34+_HSPC",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     18,
+     67,
+     79
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "13": 1,
+     "17": 1,
+     "67": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T06:56:33",
+    "cell_type": "HEK293",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     29,
+     62
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "39": 1,
+     "63": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T09:21:14",
+    "cell_type": "K562",
+    "round": 15,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     26,
+     61
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "59": 1,
+     "69": 1,
+     "84": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T11:44:48",
+    "cell_type": "HUDEP-2",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     33,
+     46,
+     63
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": true,
+    "actual_counts": {
+     "36": 1,
+     "41": 2
+    }
+   },
+   {
+    "created_at": "2026-09-05T15:29:09",
+    "cell_type": "HUDEP-2",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     41,
+     36,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "74": 1,
+     "80": 1,
+     "84": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T16:33:15",
+    "cell_type": "HUDEP-2",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     74,
+     80,
+     84
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "26": 1,
+     "64": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T18:57:39",
+    "cell_type": "HEK293",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     39,
+     63
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "28": 1,
+     "42": 1,
+     "49": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T21:22:45",
+    "cell_type": "HEK293",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     28,
+     42,
+     49
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "7": 1,
+     "20": 1,
+     "30": 1
+    }
+   },
+   {
+    "created_at": "2026-09-05T23:46:56",
+    "cell_type": "HEK293",
+    "round": 25,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     20,
+     30
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "42": 1,
+     "76": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T02:11:23",
+    "cell_type": "HUDEP-2",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     7,
+     26,
+     64
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "18": 1,
+     "67": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T04:35:44",
+    "cell_type": "HEK293",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     42,
+     76
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "31": 1,
+     "64": 1,
+     "77": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T07:01:14",
+    "cell_type": "CD34+_HSPC",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     17,
+     67
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "54": 1,
+     "68": 1,
+     "80": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T09:24:34",
+    "cell_type": "HUDEP-2",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     18,
+     67
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "15": 1,
+     "37": 1,
+     "59": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T11:49:09",
+    "cell_type": "HUDEP-2",
+    "round": 26,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     15,
+     37,
+     59
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "7": 1,
+     "26": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T14:13:20",
+    "cell_type": "HUDEP-2",
+    "round": 27,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     1,
+     7,
+     26
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "11": 1,
+     "26": 1,
+     "38": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T19:02:32",
+    "cell_type": "HEK293",
+    "round": 27,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     31,
+     64,
+     77
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "36": 1,
+     "72": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T21:27:30",
+    "cell_type": "HEK293",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     36,
+     72
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "75": 1,
+     "78": 1
+    }
+   },
+   {
+    "created_at": "2026-09-06T23:51:15",
+    "cell_type": "CD34+_HSPC",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     54,
+     68,
+     80
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "33": 1,
+     "69": 1,
+     "86": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T02:16:29",
+    "cell_type": "CD34+_HSPC",
+    "round": 27,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     33,
+     69,
+     86
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "18": 1,
+     "81": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T04:39:37",
+    "cell_type": "CD34+_HSPC",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     18,
+     81
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "73": 1,
+     "87": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T07:03:36",
+    "cell_type": "K562",
+    "round": 16,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     59,
+     69,
+     84
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "33": 1,
+     "38": 1,
+     "66": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T09:28:08",
+    "cell_type": "HEK293",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     75,
+     78
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "13": 1,
+     "38": 1,
+     "86": 1
+    }
+   },
+   {
+    "created_at": "2026-09-07T11:52:57",
+    "cell_type": "K562",
+    "round": 17,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     33,
+     38,
+     66
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "31": 1,
+     "53": 1,
+     "75": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T02:30:32",
+    "cell_type": "K562",
+    "round": 18,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     31,
+     53,
+     75
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "6": 1,
+     "78": 1,
+     "80": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T04:42:15",
+    "cell_type": "K562",
+    "round": 19,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     6,
+     78,
+     80
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "15": 1,
+     "38": 1,
+     "54": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T07:06:13",
+    "cell_type": "HEK293",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     13,
+     38,
+     86
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "1": 1,
+     "63": 1,
+     "85": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T09:30:21",
+    "cell_type": "HUDEP-2",
+    "round": 28,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     11,
+     26,
+     38
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "51": 1,
+     "67": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T11:54:12",
+    "cell_type": "K562",
+    "round": 20,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     15,
+     38,
+     54
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "28": 1,
+     "68": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T14:18:18",
+    "cell_type": "HEK293",
+    "round": 31,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     1,
+     63,
+     85
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "5": 1,
+     "49": 1,
+     "87": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T16:42:31",
+    "cell_type": "K562",
+    "round": 21,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     28,
+     68
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "61": 1,
+     "72": 1,
+     "84": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T19:06:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 29,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     3,
+     73,
+     87
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "13": 1,
+     "89": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T21:30:45",
+    "cell_type": "HEK293",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     5,
+     49,
+     87
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "8": 1,
+     "36": 1,
+     "46": 1
+    }
+   },
+   {
+    "created_at": "2026-09-08T23:55:09",
+    "cell_type": "K562",
+    "round": 22,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     61,
+     72,
+     84
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "10": 1,
+     "43": 1,
+     "64": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T02:18:56",
+    "cell_type": "HUDEP-2",
+    "round": 29,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     51,
+     67
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "28": 1,
+     "59": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T04:42:56",
+    "cell_type": "CD34+_HSPC",
+    "round": 30,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     13,
+     89
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "52": 1,
+     "76": 1,
+     "86": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T07:07:09",
+    "cell_type": "HUDEP-2",
+    "round": 30,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     2,
+     28,
+     59
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "2": 1,
+     "10": 1,
+     "47": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T09:30:55",
+    "cell_type": "K562",
+    "round": 23,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     10,
+     43,
+     64
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": true,
+    "actual_counts": {
+     "24": 2,
+     "44": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T11:56:32",
+    "cell_type": "CD34+_HSPC",
+    "round": 31,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     52,
+     76,
+     86
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": true,
+    "actual_counts": {
+     "10": 1,
+     "42": 2
+    }
+   },
+   {
+    "created_at": "2026-09-09T14:20:45",
+    "cell_type": "HEK293",
+    "round": 33,
+    "uniform": 1,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 1,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     8,
+     36,
+     46
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "0": 1,
+     "53": 1,
+     "55": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T16:44:07",
+    "cell_type": "K562",
+    "round": 24,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     24,
+     44,
+     0
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "12": 1,
+     "44": 1,
+     "50": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T19:08:34",
+    "cell_type": "HUDEP-2",
+    "round": 31,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     2,
+     10,
+     47
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "3": 1,
+     "46": 1,
+     "61": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T21:32:45",
+    "cell_type": "CD34+_HSPC",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     42,
+     10,
+     0
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "18": 1,
+     "19": 1,
+     "30": 1
+    }
+   },
+   {
+    "created_at": "2026-09-09T23:56:33",
+    "cell_type": "CD34+_HSPC",
+    "round": 33,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     18,
+     19,
+     30
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "18": 1,
+     "27": 1,
+     "76": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T02:20:57",
+    "cell_type": "K562",
+    "round": 25,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     12,
+     44,
+     50
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "27": 1,
+     "43": 1,
+     "70": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T04:45:09",
+    "cell_type": "CD34+_HSPC",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     18,
+     27,
+     76
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "12": 1,
+     "19": 1,
+     "81": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T07:09:23",
+    "cell_type": "K562",
+    "round": 26,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     27,
+     43,
+     70
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "19": 1,
+     "20": 1,
+     "32": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T09:33:22",
+    "cell_type": "HUDEP-2",
+    "round": 32,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 1,
+    "repeat_last_pred": [
+     3,
+     46,
+     61
+    ],
+    "repeat_last_matched": 1,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "61": 1,
+     "67": 1,
+     "87": 1
+    }
+   },
+   {
+    "created_at": "2026-09-10T11:57:38",
+    "cell_type": "HEK293",
+    "round": 34,
+    "uniform": 0,
+    "uniform_pred": [
+     0,
+     1,
+     2
+    ],
+    "uniform_matched": 0,
+    "repeat_last": 0,
+    "repeat_last_pred": [
+     0,
+     53,
+     55
+    ],
+    "repeat_last_matched": 0,
+    "chance": 0.1,
+    "has_duplicate": false,
+    "actual_counts": {
+     "13": 1,
+     "31": 1,
+     "56": 1
+    }
+   }
+  ],
+  "uniform": {
+   "n": 50,
+   "1_window": 7,
+   "2_windows": 0,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 3,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.14,
+   "mean_seeds_covered": 0.14
+  },
+  "repeat_last": {
+   "n": 50,
+   "1_window": 6,
+   "2_windows": 0,
+   "3_windows": 0,
+   "duplication": {
+    "tasks_with_duplicate": 3,
+    "hit": 0
+   },
+   "mean_windows_matched": 0.12,
+   "mean_seeds_covered": 0.12
+  },
+  "chance": {
+   "1_window": 0.0959,
+   "2_windows": 0.0041,
+   "3_windows": 0.0001,
+   "duplication": 0.0333,
+   "mean_seeds_covered": 0.1
+  },
+  "paired": {
+   "repeat_last_minus_uniform": -0.02,
+   "sd": 0.4734,
+   "se": 0.0669,
+   "wins": 5,
+   "losses": 6,
+   "ties": 39,
+   "p_repeat_better": 0.7273636318184091,
+   "p_uniform_better": 0.4974251287435628
+  },
+  "uniform_null": {
+   "observed": 0.14,
+   "null_mean": 0.0999,
+   "null_sd": 0.0441,
+   "z": 0.91,
+   "p_above": 0.23248837558122093,
+   "p_below": 0.8727563621818909,
+   "n_iter": 20000
+  },
+  "repeat_last_null": {
+   "observed": 0.12,
+   "null_mean": 0.0998,
+   "null_sd": 0.0446,
+   "z": 0.45,
+   "p_above": 0.3793310334483276,
+   "p_below": 0.7610119494025299,
+   "n_iter": 20000
+  }
+ }
+]

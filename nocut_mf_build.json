@@ -1,0 +1,24 @@
+[
+ {
+  "mf": 68,
+  "group": 42,
+  "clean": 2,
+  "cas9_pool": 843,
+  "needs": 208,
+  "built": true,
+  "reason": null,
+  "cells": 8,
+  "build_s": 49.4
+ },
+ {
+  "mf": 65,
+  "group": 42,
+  "clean": 2,
+  "cas9_pool": 849,
+  "needs": 208,
+  "built": true,
+  "reason": null,
+  "cells": 8,
+  "build_s": 49.4
+ }
+]

@@ -37,17 +37,13 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from .data import (CELL_TYPES, CONTEXT, N_CLASSES, SEEDS_PER_TASK,
-                   build_samples, load_rounds, refresh_seeds)
+from .data import (CELL_TYPES, CONTEXT, N_CLASSES, SEEDS_PER_TASK, WIDTH,
+                   build_samples, class_name, load_rounds, refresh_seeds)
 from .evaluate import BASELINES, top3_from_probs
 from .model import SeedFormer
 from .train import fit, predict_probs
 
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def class_name(i):
-    return f"{(i + 1) * 100}-{(i + 1) * 100 + 99}"
 
 
 def score_one(pred_classes, y):
@@ -73,8 +69,14 @@ def aggregate(scores):
     dups = [s for s in scores if s["has_duplicate"]]
     if n == 0:
         return {}
+    ll = [s["logloss"] for s in scores if "logloss" in s]
     return {
         "n": n,
+        **({"logloss": round(float(np.mean(ll)), 4),
+            "uniform_logloss": round(float(np.log(N_CLASSES)), 4),
+            "max_prob": round(float(np.mean([s["max_prob"] for s in scores])), 4),
+            "max_deviation_from_uniform":
+                round(float(np.max([s["deviation"] for s in scores])), 4)} if ll else {}),
         # thresholds on seeds covered, so a predicted duplicate counts twice
         "1_window": sum(1 for s in scores if s["seeds_covered"] >= 1),
         "2_windows": sum(1 for s in scores if s["seeds_covered"] >= 2),
@@ -91,9 +93,9 @@ def aggregate(scores):
 
 
 def chance_rates(scores):
-    """Exact probabilities for a blind pick of 3 distinct windows out of 9.
+    """Exact probabilities for a blind pick of 3 distinct windows out of N_CLASSES.
 
-    Enumerates all C(9,3) = 84 picks against each task's own multiset and
+    Enumerates all C(N_CLASSES,3) picks against each task's own multiset and
     averages, so the duplicate cases carry their true odds: naming the one
     duplicated window already covers two seeds, which makes a 2-seed success
     *more* likely on a duplicate task (1/3) than on a task with three distinct
@@ -104,7 +106,7 @@ def chance_rates(scores):
     for s in scores:
         counts = np.zeros(N_CLASSES, dtype=int)
         for name, c in s["actual_counts"].items():
-            counts[int(name.split("-")[0]) // 100 - 1] = c
+            counts[(int(name.split("-")[0]) - 100) // WIDTH] = c
         covered = np.array([counts[list(p)].sum() for p in all_picks])
         acc["1_window"].append(float((covered >= 1).mean()))
         acc["2_windows"].append(float((covered >= 2).mean()))
@@ -112,7 +114,7 @@ def chance_rates(scores):
     out = {k: (round(float(np.mean(v)), 4) if v else None)
            for k, v in acc.items() if k != "duplication"}
     # the duplicated window is one specific class, and a blind pick names 3 of
-    # the 9, so it is caught with probability 3/9 regardless of the task
+    # the N_CLASSES, so it is caught with probability 3/N regardless of the task
     out["duplication"] = round(SEEDS_PER_TASK / N_CLASSES, 4)
     return out
 
@@ -121,13 +123,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=20, help="most recent tasks to score")
     ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--cold", action="store_true",
+                    help="do not warm-start from the pooled checkpoint. Required for an honest "
+                         "number whenever that checkpoint's training window covers the tasks "
+                         "being scored, which it does for the live one -- see below.")
     ap.add_argument("--start", default="2026-08-27T00:00:00")
     ap.add_argument("--end", default="now")
     ap.add_argument("--epochs", type=int, default=200)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--context", type=int, default=CONTEXT)
-    ap.add_argument("--out", default=str(ROOT / "seed_model" / "backtest.json"))
+    ap.add_argument("--out", default=None)
     args = ap.parse_args()
+    tag = "" if WIDTH == 100 else f"-w{WIDTH}"
+    if args.out is None:
+        args.out = str(ROOT / "seed_model" / f"backtest{tag}.json")
 
     rounds, meta = (refresh_seeds(args.start, args.end) if args.refresh
                     else load_rounds())
@@ -139,9 +148,27 @@ def main():
 
     cfg = dict(dim=64, depth=3, heads=4, dropout=0.2)
     model = SeedFormer(**cfg)
-    pooled = ROOT / "seed_model" / "checkpoints" / "pooled.pt"
-    if pooled.exists():
-        model.load_state_dict(torch.load(pooled, weights_only=True)["state"])
+    # WARM-STARTING FROM THE LIVE CHECKPOINT LEAKS. update.py retrains pooled.pt on everything up
+    # to "now", so its window covers every task this walk then predicts: step 1 begins from weights
+    # that have already seen its own target. The refit is on strictly-earlier rounds, but it starts
+    # from contaminated weights, so the docstring's "never seen the task it is predicting" only
+    # holds with --cold. This was found by a width sweep in which width 100 was the ONLY arm with a
+    # checkpoint to load and the ONLY arm to beat chance (lift 1.35x, log-loss below uniform) while
+    # the seven cold arms all sat at or below it. Use --cold for any cross-width comparison.
+    pooled = ROOT / "seed_model" / "checkpoints" / f"pooled{tag}.pt"
+    if args.cold:
+        print(f"  cold start (--cold); width {WIDTH}, {N_CLASSES} classes")
+    elif pooled.exists():
+        meta = torch.load(pooled, weights_only=True)
+        model.load_state_dict(meta["state"])
+        end = (meta.get("window") or {}).get("end", "?")
+        latest = max(sample["created"][i] for i in targets)
+        print(f"  warm-started from {pooled.name} (trained through {end})")
+        if end == "?" or str(end) >= str(latest):
+            print(f"  !! LEAKAGE: that window covers the scored tasks (latest {latest[:19]}). "
+                  f"Re-run with --cold for a number that means anything.")
+    else:
+        print(f"  cold start (no {pooled.name}); width {WIDTH}, {N_CLASSES} classes")
 
     rows, model_scores = [], []
     ref_scores = {name: [] for name in BASELINES}
@@ -153,6 +180,12 @@ def main():
                    weight_decay=0.05, batch_size=16, seed=step, val_frac=0.2)
         probs = predict_probs(best["state"], sample, np.asarray([i]), cfg)[0]
         s = score_one(top3_from_probs(probs), sample["y"][i])
+        # soft log-loss against the round's own class multiset (y sums to 1, so this is the
+        # cross-entropy of the true distribution under the prediction). Compared against
+        # log(N_CLASSES), which is what an exactly-uniform head scores.
+        s["logloss"] = float(-(sample["y"][i] * np.log(np.clip(probs, 1e-12, None))).sum())
+        s["max_prob"] = float(probs.max())
+        s["deviation"] = float(np.abs(probs - 1.0 / N_CLASSES).max())
         model_scores.append(s)
         for name, fn in BASELINES.items():
             p = fn(sample["y"][prior], sample["x"][i], sample["mask"][i])

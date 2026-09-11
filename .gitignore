@@ -179,3 +179,13 @@ calc/
 # Scratch inputs, not source: each is one round's contract + hbb_reference, refetched on demand.
 # The hyphen matters — task.json is a tracked fixture and must stay so.
 task-*.json
+
+# CPU torch venv for seed_model/ (865 MB). Deliberately separate from .venv so the miner runtime
+# never sees torch — see seed_model/README.md. The `.venv` rule above does not cover this name.
+.venv-ml/
+
+# seed_model checkpoints. Rewritten by every promoted refresh cycle, which round_plan.sh runs
+# whenever a round stamps (~10/day), so tracking them means a ~6 MB binary diff per cycle for a
+# file nothing reads back. seed_model/state.json is the durable record of the walk-forward score;
+# a fresh clone regenerates the weights with `python -m seed_model.train --refresh` in ~65 s.
+seed_model/**/*.pt

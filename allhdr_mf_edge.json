@@ -1,0 +1,169 @@
+[
+ {
+  "cell": "K562",
+  "task": "7306c626",
+  "window": [
+   100,
+   324
+  ],
+  "span": 225,
+  "mf": 90,
+  "shipped_mf": 101,
+  "group_size": 80,
+  "raw_bank": 2242,
+  "loaded_bank": 2242,
+  "build_s": 48.1,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "100-324",
+   "bank": 2242,
+   "union": 218,
+   "clean": 7,
+   "clean_fraction": 0.03111111111111111,
+   "cas9_pool": 5255,
+   "rows": 250,
+   "elapsed_s": 3.0,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "union": 218,
+  "clean_in_window": 7,
+  "cas9_pool": 5255,
+  "cells": 8,
+  "rows": 250,
+  "band": 7,
+  "band_in_window": 7,
+  "leak": 0,
+  "band_seeds": [
+   108,
+   111,
+   191,
+   200,
+   256,
+   278,
+   305
+  ],
+  "weighted": 261.3506442301548,
+  "fidelity": 0.9024313404160843,
+  "wxfid": 235.85101219122575,
+  "spike_cons": 1.0
+ },
+ {
+  "cell": "K562",
+  "task": "7306c626",
+  "window": [
+   100,
+   324
+  ],
+  "span": 225,
+  "mf": 95,
+  "shipped_mf": 101,
+  "group_size": 80,
+  "raw_bank": 18556,
+  "loaded_bank": 18556,
+  "build_s": 54.9,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "100-324",
+   "bank": 18556,
+   "union": 214,
+   "clean": 11,
+   "clean_fraction": 0.04888888888888889,
+   "cas9_pool": 1386,
+   "rows": 250,
+   "elapsed_s": 8.2,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "union": 214,
+  "clean_in_window": 11,
+  "cas9_pool": 1386,
+  "cells": 8,
+  "rows": 250,
+  "band": 11,
+  "band_in_window": 11,
+  "leak": 0,
+  "band_seeds": [
+   103,
+   106,
+   116,
+   189,
+   194,
+   200,
+   201,
+   203,
+   249,
+   275,
+   298
+  ],
+  "weighted": 259.7238808971615,
+  "fidelity": 0.8964075262501956,
+  "wxfid": 232.81844158312498,
+  "spike_cons": 1.0
+ },
+ {
+  "cell": "K562",
+  "task": "7306c626",
+  "window": [
+   100,
+   324
+  ],
+  "span": 225,
+  "mf": 98,
+  "shipped_mf": 101,
+  "group_size": 80,
+  "raw_bank": 54206,
+  "loaded_bank": 54206,
+  "build_s": 59.5,
+  "meta": {
+   "method": "all-hdr",
+   "group_size": 80,
+   "band": "100-324",
+   "bank": 54206,
+   "union": 214,
+   "clean": 11,
+   "clean_fraction": 0.04888888888888889,
+   "cas9_pool": 1363,
+   "rows": 250,
+   "elapsed_s": 8.7,
+   "cells": 8,
+   "cas_mix": {
+    "Cas12a": 80,
+    "Cas9": 170
+   }
+  },
+  "union": 214,
+  "clean_in_window": 11,
+  "cas9_pool": 1363,
+  "cells": 8,
+  "rows": 250,
+  "band": 11,
+  "band_in_window": 11,
+  "leak": 0,
+  "band_seeds": [
+   116,
+   198,
+   201,
+   221,
+   229,
+   232,
+   236,
+   237,
+   248,
+   280,
+   305
+  ],
+  "weighted": 255.3914384091584,
+  "fidelity": 0.907925504184618,
+  "wxfid": 231.87640048206998,
+  "spike_cons": 1.0
+ }
+]
