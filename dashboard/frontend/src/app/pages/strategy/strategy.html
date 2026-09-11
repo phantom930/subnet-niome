@@ -1,0 +1,710 @@
+<header class="page-head">
+  <div>
+    <h1>The mining strategy</h1>
+    <p class="text-muted page-sub">
+      How the <code>develop</code> branch plays the same pipeline: a portfolio of constructions
+      across a fleet of hotkeys, betting on a rare spike rather than a good average.
+    </p>
+  </div>
+</header>
+
+<p-message severity="secondary" icon="pi pi-code" class="block-message">
+  Read from the code on <code>{{ revision.branch }}</code> at <code>{{ revision.commit }}</code> ({{
+    revision.date
+  }}, "{{ revision.subject }}"), not from its notes. The Mining page documents one miner maximising
+  one submission; this page documents what is built on top of that. Measured figures are that
+  branch's own offline results, not guarantees.
+</p-message>
+
+<!-- What the round pays -->
+<p-card class="section">
+  <ng-template #title>The objective is a rank, not a score</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      The score formula is unchanged. What changes the strategy is who gets paid:
+      <code>SCORING_SYSTEM</code> is <code>"top"</code>, so only the first ten miners of a round are
+      paid at all, on a fixed curve. That curve is a step function, which means
+      <strong>a score gain that crosses no rank boundary pays nothing</strong>.
+    </p>
+
+    <figure class="diagram">
+      <div class="diagram-scroll">
+        <svg
+          class="dg"
+          [attr.width]="payoutWidth"
+          [attr.height]="payoutHeight"
+          [attr.viewBox]="'0 0 ' + payoutWidth + ' ' + payoutHeight"
+          role="img"
+          aria-label="Bar chart of the payout curve. Rank 1 takes 30 percent of the round's emission, ranks 2 and 3 take 20 percent each, rank 4 takes 15 percent, and ranks 5 through 10 fall away to 1 percent. Rank 11 and below are paid nothing."
+        >
+          @for (bar of payoutBars; track bar.rank) {
+            <rect
+              class="dg-bar"
+              [class.dg-bar-top]="bar.rank <= 4"
+              [attr.x]="bar.x"
+              [attr.y]="bar.y"
+              [attr.width]="payoutBarWidth"
+              [attr.height]="bar.height"
+              rx="2"
+            />
+            <text class="dg-num" [attr.x]="bar.x + payoutBarWidth / 2" [attr.y]="bar.y - 5">
+              {{ bar.share * 100 | number: '1.0-1' }}
+            </text>
+            <text class="dg-t" [attr.x]="bar.x + payoutBarWidth / 2" [attr.y]="payoutBaseline + 16">
+              {{ bar.rank }}
+            </text>
+          }
+          <line
+            class="dg-arrow"
+            x1="8"
+            [attr.y1]="payoutBaseline"
+            [attr.x2]="payoutWidth - 70"
+            [attr.y2]="payoutBaseline"
+          />
+          <text class="dg-t dg-cliff" [attr.x]="payoutWidth - 62" [attr.y]="payoutBaseline + 16">
+            11+ : nothing
+          </text>
+        </svg>
+      </div>
+      <figcaption>
+        <code>settings.SCORE_DISTRIBUTION</code>, the share of a round's emission each rank is paid.
+        Ranks 1 to 4 together hold {{ topBlockShare | percent: '1.0-0' }} of the curve; ranks 6 to 9
+        hold {{ nextBlockShare | percent: '1.0-0' }}. That gap is why correlated sibling hotkeys are
+        leverage in both directions — they score within noise of each other, so they take
+        consecutive ranks and move as a block.
+      </figcaption>
+    </figure>
+  </ng-template>
+</p-card>
+
+<!-- Why consistency is the lever -->
+<p-card class="section">
+  <ng-template #title>Consistency is quantised, and that is the whole game</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Stage 4 fits a random forest per target under a five-fold split and combines the
+      cross-validated scores. The detail that decides everything is arithmetic rather than
+      biological: <code>r2_score</code> returns exactly 1.0 for a constant column predicted exactly,
+      and <code>normalized_mae</code> returns the raw error unnormalised once the target's standard
+      deviation falls below <code>1e-9</code>.
+    </p>
+
+    <div class="formula">
+      consistency_factor = clamp(0.7 · max(avg_r2, 0) + 0.3 · (1 − avg_nmae))
+    </div>
+
+    <p>
+      So what a seed pays is set by
+      <strong>how many of the three targets the rows hold exactly constant</strong>, not by how
+      learnable they are. Measured per seed:
+    </p>
+
+    <p-table [value]="seedRegimes" [tableStyle]="{ 'min-width': '30rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>On that seed</th>
+          <th>Targets pinned</th>
+          <th class="numeric">Factor</th>
+          <th>Range</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-regime>
+        <tr>
+          <td>{{ regime.label }}</td>
+          <td>{{ regime.pinned }}</td>
+          <td class="numeric figure">{{ regime.factor | number: '1.3-3' }}</td>
+          <td class="text-muted">
+            {{ regime.range }}
+            @if (regime.samples) {
+              <span class="samples">n = {{ regime.samples }}</span>
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p class="note">
+      The two <code>is_cut</code> rows differ only in row composition, which is the finding worth
+      carrying: the same pin is worth more under all-cut's rows because those rows overfit less on
+      the two targets that are still free. And the bottom row is a floor nobody escapes — the
+      population median for 250-row submissions in the three-seed regime is
+      {{ seedRegimes[3].factor | number: '1.3-3' }}, identical to this branch's.
+    </p>
+
+    <h3 class="section-heading">What that makes a round worth</h3>
+    <p class="section-intro">
+      A round's factor is the mean over its {{ seedsPerRound }} seeds, so with a floor near 0.10 and
+      a spike at 1.0 the reachable values are nearly discrete. Derived below at a stated design
+      point of <code>total_weighted_score</code> {{ statedWeighted }} and
+      <code>distribution_fidelity_factor</code> {{ statedFidelity | number: '1.2-2' }}, so the rows
+      differ only in how many seeds hit.
+    </p>
+
+    <p-table [value]="roundRows" [tableStyle]="{ 'min-width': '32rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>Round</th>
+          <th class="numeric">Per-seed floor</th>
+          <th class="numeric">consistency_factor</th>
+          <th class="numeric">final_score</th>
+          <th>Places?</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr [class.places]="row.places">
+          <td>{{ row.label }}</td>
+          <td class="numeric figure">{{ row.floor | number: '1.3-3' }}</td>
+          <td class="numeric figure">{{ row.consistency | number: '1.4-4' }}</td>
+          <td class="numeric figure">{{ row.final | number: '1.1-1' }}</td>
+          <td>
+            @if (row.places) {
+              <p-tag value="clears the median" severity="success" />
+            } @else {
+              <p-tag value="under it" severity="warn" />
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p class="note">
+      Judged against the measured rank-10 cutoff, which is a distribution rather than a bar: min
+      {{ cutoff.min | number: '1.1-1' }}, p10 {{ cutoff.p10 | number: '1.1-1' }}, median
+      <strong>{{ cutoff.median | number: '1.1-1' }}</strong
+      >, p90 {{ cutoff.p90 | number: '1.1-1' }}, max {{ cutoff.max | number: '1.1-1' }} over
+      {{ cutoff.rounds }} rounds. So one spiking seed places on a typical field and none never does.
+      Everything below follows from that one fact:
+      <strong
+        >buying a single spiking seed is worth more than any improvement to the other two
+        factors</strong
+      >.
+    </p>
+    <p class="note">
+      The last row is the same arithmetic with all-cut's own clean-seed value as the floor instead
+      of 0.10, and it is where the field's top block actually lives. A placing round is one spike
+      plus two floor seeds, and the floor seeds' worth depends on what the rows are made of.
+    </p>
+  </ng-template>
+</p-card>
+
+<!-- The ladder -->
+<h2 class="section-heading">The construction ladder</h2>
+<p class="text-muted section-intro">
+  <code>Miner._build</code> tries these in order. Each falls through to the next on a decline, a
+  short pool, a missing GPU or too little budget, so a failure anywhere lands on the build the miner
+  had before that rung existed. Every builder signals a decline the same way — a null row set with a
+  human-readable reason, never an exception and never an empty list — which is what makes the ladder
+  safe to fall down.
+</p>
+
+<p-timeline [value]="ladder" class="rungs">
+  <ng-template #marker let-rung>
+    <span class="marker"><i [class]="rung.icon" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template #content let-rung>
+    <div class="rung">
+      <div class="rung-head">
+        <p-tag [value]="rung.tag" severity="contrast" />
+        <h3>{{ rung.title }}</h3>
+      </div>
+      <code class="mono rung-source">{{ rung.source }}</code>
+      <div class="rung-meta">
+        <span><span class="text-muted">pins</span> {{ rung.pins }}</span>
+        <span><span class="text-muted">gate</span> {{ rung.gate }}</span>
+      </div>
+      <p class="rung-summary">{{ rung.summary }}</p>
+      <ul class="rung-details">
+        @for (detail of rung.details; track detail) {
+          <li>{{ detail }}</li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+</p-timeline>
+
+<!-- The two spike constructions -->
+<p-card class="section">
+  <ng-template #title>Two constructions, one machine</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      All-cut and all-HDR are the same code with one string changed: the rule handed to the guide
+      screen. Everything else — the bank, the min-union group, the conditional fill, the assembly —
+      is shared. So the difference in what they pay is entirely a matter of how many targets the
+      rule pins and over how many seeds it can hold them.
+    </p>
+
+    <p-table [value]="comparison" [tableStyle]="{ 'min-width': '34rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th></th>
+          <th>all-cut</th>
+          <th>all-HDR</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr>
+          <th class="row-label">{{ row.property }}</th>
+          <td>{{ row.allCut }}</td>
+          <td>{{ row.allHdr }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p class="note">
+      Read the trade off the two middle rows. All-HDR pins three targets and takes a hit seed to
+      exactly 1.0, but only over about 1.8 percent of the seed space. All-cut pins one target, worth
+      0.20 to 0.23, over 13 to 29 percent of it. All-HDR loses on the mean by roughly 24 points a
+      round and ships anyway, because the payout curve pays placement rather than average.
+    </p>
+  </ng-template>
+</p-card>
+
+<!-- The shared machinery -->
+<h2 class="section-heading">How a construction is built</h2>
+<p class="text-muted section-intro">
+  The two-stage shape is the part worth understanding: min-union one half of the rows so their
+  failures coincide, then require the other half to be strict over only what survived.
+</p>
+
+<p-timeline [value]="buildPhases" class="rungs">
+  <ng-template #marker let-phase>
+    <span class="marker build"><i [class]="phase.icon" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template #content let-phase>
+    <div class="rung">
+      <div class="rung-head">
+        <p-tag [value]="phase.tag" severity="secondary" />
+        <h3>{{ phase.title }}</h3>
+      </div>
+      <code class="mono rung-source">{{ phase.source }}</code>
+      <p class="rung-summary">{{ phase.summary }}</p>
+      <ul class="rung-details">
+        @for (detail of phase.details; track detail) {
+          <li>{{ detail }}</li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+</p-timeline>
+
+<!-- The fleet -->
+<p-card class="section">
+  <ng-template #title>The fleet, and the only lever with headroom</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      One process per hotkey, one hotkey per seed window. A construction spikes only when a round
+      seed lands in its clean band, so a single hotkey spikes on
+      <code
+        >1 − (1 − band/{{ seedSpace }})<sup>{{ seedsPerRound }}</sup></code
+      >
+      of rounds:
+      @for (row of singleHotkey; track row.band) {
+        <span class="inline-fact">{{ row.probability | percent: '1.1-1' }} at {{ row.label }}</span>
+      }
+      A coldkey's payout is that expression over the <strong>union</strong> of its hotkeys' bands,
+      which is the whole reason the fleet exists.
+    </p>
+
+    <figure class="diagram">
+      <div class="diagram-scroll">
+        <svg
+          class="dg"
+          [attr.width]="coverageWidth"
+          [attr.height]="coverageHeight"
+          [attr.viewBox]="'0 0 ' + coverageWidth + ' ' + coverageHeight"
+          role="img"
+          aria-label="Two rising curves of spike probability against hotkey count, one for a 13-seed band and one for a 7-seed band. Both rise steeply and roughly linearly across one to fourteen hotkeys, with no flattening, which is why hotkey count is the lever with headroom."
+        >
+          @for (line of coverageGrid; track line.value) {
+            <line
+              class="dg-grid"
+              [attr.x1]="coverageLeft"
+              [attr.y1]="line.y"
+              [attr.x2]="coverageRight"
+              [attr.y2]="line.y"
+            />
+            <text class="dg-t dg-axis" [attr.x]="coverageLeft - 8" [attr.y]="line.y + 4">
+              {{ line.value * 100 | number: '1.0-0' }}%
+            </text>
+          }
+          @for (tick of coverageTicks; track tick.hotkeys) {
+            <text class="dg-t dg-axis" [attr.x]="tick.x" [attr.y]="coverageBottom + 18">
+              {{ tick.hotkeys }}
+            </text>
+          }
+          <text
+            class="dg-t dg-axis"
+            [attr.x]="(coverageLeft + coverageRight) / 2"
+            [attr.y]="coverageHeight - 4"
+          >
+            hotkeys on disjoint windows
+          </text>
+
+          @for (curve of coverageCurves; track curve.band) {
+            <path
+              class="dg-curve"
+              [class.dg-curve-alt]="curve.band < 10"
+              [attr.d]="curve.path"
+              fill="none"
+            />
+            @for (point of curve.points; track point.hotkeys) {
+              @if (point.hotkeys === fleetHotkeys || point.hotkeys === leaderHotkeys) {
+                <circle
+                  class="dg-dot"
+                  [class.dg-curve-alt]="curve.band < 10"
+                  [attr.cx]="point.x"
+                  [attr.cy]="point.y"
+                  r="3.5"
+                />
+              }
+            }
+            <text
+              class="dg-t dg-label"
+              [class.dg-curve-alt]="curve.band < 10"
+              [attr.x]="curve.points[curve.points.length - 1].x - 4"
+              [attr.y]="curve.points[curve.points.length - 1].y - 8"
+            >
+              {{ curve.label }}
+            </text>
+          }
+        </svg>
+      </div>
+      <figcaption>
+        Marked at {{ fleetHotkeys }} hotkeys, the fleet's own band count, and at
+        {{ leaderHotkeys }}, the top of the range the leading coldkeys run. Coverage is linear in
+        hotkey count and every other lever on the branch is measured as capped, which is why hotkey
+        count is the one with headroom left. Treat the curves as upper bounds: they assume the bands
+        are disjoint, and a band leaks outside the window it was searched in.
+      </figcaption>
+    </figure>
+
+    <p-table [value]="fleetCoverage" [tableStyle]="{ 'min-width': '28rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>Band</th>
+          <th class="numeric">At {{ fleetHotkeys }} hotkeys</th>
+          <th class="numeric">At {{ leaderHotkeys }} hotkeys</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr>
+          <td>{{ row.label }}</td>
+          <td class="numeric figure">{{ row.atFleet | percent: '1.1-1' }}</td>
+          <td class="numeric figure">{{ row.atLeaders | percent: '1.1-1' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <h3 class="section-heading">Where a hotkey's window comes from</h3>
+    <p class="section-intro">
+      The launcher pins each hotkey a window through <code>NIOME_HDR_WINDOW</code>, and namespaces
+      its files under <code>data/inst/&lt;name&gt;/</code> through <code>NIOME_INSTANCE</code> so
+      siblings do not overwrite each other's diagnostics. An hourly job then writes a plan the miner
+      reads <em>per build</em>, falling back to that pin when the plan is missing, stale or
+      malformed. Four layouts are checked in order and the first non-empty one wins.
+    </p>
+
+    <p-table [value]="windowLayouts" [tableStyle]="{ 'min-width': '34rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>Mode</th>
+          <th>Condition</th>
+          <th>Layout</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-layout>
+        <tr [class.places]="layout.active">
+          <td>
+            {{ layout.mode }}
+            @if (layout.active) {
+              <p-tag value="ships" severity="success" />
+            }
+          </td>
+          <td>
+            <code class="mono">{{ layout.condition }}</code>
+          </td>
+          <td>{{ layout.layout }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <h3 class="section-heading">Three facts a window layout hides</h3>
+    <p-accordion class="facts">
+      @for (fact of bandFacts; track fact.claim) {
+        <p-accordion-panel [value]="fact.claim">
+          <p-accordion-header>{{ fact.claim }}</p-accordion-header>
+          <p-accordion-content>
+            <p class="fact-body">{{ fact.evidence }}</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  </ng-template>
+</p-card>
+
+<!-- Prediction -->
+<p-card class="section">
+  <ng-template #title>The seed-window prediction, and why it is free to be wrong</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Since a spike needs a round seed inside a narrow band, predicting which part of the seed space
+      a round will draw from would be worth money. The branch has two attempts at it, and
+      <strong>both measure at chance</strong>.
+    </p>
+    <p>
+      The newest is a {{ seedModel.parameters | number }}-parameter transformer, one finetuned
+      checkpoint per cell type, and its output is <strong>live and load-bearing</strong>: the three
+      classes it names become the joined space the fleet tiles. Measured over
+      {{ seedModel.testRounds }} walk-forward rounds, against its own committed evaluation:
+    </p>
+
+    <p-table [value]="seedModelRows" [tableStyle]="{ 'min-width': '26rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>Strategy</th>
+          <th class="numeric">Classes hit of 3</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr>
+          <td>{{ row.label }}</td>
+          <td class="numeric figure">{{ row.hits | number: '1.4-4' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p class="note">
+      The model beats neither, at p = {{ seedModel.pValue | number: '1.3-3' }} against the best
+      reference, and its log loss of {{ seedModel.logLoss | number: '1.4-4' }} is
+      <em>worse</em> than simply naming a uniform distribution, at
+      {{ seedModel.uniformLogLoss | number: '1.4-4' }}. It learned to emit the uniform distribution,
+      which is the correct answer to an unpredictable target.
+    </p>
+    <p class="note">
+      Two traps in reading those numbers, both of which the branch's own prose falls into. The
+      figures it quotes elsewhere come from an earlier run that appears in no committed artifact.
+      And the chance baseline it compares against is mis-specified as 1.000: a round can draw the
+      same class twice while the scorer caps a class at one hit, which happened on
+      {{ seedModel.duplicateRounds }} of the {{ seedModel.testRounds }} test rounds, so true chance
+      is {{ seedModel.chanceHits | number: '1.4-4' }}. That puts the model nominally
+      <em>above</em> chance rather than below it. The verdict of no edge survives either way.
+    </p>
+    <p>
+      The older maximum-likelihood window model reaches the same null from the other direction: it
+      fits a single balancing parameter, and that parameter comes out at exactly 0.00 for two of the
+      four cell types, which means every window ties and its "rank 1" is a stable-sort tie-break to
+      the lowest index rather than a prediction. Check that parameter before reading any rank as a
+      forecast.
+    </p>
+    <p>
+      Running them anyway costs nothing, and that is a measured statement rather than an optimistic
+      one: <strong>band position is free</strong>. Seeds are independent uniform draws, verified
+      across all nine windows on HEK293, so concentrating hotkeys on a predicted window is exactly
+      expected-value-neutral under a uniform generator. Three arbitrary classes are worth precisely
+      as much as three others, and the prediction file accrues a scored record either way — so if
+      the generator ever stops being uniform, the walk-forward number moves off chance first.
+    </p>
+    <p class="note">
+      What would actually pay is a different problem, and nothing has measured it. The construction
+      needs the seeds to within about 3 of {{ seedSpace }}; these models predict 100-seed windows.
+      An oracle build pinned to two of a round's three seeds took rank 1 of 245, so the prize is
+      real — but a blind band inside a correctly predicted window is worth roughly one chance in
+      2850.
+    </p>
+  </ng-template>
+</p-card>
+
+<!-- Operational envelope -->
+<p-card class="section">
+  <ng-template #title>The timing envelope</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Every construction here is far too slow to build inside the presigned URL's
+      {{ envelope.ttlSeconds }}-second life, so the build was moved off that path entirely. A
+      round's task is published on a public, unsigned endpoint the moment the round opens, carrying
+      the same contract the validator will hand over later — the only difference is the seed, which
+      is 0 on both sides until the round closes. So the miner polls for the newest unstamped task,
+      builds it on sight, and the deadline then only has to cover the upload.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat">
+        <span class="stat-value">{{ envelope.lead.median }}s</span>
+        <span class="stat-label text-muted">median lead time</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ envelope.prepareBudget }}s</span>
+        <span class="stat-label text-muted">prefetch build budget</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">~{{ inTtlBudget }}s</span>
+        <span class="stat-label text-muted">in-TTL build budget</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ envelope.lead.observedFloor }}s</span>
+        <span class="stat-label text-muted">shortest lead observed</span>
+      </div>
+    </div>
+
+    <p class="note">
+      The lead time is {{ envelope.lead.p10 }}s at the tenth percentile and {{ envelope.lead.max }}s
+      at the longest, over {{ envelope.lead.rounds }} rounds. But the floor is not safe: two hotkeys
+      were called {{ envelope.lead.observedFloor }}s after task creation on one round and shipped
+      emergency builds. A prepared build is matched to an incoming task by a hash of the contract as
+      well as the task id, so a contract edited under the same id rebuilds rather than shipping rows
+      designed against the old rules.
+    </p>
+
+    <p-table [value]="budgetGates" [tableStyle]="{ 'min-width': '32rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>Rung</th>
+          <th class="numeric">Needs</th>
+          <th>In the TTL?</th>
+          <th>Why that number</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-gate>
+        <tr>
+          <td>{{ gate.rung }}</td>
+          <td class="numeric figure">{{ gate.seconds }}</td>
+          <td>
+            @if (gate.reachableInTtl) {
+              <p-tag value="yes" severity="success" />
+            } @else {
+              <p-tag value="prefetch only" severity="warn" />
+            }
+          </td>
+          <td class="text-muted">{{ gate.note }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <h3 class="section-heading">What binds, and what it forces</h3>
+    <p class="section-intro">
+      Memory rather than the GPU. One seed-depend build holds enough that four concurrent builds
+      would exhaust the box, which is why that build is shared: one process takes an exclusive lock,
+      builds once, writes the rows outside the per-hotkey namespace, and the siblings load them. A
+      follower that runs out of budget waiting must fall through the ladder rather than build its
+      own copy — the whole point is that four concurrent builds do not fit.
+    </p>
+
+    <h3 class="section-heading">Sharp edges in the wiring</h3>
+    <p class="section-intro">Found by reading the code, and not recorded in the branch's notes.</p>
+    <p-accordion class="facts">
+      @for (edge of sharpEdges; track edge.title) {
+        <p-accordion-panel [value]="edge.title">
+          <p-accordion-header>{{ edge.title }}</p-accordion-header>
+          <p-accordion-content>
+            <p class="fact-body">{{ edge.detail }}</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  </ng-template>
+</p-card>
+
+<!-- Falsified -->
+<p-card class="section">
+  <ng-template #title>Tested and dropped</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Recorded so they are not re-run. Each of these looked like the obvious next move and each was
+      measured down.
+    </p>
+    <p-accordion class="facts">
+      @for (item of falsified; track item.hypothesis) {
+        <p-accordion-panel [value]="item.hypothesis">
+          <p-accordion-header>{{ item.hypothesis }}</p-accordion-header>
+          <p-accordion-content>
+            <p class="fact-body">{{ item.result }}</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  </ng-template>
+</p-card>
+
+<!-- Settled and open -->
+<p-card class="section">
+  <ng-template #title>What is settled, and what is open</ng-template>
+  <ng-template #content>
+    <div class="two-col">
+      <div>
+        <h3 class="col-heading">Settled, and not worth re-measuring</h3>
+        @for (item of settled; track item.claim) {
+          <div class="status-item">
+            <p class="status-claim">{{ item.claim }}</p>
+            <p class="status-evidence text-muted">{{ item.evidence }}</p>
+          </div>
+        }
+      </div>
+      <div>
+        <h3 class="col-heading">Open</h3>
+        @for (item of open; track item.claim) {
+          <div class="status-item">
+            <p class="status-claim">{{ item.claim }}</p>
+            <p class="status-evidence text-muted">{{ item.evidence }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </ng-template>
+</p-card>
+
+<!-- Where the code lives -->
+<p-card class="section">
+  <ng-template #title>Where the code lives</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Two things to know before reading around in the branch. Its repo root holds 83 top-level
+      Python scripts and 169 JSON result files, none of which either neuron imports — they are the
+      research record, and the measurements quoted on this page come from them. And the generator
+      imports the validator's own stage functions rather than reimplementing the scoring maths,
+      which means
+      <strong>editing a validation stage silently changes miner behaviour</strong>.
+    </p>
+    <p-table [value]="files" [tableStyle]="{ 'min-width': '30rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>File</th>
+          <th>What it holds</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-file>
+        <tr>
+          <td>
+            <code class="mono">{{ file.path }}</code>
+          </td>
+          <td>{{ file.role }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Drift -->
+<p-card class="section">
+  <ng-template #title>Where the branch's notes and its code disagree</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      That branch keeps a long engineering notebook in <code>CLAUDE.md</code>, written
+      newest-claim-wins. It is the authority on what was measured, but it is not a description of
+      the current configuration. These four are worth knowing before reading it as one.
+    </p>
+    <p-table [value]="drift" [tableStyle]="{ 'min-width': '34rem' }" class="data">
+      <ng-template #header>
+        <tr>
+          <th>The notes say</th>
+          <th>The code does</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-row>
+        <tr>
+          <td class="text-muted">{{ row.notes }}</td>
+          <td>{{ row.code }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+</p-card>

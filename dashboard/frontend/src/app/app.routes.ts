@@ -12,5 +12,10 @@ export const routes: Routes = [
     title: 'Mining process',
     loadComponent: () => import('./pages/mining/mining').then((m) => m.Mining),
   },
+  {
+    path: 'strategy',
+    title: 'Mining strategy',
+    loadComponent: () => import('./pages/strategy/strategy').then((m) => m.Strategy),
+  },
   { path: '**', redirectTo: 'tasks' },
 ];

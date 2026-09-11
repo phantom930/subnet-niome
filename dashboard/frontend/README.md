@@ -70,6 +70,8 @@ src/
     pages/tasks/task-json-dialog.* Per-row raw JSON viewer
     pages/mining/mining.*          The mining process, step by step
     pages/mining/mining.data.ts    Its content, with a source file per step
+    pages/strategy/strategy.*      The mining strategy on the develop branch
+    pages/strategy/strategy.data.ts  Its content, sourced from that branch's code
     theme/app-preset.ts            PrimeNG theme preset (Aura + emerald)
   styles.scss                      Global styles, CSS layer order, PrimeIcons
 ```
@@ -217,6 +219,28 @@ place to edit, and every step names the file it was drawn from. The sources are
 validation stages themselves. Numeric results quoted from those docs are
 offline measurements, and the page says so rather than presenting them as
 guarantees.
+
+## The Strategy page
+
+Where the Mining page covers one miner maximising one submission, this one
+covers what the `develop` branch builds on top of that: a portfolio of
+constructions run across a fleet of hotkeys, betting on a rare consistency
+spike rather than on a good average. It explains why that is rational, given
+that only the top ten of a round are paid and the per-seed consistency value is
+effectively quantised.
+
+Its content is in `strategy.data.ts` and was read from the code on
+`origin/develop` at `527588a` rather than from that branch's notes, because the
+notes lag the code in four places the page lists. The page pins the commit it
+describes in its own header, so a reader can tell when it has aged.
+
+Three of its numbers are derived in the component rather than quoted, on the
+same principle as the Mining page's figures: the payout curve comes from
+`SCORE_DISTRIBUTION`, the round-score ladder is computed from the measured
+per-seed floor, and the fleet coverage curves are `1 - (1 - band·hotkeys/900)³`
+evaluated across hotkey counts. The spec checks each against its formula, so a
+content edit that breaks the arithmetic fails the suite rather than shipping a
+wrong number.
 
 ## The three figures
 
