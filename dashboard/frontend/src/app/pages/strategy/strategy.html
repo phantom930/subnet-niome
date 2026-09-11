@@ -13,7 +13,8 @@
     revision.date
   }}, "{{ revision.subject }}"), not from its notes. The Mining page documents one miner maximising
   one submission; this page documents what is built on top of that. Measured figures are that
-  branch's own offline results, not guarantees.
+  branch's own offline results, not guarantees. Every term used here is defined in the
+  <a href="#glossary">glossary</a> at the foot of the page.
 </p-message>
 
 <!-- What the round pays -->
@@ -706,5 +707,53 @@
         </tr>
       </ng-template>
     </p-table>
+  </ng-template>
+</p-card>
+
+<!-- Glossary -->
+<p-card class="section" id="glossary">
+  <ng-template #title>Glossary</ng-template>
+  <ng-template #content>
+    <p class="lede">
+      Every term this page uses, in plain words, grouped by where it belongs. The search matches the
+      definitions too, so a phrase read somewhere above will find the entry that explains it.
+    </p>
+
+    <div class="glossary-search">
+      <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <input
+          pInputText
+          type="search"
+          placeholder="Search a term or a phrase"
+          [value]="glossaryQuery()"
+          (input)="setGlossaryQuery($any($event.target).value)"
+          aria-label="Search the glossary"
+        />
+      </p-iconfield>
+      <span class="text-muted glossary-count">
+        {{ glossaryMatches() }} of {{ glossaryTotal }} terms
+      </span>
+    </div>
+
+    @for (group of glossaryGroups(); track group.title) {
+      <h3 class="section-heading">{{ group.title }}</h3>
+      <p class="text-muted section-intro">{{ group.blurb }}</p>
+      <dl class="glossary">
+        @for (entry of group.terms; track entry.term) {
+          <div class="glossary-entry">
+            <dt>
+              {{ entry.term }}
+              @if (entry.aka) {
+                <span class="glossary-aka text-muted">also {{ entry.aka }}</span>
+              }
+            </dt>
+            <dd>{{ entry.definition }}</dd>
+          </div>
+        }
+      </dl>
+    } @empty {
+      <p class="note">Nothing matches that. Try a single word, or a term as the page spells it.</p>
+    }
   </ng-template>
 </p-card>

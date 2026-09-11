@@ -14,13 +14,17 @@ import { BenchmarkJob, BenchmarkResult, TaskRow } from '../../core/task.models';
 type Tone = 'count' | 'weighted' | 'consistency' | 'fidelity';
 
 /**
- * The validator's fields, ordered as the harness prints them: each raw stage
- * output, then the factor clamped to [0, 1] beside it.
+ * The validator's fields, ordered as the harness prints them.
  *
- * `tone` groups a raw output with its factor and with the matching term in the
- * formula, so the three colours are enough to read the product off the table.
- * `inProduct` marks the three fields that are actually multiplied — the two
- * raw scores are not.
+ * Only the three that are multiplied into the final score, plus the experiment
+ * count they were scored over. The raw stage outputs behind the two factors,
+ * consistency_score and distribution_fidelity_score, are left to the full
+ * report: the factors are those clamped to [0, 1], and it is the clamped ones
+ * the product is made of.
+ *
+ * `tone` ties a factor to the matching term in the formula above the table, so
+ * the colours are enough to read the product off it. `inProduct` marks the
+ * three that are multiplied — the count is not.
  */
 const VALIDATOR_FIELDS: ReadonlyArray<{
   key: keyof BenchmarkResult['validator'];
@@ -44,25 +48,11 @@ const VALIDATOR_FIELDS: ReadonlyArray<{
     inProduct: true,
   },
   {
-    key: 'consistency_score',
-    label: 'Consistency score',
-    digits: 4,
-    tone: 'consistency',
-    inProduct: false,
-  },
-  {
     key: 'consistency_factor',
     label: 'Consistency factor',
     digits: 4,
     tone: 'consistency',
     inProduct: true,
-  },
-  {
-    key: 'distribution_fidelity_score',
-    label: 'Fidelity score',
-    digits: 4,
-    tone: 'fidelity',
-    inProduct: false,
   },
   {
     key: 'distribution_fidelity_factor',

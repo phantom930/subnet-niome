@@ -261,6 +261,57 @@
   font-size: 0.8125rem;
 }
 
+/* ---- Glossary ----
+   Two columns of definitions where the viewport allows it, one below that. The
+   entries are short, so a single long column would be mostly whitespace. */
+.glossary-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.glossary-search input {
+  width: 20rem;
+  max-width: 100%;
+}
+
+.glossary-count {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  column-gap: 2.5rem;
+  margin: 0;
+}
+
+.glossary-entry {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--p-content-border-color);
+}
+
+.glossary-entry dt {
+  font-weight: 600;
+}
+
+.glossary-entry dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--p-text-muted-color);
+}
+
+/* The alternative spellings, which are searched but are not the headword. */
+.glossary-aka {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
 /* ---- Figures ---- */
 figure.diagram {
   margin: 1.25rem 0 0;

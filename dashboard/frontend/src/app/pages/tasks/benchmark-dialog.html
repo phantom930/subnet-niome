@@ -64,9 +64,9 @@
       </p>
     }
 
-    <!-- A hue per pair: each raw stage output shares it with the factor beside
-         it. The three rows that are multiplied into the final score wear it,
-         and the rest stay muted. -->
+    <!-- A hue per factor, shared with its term in the formula above. The three
+         rows that are multiplied into the final score wear it; the experiment
+         count stays muted. -->
     <table class="metrics">
       <tbody>
         @for (metric of validatorRows(); track metric.label) {

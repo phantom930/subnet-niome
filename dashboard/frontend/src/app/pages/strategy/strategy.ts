@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -17,6 +20,7 @@ import {
   ENVELOPE,
   FALSIFIED,
   FILES,
+  GLOSSARY,
   LADDER,
   OPEN,
   SCORE_DISTRIBUTION,
@@ -117,6 +121,9 @@ const COVERAGE_Y_MAX = 0.6;
     PercentPipe,
     AccordionModule,
     CardModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
     MessageModule,
     TableModule,
     TagModule,
@@ -143,6 +150,43 @@ export class Strategy {
   protected readonly settled = SETTLED;
   protected readonly open = OPEN;
   protected readonly files = FILES;
+
+  /** ---- Glossary ---- */
+
+  protected readonly glossaryQuery = signal('');
+
+  protected readonly glossaryTotal = GLOSSARY.reduce(
+    (total, group) => total + group.terms.length,
+    0,
+  );
+
+  /**
+   * The glossary, filtered by the search box.
+   *
+   * The definition is searched as well as the term, because a reader arriving
+   * from the page usually has the wording rather than the name: "0.03x" or
+   * "geometric mean" should find stage-5 cells. A group that matches nothing
+   * drops out entirely rather than showing an empty heading.
+   */
+  protected readonly glossaryGroups = computed(() => {
+    const term = this.glossaryQuery().trim().toLowerCase();
+    if (!term) return GLOSSARY;
+
+    return GLOSSARY.map((group) => ({
+      ...group,
+      terms: group.terms.filter((entry) =>
+        `${entry.term} ${entry.aka ?? ''} ${entry.definition}`.toLowerCase().includes(term),
+      ),
+    })).filter((group) => group.terms.length > 0);
+  });
+
+  protected readonly glossaryMatches = computed(() =>
+    this.glossaryGroups().reduce((total, group) => total + group.terms.length, 0),
+  );
+
+  protected setGlossaryQuery(value: string): void {
+    this.glossaryQuery.set(value);
+  }
 
   /**
    * The prediction against the two things it has to beat, ordered so the model

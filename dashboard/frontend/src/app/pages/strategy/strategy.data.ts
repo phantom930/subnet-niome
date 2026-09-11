@@ -754,3 +754,511 @@ export const DRIFT: Drift[] = [
     code: 'Those figures come from the package README and appear in no committed artifact. Its own report.json says 0.976 hits against the best reference’s 0.988, p = 0.579, over 82 rounds. The "chance = 1.000" both places compare against is also mis-specified, because a round can draw one class twice while the scorer caps a class at one hit — computed against each round’s own draw it is 0.902, which puts the model nominally above chance rather than below. The verdict of no edge survives; the sign in the prose does not.',
   },
 ];
+
+/** One entry of the glossary. */
+export interface GlossaryTerm {
+  term: string;
+  /** Other spellings the page uses for the same thing, searched alongside the term. */
+  aka?: string;
+  definition: string;
+}
+
+export interface GlossaryGroup {
+  title: string;
+  blurb: string;
+  terms: GlossaryTerm[];
+}
+
+/**
+ * Every term this page uses, defined for a reader who knows neither the subnet
+ * nor the biology.
+ *
+ * Definitions carry as few measured numbers as possible on purpose. The figures
+ * live in the constants above and in the prose that cites them; repeating one
+ * here would be a second place to update and a second place to be wrong. A
+ * number appears only where it is part of the definition — three seeds, 900
+ * values, 250 rows, ten paid ranks, a 300-second link.
+ */
+export const GLOSSARY: GlossaryGroup[] = [
+  {
+    title: 'The round, and who gets paid',
+    blurb: 'The shape of the game, before any of the strategy.',
+    terms: [
+      {
+        term: 'subnet',
+        definition:
+          'One market inside Bittensor. Miners do a job, validators score the results, and the network pays out on those scores. This subnet asks for CRISPR gene-editing experiment designs.',
+      },
+      {
+        term: 'miner',
+        definition:
+          'One registered identity that uploads a file each round. Here one miner is one hotkey running one process.',
+      },
+      {
+        term: 'validator',
+        definition:
+          'The scoring side. It collects each miner’s file, replays a fixed five-stage pipeline over it, and reports one number per miner.',
+      },
+      {
+        term: 'round',
+        definition:
+          'One cycle: a task is published, miners upload their designs, the validator scores them, the top ten are paid.',
+      },
+      {
+        term: 'task',
+        aka: 'contract',
+        definition:
+          'The job sheet for a round — which cell type, which mutations to target, what each mutation is worth, and the rules everyone builds under. Every miner in the round is handed the same one.',
+      },
+      {
+        term: 'round seed',
+        definition:
+          'The three numbers, each between 100 and 999, that the validator feeds to its simulation. They are stamped onto the task only after the round has closed, so no miner can design against them. Everything on this page follows from that one fact.',
+      },
+      {
+        term: 'seed space',
+        definition:
+          'The 900 values a seed can take, 100 through 999. A round draws three of them independently and uniformly.',
+      },
+      {
+        term: 'stamped',
+        aka: 'unstamped',
+        definition:
+          'A task carries seed 0 while its round is open — unstamped — and its real seeds afterwards. A round the backend never stamps is scored at seed 0, which is the one case where the miner knew the seed all along.',
+      },
+      {
+        term: 'submission',
+        definition: 'The file a miner uploads: up to 250 rows, one proposed experiment per row.',
+      },
+      {
+        term: 'rank',
+        aka: 'placement, places',
+        definition:
+          'Where a miner’s final score falls among everyone who submitted that round. Only the first ten are paid anything at all.',
+      },
+      {
+        term: 'payout curve',
+        aka: 'SCORE_DISTRIBUTION, SCORING_SYSTEM top',
+        definition:
+          'The fixed split of a round’s pay by rank: a large share for first, falling away to a token share for tenth, and nothing from eleventh down. Because it is a step rather than a slope, a score gain that crosses no rank boundary pays exactly nothing.',
+      },
+      {
+        term: 'emission',
+        definition: 'The tokens a round pays out, divided among the top ten by the payout curve.',
+      },
+      {
+        term: 'rank-10 cutoff',
+        aka: 'the cutoff',
+        definition:
+          'The tenth-placed score in a round, and so the bar to clear to be paid. It is not a constant — it moves with how strong that round’s field happened to be, which is why the page quotes it as a distribution.',
+      },
+      {
+        term: 'three-seed regime',
+        aka: 'the two scoring eras',
+        definition:
+          'Rounds since 2026-08-24, which draw three seeds. Before that a round drew one, it was knowable, and almost the whole field scored a perfect consistency — so scores from the two periods cannot be compared or pooled.',
+      },
+    ],
+  },
+  {
+    title: 'How a submission is scored',
+    blurb: 'The five stages, and the three factors that multiply into the ranked number.',
+    terms: [
+      {
+        term: 'the five stages',
+        definition:
+          'The validator’s pipeline. In short: stage 2 scores each row’s design quality, stage 3 simulates the experiment at each seed, stage 4 checks the simulated outcomes are learnable, stage 5 checks the rows cover the design space.',
+      },
+      {
+        term: 'total_weighted_score',
+        aka: 'weighted',
+        definition:
+          'Stage 2’s sum over the rows: design quality, weighted by how much the contract values each mutation. The first of the three factors multiplied into the final score.',
+      },
+      {
+        term: 'stage 4',
+        definition:
+          'Trains a small random forest to predict three outcome columns — is_cut, is_hdr, indel_length — from each row’s design fields under a five-fold split, then scores those predictions. This is where consistency_factor comes from.',
+      },
+      {
+        term: 'R²',
+        aka: 'r2_score, avg_r2',
+        definition:
+          'How much of a column’s variation a prediction explains: 1.0 is perfect, 0 is no better than always guessing the average, and below 0 is worse than that. The quirk the whole strategy turns on: a column that never changes, predicted exactly, returns exactly 1.0.',
+      },
+      {
+        term: 'normalized MAE',
+        aka: 'avg_nmae, normalized_mae',
+        definition:
+          'The average prediction error divided by how spread out the column is. When that spread is essentially zero the code returns the raw error instead of dividing — the second half of the same quirk.',
+      },
+      {
+        term: 'consistency_factor',
+        aka: 'consistency',
+        definition:
+          'Stage 4’s two scores combined and clamped into 0 to 1, then averaged over the round’s three seeds. In practice it measures how many of the three outcome columns every row holds identical, not how learnable they are — which is why it can be engineered rather than earned.',
+      },
+      {
+        term: 'distribution_fidelity_factor',
+        aka: 'fidelity',
+        definition:
+          'How closely the spread of the submission’s simulated outcomes matches what the validator expects to see. Measured as not the binding constraint: builds with better fidelity than the leaders still lost on consistency.',
+      },
+      {
+        term: 'final_score',
+        definition:
+          'total_weighted_score × consistency_factor × distribution_fidelity_factor. The one number miners are ranked on.',
+      },
+      {
+        term: 'the floor',
+        aka: 'off-band floor, floor seed',
+        definition:
+          'The consistency a full 250-row submission scores on a seed where it has pinned nothing — near 0.10 for everything anyone has tried, this fleet and the wider field alike. So the difference between miners is how many seeds are not floor seeds, not how high their floor is.',
+      },
+      {
+        term: 'overfitting',
+        definition:
+          'A model memorising noise instead of finding a pattern, which shows up as a negative R². Stage 4 floors R² at 0, so overfitting quietly costs the score rather than showing up as an error.',
+      },
+      {
+        term: 'stage-5 cells',
+        aka: 'cells, empty cells',
+        definition:
+          'The buckets stage 5 wants covered — each combination of mutation, enzyme and strand. Leaving one empty is close to fatal: stage 5 takes a geometric mean, so one empty bucket crushes the whole score.',
+      },
+      {
+        term: 'off-target factor',
+        definition:
+          'The penalty a guide carries for also matching somewhere else in the genome. Already perfect on this branch, so it is not where the remaining gap to the leaders is.',
+      },
+    ],
+  },
+  {
+    title: 'What a row is made of',
+    blurb: 'The biology, only as far as the scoring actually uses it.',
+    terms: [
+      {
+        term: 'row',
+        aka: 'experiment',
+        definition:
+          'One proposed edit: which enzyme, which guide sequence, where it lands, which mutation it targets. 250 rows make a submission.',
+      },
+      {
+        term: 'guide',
+        definition:
+          'The short RNA sequence that steers the cutting enzyme to one specific place in the DNA. Choosing guides is the entire design job.',
+      },
+      {
+        term: 'site',
+        definition:
+          'A place in the DNA where an enzyme can land. Each site yields many candidate guides.',
+      },
+      {
+        term: 'variant',
+        definition:
+          'One candidate guide generated at a site. The builders enumerate thousands per site and screen every one of them against every seed.',
+      },
+      {
+        term: 'Cas9 / Cas12a',
+        aka: 'cas systems, cas mix',
+        definition:
+          'The two cutting enzymes the rules allow. They behave differently in the simulation: Cas9 can be pushed to cut on almost every seed, Cas12a cannot. The constructions exploit that by treating the two halves of the submission differently.',
+      },
+      {
+        term: 'strand',
+        definition:
+          'Which of DNA’s two complementary strands a guide binds to. Part of the coverage buckets stage 5 checks.',
+      },
+      {
+        term: 'distance',
+        aka: 'max_distance',
+        definition:
+          'How far a guide’s cut sits from the mutation it is meant to repair. The rules cap it, and the builders scan nearest-first.',
+      },
+      {
+        term: 'GC content',
+        aka: 'GC band',
+        definition:
+          'The share of G and C letters in a guide, which affects how tightly it binds. The builders accept only guides inside a chosen band.',
+      },
+      {
+        term: 'cut',
+        aka: 'is_cut',
+        definition:
+          'Whether the simulation says the enzyme actually cut, for one row at one seed. The first of stage 4’s three target columns, and the only one a design can hold constant across many seeds.',
+      },
+      {
+        term: 'HDR',
+        aka: 'is_hdr, homology-directed repair',
+        definition:
+          'One of the ways a cell repairs a cut — copying from a template, rather than gluing the ends back together. The simulator picks a repair mode per row per seed at roughly a coin flip and no design choice moves it, which is why pinning HDR needs the right seed rather than the right guide.',
+      },
+      {
+        term: 'MH-NHEJ',
+        aka: 'not_mhnhej, microhomology end joining',
+        definition:
+          'Another repair mode. It appears here only as a weaker screening rule that was tried, gave a much wider band, and still paid nothing.',
+      },
+      {
+        term: 'indel_length',
+        definition:
+          'How many DNA letters the repair inserted or deleted. The third of stage 4’s target columns.',
+      },
+      {
+        term: 'cell type',
+        definition:
+          'Which cell line the round is for: HEK293, K562, HUDEP-2 or CD34+_HSPC. It is fixed by the task, and it changes which construction can work.',
+      },
+      {
+        term: 'erythroid',
+        definition:
+          'Shorthand on this page for the three blood-lineage cell types, as against HEK293 — which has much tighter chromatin and so behaves differently at almost every step.',
+      },
+      {
+        term: 'accessibility',
+        definition:
+          'How open the DNA is in that cell type, on a 0 to 1 scale. It scales the chance of a cut, so it sets how much of the score is reachable at all before any design choice is made.',
+      },
+      {
+        term: 'mutation weight',
+        definition:
+          'How much the contract values each mutation in the round. Rows are apportioned across mutations in proportion to it.',
+      },
+    ],
+  },
+  {
+    title: 'Pinning, bands and constructions',
+    blurb: 'The vocabulary of the strategy itself. Most of the page is written in these words.',
+    terms: [
+      {
+        term: 'pin',
+        definition:
+          'To make one of stage 4’s target columns identical in every row, at a given seed. A pinned column scores exactly 1.0 — that is the whole mechanism this page is built on.',
+      },
+      {
+        term: 'spike',
+        definition:
+          'A round where a pin holds on at least one of the three seeds, so consistency jumps from the floor to something that can place.',
+      },
+      {
+        term: 'clean seed',
+        definition: 'A seed on which a given build’s pin holds.',
+      },
+      {
+        term: 'band',
+        aka: 'clean band, clean set',
+        definition:
+          'All the clean seeds for one build. Its width is the strategy’s central quantity: the wider the band, the more often the build spikes. Widening it is settled as impossible — each extra seed multiplies the requirement by another coin flip.',
+      },
+      {
+        term: 'screening rule',
+        definition:
+          'The one string that separates the two spike constructions: "cut" accepts any repair mode, "hdr" demands HDR. Everything else about them is the same code.',
+      },
+      {
+        term: 'bank',
+        definition:
+          'Every candidate guide that survived the screen, stored with the list of seeds it failed on. It is the expensive half of a build and does not depend on the round’s seeds, so it can be cached and reused.',
+      },
+      {
+        term: 'max_fail',
+        definition:
+          'How many seeds a guide is allowed to break the rule on and still be banked. Deliberately loose, because the next step is what actually produces the clean band.',
+      },
+      {
+        term: 'strict',
+        definition:
+          'Breaking the rule on no seed at all of the set in question. The Cas9 half is built strict, so it adds nothing to the group’s failures and leaves the band exactly as it found it.',
+      },
+      {
+        term: 'min-union',
+        definition:
+          'The trick at the centre of the construction: pick the group of guides whose failed-seed lists overlap as much as possible. Overlapping failures are free, so a group loses far fewer seeds between them than the sum of their individual failures. What is left over is the clean band.',
+      },
+      {
+        term: 'greedy selector',
+        aka: 'fastgreedy, restarts',
+        definition:
+          'The algorithm that does the min-union: take the best-looking candidate, mark its failures as already lost, repeat. The first pass is deterministic and later passes break ties at random, keeping whichever result was smallest.',
+      },
+      {
+        term: 'group_size',
+        definition:
+          'How many Cas12a guides go into the min-union group. Bigger group, wider coverage of the design space, narrower band — the two constructions sit at different points of that trade.',
+      },
+      {
+        term: 'the ladder',
+        definition:
+          'The ordered list of builders the miner tries, best-paying first. Each one either produces rows or declines, so a failure anywhere lands on the next rung down rather than on nothing.',
+      },
+      {
+        term: 'rung',
+        definition: 'One builder on that ladder.',
+      },
+      {
+        term: 'decline',
+        definition:
+          'A builder’s way of saying "not this round" — no GPU, too little time left, too small a candidate pool. It returns no rows plus a readable reason instead of raising an error, which is what makes the ladder safe to fall down.',
+      },
+      {
+        term: 'hedge',
+        definition:
+          'A rung that gives up the exact-1.0 spike for something worth less per hit but hit far more often.',
+      },
+      {
+        term: 'all-HDR',
+        definition:
+          'The spike build. It pins all three target columns at once, so a clean seed scores a perfect consistency — but its band covers only a sliver of the seed space. It loses on the average and is shipped anyway, because the payout curve pays placement rather than averages.',
+      },
+      {
+        term: 'all-cut',
+        definition:
+          'The same machine run on the "cut" rule. It pins one column instead of three, worth much less per clean seed, but holds it across a far larger share of the seed space.',
+      },
+      {
+        term: 'seed-depend',
+        definition:
+          'The build for a round that never gets stamped. The validator then scores at seed 0 — the value the miner was handed — so the seed is known and consistency is exactly 1.000. It is worthless on any round that does get stamped.',
+      },
+      {
+        term: 'seed-agnostic',
+        definition:
+          'The older cut-only hedge: Cas9 guides that cut under every seed in the window, with no band involved. Skipped on HEK293, where tight chromatin means no such guide exists.',
+      },
+      {
+        term: 'ordinary construction',
+        definition:
+          'The plain build from before any of this existed. It pins nothing and scores the floor, but it always finishes in seconds, which is why it is the last rung and the emergency path.',
+      },
+      {
+        term: 'oracle build',
+        definition:
+          'An experiment built with the round’s real seeds known. Not playable — it exists only to price what perfect prediction would be worth, and it took rank 1.',
+      },
+    ],
+  },
+  {
+    title: 'The fleet, and the seed prediction',
+    blurb: 'Why the strategy is run across many identities at once, and what the model does.',
+    terms: [
+      {
+        term: 'hotkey',
+        definition:
+          'One registered miner identity: one process, one seed window, one submission per round.',
+      },
+      {
+        term: 'coldkey',
+        definition:
+          'The wallet that owns a group of hotkeys. Payout is what matters across the whole group, so the useful quantity is the union of what its hotkeys cover — not how good any single one is.',
+      },
+      {
+        term: 'fleet',
+        definition:
+          'The hotkeys run together as one strategy, each searching a different part of the seed space so their bands land in different places.',
+      },
+      {
+        term: 'window',
+        definition:
+          'The slice of the seed space one hotkey searches in. It steers the search but does not fence in the result: measured bands leak outside their own window.',
+      },
+      {
+        term: 'window plan',
+        definition:
+          'The file, rewritten hourly, that assigns each hotkey its window. The miner re-reads it for every build and falls back to the hotkey’s own pinned window when it is missing, stale or malformed.',
+      },
+      {
+        term: 'joined mode',
+        definition:
+          'The window layout that actually ships: the seed model’s three predicted classes are concatenated into one space, and the hotkeys take overlapping slices of that.',
+      },
+      {
+        term: 'correlated siblings',
+        definition:
+          'Hotkeys that build near-identical rows. They score within noise of each other and so take consecutive ranks, which means the fleet moves as a block — leverage in both directions, given how steep the payout curve is.',
+      },
+      {
+        term: 'seed model',
+        definition:
+          'A small transformer that tries to predict which parts of the seed space the next round will draw from. Its own evaluation puts it at chance. Running it anyway costs nothing, because where a band sits does not affect what it is worth.',
+      },
+      {
+        term: 'band position is free',
+        definition:
+          'The measured fact that makes an unproven prediction safe to act on: seeds are drawn uniformly, so a band in one part of the seed space is worth exactly as much as a band anywhere else.',
+      },
+      {
+        term: 'walk-forward',
+        definition:
+          'Testing a predictor round by round in time order, training only on rounds that came before the one being predicted. The honest way to score a forecast.',
+      },
+      {
+        term: 'chance baseline',
+        definition:
+          'What guessing would score on the same test. Easy to get wrong here: a round can draw the same class twice while the scorer counts it once, so chance is not a perfect score.',
+      },
+      {
+        term: 'log loss',
+        definition:
+          'A score for a probability forecast, where lower is better and confidence in a wrong answer is punished. A model scoring worse than a flat "no idea" has learned that there is nothing to learn.',
+      },
+      {
+        term: 'p-value',
+        definition:
+          'Roughly, how often a gap this large would appear by luck alone. A large one means the two things being compared are indistinguishable on the evidence available.',
+      },
+      {
+        term: 'cold hand',
+        definition:
+          'The best of the simple reference strategies the seed model is scored against in its own evaluation. It beats the model.',
+      },
+    ],
+  },
+  {
+    title: 'Timing and delivery',
+    blurb: 'Why a build that cannot finish in time is worth nothing, however good it is.',
+    terms: [
+      {
+        term: 'presigned URL',
+        aka: 'TTL, the deadline',
+        definition:
+          'The upload link the validator hands over when it asks for a submission, alive for 300 seconds. Every construction here takes longer than that to build, so the build had to move off this path entirely.',
+      },
+      {
+        term: 'lead time',
+        definition:
+          'The seconds between a task appearing publicly and the validator asking that hotkey for its file. Usually generous, occasionally shorter than any real build — which is why the bottom rung must always finish.',
+      },
+      {
+        term: 'prefetch',
+        aka: 'prepare',
+        definition:
+          'Building against the public, unstamped task the moment a round opens, before any validator asks. The task is the same contract the validator will hand over later; only the seed differs, and it is 0 on both sides until the round closes.',
+      },
+      {
+        term: 'in-TTL build',
+        definition:
+          'The fallback: building inside the 300-second upload link because no prepared build was ready. Only the cheaper rungs fit here, once time is reserved for the upload itself.',
+      },
+      {
+        term: 'budget gate',
+        definition:
+          'The number of seconds a rung demands before it will start at all. Set per rung so a build that cannot finish is never begun — starting one and running out is worse than never trying.',
+      },
+      {
+        term: 'emergency build',
+        definition:
+          'The ordinary construction, held in reserve for the case where a prepared build is not ready and the clock is nearly gone.',
+      },
+      {
+        term: 'build lock',
+        definition:
+          'The exclusive lock that stops sibling hotkeys building the memory-heavy shared rows at the same time. One process builds, the others load what it wrote.',
+      },
+      {
+        term: 'drift',
+        definition:
+          'Where the branch’s own engineering notes no longer describe what its code does. The last section of this page lists the cases found.',
+      },
+    ],
+  },
+];

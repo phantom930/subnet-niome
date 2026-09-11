@@ -151,6 +151,26 @@ describe('BenchmarkDialog', () => {
     expect(text()).toContain('Final score');
   });
 
+  it('should show only the factors the final score is made of', async () => {
+    const fixture = await open();
+    http.expectOne('/api/benchmarks').flush(DONE);
+    await fixture.whenStable();
+
+    // consistency_score and distribution_fidelity_score are the unclamped
+    // stage outputs behind the two factors. Nothing multiplies them, so they
+    // belong to the full report rather than to this table.
+    const labels = [...document.querySelectorAll('.metrics th')].map((th) =>
+      th.textContent?.trim(),
+    );
+    expect(labels).toEqual([
+      'Valid experiments',
+      'Total weighted score',
+      'Consistency factor',
+      'Fidelity factor',
+    ]);
+    expect(text()).not.toContain('10.582');
+  });
+
   it('should say where the seeds came from', async () => {
     const fixture = await open();
     http.expectOne('/api/benchmarks').flush(DONE);
