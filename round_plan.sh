@@ -37,6 +37,13 @@ else
     OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
       nice -n 10 "$PY_ML" -m seed_model.update --end now 2>&1 | tail -16 | sed 's/^/[model] /'
   fi
+  # walk_record.json carries the model's one-step-ahead prediction per PAST task, which is what
+  # strategy_rank.py needs to rank `model` against the five torch-free baselines. It is append-only
+  # -- normally zero or one refit (~4s) -- so it runs on every cycle rather than behind the guard:
+  # the guard gates RETRAINING on new data, while this only has to notice a task the record has not
+  # scored yet, and a stale record silently drops `model` from the auto_rank pool.
+  OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+    nice -n 10 "$PY_ML" -m seed_model.walk_update 2>&1 | tail -6 | sed 's/^/[walk ] /'
 fi
 
 "$PY" window_plan.py 2>&1 | tail -14 | sed 's/^/[plan ] /'

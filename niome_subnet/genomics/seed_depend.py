@@ -108,6 +108,13 @@ class SeedDependConfig:
     per_cell_floor: int = 4
     # Allocation search granularity over the heavy-mutation share.
     alloc_step: int = 4
+    # RESEARCH ONLY, and it must stay None on any shipped path. Pins the heavy share to one value
+    # instead of searching, so a caller can map `weighted x fidelity` against n_heavy directly --
+    # which is the only way to check that the two-stage search actually lands on the peak rather
+    # than near it. `allocate` re-solves per contract and the peak MOVES with the contract's
+    # mutation weight spread (measured r = +0.975 over the six seed-0 rounds: heavy 197-199 at
+    # spread 1.94, 205-207 at 2.54-2.62), so there is no single right value to hard-code here.
+    force_heavy: "int | None" = None
     # Price on 12-mer novelty when selecting rows, in units of weighted_score. Of stage 5's six
     # ratios, cas / strand / distinct-guide are already 1.000 and mutation / joint are both pinned
     # by the mutation split (joint is maximal when cells within a mutation are balanced, which the
@@ -274,7 +281,10 @@ def allocate(by_cell: dict[tuple, list[dict]], contract: dict, ctx,
         return (wtd * fid, wtd, fid, n_heavy, chosen)
 
     coarse = None
-    for n_heavy in range(n_rows // 2, max_heavy + 1, cfg.alloc_step):
+    forced = cfg.force_heavy
+    sweep = ([forced] if forced is not None
+             else range(n_rows // 2, max_heavy + 1, cfg.alloc_step))
+    for n_heavy in sweep:
         got = attempt(n_heavy, 0.0)
         if got and (coarse is None or got[0] > coarse[0]):
             coarse = got
@@ -283,8 +293,10 @@ def allocate(by_cell: dict[tuple, list[dict]], contract: dict, ctx,
     best = coarse
     if cfg.kmer_price > 0:
         centre = coarse[3]
-        for n_heavy in range(max(n_rows // 2, centre - cfg.alloc_step),
-                             min(max_heavy, centre + cfg.alloc_step) + 1, 2):
+        refine = ([forced] if forced is not None
+                  else range(max(n_rows // 2, centre - cfg.alloc_step),
+                             min(max_heavy, centre + cfg.alloc_step) + 1, 2))
+        for n_heavy in refine:
             got = attempt(n_heavy, cfg.kmer_price)
             if got and got[0] > best[0]:
                 best = got

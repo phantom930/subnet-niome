@@ -9368,112 +9368,228 @@
     "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a"
    ],
    "applied": {
-    "applied_at": "2026-09-11T18:17:08.956483+00:00",
-    "predicted_window": "400-499",
-    "predicted_p_hit": 0.3208,
+    "applied_at": "2026-09-12T12:11:59.241330+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
     "band_width": 0,
     "conc_rank": 1,
-    "rank1_window": "400-499",
+    "rank1_window": "100-199",
     "spread_width": 100,
     "n_concentrated": 0,
-    "played": true,
-    "assignments": {
-     "niome_hotkey": [
-      [
-       615,
-       689
-      ]
-     ],
-     "niome_hotkey1": [
-      [
-       600,
-       674
-      ]
-     ],
-     "niome_hotkey2": [
-      [
-       630,
-       704
-      ]
-     ],
-     "niome_hotkey3": [
-      [
-       660,
-       734
-      ]
-     ],
-     "niome_hotkey4": [
-      [
-       690,
-       764
-      ]
-     ],
-     "niome_hotkey5": [
-      [
-       720,
-       794
-      ]
-     ],
-     "niome_hotkey6": [
-      [
-       750,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "4390d969-6143-47cd-a98d-3433e6657830",
+    "at": "2026-09-09T14:20:45.991849",
+    "seeds": [
+     100,
+     635,
+     651
+    ],
+    "actual_windows": [
+     0,
+     5
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       200,
        799
       ],
-      [
-       900,
-       924
-      ]
-     ],
-     "niome_hotkey7": [
-      [
-       780,
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 55,
+      "final": 27.35,
+      "consistency": 0.0956,
+      "weighted": 325.5,
+      "fidelity": 0.8788,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey1": {
+      "window": [
+       200,
+       724
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 246,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       230,
+       754
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 128,
+      "final": 24.41,
+      "consistency": 0.0822,
+      "weighted": 327.6,
+      "fidelity": 0.9059,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       260,
+       784
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 142,
+      "final": 23.44,
+      "consistency": 0.0783,
+      "weighted": 332.2,
+      "fidelity": 0.9011,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       200,
        799
       ],
-      [
-       900,
-       954
-      ]
-     ],
-     "niome_hotkey8": [
-      [
-       910,
-       984
-      ]
-     ],
-     "niome_hotkey9": [
-      [
-       600,
-       614
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
       ],
-      [
-       940,
-       999
-      ]
-     ],
-     "niome_hotkey10": [
-      [
-       600,
-       644
+      "rank": 245,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       200,
+       799
       ],
-      [
-       970,
-       999
-      ]
-     ]
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 99,
+      "final": 26.01,
+      "consistency": 0.0873,
+      "weighted": 330.7,
+      "fidelity": 0.9016,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       200,
+       799
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 242,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       200,
+       799
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 239,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       200,
+       799
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       635,
+       651
+      ],
+      "rank": 243,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
     },
-    "roles": {
-     "niome_hotkey": "joined-full",
-     "niome_hotkey1": "joined",
-     "niome_hotkey2": "joined",
-     "niome_hotkey3": "joined",
-     "niome_hotkey4": "joined",
-     "niome_hotkey5": "joined",
-     "niome_hotkey6": "joined",
-     "niome_hotkey7": "joined",
-     "niome_hotkey8": "joined",
-     "niome_hotkey9": "joined",
-     "niome_hotkey10": "joined"
-    }
+    "scores_at": "2026-09-12T12:17:02.131002+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey",
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7",
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": []
    }
   },
   {
@@ -9538,124 +9654,174 @@
     "1eca4bf1-c91f-4291-93ff-4391d058d3dc"
    ],
    "applied": {
-    "applied_at": "2026-09-11T18:17:08.956483+00:00",
+    "applied_at": "2026-09-12T12:11:59.241330+00:00",
     "predicted_window": "900-999",
-    "predicted_p_hit": 0.398,
+    "predicted_p_hit": 0.3922,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "900-999",
     "spread_width": 100,
     "n_concentrated": 0,
-    "played": true,
-    "assignments": {
-     "niome_hotkey": [
-      [
-       215,
-       299
-      ],
-      [
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "a155b953-bb0b-423d-8a3a-2189c571a3a2",
+    "at": "2026-09-09T09:30:55.284775",
+    "seeds": [
+     343,
+     346,
+     546
+    ],
+    "actual_windows": [
+     2,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
        600,
-       614
-      ]
-     ],
-     "niome_hotkey1": [
-      [
-       200,
-       299
-      ]
-     ],
-     "niome_hotkey2": [
-      [
-       230,
-       299
+       899
       ],
-      [
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 214,
+      "final": 23.98,
+      "consistency": 0.1056,
+      "weighted": 250.6,
+      "fidelity": 0.9065,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       630,
+       929
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 231,
+      "final": 22.03,
+      "consistency": 0.0978,
+      "weighted": 244.9,
+      "fidelity": 0.9194,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       660,
+       959
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 224,
+      "final": 22.56,
+      "consistency": 0.0997,
+      "weighted": 247.6,
+      "fidelity": 0.9135,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       690,
+       989
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 207,
+      "final": 24.18,
+      "consistency": 0.1075,
+      "weighted": 246.2,
+      "fidelity": 0.9141,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
        600,
-       629
-      ]
-     ],
-     "niome_hotkey3": [
-      [
-       260,
-       299
+       999
       ],
-      [
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 238,
+      "final": 20.0,
+      "consistency": 0.089,
+      "weighted": 252.6,
+      "fidelity": 0.8898,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
        600,
-       659
-      ]
-     ],
-     "niome_hotkey4": [
-      [
-       290,
-       299
+       999
       ],
-      [
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 236,
+      "final": 21.27,
+      "consistency": 0.094,
+      "weighted": 250.5,
+      "fidelity": 0.9035,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
        600,
-       689
-      ]
-     ],
-     "niome_hotkey5": [
-      [
-       620,
-       719
-      ]
-     ],
-     "niome_hotkey6": [
-      [
-       650,
-       749
-      ]
-     ],
-     "niome_hotkey7": [
-      [
-       680,
-       779
-      ]
-     ],
-     "niome_hotkey8": [
-      [
-       200,
-       209
+       999
       ],
-      [
-       710,
-       799
-      ]
-     ],
-     "niome_hotkey9": [
-      [
-       200,
-       239
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 223,
+      "final": 22.83,
+      "consistency": 0.1011,
+      "weighted": 247.3,
+      "fidelity": 0.9129,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       600,
+       999
       ],
-      [
-       740,
-       799
-      ]
-     ],
-     "niome_hotkey10": [
-      [
-       200,
-       269
-      ],
-      [
-       770,
-       799
-      ]
-     ]
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 194,
+      "final": 25.21,
+      "consistency": 0.1111,
+      "weighted": 249.5,
+      "fidelity": 0.9089,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
     },
-    "roles": {
-     "niome_hotkey": "joined-full",
-     "niome_hotkey1": "joined",
-     "niome_hotkey2": "joined",
-     "niome_hotkey3": "joined",
-     "niome_hotkey4": "joined",
-     "niome_hotkey5": "joined",
-     "niome_hotkey6": "joined",
-     "niome_hotkey7": "joined",
-     "niome_hotkey8": "joined",
-     "niome_hotkey9": "joined",
-     "niome_hotkey10": "joined"
-    }
+    "scores_at": "2026-09-12T12:17:02.131002+00:00",
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": []
    }
   },
   {
@@ -9727,120 +9893,216 @@
     "4725e952-50b0-4b39-a21b-8f9ae2e57b1a"
    ],
    "applied": {
-    "applied_at": "2026-09-11T18:17:08.956483+00:00",
+    "applied_at": "2026-09-12T12:11:59.241330+00:00",
     "predicted_window": "800-899",
-    "predicted_p_hit": 0.3639,
+    "predicted_p_hit": 0.3541,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "800-899",
     "spread_width": 100,
     "n_concentrated": 0,
-    "played": true,
-    "assignments": {
-     "niome_hotkey": [
-      [
-       115,
-       214
-      ]
-     ],
-     "niome_hotkey1": [
-      [
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "9ac1d178-1e35-410c-8a1c-17efaa35e029",
+    "at": "2026-09-09T07:07:09.038695",
+    "seeds": [
+     129,
+     207,
+     573
+    ],
+    "actual_windows": [
+     0,
+     1,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
        100,
-       199
-      ]
-     ],
-     "niome_hotkey2": [
-      [
+       599
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       129,
+       207,
+       573
+      ],
+      "rank": 204,
+      "final": 31.59,
+      "consistency": 0.1045,
+      "weighted": 341.5,
+      "fidelity": 0.8856,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
        130,
-       229
-      ]
-     ],
-     "niome_hotkey3": [
-      [
+       829
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       207,
+       573
+      ],
+      "rank": 12,
+      "final": 117.46,
+      "consistency": 0.3912,
+      "weighted": 333.9,
+      "fidelity": 0.8992,
+      "band_hit": true,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
        160,
-       259
-      ]
-     ],
-     "niome_hotkey4": [
-      [
+       859
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       207,
+       573
+      ],
+      "rank": 11,
+      "final": 121.74,
+      "consistency": 0.401,
+      "weighted": 339.9,
+      "fidelity": 0.8931,
+      "band_hit": true,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
        190,
-       289
-      ]
-     ],
-     "niome_hotkey5": [
-      [
-       220,
-       299
+       889
       ],
-      [
-       500,
-       519
-      ]
-     ],
-     "niome_hotkey6": [
-      [
-       250,
-       299
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       207,
+       573
       ],
-      [
-       500,
-       549
-      ]
-     ],
-     "niome_hotkey7": [
-      [
-       280,
-       299
-      ],
-      [
-       500,
-       579
-      ]
-     ],
-     "niome_hotkey8": [
-      [
+      "rank": 213,
+      "final": 29.18,
+      "consistency": 0.0967,
+      "weighted": 338.0,
+      "fidelity": 0.8932,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
        100,
-       109
+       899
       ],
-      [
-       510,
-       599
-      ]
-     ],
-     "niome_hotkey9": [
-      [
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       129,
+       207,
+       573
+      ],
+      "rank": 219,
+      "final": 26.15,
+      "consistency": 0.0908,
+      "weighted": 313.3,
+      "fidelity": 0.9189,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
        100,
-       139
+       899
       ],
-      [
-       540,
-       599
-      ]
-     ],
-     "niome_hotkey10": [
-      [
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       129,
+       207,
+       573
+      ],
+      "rank": 210,
+      "final": 30.05,
+      "consistency": 0.0997,
+      "weighted": 342.3,
+      "fidelity": 0.8801,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
        100,
-       169
+       899
       ],
-      [
-       570,
-       599
-      ]
-     ]
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       129,
+       207,
+       573
+      ],
+      "rank": 171,
+      "final": 35.02,
+      "consistency": 0.1151,
+      "weighted": 340.2,
+      "fidelity": 0.8944,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       100,
+       899
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       129,
+       207,
+       573
+      ],
+      "rank": 239,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
     },
-    "roles": {
-     "niome_hotkey": "joined-full",
-     "niome_hotkey1": "joined",
-     "niome_hotkey2": "joined",
-     "niome_hotkey3": "joined",
-     "niome_hotkey4": "joined",
-     "niome_hotkey5": "joined",
-     "niome_hotkey6": "joined",
-     "niome_hotkey7": "joined",
-     "niome_hotkey8": "joined",
-     "niome_hotkey9": "joined",
-     "niome_hotkey10": "joined"
-    }
+    "scores_at": "2026-09-12T12:17:02.131002+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7",
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": [
+     "niome_hotkey2",
+     "niome_hotkey3"
+    ]
    }
   },
   {
@@ -9913,7 +10175,2044 @@
     "445d95d2-55ec-4b36-a26e-58efeff789b0"
    ],
    "applied": {
-    "applied_at": "2026-09-11T18:17:08.956483+00:00",
+    "applied_at": "2026-09-12T12:11:59.241330+00:00",
+    "predicted_window": "100-199",
+    "predicted_p_hit": 0.2977,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "100-199",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+    "at": "2026-09-09T11:56:32.291967",
+    "seeds": [
+     201,
+     523,
+     525
+    ],
+    "actual_windows": [
+     1,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey1": {
+      "window": [
+       100,
+       299
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201
+      ],
+      "rank": 9,
+      "final": 93.87,
+      "consistency": 0.4006,
+      "weighted": 264.5,
+      "fidelity": 0.8859,
+      "band_hit": true,
+      "all_hdr_built": true
+     },
+     "niome_hotkey2": {
+      "window": [
+       130,
+       529
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 218,
+      "final": 24.11,
+      "consistency": 0.1026,
+      "weighted": 263.1,
+      "fidelity": 0.893,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey3": {
+      "window": [
+       160,
+       559
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 226,
+      "final": 22.74,
+      "consistency": 0.0973,
+      "weighted": 265.8,
+      "fidelity": 0.8797,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey4": {
+      "window": [
+       190,
+       589
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 221,
+      "final": 23.38,
+      "consistency": 0.0999,
+      "weighted": 261.9,
+      "fidelity": 0.8939,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       100,
+       599
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 231,
+      "final": 22.07,
+      "consistency": 0.0944,
+      "weighted": 260.7,
+      "fidelity": 0.8972,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       100,
+       599
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 233,
+      "final": 21.66,
+      "consistency": 0.0926,
+      "weighted": 264.6,
+      "fidelity": 0.8837,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       100,
+       599
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 10,
+      "final": 91.92,
+      "consistency": 0.3934,
+      "weighted": 260.9,
+      "fidelity": 0.8958,
+      "band_hit": true,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       100,
+       599
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       201,
+       523,
+       525
+      ],
+      "rank": 213,
+      "final": 24.58,
+      "consistency": 0.1053,
+      "weighted": 260.0,
+      "fidelity": 0.8973,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-12T12:17:02.131002+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey1",
+     "niome_hotkey2",
+     "niome_hotkey3",
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey6",
+     "niome_hotkey7",
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": [
+     "niome_hotkey1",
+     "niome_hotkey7"
+    ]
+   }
+  },
+  {
+   "made_at": "2026-09-12T12:17:02.131002+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    10,
+    18,
+    12,
+    14,
+    19,
+    8,
+    10,
+    14,
+    15
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "600-699",
+    "100-199",
+    "700-799"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20",
+    "445d95d2-55ec-4b36-a26e-58efeff789b0",
+    "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+    "571f4843-1671-49c3-951c-47d16a9418b0",
+    "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+    "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+    "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+    "b162020b-274c-460d-b4e6-e480038549ac",
+    "50e9259a-c10f-4273-9501-86c61147ea8c",
+    "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+    "20546350-789d-4b21-86aa-93119c1016b7",
+    "4f427a7f-ae4a-4f8d-b3dd-3601714f4c85"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T11:47:52.874761+00:00",
+    "predicted_window": "700-799",
+    "predicted_p_hit": 0.3129,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "700-799",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "ee877baa-ad82-4d8c-a3c4-451068223428",
+    "at": "2026-09-12T14:28:36.141456",
+    "seeds": [
+     173,
+     676,
+     829
+    ],
+    "actual_windows": [
+     0,
+     5,
+     7
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey4": {
+      "window": [
+       100,
+       449
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       173
+      ],
+      "rank": 210,
+      "final": 24.04,
+      "consistency": 0.0986,
+      "weighted": 257.8,
+      "fidelity": 0.9454,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       150,
+       499
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       173
+      ],
+      "rank": 244,
+      "final": 0.0,
+      "consistency": 0.0,
+      "weighted": 0.0,
+      "fidelity": 0.0,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       400,
+       649
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 209,
+      "final": 24.04,
+      "consistency": 0.0986,
+      "weighted": 257.8,
+      "fidelity": 0.9454,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       450,
+       699
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       676
+      ],
+      "rank": 221,
+      "final": 21.74,
+      "consistency": 0.0996,
+      "weighted": 231.1,
+      "fidelity": 0.9447,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       100,
+       699
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       173,
+       676
+      ],
+      "rank": 223,
+      "final": 18.97,
+      "consistency": 0.0913,
+      "weighted": 223.0,
+      "fidelity": 0.9315,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-13T12:17:03.775001+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey4",
+     "niome_hotkey5",
+     "niome_hotkey7",
+     "niome_hotkey8"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-12T12:17:02.131002+00:00",
+   "cell": "HEK293",
+   "beta": 0.0,
+   "counts": [
+    17,
+    10,
+    8,
+    18,
+    10,
+    13,
+    16,
+    11,
+    11
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "300-399",
+    "200-299",
+    "500-599"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "4390d969-6143-47cd-a98d-3433e6657830",
+    "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+    "3008c42e-396c-4e99-b430-2cca1581b268",
+    "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+    "060a1a06-1098-41b1-ad55-89a3e7d0a37f",
+    "c45d20cf-8e9e-4a77-a9ea-0f2d3176bea9"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T11:47:52.874761+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3123,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "300-399",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "975c968b-409d-4cdd-949b-850ec12184e9",
+    "at": "2026-09-12T21:41:47.744727",
+    "seeds": [
+     299,
+     352,
+     802
+    ],
+    "actual_windows": [
+     1,
+     2,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": true,
+    "per_hotkey": {
+     "niome_hotkey4": {
+      "window": [
+       100,
+       174
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       150,
+       224
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       200,
+       274
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       250,
+       624
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       299,
+       352
+      ],
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       100,
+       199
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 166,
+      "final": 17.07,
+      "consistency": 0.0741,
+      "weighted": 245.0,
+      "fidelity": 0.9401,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-13T12:17:03.775001+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey7"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-12T12:17:02.131002+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.15,
+   "counts": [
+    14,
+    12,
+    13,
+    11,
+    14,
+    12,
+    14,
+    7,
+    8
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3541
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3409
+    },
+    {
+     "window": 3,
+     "label": "400-499",
+     "p_hit": 0.3039
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "400-499"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "4195cd32-4b9a-4b38-9835-9631ea75af08",
+    "4725e952-50b0-4b39-a21b-8f9ae2e57b1a",
+    "9ac1d178-1e35-410c-8a1c-17efaa35e029",
+    "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+    "442591a9-ddc4-4f96-8e27-be58186ed76a",
+    "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+    "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+    "7715f00d-3517-482a-abd4-19d929a86e47"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T11:47:52.874761+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3517,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "bbdece32-e367-4bc4-8bb9-826663312f05",
+    "at": "2026-09-13T02:30:50.707552",
+    "seeds": [
+     674,
+     799,
+     921
+    ],
+    "actual_windows": [
+     5,
+     6,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey8": {
+      "window": [
+       300,
+       399
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 234,
+      "final": 18.83,
+      "consistency": 0.0959,
+      "weighted": 213.2,
+      "fidelity": 0.9214,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-13T12:17:03.775001+00:00",
+    "hotkeys_with_seed_in_window": [],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-12T12:17:02.131002+00:00",
+   "cell": "K562",
+   "beta": 0.3,
+   "counts": [
+    12,
+    11,
+    11,
+    15,
+    10,
+    11,
+    10,
+    9,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3922
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3352
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3094
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "1eca4bf1-c91f-4291-93ff-4391d058d3dc",
+    "a155b953-bb0b-423d-8a3a-2189c571a3a2",
+    "42bec26a-7482-4dcd-9b20-1577fcabe0f6",
+    "1c973596-860c-4a31-a122-3a3827ce4998",
+    "fbde9cc4-bd00-48a9-8a43-555528950729",
+    "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+    "7306c626-df05-420f-8ee1-093c301eb4ba",
+    "430543e8-59b3-453d-8756-888cb393cf26",
+    "a3e302de-d08d-4d55-95e5-529045ccee11",
+    "b4a07daf-0d7f-4372-bdc0-b497378ed61b",
+    "c192f1f1-33d4-46db-a381-078f749edcf3"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T11:47:52.874761+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3946,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "315d5f23-c15d-4529-a6fb-96fbb46bce7b",
+    "at": "2026-09-12T16:53:24.961191",
+    "seeds": [
+     339,
+     345,
+     644
+    ],
+    "actual_windows": [
+     2,
+     5
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey4": {
+      "window": [
+       400,
+       499
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 234,
+      "final": 28.82,
+      "consistency": 0.0985,
+      "weighted": 331.9,
+      "fidelity": 0.8814,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey5": {
+      "window": [
+       450,
+       849
+      ],
+      "window_source": "plan_joined",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [
+       644
+      ],
+      "rank": 211,
+      "final": 33.04,
+      "consistency": 0.1123,
+      "weighted": 328.1,
+      "fidelity": 0.8966,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey6": {
+      "window": [
+       800,
+       899
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 229,
+      "final": 30.36,
+      "consistency": 0.1046,
+      "weighted": 326.6,
+      "fidelity": 0.8888,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey7": {
+      "window": [
+       850,
+       949
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 202,
+      "final": 34.33,
+      "consistency": 0.1178,
+      "weighted": 325.6,
+      "fidelity": 0.8946,
+      "band_hit": false,
+      "all_hdr_built": true
+     },
+     "niome_hotkey8": {
+      "window": [
+       900,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": null,
+      "seeds_in_window": [],
+      "rank": 235,
+      "final": 28.68,
+      "consistency": 0.0981,
+      "weighted": 325.8,
+      "fidelity": 0.8977,
+      "band_hit": false,
+      "all_hdr_built": true
+     }
+    },
+    "scores_at": "2026-09-13T12:17:03.775001+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey5"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-13T12:17:03.775001+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.05,
+   "counts": [
+    11,
+    18,
+    12,
+    15,
+    19,
+    13,
+    10,
+    15,
+    16
+   ],
+   "ranked": [
+    {
+     "window": 6,
+     "label": "700-799",
+     "p_hit": 0.3129
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3093
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3057
+    }
+   ],
+   "heuristic": [
+    "700-799",
+    "100-199",
+    "300-399"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20",
+    "445d95d2-55ec-4b36-a26e-58efeff789b0",
+    "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+    "571f4843-1671-49c3-951c-47d16a9418b0",
+    "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+    "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+    "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+    "b162020b-274c-460d-b4e6-e480038549ac",
+    "50e9259a-c10f-4273-9501-86c61147ea8c",
+    "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+    "20546350-789d-4b21-86aa-93119c1016b7",
+    "4f427a7f-ae4a-4f8d-b3dd-3601714f4c85",
+    "a1d4bf36-b8de-47a6-9ec7-3eb23e4cfc53",
+    "ee877baa-ad82-4d8c-a3c4-451068223428",
+    "faf031cd-b20a-44df-a347-4a1cda46ec23"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T20:17:10.458915+00:00",
+    "predicted_window": "700-799",
+    "predicted_p_hit": 0.3129,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "700-799",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "ca7d111f-7024-4169-9380-e2a32370281f",
+    "at": "2026-09-13T19:20:12.116172",
+    "seeds": [
+     108,
+     288,
+     508
+    ],
+    "actual_windows": [
+     0,
+     1,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-13T12:17:03.775001+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    17,
+    11,
+    9,
+    18,
+    10,
+    13,
+    16,
+    12,
+    11
+   ],
+   "ranked": [
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3123
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3086
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3048
+    }
+   ],
+   "heuristic": [
+    "300-399",
+    "500-599",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "4390d969-6143-47cd-a98d-3433e6657830",
+    "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+    "3008c42e-396c-4e99-b430-2cca1581b268",
+    "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+    "060a1a06-1098-41b1-ad55-89a3e7d0a37f",
+    "c45d20cf-8e9e-4a77-a9ea-0f2d3176bea9",
+    "975c968b-409d-4cdd-949b-850ec12184e9"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T18:17:11.555856+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3123,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "300-399",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "174d5d8b-e7bd-4002-9ef3-87bd28c5925e",
+    "at": "2026-09-13T16:56:01.224530",
+    "seeds": [
+     331,
+     739,
+     850
+    ],
+    "actual_windows": [
+     2,
+     6,
+     7
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true
+   }
+  },
+  {
+   "made_at": "2026-09-13T12:17:03.775001+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.15,
+   "counts": [
+    14,
+    14,
+    14,
+    11,
+    15,
+    14,
+    15,
+    8,
+    9
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3517
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3391
+    },
+    {
+     "window": 3,
+     "label": "400-499",
+     "p_hit": 0.3151
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "400-499"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "4195cd32-4b9a-4b38-9835-9631ea75af08",
+    "4725e952-50b0-4b39-a21b-8f9ae2e57b1a",
+    "9ac1d178-1e35-410c-8a1c-17efaa35e029",
+    "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+    "442591a9-ddc4-4f96-8e27-be58186ed76a",
+    "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+    "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+    "7715f00d-3517-482a-abd4-19d929a86e47",
+    "bbdece32-e367-4bc4-8bb9-826663312f05",
+    "06b78fe1-ca70-4df3-892e-98c4d3eb4f9b",
+    "33d826fc-87be-44f7-bfec-12b08a82e41b"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T15:17:06.858603+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3517,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "e91f05f8-5acf-4b2c-b4b8-35ed7255921b",
+    "at": "2026-09-13T14:31:46.348933",
+    "seeds": [
+     728,
+     817,
+     917
+    ],
+    "actual_windows": [
+     6,
+     7,
+     8
+    ],
+    "top1_hit": true,
+    "top2_hit": true,
+    "heuristic_hit": true
+   }
+  },
+  {
+   "made_at": "2026-09-13T12:17:03.775001+00:00",
+   "cell": "K562",
+   "beta": 0.25,
+   "counts": [
+    13,
+    12,
+    14,
+    15,
+    11,
+    12,
+    12,
+    9,
+    7
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3946
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3485
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3067
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "1eca4bf1-c91f-4291-93ff-4391d058d3dc",
+    "a155b953-bb0b-423d-8a3a-2189c571a3a2",
+    "42bec26a-7482-4dcd-9b20-1577fcabe0f6",
+    "1c973596-860c-4a31-a122-3a3827ce4998",
+    "fbde9cc4-bd00-48a9-8a43-555528950729",
+    "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+    "7306c626-df05-420f-8ee1-093c301eb4ba",
+    "430543e8-59b3-453d-8756-888cb393cf26",
+    "a3e302de-d08d-4d55-95e5-529045ccee11",
+    "b4a07daf-0d7f-4372-bdc0-b497378ed61b",
+    "c192f1f1-33d4-46db-a381-078f749edcf3",
+    "315d5f23-c15d-4529-a6fb-96fbb46bce7b",
+    "837bf08c-3454-45aa-84ee-e95cb7f8166a",
+    "9c6c9d3e-bd92-450d-8d56-c216c0c16880"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T01:17:10.072492+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3777,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "f6a98adf-5642-4328-b839-bc0da5a4f5c9",
+    "at": "2026-09-14T00:08:50.647620",
+    "seeds": [
+     293,
+     632,
+     785
+    ],
+    "actual_windows": [
+     1,
+     5,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-13T16:17:02.011941+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.2,
+   "counts": [
+    14,
+    14,
+    14,
+    11,
+    15,
+    14,
+    16,
+    9,
+    10
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3586
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3419
+    },
+    {
+     "window": 3,
+     "label": "400-499",
+     "p_hit": 0.3258
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "400-499"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "4195cd32-4b9a-4b38-9835-9631ea75af08",
+    "4725e952-50b0-4b39-a21b-8f9ae2e57b1a",
+    "9ac1d178-1e35-410c-8a1c-17efaa35e029",
+    "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+    "442591a9-ddc4-4f96-8e27-be58186ed76a",
+    "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+    "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+    "7715f00d-3517-482a-abd4-19d929a86e47",
+    "bbdece32-e367-4bc4-8bb9-826663312f05",
+    "06b78fe1-ca70-4df3-892e-98c4d3eb4f9b",
+    "33d826fc-87be-44f7-bfec-12b08a82e41b",
+    "e91f05f8-5acf-4b2c-b4b8-35ed7255921b"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T11:17:09.681131+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3586,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey": [
+      [
+       700,
+       999
+      ]
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "joined-full"
+    }
+   },
+   "resolved": {
+    "task_id": "9f14cd8d-1e78-40f8-9a32-d775d0fdbbcd",
+    "at": "2026-09-14T09:46:08.023812",
+    "seeds": [
+     110,
+     665,
+     761
+    ],
+    "actual_windows": [
+     0,
+     5,
+     6
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false,
+    "per_hotkey": {
+     "niome_hotkey": {
+      "window": [
+       700,
+       999
+      ],
+      "window_source": "plan",
+      "window_confirmed": true,
+      "role": "joined-full",
+      "seeds_in_window": [
+       761
+      ],
+      "rank": 226,
+      "final": 23.0,
+      "consistency": 0.1041,
+      "weighted": 237.0,
+      "fidelity": 0.9325,
+      "band_hit": false,
+      "all_hdr_built": true,
+      "planned_window": [
+       [
+        700,
+        999
+       ]
+      ]
+     }
+    },
+    "scores_at": "2026-09-14T12:17:04.089045+00:00",
+    "hotkeys_with_seed_in_window": [
+     "niome_hotkey"
+    ],
+    "hotkeys_with_band_hit": []
+   }
+  },
+  {
+   "made_at": "2026-09-13T19:17:10.477290+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    17,
+    11,
+    10,
+    18,
+    10,
+    13,
+    17,
+    13,
+    11
+   ],
+   "ranked": [
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3097
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3097
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.306
+    }
+   ],
+   "heuristic": [
+    "300-399",
+    "500-599",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "4390d969-6143-47cd-a98d-3433e6657830",
+    "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+    "3008c42e-396c-4e99-b430-2cca1581b268",
+    "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+    "060a1a06-1098-41b1-ad55-89a3e7d0a37f",
+    "c45d20cf-8e9e-4a77-a9ea-0f2d3176bea9",
+    "975c968b-409d-4cdd-949b-850ec12184e9",
+    "174d5d8b-e7bd-4002-9ef3-87bd28c5925e"
+   ],
+   "applied": {
+    "applied_at": "2026-09-13T23:17:09.028731+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3097,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "300-399",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "0074d1e3-96e8-4323-ac93-04d3ee127928",
+    "at": "2026-09-13T21:44:35.403875",
+    "seeds": [
+     143,
+     806,
+     896
+    ],
+    "actual_windows": [
+     0,
+     7
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-13T21:17:02.387053+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.05,
+   "counts": [
+    12,
+    19,
+    12,
+    15,
+    20,
+    13,
+    10,
+    15,
+    16
+   ],
+   "ranked": [
+    {
+     "window": 6,
+     "label": "700-799",
+     "p_hit": 0.3139
+    },
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.3067
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3067
+    }
+   ],
+   "heuristic": [
+    "700-799",
+    "100-199",
+    "300-399"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20",
+    "445d95d2-55ec-4b36-a26e-58efeff789b0",
+    "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+    "571f4843-1671-49c3-951c-47d16a9418b0",
+    "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+    "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+    "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+    "b162020b-274c-460d-b4e6-e480038549ac",
+    "50e9259a-c10f-4273-9501-86c61147ea8c",
+    "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+    "20546350-789d-4b21-86aa-93119c1016b7",
+    "4f427a7f-ae4a-4f8d-b3dd-3601714f4c85",
+    "a1d4bf36-b8de-47a6-9ec7-3eb23e4cfc53",
+    "ee877baa-ad82-4d8c-a3c4-451068223428",
+    "faf031cd-b20a-44df-a347-4a1cda46ec23",
+    "ca7d111f-7024-4169-9380-e2a32370281f"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T03:20:23.148232+00:00",
+    "predicted_window": "700-799",
+    "predicted_p_hit": 0.3139,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "700-799",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "70c3117e-3319-4534-9785-27983364952b",
+    "at": "2026-09-14T02:33:06.155285",
+    "seeds": [
+     209,
+     242,
+     475
+    ],
+    "actual_windows": [
+     1,
+     3
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-14T00:17:01.363985+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    18,
+    11,
+    10,
+    18,
+    10,
+    13,
+    17,
+    15,
+    11
+   ],
+   "ranked": [
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3107
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3107
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.307
+    }
+   ],
+   "heuristic": [
+    "300-399",
+    "500-599",
+    "200-299"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "4390d969-6143-47cd-a98d-3433e6657830",
+    "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+    "3008c42e-396c-4e99-b430-2cca1581b268",
+    "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+    "060a1a06-1098-41b1-ad55-89a3e7d0a37f",
+    "c45d20cf-8e9e-4a77-a9ea-0f2d3176bea9",
+    "975c968b-409d-4cdd-949b-850ec12184e9",
+    "174d5d8b-e7bd-4002-9ef3-87bd28c5925e",
+    "0074d1e3-96e8-4323-ac93-04d3ee127928"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T08:17:30.416198+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3107,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "300-399",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "0fdc7c52-39aa-4b9f-b42f-fe035dc2ee7e",
+    "at": "2026-09-14T07:21:33.949877",
+    "seeds": [
+     123,
+     587,
+     998
+    ],
+    "actual_windows": [
+     0,
+     4,
+     8
+    ],
+    "top1_hit": false,
+    "top2_hit": true,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-14T02:17:08.433478+00:00",
+   "cell": "K562",
+   "beta": 0.25,
+   "counts": [
+    13,
+    13,
+    14,
+    16,
+    11,
+    13,
+    14,
+    9,
+    8
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3837
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3612
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3193
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "1eca4bf1-c91f-4291-93ff-4391d058d3dc",
+    "a155b953-bb0b-423d-8a3a-2189c571a3a2",
+    "42bec26a-7482-4dcd-9b20-1577fcabe0f6",
+    "1c973596-860c-4a31-a122-3a3827ce4998",
+    "fbde9cc4-bd00-48a9-8a43-555528950729",
+    "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+    "7306c626-df05-420f-8ee1-093c301eb4ba",
+    "430543e8-59b3-453d-8756-888cb393cf26",
+    "a3e302de-d08d-4d55-95e5-529045ccee11",
+    "b4a07daf-0d7f-4372-bdc0-b497378ed61b",
+    "c192f1f1-33d4-46db-a381-078f749edcf3",
+    "315d5f23-c15d-4529-a6fb-96fbb46bce7b",
+    "837bf08c-3454-45aa-84ee-e95cb7f8166a",
+    "9c6c9d3e-bd92-450d-8d56-c216c0c16880",
+    "db67875f-176b-4d51-9889-cd9e3a1e6bdb",
+    "f6a98adf-5642-4328-b839-bc0da5a4f5c9"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T06:17:07.379826+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3837,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": false,
+    "assignments": {},
+    "roles": {}
+   },
+   "resolved": {
+    "task_id": "efb1e20d-c7a8-436b-9b18-ab250651fd74",
+    "at": "2026-09-14T05:20:00.764447",
+    "seeds": [
+     115,
+     345,
+     533
+    ],
+    "actual_windows": [
+     0,
+     2,
+     4
+    ],
+    "top1_hit": false,
+    "top2_hit": false,
+    "heuristic_hit": false
+   }
+  },
+  {
+   "made_at": "2026-09-14T04:17:01.301654+00:00",
+   "cell": "CD34+_HSPC",
+   "beta": 0.0,
+   "counts": [
+    12,
+    21,
+    12,
+    16,
+    20,
+    13,
+    10,
+    15,
+    16
+   ],
+   "ranked": [
+    {
+     "window": 0,
+     "label": "100-199",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.2977
+    },
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.2977
+    }
+   ],
+   "heuristic": [
+    "700-799",
+    "100-199",
+    "300-399"
+   ],
+   "known_ids": [
+    "ea92a09c-d4dc-49f0-ba43-4fefc6ec00c8",
+    "dd07ff28-7a6c-4af6-9098-a035533b8074",
+    "470d6d3c-8372-4979-bcf3-81816e5cbab0",
+    "c1f4663a-6c9d-4391-bfbe-9ff3c7a8243e",
+    "b0fad64f-bb35-4310-9c64-6f1cc965b6fa",
+    "d2ca8e6e-5aa7-4739-9c06-84a3ba76f8b0",
+    "60f5f6a1-142f-49bd-a192-74ee28861f37",
+    "d03c7439-0855-47fc-ac46-6872d7a83c8f",
+    "97fd0b34-f45f-4048-88d1-0e447c76cdfc",
+    "5ab9723c-76c0-4257-9ebb-2a86dba681c7",
+    "bc949ad8-14dd-45a7-9df4-7df50ec6952e",
+    "d2a6c1cc-770a-4724-9cee-ec81dc87c00e",
+    "30ccd697-33c7-4d61-8add-3d08fd65d6e1",
+    "51c26d0a-bd5b-435c-ac48-1224487e7e55",
+    "e6de0a29-2e59-4606-9d5f-bfaae0f9a6e7",
+    "cec7f783-dd9d-4e0a-899f-e11172f341b8",
+    "f3bd1cf3-faeb-46a2-90d6-d150ceee08f5",
+    "10a08d2c-7772-4780-80be-badaf73d9622",
+    "59e1c168-f11d-4caf-95fa-52d82d347a49",
+    "999dc89d-7896-4666-a19d-e695047044f2",
+    "71b28495-4669-4fc2-8cf1-a807e4ab81b1",
+    "4d385215-547a-46a1-84da-78d63af4e04a",
+    "6bd73fc6-a7f3-4c9f-9fea-c99da42f03bd",
+    "a7d01bd4-ee2b-4a0a-9ba6-3e80db35c162",
+    "f3caa161-17fc-41a0-9a8a-851876718b65",
+    "e86758d2-b379-4b8c-aae2-dbc44d447b4d",
+    "b08b59ff-3cf5-4b17-935d-5033b29ef13a",
+    "8bf17022-38ca-4a7c-9e46-a36c757478e1",
+    "12be08f9-8e88-455d-aa18-3a995626df20",
+    "445d95d2-55ec-4b36-a26e-58efeff789b0",
+    "d4a8f8b8-f3fa-4ef1-8470-31c9a2935a08",
+    "571f4843-1671-49c3-951c-47d16a9418b0",
+    "92de7a20-4924-4094-8fe6-2ca2cce0efdb",
+    "56a9f4cb-3971-46ed-b6b5-503e20ef4d17",
+    "0a5d1abf-67e0-4cdb-bc37-99fde920b8a4",
+    "b162020b-274c-460d-b4e6-e480038549ac",
+    "50e9259a-c10f-4273-9501-86c61147ea8c",
+    "53671b0f-4bb0-4c2a-bac6-8a52e6a0ee31",
+    "20546350-789d-4b21-86aa-93119c1016b7",
+    "4f427a7f-ae4a-4f8d-b3dd-3601714f4c85",
+    "a1d4bf36-b8de-47a6-9ec7-3eb23e4cfc53",
+    "ee877baa-ad82-4d8c-a3c4-451068223428",
+    "faf031cd-b20a-44df-a347-4a1cda46ec23",
+    "ca7d111f-7024-4169-9380-e2a32370281f",
+    "70c3117e-3319-4534-9785-27983364952b"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T14:25:22.482731+00:00",
     "predicted_window": "100-199",
     "predicted_p_hit": 0.2977,
     "band_width": 0,
@@ -9925,123 +12224,331 @@
     "assignments": {
      "niome_hotkey": [
       [
-       415,
-       499
+       100,
+       299
       ],
-      [
-       600,
-       664
-      ]
-     ],
-     "niome_hotkey1": [
       [
        400,
        499
-      ],
-      [
-       600,
-       649
-      ]
-     ],
-     "niome_hotkey2": [
-      [
-       430,
-       499
-      ],
-      [
-       600,
-       679
-      ]
-     ],
-     "niome_hotkey3": [
-      [
-       460,
-       499
-      ],
-      [
-       600,
-       709
-      ]
-     ],
-     "niome_hotkey4": [
-      [
-       490,
-       499
-      ],
-      [
-       600,
-       739
-      ]
-     ],
-     "niome_hotkey5": [
-      [
-       620,
-       769
-      ]
-     ],
-     "niome_hotkey6": [
-      [
-       650,
-       799
-      ]
-     ],
-     "niome_hotkey7": [
-      [
-       400,
-       429
-      ],
-      [
-       680,
-       799
-      ]
-     ],
-     "niome_hotkey8": [
-      [
-       400,
-       459
-      ],
-      [
-       710,
-       799
-      ]
-     ],
-     "niome_hotkey9": [
-      [
-       400,
-       489
-      ],
-      [
-       740,
-       799
-      ]
-     ],
-     "niome_hotkey10": [
-      [
-       400,
-       499
-      ],
-      [
-       600,
-       619
-      ],
-      [
-       770,
-       799
       ]
      ]
     },
     "roles": {
-     "niome_hotkey": "joined-full",
-     "niome_hotkey1": "joined",
-     "niome_hotkey2": "joined",
-     "niome_hotkey3": "joined",
-     "niome_hotkey4": "joined",
-     "niome_hotkey5": "joined",
-     "niome_hotkey6": "joined",
-     "niome_hotkey7": "joined",
-     "niome_hotkey8": "joined",
-     "niome_hotkey9": "joined",
-     "niome_hotkey10": "joined"
+     "niome_hotkey": "joined-full"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-14T07:17:01.530606+00:00",
+   "cell": "K562",
+   "beta": 0.25,
+   "counts": [
+    14,
+    13,
+    15,
+    16,
+    12,
+    13,
+    14,
+    9,
+    8
+   ],
+   "ranked": [
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.3897
+    },
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3672
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3059
+    }
+   ],
+   "heuristic": [
+    "900-999",
+    "800-899",
+    "500-599"
+   ],
+   "known_ids": [
+    "a5b89b25-7298-4024-8dc3-8743fcedaab7",
+    "8c7174bd-cd82-4f10-b1a6-fcc3218cbfb3",
+    "8002146e-63fd-41f6-815a-a04e87bb0403",
+    "d275b1f9-1b86-4d7f-964e-37b7ba635e87",
+    "ebd8f64a-7f83-4443-a0d8-8b4d89fcc913",
+    "6e65b5cd-5e58-4582-99a3-ba0d238af6c9",
+    "51c6aaa0-4889-47b4-91d9-576fa069b2c6",
+    "37737cb7-6ffa-4d2c-a2b8-9b0f5def85a3",
+    "9ed335da-2667-4119-9a8b-8bd190b60709",
+    "92280006-3fe8-4d80-ba26-57380770eb54",
+    "87411bfa-28c4-48d0-9db5-97bb6c46df66",
+    "b9051bc7-b00d-4ec9-9c2f-18aa3623f0b5",
+    "f2d36f4d-a7eb-4b2c-87d7-560fc40fd301",
+    "e9a67b4a-0f72-4fec-be3d-0b79e174dcb2",
+    "5ac65a76-3cb3-408a-a554-2e8b0464b5eb",
+    "65786823-abc0-4288-849b-fce1d35fcb47",
+    "9c26657e-a66b-46d0-9a72-14c3f7d9dc03",
+    "7287db6a-9761-48e3-bf87-81d3cf63f48b",
+    "83f430e9-1c9a-48b4-b594-e17477a046ea",
+    "260f849f-47ff-4420-8619-fdef26947bf4",
+    "bba85ff0-d2d1-43dc-b47d-a85ac4e2077e",
+    "1eca4bf1-c91f-4291-93ff-4391d058d3dc",
+    "a155b953-bb0b-423d-8a3a-2189c571a3a2",
+    "42bec26a-7482-4dcd-9b20-1577fcabe0f6",
+    "1c973596-860c-4a31-a122-3a3827ce4998",
+    "fbde9cc4-bd00-48a9-8a43-555528950729",
+    "39657639-6038-4bdd-bb1a-6f05bda0dd3b",
+    "7306c626-df05-420f-8ee1-093c301eb4ba",
+    "430543e8-59b3-453d-8756-888cb393cf26",
+    "a3e302de-d08d-4d55-95e5-529045ccee11",
+    "b4a07daf-0d7f-4372-bdc0-b497378ed61b",
+    "c192f1f1-33d4-46db-a381-078f749edcf3",
+    "315d5f23-c15d-4529-a6fb-96fbb46bce7b",
+    "837bf08c-3454-45aa-84ee-e95cb7f8166a",
+    "9c6c9d3e-bd92-450d-8d56-c216c0c16880",
+    "db67875f-176b-4d51-9889-cd9e3a1e6bdb",
+    "f6a98adf-5642-4328-b839-bc0da5a4f5c9",
+    "efb1e20d-c7a8-436b-9b18-ab250651fd74"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T14:25:22.482731+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3897,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "900-999",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey": [
+      [
+       100,
+       399
+      ]
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "joined-full"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-14T09:17:14.489858+00:00",
+   "cell": "HEK293",
+   "beta": 0.05,
+   "counts": [
+    19,
+    11,
+    10,
+    18,
+    11,
+    13,
+    17,
+    15,
+    12
+   ],
+   "ranked": [
+    {
+     "window": 2,
+     "label": "300-399",
+     "p_hit": 0.3118
+    },
+    {
+     "window": 1,
+     "label": "200-299",
+     "p_hit": 0.3081
+    },
+    {
+     "window": 4,
+     "label": "500-599",
+     "p_hit": 0.3081
+    }
+   ],
+   "heuristic": [
+    "300-399",
+    "200-299",
+    "500-599"
+   ],
+   "known_ids": [
+    "58fde315-3e31-4f0e-bdbd-45de23afbbb3",
+    "49f810fc-cda0-45fa-a861-36c9df735253",
+    "2f77851c-1101-4489-8c42-1566f328d9d8",
+    "3b6711f3-31c3-41f1-b6ea-379a2a67dac9",
+    "a85462c8-2a0e-431a-8008-ba6e2bd6f3b4",
+    "a35e4ed9-b81a-4afb-89a3-6654e0345d5c",
+    "701a4d09-c861-41a5-adfa-17e6b30fad44",
+    "eff5976d-da7f-418a-89a7-cd2bd3242b53",
+    "7dea5dc0-9bcd-4d5f-a1aa-0c764a76b199",
+    "ec056794-8040-45d4-9796-704651a85a16",
+    "bc2b44b0-8a49-4732-9d0f-320b9a5b969e",
+    "4aef74cb-3baf-4517-9837-efd4db069492",
+    "21e6c1e2-d8a2-4c41-af00-a730f64ae72e",
+    "e079a544-850a-4cba-9be7-f85d76795fdb",
+    "b743244d-b6cb-41d9-b521-17a94c30045b",
+    "9fa0a092-be3d-47fc-bb2f-bdb3df888787",
+    "16710fdc-3529-4b44-9fae-dc22672a141a",
+    "9cf0def4-1e37-4d39-acce-533f54310d23",
+    "b9322a5a-1579-492c-bc94-04aded62e54d",
+    "29488fed-3d55-4b9b-af2e-11708d126306",
+    "678cf369-b4d5-4a5e-bbb5-b25ed8568597",
+    "5f8af271-4355-43c3-9b47-a9c9c548d206",
+    "2f0ef177-78eb-47e8-837f-d938e3843180",
+    "5ed27468-6ec9-4a68-890c-835b96af1b08",
+    "8e19a0b8-1a80-4ea1-8efa-2f8e8cd220e0",
+    "0c554bce-4842-4870-b308-763fe851d055",
+    "9695c7dd-b0ff-4c44-80d9-ea1ed5ca36bf",
+    "bb4c8ece-962e-4389-b82e-1efe81e5ae75",
+    "ff274c5c-6927-4920-bc7f-0b7ca05aa490",
+    "634a512c-5760-402f-8b57-70d8e1dcc314",
+    "414dab89-1bf9-4f16-ba6f-93c43186b8cf",
+    "a8b9f1bb-f25d-42af-92a1-e0aff16bee3a",
+    "4390d969-6143-47cd-a98d-3433e6657830",
+    "2c40b2b0-bb1c-43c3-86f4-fd09d1017066",
+    "3008c42e-396c-4e99-b430-2cca1581b268",
+    "b3a077d1-4ca0-4c0f-aa61-9a540cc80659",
+    "060a1a06-1098-41b1-ad55-89a3e7d0a37f",
+    "c45d20cf-8e9e-4a77-a9ea-0f2d3176bea9",
+    "975c968b-409d-4cdd-949b-850ec12184e9",
+    "174d5d8b-e7bd-4002-9ef3-87bd28c5925e",
+    "0074d1e3-96e8-4323-ac93-04d3ee127928",
+    "0fdc7c52-39aa-4b9f-b42f-fe035dc2ee7e"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T14:25:22.482731+00:00",
+    "predicted_window": "300-399",
+    "predicted_p_hit": 0.3118,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "300-399",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey": [
+      [
+       100,
+       199
+      ],
+      [
+       500,
+       599
+      ],
+      [
+       900,
+       999
+      ]
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "joined-full"
+    }
+   }
+  },
+  {
+   "made_at": "2026-09-14T12:17:04.089045+00:00",
+   "cell": "HUDEP-2",
+   "beta": 0.15,
+   "counts": [
+    15,
+    14,
+    14,
+    11,
+    15,
+    15,
+    17,
+    9,
+    10
+   ],
+   "ranked": [
+    {
+     "window": 7,
+     "label": "800-899",
+     "p_hit": 0.3461
+    },
+    {
+     "window": 8,
+     "label": "900-999",
+     "p_hit": 0.334
+    },
+    {
+     "window": 3,
+     "label": "400-499",
+     "p_hit": 0.3223
+    }
+   ],
+   "heuristic": [
+    "800-899",
+    "900-999",
+    "400-499"
+   ],
+   "known_ids": [
+    "836ed169-86c3-4eb2-a8e5-ea71aecb8ce6",
+    "beec21a1-7cda-45c1-a2c7-0648fe740a60",
+    "9503b973-f355-4d85-9173-eb90660c83a1",
+    "a2af3987-7b4c-4c6a-95b7-6de6e58b5e98",
+    "659da8e7-74de-4565-93a2-12f7731f1686",
+    "5d65408f-14f5-40a1-a8b4-6b1770b0144a",
+    "d53db5d1-fbd4-422e-a5a5-a54248978391",
+    "db327875-11d4-4b57-9c43-5c015fdd3895",
+    "27e5642a-133b-4511-8347-0c7381e6138b",
+    "60a0c201-330e-4685-8bf6-420f505fb55c",
+    "30ec3094-40ac-427f-ac57-86f72dee7c7d",
+    "4a823567-eb38-4779-b6ac-1f24f2f287d5",
+    "94763dce-7312-4c96-8f0e-0f5aa025c13f",
+    "2dcb5d0e-aa48-488e-8b26-a57042c457bc",
+    "9c29702c-68e8-4dae-b9df-c765e108429d",
+    "a9fbd62d-a343-41a8-a828-ebf4d4435cc9",
+    "05071346-8862-4a4d-a1be-780c1983e304",
+    "e890b5d2-ca97-4226-b329-65e854e8bc60",
+    "3d26694e-6b6f-49a8-88ac-181481a3b5e6",
+    "37145bdd-1046-4e7c-ac26-9bd884fa2fce",
+    "f9511be6-dcd7-45c0-b4e9-a51bdf0e54ec",
+    "d7adde05-07ca-46a2-af55-ebecabe9279f",
+    "a4cf2a48-8867-4bd2-83f4-2c0e2f8945ca",
+    "b91fa91e-253f-4dcf-8edc-5ba79fb8ecce",
+    "129cffd3-5fea-407b-9c0a-f0cb3c0b1ba5",
+    "4481c8ea-d292-48fa-b923-05523ee4b144",
+    "c82c841b-4f39-484c-96b6-767ef35a804a",
+    "4195cd32-4b9a-4b38-9835-9631ea75af08",
+    "4725e952-50b0-4b39-a21b-8f9ae2e57b1a",
+    "9ac1d178-1e35-410c-8a1c-17efaa35e029",
+    "aaabce6e-928a-4a30-bc05-3d480333c0fe",
+    "442591a9-ddc4-4f96-8e27-be58186ed76a",
+    "a6d107e0-23d0-48d9-9d92-05a68f45e5da",
+    "72fb2cd4-5915-4b47-ae8a-7424bf711f17",
+    "7715f00d-3517-482a-abd4-19d929a86e47",
+    "bbdece32-e367-4bc4-8bb9-826663312f05",
+    "06b78fe1-ca70-4df3-892e-98c4d3eb4f9b",
+    "33d826fc-87be-44f7-bfec-12b08a82e41b",
+    "e91f05f8-5acf-4b2c-b4b8-35ed7255921b",
+    "9f14cd8d-1e78-40f8-9a32-d775d0fdbbcd"
+   ],
+   "applied": {
+    "applied_at": "2026-09-14T14:25:22.482731+00:00",
+    "predicted_window": "800-899",
+    "predicted_p_hit": 0.3492,
+    "band_width": 0,
+    "conc_rank": 1,
+    "rank1_window": "800-899",
+    "spread_width": 100,
+    "n_concentrated": 0,
+    "played": true,
+    "assignments": {
+     "niome_hotkey": [
+      [
+       100,
+       399
+      ]
+     ]
+    },
+    "roles": {
+     "niome_hotkey": "joined-full"
     }
    }
   }

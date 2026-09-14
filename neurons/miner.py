@@ -51,6 +51,7 @@ import niome_subnet.utils.settings as settings  # noqa: E402
 # but it is an import-time side effect, so it stays below settings and above nothing that cares
 # about cwd.
 import genExp as G  # noqa: E402
+import joined_window as JW  # noqa: E402
 
 from niome_subnet.base.miner import BaseMinerNeuron  # noqa: E402
 from niome_subnet.genomics.hek293_generation import (  # noqa: E402
@@ -552,19 +553,46 @@ class Miner(BaseMinerNeuron):
 
         Every failure path returns ``self.hdr_window``, the behaviour the fleet had before.
         """
-        def pin(source: str) -> tuple[int, int] | None:
-            """The env pin's START at the CELL's validated width.
+        def pin(source: str):
+            """This hotkey's window with no usable plan -- the SAME construction the plan runs.
 
-            NIOME_HDR_WINDOW is one window per hotkey, but the right WIDTH is per cell type --
-            validated over 5 contracts each: 100 for K562 and HUDEP-2, 150 for CD34+_HSPC, 75 for
-            HEK293 (`all_hdr.CELL_CONFIG`). A single env var cannot carry that, and the width is
-            not a free choice: `group_size` is tuned at it (HEK293 measured group 100 ahead at
-            width 75 and group 80 ahead at 100-225), so a fallback that keeps the pin's width would
-            pair the new group with the wrong window.
+            The fallback used to be one contiguous window per hotkey, read straight from
+            NIOME_HDR_WINDOW, and it was wrong in two independent ways:
 
-            So the pin supplies the OFFSET, which is what decorrelates sibling hotkeys, and the
-            cell supplies the width. Clamped to keep the window inside 100-999.
+              * **The widths collided.** The right width is per CELL TYPE -- 100 for K562 and
+                HUDEP-2, 150 for CD34+_HSPC, 75 for HEK293, validated over five contracts each
+                (`all_hdr.CELL_CONFIG`) -- and one env var cannot carry four. The width is not a
+                free choice either: `group_size` is tuned AT it (HEK293 measured group 100 ahead at
+                width 75 and group 80 ahead at 100-225), so keeping the pin's width would pair the
+                new group with the wrong window.
+              * **The starts collided.** h0/h1 both began at 100 and h8/h9/h10 all at 900, so
+                eleven hotkeys fell back onto EIGHT distinct windows -- three drawing the identical
+                band, on exactly the rounds the plan was unavailable.
+
+            So the fallback now takes `joined_window.fallback_for`: rotated slices at stride 30
+            over a joined seed space, width from the cell, h0 at a half-stride offset. Identical
+            arithmetic to `window_plan.py` (imported, not restated), against a FIXED class triple
+            rather than a predicted one -- which costs nothing, because band position is free under
+            a uniform generator and the generator is measured uniform.
+
+            The env pin at the cell's width remains the last resort, for a hotkey the layout does
+            not name or an import that fails. Every path still returns something buildable.
             """
+            instance = os.getenv("NIOME_INSTANCE")
+            try:
+                spans = JW.fallback_for(cell_type, instance) if instance else None
+            except Exception as exc:
+                logger.warning(f"fallback window layout unusable ({exc}); using the env pin")
+                spans = None
+            if spans:
+                label = ",".join(f"{a}-{b}" for a, b in spans)
+                logger.info(f"Build: window {label} from the built-in fallback layout ({source})")
+                self._record_window(task_id, cell_type, (spans[0][0], spans[-1][1]),
+                                    f"{source}_joined", None)
+                if len(spans) == 1:
+                    return spans[0][0], spans[0][1]
+                return sorted({s for a, b in spans for s in range(a, b + 1)})
+
             window = self.hdr_window
             if window:
                 try:

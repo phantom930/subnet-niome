@@ -28,9 +28,32 @@ cd "$ROOT"
 EXTERNAL_IP=184.144.255.144
 
 # One row per hotkey:  <wallet-hotkey>  <axon.port>  <axon.external-port>  <NIOME_HDR_WINDOW>
-# Windows must be disjoint (no shared seeds) or the siblings' bands overlap and the coverage
-# collapses toward a single hotkey's. 200-299 / 500-599 / 800-899 are evenly spread; any three
-# non-overlapping 100-seed windows in 100-999 are equivalent, since band position is otherwise free.
+#
+# **The window column is now a LAST RESORT that nothing normally reads.** A build takes its window
+# from one of two places, in this order:
+#
+#   1. data/window_plan.json         written hourly by window_plan.py from the predicted classes
+#   2. joined_window.fallback_for()  the SAME construction against a FIXED class triple, used when
+#                                    that file is missing, stale or malformed
+#
+# Both key on NIOME_INSTANCE (the hotkey name, exported below), both take the WIDTH from the cell
+# type, and both rotate at stride 30 with h0 at a half-stride offset. The width is per cell --
+# 100 for K562 and HUDEP-2, 150 for CD34+_HSPC, 75 for HEK293, validated over five contracts each
+# (all_hdr.CELL_CONFIG) -- and it is not a free choice: group_size is tuned AT the width (HEK293
+# measured group 100 ahead at width 75 and group 80 ahead at 100-225), so a layout that hands a
+# cell the wrong width hands it the wrong group too. One env var cannot carry four widths, which
+# is why this column stopped being the source.
+#
+# NIOME_HDR_WINDOW is read only if NIOME_INSTANCE is unset or the hotkey appears in neither of
+# joined_window's lists -- and even then only its START is used, at the cell's width. That is why
+# the duplicate starts below (h0/h1 at 100, h8/h9/h10 at 900) are now harmless: before the rotation
+# was wired in they collapsed eleven hotkeys onto EIGHT distinct fallback windows, three of them
+# drawing the identical band.
+#
+# So: to move a hotkey, edit joined_window.ROTATE_HK or FALLBACK_CLASSES. To change a width, edit
+# all_hdr.CELL_CONFIG. Editing this column changes only the last resort. Adding a row here still
+# registers its ports, but add the same name to joined_window.ROTATE_HK or it will fall straight
+# through to that last resort and re-correlate with whatever shares its start.
 HOTKEYS=(
   "niome_hotkey   8091 52760 100-299"
   "niome_hotkey1  8092 52096 100-299"
@@ -70,6 +93,37 @@ HOTKEYS=(
 #               share 25.5% -> 25.8%, i.e. nothing — the points crossed no rank boundary. 24000
 #               adds +0.12 for 2x build and 2x memory. One build holds 12.7 GB; four would need
 #               50.6 GB on a 49 GB box, which is why the build is shared.
+# EMPTY as of 2026-09-14: h0 (niome_hotkey), the only registered hotkey, was moved OFF seed-depend
+# and onto all-HDR at the full joined width. It ran seed-depend for one day (2026-09-13) after the
+# whole fleet was deregistered between 09-11 22:48 and 09-13 07:33 and only h0 was registered back
+# (uid 122, block 9058420).
+#
+# With one hotkey there is no band/hedge split to make across siblings — the choice is which single
+# trade to take, and it is now the band rather than the seed-0 lottery. Seed-depend wins outright
+# on the 7.6% of rounds the backend never stamps (rank 1 of 248 twice) and scores the ~0.10 floor
+# on the other 92.4%, and the field on those rounds went 6 -> 8 -> 25 -> 38 miners tied at
+# consistency 1.000 across 09-07/08, with the 38-deep round putting us 6th at 9% of the curve. The
+# band instead plays every round, and at full width it covers the whole 300-seed joined space.
+# Everything needed to switch back is intact: list "niome_hotkey:1" here and re-run window_plan.py.
+#
+# seed-depend is the FIRST rung of _build's ladder and REPLACES the construction rather than
+# hedging beside it, so a listed hotkey scores the ~0.10 floor on every round the backend does
+# stamp -- which is ~92.4% of them (8 never-stamped of 105 measured). Running all seven there
+# put the whole fleet on that trade; one hotkey buys the seed-0 lottery ticket while the other
+# six keep the band.
+#
+# The seed-depend hotkey must be the one sitting in joined_window.FULL_HK, and the two lists are
+# kept in step: with h10 here, ROTATE_HK is h4-h9, and 6 x STRIDE 50 tiles the 300-seed joined
+# space exactly once -- no gap, nothing doubled up. Moving seed-depend to a hotkey that is in
+# ROTATE_HK instead would leave five rotating slices covering 250 of 300 seeds and strand the
+# half-stride one. h10 keeps its FULL_HK entry so that if seed-depend declines (budget under
+# SEED_DEPEND_MIN_BUDGET_S of 360s on a failed prefetch) it falls through onto a real window.
+#
+# The value after the colon is only a marker -- SEED_DEPEND_SHARED is True, so one process builds
+# and any others load the same rows at SEED_DEPEND_SHARED_VARIANT.
+#
+# Re-run window_plan.py after changing this list: it excludes seed-depend hotkeys from the band
+# allocation, so a stale plan would either assign a window nothing plays or omit one that is.
 SEED_DEPEND_VARIANTS=""
 
 # One hotkey runs all-cut instead of all-HDR: the fleet's flat-score hedge. all-HDR scores the
@@ -135,15 +189,24 @@ ALL_CUT_HOTKEYS=""
 #   2026-09-05: niome_hotkey (h0) deregistered; the other eight hold uids 175/8/110/79/81/124/36/92.
 #   2026-09-07: the whole fleet dropped off the metagraph — h0 09-04 20:58, h1 09-05 07:28,
 #   h8 09-05 16:39 — and was rebuilt smaller.
-#   2026-09-08: six registered, verified against the chain (256 uids on netuid 55):
-#     niome_hotkey uid 74, niome_hotkey1 uid 209, niome_hotkey2 uid 235, niome_hotkey3 uid 196,
-#     niome_hotkey4 uid 189, niome_hotkey5 uid 147, niome_hotkey6 uid 136, niome_hotkey7 uid 75.
-#   h8 remains off. Nothing here can register a hotkey — until `btcli subnet register` puts one
-#   back on netuid 55 its process exits at startup (base/neuron.check_registered calls exit()) and
-#   pm2 restarts it on a delay.
-# 2026-09-09: all eleven are registered — niome_hotkey uid 74, h1 209, h2 235, h3 196, h4 189,
-#   h5 147, h6 136, h7 75, h8 151, h9 224, h10 10 — so nothing is held out of the allocation.
-DEREGISTERED=""
+#   2026-09-09: all eleven were registered — niome_hotkey uid 74, h1 209, h2 235, h3 196, h4 189,
+#   h5 147, h6 136, h7 75, h8 151, h9 224, h10 10.
+# 2026-09-13, verified against the chain (256 uids on netuid 55): ONE of eleven is registered —
+#   niome_hotkey uid 122, registered at block 9058420. Every other hotkey was deregistered over the
+#   preceding ~36h, one at a time in hotkey order: h0 09-11 22:48, h1/h2/h3 09-12 05:13/05:36/06:02,
+#   h4-h7 09-12 19:26-21:28, h8/h9/h10 09-13 06:46/07:10/07:33. uid 10 now belongs to another
+#   coldkey, so the old uids above are recycled and must not be used to identify us.
+#
+#   **A deregistered miner does NOT reliably crash-loop, and pm2 will report it healthy.**
+#   check_registered's exit() (base/neuron.py) raises SystemExit, and run() is a DAEMON THREAD
+#   (base/miner.py run_in_background_thread) — so mid-run deregistration kills only that thread.
+#   h8/h9/h10 stayed `online` for 4-5 hours after falling off, printing the "Miner running..."
+#   heartbeat from the main thread and still prefetching builds no validator could ever ask for,
+#   with resync_metagraph() stopped dead at the deregistration error. Only the exit() in __init__
+#   runs on the main thread and actually ends the process, so the crash-loop-plus-restart-delay
+#   recovery applies to a hotkey that starts unregistered, NOT to one deregistered while running.
+#   Check the chain, not `pm2 list` — grep for the last resync_metagraph() to date the death.
+DEREGISTERED="niome_hotkey1 niome_hotkey2 niome_hotkey3 niome_hotkey4 niome_hotkey5 niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so
@@ -203,6 +266,13 @@ run_one() {
 # min-union different guide groups, so their bands still land on different seeds.
 ALLOW_OVERLAPPING_WINDOWS=1
 
+# It parses the ranges AS WRITTEN, which are no longer the runtime windows -- those come from the
+# plan or from joined_window.fallback_for(), keyed on NIOME_INSTANCE (see the HOTKEYS table above).
+# So this guard no longer protects decorrelation; both real layouts guarantee eleven distinct
+# windows by construction, and neither can be broken by an edit here. What it still earns its keep
+# on is catching a malformed or out-of-range window before a process starts on it. Overlap is only
+# a NOTE while ALLOW_OVERLAPPING_WINDOWS=1, and duplicate rows (h0/h1 at 100, h8/h9/h10 at 900) are
+# deliberate: they feed only the last resort.
 assert_disjoint_windows() {
   local -a los=() his=() names=()
   for row in "${HOTKEYS[@]}"; do

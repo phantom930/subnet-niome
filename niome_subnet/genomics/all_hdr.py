@@ -93,9 +93,14 @@ HDR_BANK_DIR = "data/all_hdr"
 CELL_CONFIG: dict[str, dict] = {
     # CD34+_HSPC: width 150 at group 100, validated over 5 contracts (spread 1.50-2.71) at
     # E[share] 0.00236 against the shared width-100/group-80 default's 0.00227 (+3.8%). Carries
-    # its own `main_max_fail` because `build_for_cell` only rescales the screen for a window
-    # passed IN by the caller: 78 is the measured plateau entry at span 150 (the adaptive search
+    # its own `main_max_fail`: 78 is the measured plateau entry at span 150 (the adaptive search
     # had to loosen past the linear 68, unlike K562/HUDEP-2, so this is cell-specific).
+    #
+    # **`main_max_fail` here is the value at THIS `hdr_range`'s span, not at span 100.** An earlier
+    # note said it was carried "because build_for_cell only rescales for a window passed IN by the
+    # caller" — that premise is false now that the window plan is the shipped path, since the plan
+    # passes a window on every build. `_scaled_max_fail` therefore takes `_native_span(cell)` as
+    # its reference. It cost HEK293 band 9 -> 5 before it was fixed; CD34+ was unaffected.
     "CD34+_HSPC": {"hdr_range": (500, 649), "main_max_fail": 78, "group_size": 100,
                    "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     # K562 stays at the shared 100-seed band. A 150-seed default was set earlier in this
@@ -104,16 +109,22 @@ CELL_CONFIG: dict[str, dict] = {
     # 0.00181 and width 75's 0.00181 — the single-contract grid picked a width that came LAST.
     "K562": {"hdr_range": (700, 799), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
     "HUDEP-2": {"hdr_range": (800, 899), "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
-    # HEK293: width 75 at group 100, the largest validated gain of the four cells — E[share]
-    # 0.00228 over 5 contracts (spread 1.50-3.93) against the width-100/group-80 default's
-    # 0.00205 (+10.8%). `main_max_fail` 45 is the measured plateau entry at span 75; the z-rule
-    # predicted 34 and the adaptive search had to loosen twice, so HEK293 needs a looser screen
-    # than its own P(HDR) implies.
+    # HEK293: width 100 at group 80, mf 48 — reverted 2026-09-12 by operator decision.
     #
-    # **group_size 100 is specific to width 75.** At widths 100/150/225 this cell measured group
-    # 80 ahead (230.2/228.6/228.2 against 229.2/228.1/224.8), so a build that overrides the window
-    # to a wider one should use 80. See the note on CELL_CONFIG below.
-    "HEK293": {"hdr_range": (300, 374), "main_max_fail": 45, "group_size": 100,
+    # **This gives up a measured win, deliberately; do not "fix" it back without being asked.**
+    # Width 75 at group 100 validated over 5 contracts (spread 1.50-3.93) at E[share] 0.00228
+    # against this config's 0.00205, i.e. **+10.8%**, the largest validated gain of the four cells.
+    # Its `main_max_fail` 45 was the measured plateau entry at span 75.
+    #
+    # The three values here move together and must not be mixed with that set:
+    #   * group 80 is the right partner for width 100 — at widths 100/150/225 this cell measured
+    #     group 80 ahead (230.2/228.6/228.2 against 229.2/228.1/224.8), and group 100 only wins
+    #     at width 75.
+    #   * mf 48 is the documented screen for band 300-399. `_scaled_max_fail` reads its reference
+    #     span from `_native_span`, i.e. from this `hdr_range`, so 48 is applied AT span 100.
+    #     Carrying 45 over would be a tighter screen than this width was ever measured with —
+    #     the same mistake that cost this cell band 9 -> 5 earlier today.
+    "HEK293": {"hdr_range": (300, 399), "main_max_fail": 48, "group_size": 80,
                "cas12a_gc": (0.40, 0.95), "cas9_gc": (0.40, 0.95)},
 }
 
@@ -323,17 +334,43 @@ WIDE_WINDOW_VARIANTS = 44000
 MEAN_FAIL_100 = {"HEK293": 64.2}
 
 
-def _scaled_max_fail(cell_type: str, mf_100: int, span: int) -> int:
+def _native_span(cell_type: str) -> int:
+    """The span ``CELL_CONFIG[cell]["main_max_fail"]`` was MEASURED at — its own `hdr_range`.
+
+    100 for K562 and HUDEP-2, 150 for CD34+_HSPC, 75 for HEK293. Not always 100, which is what
+    `_scaled_max_fail` assumed until 2026-09-11; see the note there.
+    """
+    lo, hi = (CELL_CONFIG.get(cell_type) or {}).get("hdr_range", (100, 199))
+    return hi - lo + 1
+
+
+def _scaled_max_fail(cell_type: str, mf_native: int, span: int, native: int = 100) -> int:
     """``main_max_fail`` for a band of ``span`` seeds, holding the z-score of the tuned value.
 
-    mf = mean*r + z*sd*sqrt(r) with r = span/100, which rearranges to the form below so only the
-    mean fail count at span 100 is needed. Falls back to linear when that is unmeasured.
+    mf = mean*r + z*sd*sqrt(r) with r = span/100. ``native`` is the span ``mf_native`` was measured
+    at, which cancels out when the two match, so a cell asked for its own validated width gets its
+    validated screen back unchanged. Falls back to linear when the mean is unmeasured.
+
+    **`native` defaulted to 100 and that was wrong for two cells.** CD34+_HSPC's 78 is the measured
+    plateau entry at span **150** and HEK293's 45 at span **75**, but both were being re-scaled as
+    though measured at 100 — and `window_plan._sub_width` hands every cell exactly its validated
+    width, so this fired on every planned build. Measured on the live plan windows: HEK293 ran
+    mf 32 against its validated 45, which collapsed the bank from the 60,000 cap to ~1,900 guides
+    and the band from **9 seeds to 5**. CD34+ ran 117 against 78 and was unaffected (band 12 both
+    ways) because its bank sits at the cap either way. K562 and HUDEP-2 are native-100 and were
+    always correct.
+
+    Note the z-rule is a poor EXTRAPOLATOR for HEK293 even when anchored correctly -- CLAUDE.md
+    records that it predicted 34 where the adaptive search needed 45 -- so prefer a measured point
+    over a scaled one whenever one exists for the width in question.
     """
-    r = span / 100.0
+    r_s = span / 100.0
+    r_n = native / 100.0
     mean_100 = MEAN_FAIL_100.get(cell_type)
     if not mean_100:
-        return max(1, round(mf_100 * r))
-    return max(1, round(mf_100 * r + (mean_100 - mf_100) * (r - math.sqrt(r))))
+        return max(1, round(mf_native * span / max(1, native)))
+    mean_n = mean_100 * r_n
+    return max(1, round(mean_100 * r_s + (mf_native - mean_n) * math.sqrt(r_s / r_n)))
 
 
 # `light_cell_rows` is not one number: the right value depends on the CONTRACT, because the knob
@@ -606,7 +643,8 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
         hdr_range = (seeds[0], seeds[-1])
         span = len(seeds)
         cfg = dataclasses.replace(cfg, hdr_range=hdr_range, seed_list=tuple(seeds),
-                                  main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span))
+                                  main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span,
+                                                                 _native_span(cell)))
         if span > 100:
             cfg = dataclasses.replace(cfg, variants=min(cfg.variants, WIDE_WINDOW_VARIANTS))
         return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)
@@ -621,9 +659,10 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
         # the band itself from 13 seeds at width 100 to 9 at width 300.
         span = hdr_range[1] - hdr_range[0] + 1
         cfg = dataclasses.replace(cfg, hdr_range=hdr_range)
-        if span != 100:
+        if span != _native_span(cell):
             cfg = dataclasses.replace(
-                cfg, main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span))
+                cfg, main_max_fail=_scaled_max_fail(cell, cfg.main_max_fail, span,
+                                                    _native_span(cell)))
         if span > 100:
             # The scan cost scales with the span, so a wide window has to give some of it back in
             # `variants` or the fleet exceeds its GPU budget. See WIDE_WINDOW_VARIANTS.

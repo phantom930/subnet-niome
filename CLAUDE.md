@@ -805,15 +805,18 @@ three targets are *exactly constant* across the 250 rows — because `r2_score` 
 constant `y_test` predicted exactly, and `normalized_mae` returns the raw MAE **unnormalised** when
 `std(y) < 1e-9`. Pinning all three targets therefore scores exactly 1.0 on both terms; pinning one
 scores 1.0 on that target only, while the other two still overfit to negative R². Measured on
-HUDEP-2 (9ac1d178 for all-HDR, 4725e952 for all-cut):
+HUDEP-2 (9ac1d178 for all-HDR, 4725e952 for all-cut) and on CD34+_HSPC (20546350, h10's shipped
+rows):
 
-| per-seed regime | pinned targets | n | mean | range |
-|---|---|---|---|---|
-| HDR band | all 3 | 2 | **1.0000** | exact |
-| cut-clean, all-cut rows | `is_cut` | 14 | **0.237** | 0.139-0.303 |
-| cut-clean, all-HDR rows | `is_cut` | 5 | **0.162** | 0.135-0.203 |
-| dirty, all-cut rows | none | 8 | 0.108 | 0.103-0.121 |
-| dirty, all-HDR rows | none | 2 | 0.101 | 0.099-0.104 |
+| per-seed regime | pinned targets | cell | n | mean | range |
+|---|---|---|---|---|---|
+| HDR band | all 3 | HUDEP-2 | 2 | **1.0000** | exact |
+| cut-clean, all-cut rows | `is_cut` | HUDEP-2 | 14 | **0.237** | 0.139-0.303 |
+| cut-clean, all-HDR rows | `is_cut` | HUDEP-2 | 5 | **0.162** | 0.135-0.203 |
+| cut-clean, all-HDR rows | `is_cut` | **CD34+_HSPC** | **10** | **0.190** | **0.115-0.250** |
+| dirty, all-cut rows | none | HUDEP-2 | 8 | 0.108 | 0.103-0.121 |
+| dirty, all-HDR rows | none | HUDEP-2 | 2 | 0.101 | 0.099-0.104 |
+| dirty, all-HDR rows | none | **CD34+_HSPC** | **6** | **0.094** | **0.078-0.108** |
 
 Two things to take from it. **Pinning `is_cut` is worth far less than the 0.7 R² weight suggests** —
 `avg_r2` only reaches 0.04-0.24, because `is_hdr` and `indel_length` overfit *harder* once `is_cut`
@@ -824,6 +827,40 @@ composition's number, and never off one seed — an earlier draft of this sectio
 recorded 0.299, which is the top of the range rather than the mean. This does not contradict the
 "nobody has a better floor" line above: the *dirty* floor really is ~0.10 for everyone. The
 difference between us and the field is how many seeds are not dirty.
+
+**The CD34+ row is exhaustive over the class, and it does not contain the HUDEP-2 figure.** It comes
+from h10's live shipped rows on task 20546350, replayed through stage 3 at all 900 seeds to
+enumerate the cut-clean set and then scored through stage 4 at every member — so the 10 is the whole
+class, not a sample, and 0.115-0.250 brackets HUDEP-2's 0.135-0.203 on both sides. **Do not reuse
+0.162 on another cell type or another build**; re-enumerate. (The dirty row is the one convenience
+sample here — the round's own 249 plus 100/200/300/700/800.) Note this does **not** re-test the
+"composition, not rule" claim above: that t = 3.8 is all-cut against all-HDR *within HUDEP-2*, and
+there is no all-cut CD34+ measurement to pair with the 0.190, which sits much nearer all-cut's
+HUDEP-2 0.237 than all-HDR's HUDEP-2 0.162. Cell type and composition are confounded here.
+
+**All-HDR carries a handful of cut-clean seeds beyond its band, and the count is stable across
+siblings.** HDR-clean ⊂ cut-clean, so the band is a subset; the remainder is the class above.
+Measured on the four hotkeys that submitted to 20546350, same contract, different windows:
+
+| | h10 | h4 | h8 | h9 |
+|---|---|---|---|---|
+| band (HDR-clean) | 12 | 12 | 12 | 12 |
+| cut-clean | 22 | 20 | 19 | 18 |
+| **cut-clean only** | **10** | **8** | **7** | **6** |
+
+That is consistent with the falsified "recover cut-clean seeds inside all-HDR's pools — ceiling 34
+of 900" row: the bonus exists, it is small, and nothing selected for it.
+
+**It pays occasionally and is worth ~nothing in expectation — 20546350 is the worked example of
+both halves.** A 3-seed round draws one of h10's 10 bonus seeds with probability
+`1-(890/900)**3` = **3.30%**, and this round did: seed 603 came in at **0.2287**, which took h10
+from cons 0.3995 / final 111.5 / **rank 14 / 0% of the curve** to 0.4443 / 123.97 / **rank 10 / 1%**.
+h4 caught a band seed on the same round (603, at exactly 1.0000) and finished rank 14 *because* it
+had no bonus seed. But in expectation the off-band floor moves only **0.0944 -> 0.0955**, and even
+at the conjunction's measured 80-seed cap it reaches ~**0.102** against the **f = 0.150** that
+[floor_price.py](floor_price.py) arm A needs for +22%. That independently reconfirms
+`cas12a_union.py`'s "+0.7 to +2.4 round final" from live rows: **the wide-cut-clean route is priced
+at zero even when it wins a round.**
 
 **What the field's top actually is: a top block present in EVERY round, and the plateau
 reading of it was wrong twice.** The mechanism `(1 + 2*0.237)/3 = 0.491` is right and the framing

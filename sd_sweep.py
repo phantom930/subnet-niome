@@ -66,6 +66,18 @@ CONFIGS = {
     # 12k costs ~300s against SEED_DEPEND_MIN_BUDGET_S of 190s, so this only ever runs on the
     # prefetch path.
     "vps24k": {"variants_per_site": 24000},
+    # per_cell_floor sweep — seed-depend's analogue of all_hdr's `light_cell_rows`. It is a
+    # MINIMUM rows-per-light-cell, not a hard quota: `allocate` searches the heavy share and the
+    # floor only bounds it, via `max_heavy = n_rows - floor * len(light_cells)`. With 4 light
+    # cells that caps heavy at 250/242/234/226/202/150 for floor 0/2/4/6/12/25, and the search
+    # currently settles near 207 — so everything at or below floor 6 should be INERT and only
+    # 12 and 25 can bind. Arms below 4 exist to confirm that inertness rather than assume it.
+    "floor4": {"per_cell_floor": 4},   # the shipped default, rebuilt under current code
+    "floor0": {"per_cell_floor": 0},
+    "floor2": {"per_cell_floor": 2},
+    "floor6": {"per_cell_floor": 6},
+    "floor12": {"per_cell_floor": 12},
+    "floor25": {"per_cell_floor": 25},
 }
 
 

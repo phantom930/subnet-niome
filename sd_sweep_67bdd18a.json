@@ -73,6 +73,16 @@
    "share": 0.025,
    "build_s": 0.0,
    "heavy": 205
+  },
+  "floor0": {
+   "weighted": 360.7726649569636,
+   "consistency": 1.0,
+   "fidelity": 0.9194260530087308,
+   "final": 331.7037873748223,
+   "rank": 1,
+   "share": 0.3,
+   "build_s": 309.4,
+   "heavy": 205
   }
  }
 }

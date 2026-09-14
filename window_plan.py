@@ -35,6 +35,7 @@ import re
 import sys
 from datetime import datetime, timedelta, timezone
 
+import joined_window as JW
 from seed_window_model import (load_log, load_tasks, pending_for, predict, save_log,
                                window as _sw_window,
                                window_label)
@@ -206,11 +207,13 @@ JOINED_MODE = True
 # window of the same span holds its band far better. h0 at full width 300 returns band 11 on K562
 # and 7 on HEK293, against that table's prediction of 9. So the depth gain (6.67 -> 7.5 slices per
 # seed) is free rather than paid for.
-JOINED_HK = ["niome_hotkey1", "niome_hotkey2", "niome_hotkey3", "niome_hotkey4",
-             "niome_hotkey5", "niome_hotkey6", "niome_hotkey7", "niome_hotkey8",
-             "niome_hotkey9", "niome_hotkey10"]
-JOINED_SUB_WIDTH = 225
-JOINED_STRIDE = 30
+# The rotation itself lives in [joined_window.py](joined_window.py), because the MINER runs the
+# same construction when this plan is missing or stale -- fixed classes instead of predicted ones.
+# Restating stride, width or the hotkey order here would let the two layouts drift silently, and a
+# drifted fallback is invisible until the cron stops.
+JOINED_HK = JW.ROTATE_HK
+JOINED_SUB_WIDTH = JW.DEFAULT_WIDTH
+JOINED_STRIDE = JW.STRIDE
 # h0 takes the WHOLE joined space -- width 300, no rotation offset. It came off all-cut on a
 # fleet-level pricing (fleet_price.py): all-cut wins 3.18x per hotkey on P(place), but ten identical
 # all-cut submissions hold ONE score and take ranks r..r+9, collecting the tail of
@@ -219,10 +222,14 @@ JOINED_STRIDE = 30
 # seeds, mean/SE 21) and +6.0% (K562); every hotkey moved TO all-cut costs share, monotonically, to
 # -60% at 11/0. all-cut stays the ladder's fallback for h0, so a decline loses nothing.
 #
-# Full width rather than a rotated slice costs band size -- the band narrows as the window widens
-# (13/12/11/9 measured at 100/150/200/300), so expect ~9 against the slices' ~10-11 -- and buys
-# reach across the whole joined space instead of 75% of it.
-JOINED_FULL_HK = ["niome_hotkey"]
+# Full width rather than a rotated slice was expected to cost band size -- the CONTIGUOUS width
+# sweep reads 13/12/11/9 at 100/150/200/300 -- and on the live fleet it does not: h0 at full width
+# returns band 11 on K562 and 7 on HEK293, against that sweep's predicted 9. A joined window holds
+# its band far better than a contiguous one of the same span. The width it takes is
+# `JW.FULL_SUB_WIDTH` (None -> the whole 300), read from joined_window so this plan and the miner's
+# offline fallback cannot drift on it.
+JOINED_FULL_HK = JW.FULL_HK
+JOINED_FULL_WIDTH = JW.FULL_SUB_WIDTH
 
 
 # Where the joined window's three classes come from.
@@ -253,7 +260,22 @@ JOINED_FULL_HK = ["niome_hotkey"]
 # What it does buy is simplicity, and that part is not marginal: repeat_last reads the task feed the
 # plan already loads, so it takes torch, `.venv-ml`, the retraining cron, `seed_refresh_guard.py`
 # and the staleness window off the critical path entirely. There is nothing to go stale.
-JOINED_SOURCE = "repeat_last"
+#   "auto_rank"    strategy_rank.py -- pick, PER CELL TYPE, whichever of the six strategies has
+#                  the best average rank over that cell's latest 10/20/30 tasks. Shipped.
+#
+# **auto_rank is a selection rule over measurements that do not separate**, which is less a
+# criticism of the rule than of what there is to select from. The three ranking windows are NESTED
+# (10 subset 20 subset 30), so they are not three independent votes; and over the 160-task cold
+# walk-forward every strategy sits between 0.93x and 1.06x chance with |z| <= 1.1, the model's
+# paired difference against `uniform` being +0.006 seeds (54W/51L/55T, p 0.497). Picking the max of
+# six correlated noisy estimates is a winner's-curse setup, so expect auto_rank to behave like an
+# arbitrary pick rather than like skill.
+#
+# It is safe for exactly the reason the earlier switches were: band position is free under a uniform
+# generator and the generator is measured uniform, so choosing differently costs nothing. What it
+# buys is that the choice comes from this cell type's own recent record instead of one global
+# constant, and that record accrues either way. Do not read a selection as evidence of an edge.
+JOINED_SOURCE = "auto_rank"
 SEED_MODEL_PREDICTION = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      "seed_model", "next_prediction.json")
 
@@ -293,6 +315,25 @@ def _seed_model_windows(cell, rows):
     note = (f"STALE: predicts the round after {seen[:16]}, but {newest[:16]} has since drawn"
             if stale else f"current as of {seen[:16]}")
     return sorted(wins), note
+
+
+def _auto_rank_windows(cell, rows):
+    """Per-cell strategy selection by average rank -> (windows, note), or None to fall back.
+
+    Delegates to `strategy_rank.select`, which scores all six strategies over this cell's latest
+    10/20/30 tasks and returns the winner's prediction for the next round. The import is lazy and
+    guarded: `strategy_rank` pulls in `seed_model.data`/`evaluate` (numpy only -- NOT torch), and if
+    either is unavailable the plan must degrade to `rank_freq` rather than die, because this runs
+    from an hourly cron the miner depends on for its window.
+    """
+    try:
+        import strategy_rank
+    except Exception as exc:
+        return None, f"strategy_rank unimportable ({exc})"
+    try:
+        return strategy_rank.select(rows, cell)
+    except Exception as exc:
+        return None, f"strategy_rank failed ({exc})"
 
 
 def _repeat_last_windows(cell, rows):
@@ -366,12 +407,7 @@ def _rank_freq_windows(history, cell):
 #
 # Falls back to JOINED_SUB_WIDTH if all_hdr cannot be imported, so a cron run never dies on it.
 def _sub_width(cell):
-    try:
-        from niome_subnet.genomics import all_hdr as _AH
-        lo, hi = _AH.CELL_CONFIG[cell]["hdr_range"]
-        return hi - lo + 1
-    except Exception:
-        return JOINED_SUB_WIDTH
+    return JW.sub_width(cell, JOINED_SUB_WIDTH)
 
 
 def _joined_slices(windows, width=None):
@@ -382,22 +418,7 @@ def _joined_slices(windows, width=None):
     ascending, non-overlapping [lo, hi] ranges, which is what the plan stores and
     `Miner._window_for` validates.
     """
-    seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
-    n = len(seeds)
-    width = min(width or JOINED_SUB_WIDTH, n)
-    out = []
-    for h in range(len(JOINED_HK)):
-        off = (h * JOINED_STRIDE) % max(1, n)
-        chunk = sorted({seeds[(off + k) % n] for k in range(width)})
-        spans, lo, prev = [], chunk[0], chunk[0]
-        for x in chunk[1:]:
-            if x != prev + 1:
-                spans.append([lo, prev])
-                lo = x
-            prev = x
-        spans.append([lo, prev])
-        out.append(spans)
-    return out
+    return JW.rotated(JW.expand(windows), width or JOINED_SUB_WIDTH, len(JOINED_HK))
 
 def _joined_full(windows, width=None):
     """h0's window: the whole joined space, or a width-`width` slice at a HALF-STRIDE offset.
@@ -410,19 +431,7 @@ def _joined_full(windows, width=None):
     would be byte-identical to h1's slice, and two hotkeys on one window draw correlated bands —
     which throws away the decorrelation the whole layout exists for.
     """
-    seeds = sorted(s for w in windows for s in range(w * 100 + 100, w * 100 + 200))
-    if width and width < len(seeds):
-        n = len(seeds)
-        off = (JOINED_STRIDE // 2) % n
-        seeds = sorted({seeds[(off + k) % n] for k in range(width)})
-    spans, lo, prev = [], seeds[0], seeds[0]
-    for x in seeds[1:]:
-        if x != prev + 1:
-            spans.append([lo, prev])
-            lo = x
-        prev = x
-    spans.append([lo, prev])
-    return spans
+    return JW.half_stride(JW.expand(windows), width)
 
 
 def _sh_list(var):
@@ -564,7 +573,8 @@ def main():
             wins3, top3 = _rank_freq_windows(rows, cell)
             src = "rank_freq"
             picker = {"seed_model": _seed_model_windows,
-                      "repeat_last": _repeat_last_windows}.get(JOINED_SOURCE)
+                      "repeat_last": _repeat_last_windows,
+                      "auto_rank": _auto_rank_windows}.get(JOINED_SOURCE)
             if picker:
                 got, note = picker(cell, rows)
                 if got:
@@ -574,7 +584,11 @@ def main():
             sub_w = _sub_width(cell)
             slices = _joined_slices(wins3, sub_w)
             assign, slots = {}, []
-            full = _joined_full(wins3, sub_w)
+            # The rotating slices take the cell's validated width (`group_size` is tuned at it); a
+            # FULL_HK hotkey takes JOINED_FULL_WIDTH instead, which is the whole joined space by
+            # default. Passing `sub_w` here narrowed h0 back to a half-stride slice of the cell
+            # width, which is not what "full" means.
+            full = _joined_full(wins3, JOINED_FULL_WIDTH)
             for name, _default in avail:
                 if name in JOINED_FULL_HK:
                     assign[name] = full
@@ -675,7 +689,8 @@ def main():
             wins3, top3 = _rank_freq_windows(rows, cell)
             src = "rank_freq"
             picker = {"seed_model": _seed_model_windows,
-                      "repeat_last": _repeat_last_windows}.get(JOINED_SOURCE)
+                      "repeat_last": _repeat_last_windows,
+                      "auto_rank": _auto_rank_windows}.get(JOINED_SOURCE)
             if picker:
                 got, note = picker(cell, rows)
                 if got:
