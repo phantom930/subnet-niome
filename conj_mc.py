@@ -42,7 +42,7 @@ N = int(os.getenv("CMC_N", "200000"))
 DIST = np.array([0.30, 0.20, 0.20, 0.15, 0.05, 0.03, 0.025, 0.02, 0.015, 0.01])
 RNG = np.random.default_rng(int(os.getenv("CMC_SEED", "20260914")))
 CELLS = [("HEK293", (6, 80, 300, 12)), ("K562", (8, 80, 150, 6)),
-         ("CD34+_HSPC", (8, 80, 100, 12)), ("HUDEP-2", (8, 80, 225, 12))]
+         ("CD34+_HSPC", (8, 80, 100, 6)), ("HUDEP-2", (8, 80, 225, 12))]
 
 
 def spreads(cell):

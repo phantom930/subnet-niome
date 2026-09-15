@@ -68,6 +68,25 @@ ARMS = {
     "HEK293":     [(6, 80, 300, 12), (6, 100, 75, 6)],
 }
 
+# CR_ARMS overrides the table: "k/group/width/light,..." with `light` allowed to be "None".
+#
+# The shipped arms above vary several parameters at once -- HEK293's two differ in light, group AND
+# width -- so they establish which COMBINATION is better and cannot attribute the difference to any
+# single knob. Holding k/group/width fixed and sweeping only `light` is what isolates it, and that
+# matters because the only unconfounded evidence for HEK293's shipped `light: 12` is a 360-config
+# grid run on ONE contract, where it beat `light: 6` by +0.5% of `weighted x fidelity` (233.9 vs
+# 232.7) and by +0.1% aggregated. CLAUDE.md records the same single-contract trap deciding K562's
+# width, where the winner "came LAST" once five contracts were used.
+if os.getenv("CR_ARMS"):
+    ARMS[CELL] = [tuple(None if x == "None" else int(x) for x in spec.split("/"))
+                  for spec in os.getenv("CR_ARMS").split(",")]
+
+# Any CR_ARMS sweep MUST set this. The canonical `conj_replicate_<cell>.json` is the 12-contract
+# result the shipped per-cell decision rests on, and `conj_mc.py` / the MC detail reporter read it
+# by that exact name — a sweep writing over it would silently replace the record with a different
+# arm set and every later reprice would be of the sweep, not of the decision.
+SUFFIX = os.getenv("CR_SUFFIX", "")
+
 
 def fields_by_task(cell):
     """{task_id: sorted finals} for every current-regime 3-seed field of this cell, ours removed."""
@@ -168,7 +187,17 @@ def main():
             for rec in grp:
                 bad.update(int(x) for x in rec["fails"])
             clean = sorted(jset - bad)
-            cfg_scan = _dc.replace(cfg0, group_size=g, pool_target=POOL_TARGET)
+            # `light_cell_rows` must be carried into the SCAN, not just into `assemble`.
+            # `scan_cas9` calls `all_cut.cas9_cell_target`, which branches on it: with it unset the
+            # exponent path returns 65 for HEK293, against 73 for light 12 and 79 for light 6. That
+            # floor is what the nearest-first scan must reach in every (mutation, strand) cell
+            # before it may stop, and HEK293 is the one cell CLAUDE.md records as STARVING there
+            # ("its heavy-mutation Cas9 sites sit farther from the mutation than the light ones").
+            # conjunction.py:313 passes the full cfg, so leaving it out here measured a build the
+            # miner does not run -- and held the floor CONSTANT across light arms, which is exactly
+            # the quantity a light sweep is trying to vary.
+            cfg_scan = _dc.replace(cfg0, group_size=g, pool_target=POOL_TARGET,
+                                   light_cell_rows=light)
             cas9 = AC.scan_cas9(np.array(clean, dtype=np.int64), contract, cell_types, ctx,
                                 sites, cfg_scan, n_rows - g)
             if band and cas9:
@@ -217,7 +246,7 @@ def main():
                       f"own {ae_own:.5f}  pooled {ae_pool:.5f}")
             MT.free_gpu_memory()
         out.append(row)
-        json.dump(out, open(f"conj_replicate_{tag}.json", "w"), indent=1)
+        json.dump(out, open(f"conj_replicate_{tag}{SUFFIX}.json", "w"), indent=1)
         print()
 
     print(f"===== {CELL}: {len(out)} contracts =====")
@@ -236,7 +265,7 @@ def main():
             print(f"    k={arm[0]} g={arm[1]} w={arm[2]} l={arm[3]}: conj {cs:.5f} vs "
                   f"all-HDR {bs:.5f} -> {cs/bs:.2f}x aggregate, wins {wins}/{len(rs)}"
                   + (f", per-contract median {st.median(fin):.2f}x" if fin else ""))
-    print(f"\nwrote conj_replicate_{tag}.json")
+    print(f"\nwrote conj_replicate_{tag}{SUFFIX}.json")
 
 
 if __name__ == "__main__":

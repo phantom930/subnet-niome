@@ -1,46 +1,6 @@
 {
-  "cycles": 51,
+  "cycles": 55,
   "history": [
-    {
-      "at": "2026-09-09T14:51:32.241114+00:00",
-      "window": "2026-09-09T23:59:59",
-      "n_samples": 80,
-      "model_hits": 0.95,
-      "best_reference": "cold_hand",
-      "best_reference_hits": 0.9875,
-      "p_value": 0.6590670466476676,
-      "promoted": true
-    },
-    {
-      "at": "2026-09-09T18:14:56.738118+00:00",
-      "window": "now",
-      "n_samples": 81,
-      "model_hits": 1.0,
-      "best_reference": "cold_hand",
-      "best_reference_hits": 0.9876543209876543,
-      "p_value": 0.49722513874306284,
-      "promoted": true
-    },
-    {
-      "at": "2026-09-09T18:29:29.620908+00:00",
-      "window": "now",
-      "n_samples": 82,
-      "model_hits": 0.975609756097561,
-      "best_reference": "cold_hand",
-      "best_reference_hits": 0.9878048780487805,
-      "p_value": 0.5791210439478026,
-      "promoted": true
-    },
-    {
-      "at": "2026-09-09T21:18:29.839665+00:00",
-      "window": "now",
-      "n_samples": 83,
-      "model_hits": 0.9036144578313253,
-      "best_reference": "cold_hand",
-      "best_reference_hits": 0.9879518072289156,
-      "p_value": 0.8112094395280236,
-      "promoted": true
-    },
     {
       "at": "2026-09-09T23:18:12.183302+00:00",
       "window": "now",
@@ -499,6 +459,46 @@
       "best_reference": "uniform",
       "best_reference_hits": 0.9534883720930233,
       "p_value": 0.013299335033248337,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-14T16:18:10.206314+00:00",
+      "window": "now",
+      "n_samples": 131,
+      "model_hits": 1.1603053435114503,
+      "best_reference": "uniform",
+      "best_reference_hits": 0.9541984732824428,
+      "p_value": 0.007549622518874056,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-14T19:18:15.350534+00:00",
+      "window": "now",
+      "n_samples": 132,
+      "model_hits": 1.1515151515151516,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9545454545454546,
+      "p_value": 0.018849057547122645,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-14T21:18:35.431327+00:00",
+      "window": "now",
+      "n_samples": 133,
+      "model_hits": 1.1578947368421053,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9473684210526315,
+      "p_value": 0.014099295035248238,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-15T00:18:13.058692+00:00",
+      "window": "now",
+      "n_samples": 134,
+      "model_hits": 1.1492537313432836,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9477611940298507,
+      "p_value": 0.017649117544122794,
       "promoted": true
     }
   ]

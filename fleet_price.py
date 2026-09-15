@@ -180,21 +180,28 @@ def main():
     print("all-HDR  : band %d, clean %d/900, clean-seed %.3f, dirty %.3f, weighted x fid %.1f"
           % (AH_BAND, AH_CLEAN, AH_VCLEAN, AH_VDIRTY, AH_WXF))
     print("%d trials per round per composition\n" % TRIALS)
-    comps = [(0, 11), (1, 10), (2, 9), (4, 7), (6, 5), (8, 3), (11, 0)]
+    # FP_COMPS overrides the 11-hotkey ladder, e.g. "1/0,0/1" for the ONE-hotkey question.
+    # That case matters because this script's whole premise -- that correlated all-cut siblings
+    # stack at ranks r..r+n while decorrelated bands place alone -- REQUIRES siblings. With a
+    # single hotkey there is nothing to correlate, so the per-hotkey measurements the docstring
+    # sets aside (all-cut 3.78x on K562, 3.18x on HUDEP-2) become the applicable ones.
+    comps = ([tuple(int(x) for x in c.split("/")) for c in os.environ["FP_COMPS"].split(",")]
+             if os.environ.get("FP_COMPS") else
+             [(0, 11), (1, 10), (2, 9), (4, 7), (6, 5), (8, 3), (11, 0)])
     print("%-14s %-12s %-12s %-10s" % ("all-cut/all-HDR", "E[share]", "vs current", "ratio"))
     res = {}
     for comp in comps:
         rng = np.random.default_rng(RNG)
         vals = [simulate(f, comp, rng, TRIALS) for _tid, f in fs]
         res[comp] = float(np.mean(vals))
-    cur = res[(1, 10)]
+    cur = res.get((1, 10), res[comps[0]])
     for comp in comps:
         v = res[comp]
         print("%-14s %-12.5f %-12s %-10.2f"
               % ("%d / %d" % comp, v, "%+.1f%%" % (100 * (v / cur - 1)) if cur else "-",
                  v / cur if cur else 0))
     print()
-    print("current fleet is 1 all-cut (h0) + 10 all-HDR = the '1 / 10' row")
+    print("baseline row = %d / %d" % (comps[0] if (1, 10) not in res else (1, 10)))
 
 
 if __name__ == "__main__":

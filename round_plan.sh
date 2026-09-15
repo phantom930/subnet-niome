@@ -13,6 +13,14 @@ set -u
 cd /root/workspace/subnet-niome || exit 1
 PY=/root/workspace/subnet-niome/.venv/bin/python
 PY_ML=/root/workspace/subnet-niome/.venv-ml/bin/python
+
+# Shared with plan_refresh.sh, which runs every minute and rewrites the same plan file the moment a
+# round stamps. BLOCKING here (not -n): this hourly job does the retrain and the live-prediction
+# resolve, so it must not be skipped just because a one-second guard held the lock. The minute cron
+# takes the non-blocking side and skips instead.
+exec 9>/root/workspace/subnet-niome/data/.plan.lock || exit 1
+flock 9
+
 echo "===== $(date -Is) ====="
 "$PY" seed_window_model.py 2>&1 | tail -12 | sed 's/^/[live ] /'
 

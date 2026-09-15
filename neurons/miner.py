@@ -59,6 +59,7 @@ from niome_subnet.genomics.hek293_generation import (  # noqa: E402
 )
 from niome_subnet.genomics import all_cut as AC  # noqa: E402
 from niome_subnet.genomics import all_hdr as AH
+from niome_subnet.genomics import conjunction as CJ  # noqa: E402
 from niome_subnet.genomics import seed_depend as SD  # noqa: E402
 from niome_subnet.genomics import seed_agnostic as SA  # noqa: E402
 from niome_subnet.genomics.model import Task  # noqa: E402
@@ -386,6 +387,27 @@ class Miner(BaseMinerNeuron):
     # is cheap). All four therefore fit the ~225s in-TTL path, and this gate stays a single number —
     # unlike ALL_CUT_MIN_BUDGET_S, which had to go per cell type.
     ALL_HDR_MIN_BUDGET_S = 190.0
+    # The conjunction — all-cut's clean set AND all-HDR's pinned band on the same rows — goes one
+    # rung ABOVE all-HDR on the three cell types where it measured a win over 12 contracts each,
+    # priced against the single field that played each contract (see genomics/conjunction.py for
+    # the table and its three caveats). HUDEP-2 is deliberately absent: it measured 0.89x and 0/6
+    # on fresh contracts, so it keeps all-HDR. `conjunction.config_for` returns None for it too,
+    # so the exclusion holds even if this tuple is widened by mistake.
+    CONJUNCTION = True
+    CONJUNCTION_CELL_TYPES = ("HEK293", "CD34+_HSPC", "K562")
+    # Per cell type, like ALL_CUT_MIN_BUDGET_S and unlike ALL_HDR_MIN_BUDGET_S, because the cold
+    # builds differ by 50%: measured end to end on contracts the replication never touched,
+    # HEK293 **132s**, CD34+_HSPC **185s**, K562 **196s** (cold Cas12a bank + HDR screen + band +
+    # min-union + the deep Cas9 scan + assemble). A flat gate would either lock HEK293 out of
+    # rounds it finishes inside or start a K562 build that cannot.
+    #
+    # Each number is the measured build plus ALL_HDR_MIN_BUDGET_S plus ~25% margin, because the
+    # rung below is what runs when this one declines: `_build` hands the conjunction
+    # `budget - ALL_HDR_MIN_BUDGET_S`, so even a build that runs to its deadline leaves all-HDR
+    # the budget it needs. **None of the three fits the ~225s in-TTL path**, so the conjunction is
+    # prefetch-dependent exactly as K562/HUDEP-2 all-cut is: a round whose prefetch fails falls to
+    # all-HDR, which is the build the fleet had before this rung existed.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 430.0, "K562": 450.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
     # 1-(1-union/900)^3, so the win comes from making sibling hotkeys' bands DISJOINT. Measured: 3
@@ -1589,14 +1611,20 @@ class Miner(BaseMinerNeuron):
                         sd_meta.get("reason", "unknown"))
             budget = remaining()
 
-        # All-HDR goes ahead of all-cut for the cell types it is configured for. It declines to
-        # None on an unmeasured cell type or a short pool, and all-cut below is then the fallback —
-        # so HEK293, and any failure on the other three, still gets the build it had before.
+        # Two band rungs, in order: the conjunction (all-cut's clean set AND all-HDR's pinned band
+        # on the same rows) where it measured a win, then all-HDR. Both decline to None on an
+        # unmeasured cell type or a short pool, and all-cut below is the fallback under both — so
+        # HUDEP-2, and any failure anywhere, still gets the build it had before this rung existed.
         all_cut_only = self._all_cut_only(cell_type)
-        all_hdr_applies = (allow_hedges and self.ALL_HDR and not all_cut_only
-                           and cell_type in self.ALL_HDR_CELL_TYPES
-                           and budget >= self.ALL_HDR_MIN_BUDGET_S)
-        if not all_hdr_applies:
+        conj_min = self.CONJUNCTION_MIN_BUDGET_S.get(cell_type, 0.0)
+        conj_applies = (allow_hedges and self.CONJUNCTION and not all_cut_only
+                        and cell_type in self.CONJUNCTION_CELL_TYPES
+                        and budget >= conj_min)
+        band_applies = conj_applies or (
+            allow_hedges and self.ALL_HDR and not all_cut_only
+            and cell_type in self.ALL_HDR_CELL_TYPES
+            and budget >= self.ALL_HDR_MIN_BUDGET_S)
+        if not band_applies:
             # The emergency in-TTL path and a short budget never reach _window_for, so without
             # this the round leaves no record at all and reads later as merely "unverified" —
             # when the truth is stronger: no clean band was built, so no spike was possible.
@@ -1604,14 +1632,58 @@ class Miner(BaseMinerNeuron):
                                 "all_cut_only" if all_cut_only else "all_hdr_not_attempted",
                                 None)
             self._note_window_outcome(task_id, False)
+        # Resolved ONCE and shared, so the two rungs cannot land on different windows and
+        # `_record_window` cannot log the same round twice. It is hoisted out of the hedge slot
+        # because it only reads the window plan — the one behaviour change is that a round which
+        # never acquires the slot now records the window it intended rather than nothing.
+        space = self._window_for(cell_type, task_id) if band_applies else None
+        # A list is a joined (non-contiguous) band space; a tuple is one window.
+        kw = ({"seed_list": space} if isinstance(space, list) else {"hdr_range": space})
+
+        if conj_applies:
+            try:
+                with self._hedge_slot(hedge_wait) as slot:
+                    if slot:
+                        # Reserve all-HDR's gate: a conjunction that runs to its deadline must
+                        # still leave the rung below it enough budget to build.
+                        conj_rows, conj_meta = CJ.build_for_cell(
+                            contract, reference, cell_types,
+                            budget_s=max(0.0, budget - self.ALL_HDR_MIN_BUDGET_S), **kw)
+                    else:
+                        conj_rows, conj_meta = None, {
+                            "reason": "another build holds the hedge slot"}
+            except Exception as exc:
+                logger.warning(f"Build: conjunction failed ({exc}); falling through to all-HDR")
+                logger.debug(traceback.format_exc())
+                conj_rows, conj_meta = None, {"reason": str(exc)}
+            if conj_rows:
+                logger.info(
+                    f"Build: conjunction ({cell_type}) | band {conj_meta['band']} "
+                    f"k={conj_meta['k']} group {conj_meta['group_size']} "
+                    f"clean {conj_meta['clean']}/{conj_meta['clean'] + conj_meta['union']} "
+                    f"| cas9 pool {conj_meta['cas9_pool']} | rows {conj_meta['rows']} "
+                    f"cells {conj_meta['cells']}/8 | {conj_meta['elapsed_s']}s"
+                )
+                self._persist(settings.MINER_SUBMISSION_PATH, conj_rows)
+                self._note_window_outcome(task_id, True, str(conj_meta.get("band_seeds")))
+                return conj_rows
+            logger.info("Build: conjunction declined (%s); falling through to all-HDR",
+                        conj_meta.get("reason", "unknown"))
+            budget = remaining()
+
+        # Recomputed AFTER the conjunction rather than alongside it: a conjunction build that spent
+        # budget must not leave this reading a stale number and starting a build it cannot finish.
+        all_hdr_applies = (allow_hedges and self.ALL_HDR and not all_cut_only
+                           and cell_type in self.ALL_HDR_CELL_TYPES
+                           and budget >= self.ALL_HDR_MIN_BUDGET_S)
+        if band_applies and not all_hdr_applies:
+            # The conjunction was the only band rung available and it declined, so the round's
+            # window outcome is still open. Record it here or it reads as unverified.
+            self._note_window_outcome(task_id, False)
         if all_hdr_applies:
             try:
                 with self._hedge_slot(hedge_wait) as slot:
                     if slot:
-                        space = self._window_for(cell_type, task_id)
-                        # A list is a joined (non-contiguous) band space; a tuple is one window.
-                        kw = ({"seed_list": space} if isinstance(space, list)
-                              else {"hdr_range": space})
                         hdr_rows, hdr_meta = AH.build_for_cell(
                             contract, reference, cell_types, budget_s=budget, **kw)
                     else:

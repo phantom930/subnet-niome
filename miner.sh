@@ -106,6 +106,27 @@ HOTKEYS=(
 # band instead plays every round, and at full width it covers the whole 300-seed joined space.
 # Everything needed to switch back is intact: list "niome_hotkey:1" here and re-run window_plan.py.
 #
+# 2026-09-15: h0 is BACK on seed-depend by operator request. **The rate this trade depends on has
+# collapsed and that is measured, not inferred.** Counting rounds where any miner reached
+# consistency 1.000 -- the reliable test, since the task listing reports seed 0 for rounds that were
+# in fact stamped -- across all 474 scored rounds from 2026-08-03:
+#
+#   overall                     51 of 474 = 10.8%
+#   clustered in               2026-08-03/04 (20 rounds) and 08-22/24 (23 rounds)
+#   last seed-0 round          a66f01fa, 2026-09-07T23:53 (39 miners tied at 1.000)
+#   rounds since               **70, none scored at seed 0**
+#
+# So seed-depend now scores the ~0.10 floor on every round with no upside unless the backend
+# regresses to leaving rounds unstamped. Revert with SEED_DEPEND_VARIANTS="" and re-run
+# window_plan.py; nothing else has to change, because h0 keeps its FULL_HK entry either way.
+#
+# 2026-09-15 (later, operator request): REVERTED to "" -- h0 is back on the band ladder, i.e. the
+# conjunction on HEK293/CD34+_HSPC/K562 and all-HDR on HUDEP-2. The seed-0 rate above was
+# re-verified independently against the live score feed before reverting: 51 of 477 scored rounds
+# have ever carried a miner at consistency exactly 1.000, the last was a66f01fa on 2026-09-08, and
+# **73 rounds have been scored since with none at seed 0**. So the lottery this rung exists to win
+# has not paid in a week of rounds, while the band plays every round.
+#
 # seed-depend is the FIRST rung of _build's ladder and REPLACES the construction rather than
 # hedging beside it, so a listed hotkey scores the ~0.10 floor on every round the backend does
 # stamp -- which is ~92.4% of them (8 never-stamped of 105 measured). Running all seven there

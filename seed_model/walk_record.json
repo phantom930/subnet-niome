@@ -1614,7 +1614,97 @@
         "100-199",
         "600-699"
       ]
+    },
+    {
+      "created_at": "2026-09-14T14:34:37",
+      "cell_type": "K562",
+      "round": 39,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T16:59:02",
+      "cell_type": "K562",
+      "round": 40,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T19:23:47",
+      "cell_type": "HUDEP-2",
+      "round": 42,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T21:48:36",
+      "cell_type": "HEK293",
+      "round": 43,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T00:12:53",
+      "cell_type": "HEK293",
+      "round": 44,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T02:37:37",
+      "cell_type": "HUDEP-2",
+      "round": 43,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T05:02:25",
+      "cell_type": "CD34+_HSPC",
+      "round": 46,
+      "predicted_windows": [
+        "900-999",
+        "600-699",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T07:26:58",
+      "cell_type": "HEK293",
+      "round": 45,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T09:53:01",
+      "cell_type": "K562",
+      "round": 41,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "300-399"
+      ]
     }
   ],
-  "updated_at": "2026-09-14T14:17:58.223617+00:00"
+  "updated_at": "2026-09-15T11:28:35.850714+00:00"
 }
