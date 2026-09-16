@@ -35,7 +35,10 @@ Nothing here imports torch, the seed model or the chain, so the miner can import
 # Only h8/h9/h10 remain, holding uids 151/224/10. Leaving the stride behind the hotkey count packs
 # the slices into the front of the space and leaves the tail covered only by the circular wrap.
 STRIDE = 100
-ROTATE_HK = ["niome_hotkey8", "niome_hotkey9", "niome_hotkey10"]
+# 2026-09-15: EMPTY. All four registered hotkeys take the FULL joined space (see `FULL_HK`), and
+# their decorrelation comes from the BAND sub-window offset below instead of from a joined-window
+# slice. `rotated(..., count=0)` returns [], so the plan simply assigns nothing here.
+ROTATE_HK: list[str] = []
 
 # One hotkey sits at HALF a stride, i.e. between the first two rotating slices. At offset 0 its
 # slice would be byte-identical to the first one's, and two hotkeys on one window draw correlated
@@ -60,7 +63,46 @@ ROTATE_HK = ["niome_hotkey8", "niome_hotkey9", "niome_hotkey10"]
 #
 # 2026-09-14: h0 came OFF seed-depend and onto all-HDR, so this slot is now a playing band rather
 # than a parking space, and it is the fleet's only one.
-FULL_HK: list[str] = ["niome_hotkey"]
+# 2026-09-15: h0-h3 are registered (uids 122/41/163/118) and ALL FOUR sit here, i.e. every hotkey
+# min-unions on cut over the whole 300-seed joined space. They are NOT correlated by that: the
+# conjunction's clean set is a function of the joined space, but its BAND is drawn from a width-150
+# sub-window whose offset rotates per hotkey at `BAND_STRIDE` (see `band_offset_frac`). Two hotkeys
+# therefore share a clean set and hold different bands, which is where the spike lives.
+FULL_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_hotkey3"]
+
+# --- the BAND sub-window, which is what decorrelates the fleet now -------------------------------
+#
+# `conjunction.sub_window` draws the k-seed band from `band_width` seeds of the joined space
+# starting `band_offset_frac` through it and wrapping. With every hotkey on the same joined window
+# that fraction is the ONLY thing separating two siblings' bands, so it is the fleet layout and
+# belongs here rather than in the per-cell config.
+#
+# `conjunction.py`'s module docstring flags this explicitly: the band is a deterministic function of
+# (contract, joined space, width), so two hotkeys handed the same window build the SAME band. That
+# was safe while the fleet was one hotkey (n=1 makes the per-hotkey number the fleet number) and
+# stops being safe the moment it regrows -- which is what this is.
+#
+# Four hotkeys at BAND_STRIDE 75 over 300 seeds put the sub-windows at 0 / 75 / 150 / 225. At
+# BAND_SUB_WIDTH 150 each covers half the space, so each seed sits in exactly 2 of the 4 -- a
+# deliberate 2x overlap, since 4 x 75 = 300 tiles the space once while the width is double the
+# stride. Disjoint bands would need width 75, which is not the width the arms were tuned at.
+BAND_SUB_WIDTH = 150
+BAND_STRIDE = 75
+BAND_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_hotkey3"]
+# The joined space these offsets are expressed against: 3 classes x 100 seeds. The offset is carried
+# as a FRACTION so it stays proportional if a plan ever yields a space of another size.
+BAND_SPAN = 300
+
+
+def band_offset_frac(instance):
+    """This hotkey's band sub-window offset, as a fraction of the joined space, or None.
+
+    None means "not a band hotkey here" and the caller keeps `ConjunctionConfig`'s own default,
+    which is the single-hotkey value the 12-contract replication was measured at.
+    """
+    if instance not in BAND_HK:
+        return None
+    return ((BAND_HK.index(instance) * BAND_STRIDE) % BAND_SPAN) / float(BAND_SPAN)
 
 # The width a FULL_HK hotkey takes out of the joined space. `None` (or anything >= the joined span)
 # means the WHOLE space -- 300 seeds at three width-100 classes -- with no rotation offset, which is

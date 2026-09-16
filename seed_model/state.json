@@ -1,16 +1,6 @@
 {
-  "cycles": 55,
+  "cycles": 56,
   "history": [
-    {
-      "at": "2026-09-09T23:18:12.183302+00:00",
-      "window": "now",
-      "n_samples": 84,
-      "model_hits": 0.9166666666666666,
-      "best_reference": "cold_hand",
-      "best_reference_hits": 0.9761904761904762,
-      "p_value": 0.7355632218389081,
-      "promoted": true
-    },
     {
       "at": "2026-09-10T02:18:22.389243+00:00",
       "window": "now",
@@ -499,6 +489,16 @@
       "best_reference": "cold_hand",
       "best_reference_hits": 0.9477611940298507,
       "p_value": 0.017649117544122794,
+      "promoted": true
+    },
+    {
+      "at": "2026-09-15T16:18:34.264397+00:00",
+      "window": "now",
+      "n_samples": 141,
+      "model_hits": 1.1702127659574468,
+      "best_reference": "cold_hand",
+      "best_reference_hits": 0.9574468085106383,
+      "p_value": 0.0095995200239988,
       "promoted": true
     }
   ]

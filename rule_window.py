@@ -53,6 +53,27 @@ TASKS = ["task-k562.json", "task-cd34.json"]
 # (window, main_max_fail) -- max_fail near the per-row failure mean for that width
 PLAN = [((700, 799), 20), ((700, 924), 45)]
 RULE = os.getenv("WIN20_RULE", "not_mhnhej")
+
+# WIN20_TASKS / WIN20_PLAN override the two lists above, so a single rule can be measured on one
+# cell at one width without editing the file. PLAN is "lo-hi:mf,lo-hi:mf".
+#
+# `main_max_fail` is NOT transferable between rules and must be re-derived per rule, because it is a
+# screen on the per-row failure COUNT and the rules differ in per-row compliance. On K562 Cas12a at
+# the clamped energy 1.0 (hdr_w 0.59, cut_p 0.96, p_mh 0.55 at gc 0.50):
+#
+#   rule      mh branch          no-mh branch        comply   mean fails @150
+#   hdr       P(HDR|mh)  0.476   P(HDR|!mh)  0.557   0.492    76
+#   mh_any    P(HDR|mh)  0.476   P(BLUNT|!mh) 0.330  0.394    91
+#
+# so `mh_any` is STRICTLY harder than `hdr` -- it asks for BLUNT where hdr asks for HDR on the
+# no-mh branch, and BLUNT is the rarer of the two. The shipped K562 hdr screen sits at mf 45 on a
+# width-100 mean of 50.8, i.e. z = -1.16; holding that z gives 69 for hdr at width 150 and 84 for
+# mh_any. Both are swept here rather than assumed.
+if os.getenv("WIN20_TASKS"):
+    TASKS = os.getenv("WIN20_TASKS").split(",")
+if os.getenv("WIN20_PLAN"):
+    PLAN = [((int(w.split("-")[0]), int(w.split("-")[1])), int(mf))
+            for w, mf in (a.split(":") for a in os.getenv("WIN20_PLAN").split(","))]
 BANK_DIR = "data/rule_window"
 
 
@@ -132,7 +153,14 @@ def main():
         print(f"=== {tf}  {cell} ===", flush=True)
         for window, mf in PLAN:
             width = window[1] - window[0] + 1
-            cfg = dataclasses.replace(base, hdr_range=window, main_max_fail=mf)
+            # `light_cell_rows` defaults to the STRING "auto" on AllHdrConfig and is resolved per
+            # contract inside all_hdr.build_submission. This harness calls AH.assemble directly, so
+            # it has to resolve it here too -- otherwise `assemble` computes 2 * "auto" and dies on
+            # `int + str` deep inside the quota arithmetic. Same class as the shared-config hazard
+            # CLAUDE.md records for AllCutConfig/AllHdrConfig sharing one `assemble`.
+            cfg = dataclasses.replace(base, hdr_range=window, main_max_fail=mf,
+                                      light_cell_rows=AH.resolve_light(base.light_cell_rows,
+                                                                       contract))
             t0 = time.monotonic()
             path = os.path.join(BANK_DIR,
                                 f"{cell}-{RULE}-{window[0]}_{window[1]}-mf{mf}.npz")

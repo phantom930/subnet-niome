@@ -277,6 +277,12 @@ RULE_SPECS = {
     # criterion, expressed as a rule so the 3-draw screen can bank it with its failed-seed sets.
     "cut": {"any": ("HDR", "MH_NHEJ", "BLUNT_NHEJ")},
     "mh_any": {"mh": ("HDR",), "no_mh": ("BLUNT_NHEJ",)},
+    # "mh_any" with the two branches swapped. Per-row compliance is nearly identical (the two swaps
+    # cancel: 0.407 against 0.413 on K562 Cas9) because it trades P(BLUNT|mh) 0.265 for
+    # P(HDR|!mh) 0.588 while giving up P(HDR|mh) 0.508 and P(BLUNT|!mh) 0.307. What differs is WHICH
+    # branch carries the unpinned indel draw: here BLUNT lands on the mh branch, which is the larger
+    # one (p_mh 0.55 at gc 0.50), so more rows carry the expovariate the forest cannot resolve.
+    "mh_any_rev": {"mh": ("BLUNT_NHEJ",), "no_mh": ("HDR",)},
     # The mirror of "cut": the row must NOT cut. Like "hdr" this pins all three of stage 4's
     # targets at once (is_cut False, is_hdr False, indel_length 0), so a seed where every row
     # complies scores consistency 1.000 — but where "cut" asks for a ~0.99 event per row, this

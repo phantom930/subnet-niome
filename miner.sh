@@ -227,7 +227,11 @@ ALL_CUT_HOTKEYS=""
 #   runs on the main thread and actually ends the process, so the crash-loop-plus-restart-delay
 #   recovery applies to a hotkey that starts unregistered, NOT to one deregistered while running.
 #   Check the chain, not `pm2 list` — grep for the last resync_metagraph() to date the death.
-DEREGISTERED="niome_hotkey1 niome_hotkey2 niome_hotkey3 niome_hotkey4 niome_hotkey5 niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
+# 2026-09-15: h1/h2/h3 came OFF this list -- verified against the metagraph, they hold uids 41,
+# 163 and 118 alongside h0's 122. All four play the conjunction on the SAME 300-seed joined window
+# and decorrelate through the band sub-window offset instead (joined_window.band_offset_frac,
+# width 150 at stride 75 -> offsets 0/75/150/225).
+DEREGISTERED="niome_hotkey4 niome_hotkey5 niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so

@@ -50,6 +50,12 @@ SUB_WIDTH = int(os.getenv("CF_SUB_WIDTH", "150"))
 STRIDE = int(os.getenv("CF_STRIDE", "30"))
 NHK = int(os.getenv("CF_NHK", "10"))
 POOL_TARGET = int(os.getenv("CF_POOL_TARGET", "500"))
+# The CUT space the Cas12a group min-unions over. 300 (default) is the three oracle classes -- the
+# band space and the cut space are then the same set. 900 widens the cut half to the whole seed
+# range while the HDR band is still drawn ONLY from the three oracle classes, so the clean set can
+# reach far beyond them while the band cannot. The two are genuinely different constructions: at
+# 900 the group must keep 900 seeds cut-clean instead of 300, which is a much harder min-union.
+CUT_SPAN = int(os.getenv("CF_CUT_SPAN", "300"))
 OUT = os.getenv("CF_OUT", "conj_fleet.json")
 
 N_WINDOWS = int(os.getenv("CF_WINDOWS", "3"))
@@ -93,6 +99,14 @@ ARM = {
     "HEK293": (80, 8, 12),
 }
 
+# CF_GROUP / CF_K override group and k on EVERY cell type while leaving `light_cell_rows` at its
+# per-cell value, which is what makes a re-run a paired comparison rather than a new experiment:
+# exactly two knobs move. Always pair with CF_OUT -- `conj_fleet.json` is tracked, and a sweep
+# written over it replaces the run of record with an arm it was not measuring.
+if os.getenv("CF_GROUP") or os.getenv("CF_K"):
+    _g, _k = os.getenv("CF_GROUP"), os.getenv("CF_K")
+    ARM = {c: (int(_g) if _g else g, int(_k) if _k else k, lt) for c, (g, k, lt) in ARM.items()}
+
 
 def build_one(band, clean, group, contract, cell_types, ctx, sites, cfg, n_rows):
     """Cas9 half + assemble for one (band, clean, group) -> (rows, None) or (None, reason)."""
@@ -119,12 +133,22 @@ def run_task(task, cell_types, fields):
     cell = contract.get("cell_type")
     tid = (task.get("task_id") or task["id"])
     seeds = sorted(int(x) for x in str(contract.get("seed", "")).split(",") if x.strip().isdigit())
-    joined, nwin, classes = windows_of(seeds)
+    joined, nwin, classes = windows_of(seeds)          # the BAND space: three oracle classes
     group, k, light = ARM[cell]
     base = CJ.config_for(cell) or CJ.ConjunctionConfig()
-    mf = max(1, round(base.cas12a_max_fail * len(joined) / 900))
-    cfg = _dc.replace(base, seed_list=tuple(joined), start_seed=joined[0], end_seed=joined[-1],
-                      cas12a_max_fail=mf, group_size=group, light_cell_rows=light, band_k=k)
+    if CUT_SPAN >= 900:
+        # Contiguous 100-999. Leave `seed_list` EMPTY so `bank_key` keys this the way all_cut does
+        # (w=[100,999], no "seeds" entry) and any bank already built at that config is reused --
+        # passing an explicit 900-long seed_list would key it differently and rebuild the same bank.
+        cut = list(range(100, 1000))
+        mf = base.cas12a_max_fail
+        cfg = _dc.replace(base, seed_list=(), start_seed=100, end_seed=999,
+                          cas12a_max_fail=mf, group_size=group, light_cell_rows=light, band_k=k)
+    else:
+        cut = joined
+        mf = max(1, round(base.cas12a_max_fail * len(joined) / 900))
+        cfg = _dc.replace(base, seed_list=tuple(joined), start_seed=joined[0], end_seed=joined[-1],
+                          cas12a_max_fail=mf, group_size=group, light_cell_rows=light, band_k=k)
     ctx = G.build_context(contract, reference, cell_types)
     sites = G.enumerate_sites(ctx, 3000, (20, 23))
     n_rows = contract["rules"].get("max_experiments") or ctx.max_experiments
@@ -142,7 +166,7 @@ def run_task(task, cell_types, fields):
     MT.free_gpu_memory()
     t_prep = time.monotonic() - t0
 
-    jset, sset = set(joined), set(seeds)
+    jset, sset = set(cut), set(seeds)          # clean is measured over the CUT space
     width = min(SUB_WIDTH, len(joined))
     memo, hks = {}, []
     t0 = time.monotonic()
@@ -155,8 +179,8 @@ def run_task(task, cell_types, fields):
         if len(alive) < group:
             hks.append({"hk": h, "reason": f"pool {len(alive)} < group {group}"}); continue
         pool = [records[i] for i in alive]
-        sel = FG.FastGreedy(pool, window_lo=joined[0], window_hi=joined[-1],
-                            seeds=np.asarray(joined, dtype=np.int64))
+        sel = FG.FastGreedy(pool, window_lo=cut[0], window_hi=cut[-1],
+                            seeds=np.asarray(cut, dtype=np.int64))
         idx, _u = sel.best(group, restarts=cfg.restarts)
         gidx = [alive[i] for i in idx]
         bad = set()
@@ -189,7 +213,8 @@ def run_task(task, cell_types, fields):
     built = [x for x in hks if "final" in x]
     out = {"task": tid[:8], "cell": cell, "at": task.get("created_at", "")[:16], "seeds": seeds,
            "n_windows": nwin, "classes": [f"{c*100+100}-{c*100+199}" for c in classes],
-           "padded": N_WINDOWS - nwin, "span": len(joined), "mf": mf, "group": group, "k": k,
+           "padded": N_WINDOWS - nwin, "span": len(joined), "cut_span": len(cut),
+           "mf": mf, "group": group, "k": k,
            "light": light, "bank": len(records), "sub_width": width,
            "prep_s": round(t_prep, 1), "build_s": round(t_build, 1),
            "distinct_builds": len(memo), "hotkeys": hks,
@@ -203,14 +228,29 @@ def run_task(task, cell_types, fields):
 
 def main():
     items = fetch_tasks(limit=500)
+    # CF_ONLY pins an explicit set of task-id prefixes instead of "the latest NTASKS". Needed
+    # because the default selection is a MOVING window: rounds land every ~2h24m, so two runs
+    # separated by a few hours cover different task sets and the second one is not a paired
+    # comparison of the first however identical its config. This is how a dropped task is filled in.
+    only = [x.strip() for x in os.getenv("CF_ONLY", "").split(",") if x.strip()]
     cands = []
     for t in sorted(items, key=lambda x: x.get("created_at", ""), reverse=True):
         c = (t.get("content") or {}).get("contract") or {}
         sd = [x for x in str(c.get("seed", "") or "").split(",") if x.strip().isdigit()]
-        if len(sd) == 3 and c.get("cell_type") in ARM:
-            cands.append(t)
+        if len(sd) != 3 or c.get("cell_type") not in ARM:
+            continue
+        tid = (t.get("task_id") or t["id"])
+        if only:
+            if any(tid.startswith(x) for x in only):
+                cands.append(t)
+            continue
+        cands.append(t)
         if len(cands) >= NTASKS:
             break
+    if only and len(cands) != len(only):
+        got = {(t.get("task_id") or t["id"])[:8] for t in cands}
+        raise SystemExit(f"CF_ONLY asked for {len(only)} tasks, matched {len(cands)}: "
+                         f"missing {[x for x in only if x[:8] not in got]}")
     fields = {}
     for cell in ARM:
         fields.update(fields_by_task(cell))

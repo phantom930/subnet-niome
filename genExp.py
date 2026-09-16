@@ -1089,6 +1089,15 @@ def _rule_mh_any(result: dict, entry: dict) -> bool:
     return result["outcome"] == "BLUNT_NHEJ"
 
 
+def _rule_mh_any_rev(result: dict, entry: dict) -> bool:
+    # "mh_any" reversed: BLUNT on the microhomology branch, HDR without it. is_hdr is still an exact
+    # function of `mh` (now its complement), so stage 4 can still read it straight off build_X --
+    # the target is never constant, it is merely predictable, which r2_score pays identically.
+    if result["mh"]:
+        return result["outcome"] == "BLUNT_NHEJ"
+    return result["outcome"] == "HDR"
+
+
 def _rule_blunt_any(result: dict, entry: dict) -> bool:
     return result["outcome"] == "BLUNT_NHEJ"
 
@@ -1100,6 +1109,7 @@ def _rule_mhnhej_any(result: dict, entry: dict) -> bool:
 CONSTRUCTIONS = {
     "mh": _rule_mh,
     "mh_any": _rule_mh_any,
+    "mh_any_rev": _rule_mh_any_rev,
     "hdr": _rule_hdr,
     "nocut": _rule_nocut,
     "blunt": _rule_blunt,

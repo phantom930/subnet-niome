@@ -426,18 +426,39 @@ def build_bank(contract: dict, reference: dict, cell_types: dict, ctx, sites,
 
 
 def save_bank(path: str, bank: list[dict]) -> None:
+    """Write a bank ATOMICALLY: temp file in the same directory, then `os.replace`.
+
+    `data/all_cut` is shared on purpose -- a bank is a pure function of its `bank_key`, so research
+    scripts and the live fleet reuse each other's. That sharing makes a direct write to `path` a
+    read-during-write race: `np.savez_compressed` streams the file out over seconds, and a miner
+    calling `load_bank` in that window gets a truncated archive. numpy reports it as "This file
+    contains pickled (object) data ... allow_pickle=", which reads like a corrupt or malicious bank
+    rather than a partial one. Measured live on 2026-09-16: a research sweep wrote
+    `cas12a-9c77451574a50726.npz` at 00:24:03 while h1 read it at 00:24:01; h1's conjunction raised
+    that error and fell through to all-HDR for the round. The file itself was fine once complete.
+    `os.replace` is atomic within a filesystem, so a reader now sees either the old bank or the new
+    one and never a half-written one.
+    """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     width = max(len(b["fails"]) for b in bank)
     matrix = np.full((len(bank), width), -1, dtype=np.int16)
     for i, rec in enumerate(bank):
         matrix[i, :len(rec["fails"])] = rec["fails"]
-    np.savez_compressed(
-        path, fails=matrix,
-        guide=np.array([b["guide"] for b in bank]),
-        mutation=np.array([b["mutation"] for b in bank]),
-        strand=np.array([b["strand"] for b in bank]),
-        start=np.array([b["start"] for b in bank], dtype=np.int64),
-        length=np.array([b["length"] for b in bank], dtype=np.int16))
+    # The temp name ends in .npz so `np.savez_compressed` does not append a second suffix, and it
+    # carries the pid so two concurrent writers of the same key cannot clobber each other's temp.
+    tmp = f"{path}.{os.getpid()}.tmp.npz"
+    try:
+        np.savez_compressed(
+            tmp, fails=matrix,
+            guide=np.array([b["guide"] for b in bank]),
+            mutation=np.array([b["mutation"] for b in bank]),
+            strand=np.array([b["strand"] for b in bank]),
+            start=np.array([b["start"] for b in bank], dtype=np.int64),
+            length=np.array([b["length"] for b in bank], dtype=np.int16))
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
 
 
 def load_bank(path: str, limit: int = 60_000) -> list[dict]:
@@ -493,8 +514,18 @@ def cas9_cell_target(contract: dict, ctx, cfg, want: int) -> int:
 
 
 def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
-              cfg: AllCutConfig, want: int, deadline: float | None = None) -> list[dict]:
+              cfg: AllCutConfig, want: int, deadline: float | None = None,
+              cell_floor: int | None = None) -> list[dict]:
     """Cas9 guides strict over ``clean``, nearest targets first.
+
+    ``cell_floor`` overrides the per-cell quota the early exit waits for. It exists for the
+    conjunction, where this pool is then decimated by an on-band filter keeping ~``P(rule)**k`` of
+    it: the default floor is the quota ``assemble`` will ask for, which is the right number for a
+    pool that gets assembled directly and far too small for one that gets filtered first. Measured
+    on HEK293 ba815f07 at k=8, the four cells entered the filter holding 169953 / 130405 / 125307 /
+    **1154** candidates and left it holding 414 / 295 / 304 / **0** — the survival rate was an
+    identical 0.0023-0.0024 in every cell, so the build declined purely because one cell was 110x
+    thinner going in. It had cleared the unscaled floor of 73 and the scan stopped.
 
     Ordering by distance is what makes the early exit lossless: the assembly ranks candidates by
     ``(distance, |gc - 0.50|)``, so the rows it keeps come from the nearest targets regardless. A
@@ -509,7 +540,7 @@ def scan_cas9(clean: np.ndarray, contract: dict, cell_types: dict, ctx, sites,
     jobs.sort(key=lambda job: job[2])
     found: list[dict] = []
     per_cell: dict[tuple, int] = {}
-    cell_target = cas9_cell_target(contract, ctx, cfg, want)
+    cell_target = cas9_cell_target(contract, ctx, cfg, want) if cell_floor is None else cell_floor
     for site_index, mutation, distance in jobs:
         if deadline is not None and time.monotonic() > deadline:
             logger.info("all-cut: Cas9 scan stopped on the deadline with %d candidates",

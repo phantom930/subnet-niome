@@ -78,6 +78,7 @@ all-HDR — which is the build the fleet had before this module existed.
 from __future__ import annotations
 
 import dataclasses
+import math
 import logging
 import os
 import time
@@ -89,7 +90,9 @@ import numpy as np
 import genExp as G
 from niome_subnet.genomics import fastgreedy as FG
 from niome_subnet.genomics import mt19937 as MT
+from niome_subnet.genomics import seed_agnostic as SA
 from niome_subnet.genomics.all_cut import (AllCutConfig, BANK_DIR, _params_fn, assemble, bank_key,
+                                           cas9_cell_target,
                                            build_bank, config_for as all_cut_config_for, load_bank,
                                            save_bank, scan_cas9)
 from niome_subnet.genomics.validation import stage3
@@ -105,34 +108,112 @@ logger = logging.getLogger(__name__)
 # at width 300 is not automatically feasible at width 100. Width 300 means "the whole joined space",
 # i.e. no sub-window restriction at all.
 #
-# **2026-09-15: every cell moved to `band_width` 300 by operator request. It is NOT a measured
-# improvement and the measurement says the opposite, slightly.** CD34+ was swept at 100/150/225/300
-# over six contracts, each priced against the one field that played its contract
-# (`conj_replicate.py` with `CR_ARMS`, output `conj_replicate_CD34_HSPC_bw.json`):
+# **2026-09-15 (later): the four-hotkey fleet arm, set by operator request.** Every hotkey
+# min-unions on cut over the same 300-seed joined space and the band is drawn from a width-150
+# sub-window whose offset rotates per hotkey (`joined_window.band_offset_frac`, stride 75 -> offsets
+# 0/75/150/225). At `band_width` 300 every hotkey would search the identical candidate set and build
+# the IDENTICAL band, which is the correlation that sank all-cut at fleet level; at 150 the four
+# bands measured 0-3 shared seeds per pair on a live round, a fleet union of 31 of 900 against a
+# single hotkey's 8.
 #
-#     width   own E[share]   vs all-HDR      re-priced   vs width 100
-#       100      0.00177        2.34x          0.00125      1.000x     <- was shipped
-#       150      0.00122        1.61x          0.00122      0.970x
-#       225      0.00105        1.40x          0.00122      0.973x
-#       300      0.00101        1.34x          0.00118      0.940x
+# **`band_k` is 8 on every cell.** It was 10/8 briefly on 2026-09-15, then 8/6, and HEK293 came
+# back to 8 on the arm comparison recorded at the bottom of this block. What is measured, and what
+# is not:
 #
-# **Read the RE-PRICED column, not the raw one.** `conj_replicate.py` draws `v_clean`/`v_rest` from
-# a shared RNG that advances between arms, so no two arms are scored on the same sampled seeds --
-# two arms whose builds were byte-identical (band 8 / clean 183 / wxfid 317.9) priced at 0.00021 and
-# 0.00009. Within a contract, across widths, `clean` spreads 2.0% and `wxfid` 0.9% while `v_clean`
-# spreads 18%, so the raw 2.34x -> 1.34x ordering is almost entirely that sampling noise.
-# `conj_bw_reprice.py` re-prices every arm on a COMMON `v_clean`/`v_rest` per contract, which leaves
-# only the deterministic build outputs, and the real effect of 100 -> 300 is **-6%** with 4 of 6
-# contracts tying exactly. The paired `v_clean` test behind the raw ordering is t = 1.78, p ~ 0.135.
+#   * The only PAIRED fleet measurement is group 80 / k=8 against group 100 / k=10, over the same
+#     10 tasks, each hotkey priced in the field that played its contract (`conj_fleet.py`, paired
+#     by `conj_fleet_pair.py` -- pairing within task matters because `total_weighted_score` moves
+#     54% with the contract):
 #
-# So widening is ~neutral on score and costs build time (`hdr_compliance` scales with the candidate
-# count; `conj_bandwidth.json` measured 52s -> 103s from width 30 -> 300 on K562), which matters
-# because these builds are already prefetch-dependent. Band depth is unaffected: k=8 built on 6 of 6
-# CD34+ contracts at width 300. Revert by restoring 100 (CD34+) and 150 (K562).
+#         arm        places  median final/cut10  band>=1  mean |band|  |clean|  built
+#         g80  k8      1/5          0.92x          3/5         56        217    10.0/10
+#         g100 k10     0/5          0.00x          0/5         30        119     4.0/10
+#
+#     g100k10 lost on 0 of 5 tasks, mean paired delta -60.5 final points; per cell CD34+ -17.3
+#     (n=1), HUDEP-2 -4.7 (n=1), HEK293 -93.5 (n=3, a BUILD FAILURE -- zero rows on all three, the
+#     on-band Cas9 fill cannot reach 150 rows at ~P(HDR)**10 and accessibility 0.35).
+#
+#   * **`band_k` 8 vs 6, and cut width 300 vs 900, were then measured directly** by rebuilding the
+#     HEK293 round `ba815f07` (seeds 580/769/569) on all four band offsets and pricing every arm in
+#     that round's own 248-miner field. The two quantities that pay are the fleet band union (spike
+#     frequency) and the absolute clean-seed count (the elevated floor):
+#
+#         arm                band union  P(>=1 hit)  clean seeds of 900  cold build
+#         cut300 k=8 (live)      31        9.98%           19-23             51s
+#         cut300 k=6             23        7.47%           38-39             41s
+#         cut900 k=8             30        9.67%           16-20            180s
+#         cut900 k=6             22        7.16%           34-37            180s
+#
+#     **Two structural results, each consistent across both k values.** (a) The clean-seed count is
+#     set by `band_k`, NOT by the width of the cut space -- tripling the cut space to 900 leaves it
+#     unchanged or slightly lower, because the min-union's job grows exactly as fast as the space.
+#     Band union behaves the same way. So the 900-seed cut space is DOMINATED: equal on both paying
+#     terms, 3.5x the cold build. Do not re-run it. (b) `choose_band` is a greedy prefix, so the k=6
+#     band is a strict SUBSET of the k=8 band on every hotkey (verified 4/4) -- band coverage is
+#     monotone in k and lowering k can only shrink the spike.
+#
+#     HEK293 therefore sits at k=8: the ~35% more band union is worth more than the ~2x clean set
+#     k=6 buys, because HEK293's clean set is only ~38 of 900 even at k=6 -- too small to pay. The
+#     erythroid cells hold k=8 for the OPPOSITE reason: their clean sets are 161-167, a floor that
+#     does pay, and k=10 collapsed it to ~125 while starving the Cas9 fill.
+#
+#     Caveat on what this is: one contract, one field. The mechanism half (subset property, clean
+#     count independent of cut width) is exact and holds on every contract; the ranking of k=8 over
+#     k=6 on HEK293 is a mechanism argument plus a single observation, not a replication.
+#
+#   * **The arm below is neither of those two.** It pairs group 100 with k=8 on the erythroid cells
+#     and group 80 with k=6 on HEK293, so it takes the SHALLOWER band of the winning arm with the
+#     LARGER group of the losing one. Nothing has measured that combination. What the k=10 -> 8
+#     move is expected to recover is the two things that collapsed at k=10 -- the clean set
+#     (119 -> 217 between the two measured arms) and the Cas9 pool, since the on-band filter keeps
+#     ~P(HDR)**k -- at the cost of band depth, i.e. spike FREQUENCY. Pre-flight the pool before
+#     trusting it: at k=10 CD34+ ran 164-213 candidates against the 150 rows it must fill.
+#
+# Reverting is one row each. Before the four-hotkey layout the shipped values were HEK293
+# k=6/g80/w300, CD34+ and K562 k=8/g80/w300, and no HUDEP-2 entry at all (it kept all-HDR on a
+# 0.89x 12-contract replication).
+# **2026-09-16: band depth moved to each cell's measured optimum, with `band_cell_aware` ON.**
+# Set by operator request, and unlike the two arms above this one IS the measurement — see
+# "Band depth, and the per-cell defect that was capping it" in CLAUDE.md. Two things changed:
+#
+#   * `band_cell_aware` scales `scan_cas9`'s per-cell floor by `P(rule)**k`, because the on-band
+#     filter decimates that pool AFTER the scan has stopped. Without it, depth declines: 3 of 12
+#     HEK293 contracts at k=8 and 5 of 12 at k=9, and 6 of 12 erythroid at k=11-12. With it, 12/12
+#     and 12/12. Paired within contract over 3 erythroid cells x 3 depths it is **20W/2L,
+#     sign p = 0.00012**, and it lifts builds that already succeeded (HEK293 `w x fid` +3.25%).
+#   * `band_k` is each cell's optimum. Three of the four are the Cas12a BAND-FORMATION WALL -- the
+#     depth at which `choose_band`'s survivors fall under `group_size` -- which no Cas9 floor can
+#     move and which `group_size` 100 -> 80 does not move either (it is a 0.8x cut against a 0.57x
+#     per-seed decay, so it buys the next seed on 1 contract in 4; measured, and it LOSES on
+#     E[share]). Only CD34+ has an interior maximum.
+#
+#     | cell | wall | k here | own-field E[share] | vs the k=8 it replaces |
+#     |---|---|---|---|---|
+#     | HEK293 | 9 | **9** | 0.000163 | k=8 declined 3/12 |
+#     | CD34+_HSPC | 12 | **12**, wall | 0.000145 (k=11 peaks at 0.000153) | 1.43x at its peak |
+#     | K562 | 12 | **12**, wall | 0.000220 | 1.36x |
+#     | HUDEP-2 | 12 | **12**, wall | 0.000303 | 2.06x |
+#
+# **CD34+ is set to the wall, not to its peak.** k=11 measures 0.000153 against k=12's 0.000145 --
+# a 5% interior maximum at n=4 contracts, which is inside the noise this file's own rules would
+# demand more evidence for. Set at 12 by operator request for a uniform erythroid k; revert to 11
+# if CD34+ is ever swept properly.
+#
+# **HUDEP-2 is the load-bearing caveat.** [hud_resolve.py](hud_resolve.py) re-measured the 0.89x
+# exclusion on six fresh contracts and **it holds for k=8 (0.94x, 2/6 wins)** -- the arm that was
+# shipping. k=12 + the floor is the first HUDEP-2 conjunction arm that does not lose, at **1.12x,
+# 4/6, sign p = 0.688**. That is "stops losing", NOT a measured win, and all-HDR remains the
+# lower-variance choice on that cell. The mechanism is that HUDEP-2's all-HDR band is **11.5**, so
+# any conjunction pinned below ~12 is giving up the dominant term to buy a clean set.
 CELL_CONFIG: dict[str, dict] = {
-    "HEK293": {"band_k": 6, "group_size": 80, "band_width": 300, "light_cell_rows": 12},
-    "CD34+_HSPC": {"band_k": 8, "group_size": 80, "band_width": 300, "light_cell_rows": 6},
-    "K562": {"band_k": 8, "group_size": 80, "band_width": 300, "light_cell_rows": 6},
+    "HEK293": {"band_k": 9, "group_size": 80, "band_width": 150, "light_cell_rows": 12,
+               "band_cell_aware": True},
+    "CD34+_HSPC": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+                   "band_cell_aware": True},
+    "K562": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+             "band_cell_aware": True},
+    "HUDEP-2": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+                "band_cell_aware": True},
 }
 
 
@@ -145,6 +226,20 @@ class ConjunctionConfig(AllCutConfig):
     seed_list: tuple[int, ...] = ()
     band_k: int = 8
     band_width: int = 150
+    # Let `choose_band` see the Cas9 side before it fixes the band. OFF by default: the band it
+    # picks differs from the measured one, so every tuned (k, group, width) row above was measured
+    # without it. See `cas9_cell_probe` for what it is for and what it costs.
+    band_cell_aware: bool = False
+    band_probe_sites: int = 8
+    band_probe_guides: int = 2000
+    # Ceiling on the band-scaled per-cell Cas9 floor. The scan walks jobs nearest-first, so filling
+    # a thin cell means walking most of the distance ordering; this bounds that against the build
+    # budget. The deadline still bounds it independently.
+    band_fill_cap: int = 50000
+    # The rule the band is pinned on. "hdr" is the measured construction; see `hdr_compliance` for
+    # what changing it costs. Per-row compliance sets the Cas9 conditional fill, so a rule with
+    # lower compliance reaches a smaller feasible `band_k` at the same pool.
+    band_rule: str = "hdr"
     # Where the band sub-window starts, as a fraction of the joined space. 2/3 reproduces the
     # measurement, which fixed the start at seed 700 of the joined space [100-199, 400-499,
     # 700-799] — i.e. the start of the third class. The start was held fixed through the whole
@@ -201,8 +296,21 @@ def sub_window(seeds: list[int], width: int, offset_frac: float = 2.0 / 3.0) -> 
     return [seeds[(start + j) % n] for j in range(width)]
 
 
-def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates) -> dict:
-    """For each banked guide, which of `candidates` it repairs by HDR on.
+def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates,
+                   rule: str = "hdr") -> dict:
+    """For each banked guide, which of `candidates` it satisfies ``rule`` on.
+
+    ``rule`` defaults to "hdr", the construction as measured. Any key of
+    ``mt19937.RULE_SPECS`` works; what changes is how many of stage 4's three targets a band seed
+    pins, and therefore what a band seed is WORTH:
+
+        hdr      all 3 pinned                     cons exactly 1.0000
+        mh_any   is_cut pinned, is_hdr == mh      cons 0.77-0.85 (measured, K562 and HEK293)
+
+    `mh_any` never makes `is_hdr` constant -- it makes it an exact function of `mh`, which stage 4
+    hands the forest as a `build_X` feature, so `r2_score` pays it like a constant. `indel_length`
+    is only partly recovered (the BLUNT branch carries an unpinned expovariate), which is the whole
+    of the 0.8-vs-1.0 gap.
 
     Grouped by (site, mutation) because the screen is per target: every guide of one target shares
     the gc/energy/cut_p columns, which is what makes the batched kernel worth using.
@@ -223,7 +331,7 @@ def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates) -
         params_of = _params_fn(site, distance, accessibility, offset)
         guides = [records[i]["guide"] for i in idxs]
         got = MT.screen_guides_rule_gpu(guides, seeds, mutation, cas, start, strand,
-                                        params_of, "hdr", len(seeds))
+                                        params_of, rule, len(seeds))
         for i, guide in zip(idxs, guides):
             fails = got.get(guide)
             bad = set(int(x) for x in fails) if fails is not None else whole
@@ -231,13 +339,83 @@ def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates) -
     return ok
 
 
-def choose_band(ok: dict, k: int, candidates, need: int) -> tuple[list[int], list[int]]:
+def cas9_cell_probe(contract: dict, cell_types: dict, ctx, sites, cfg, candidates,
+                    rule: str) -> dict:
+    """Per (mutation, strand) cell, the rule-compliance sets of a SAMPLE of Cas9 guides.
+
+    `choose_band` picks the band from Cas12a guides alone, but the constraint that actually
+    declines the build lives on the Cas9 side: stage 5 needs all four cells populated, and the
+    on-band filter keeps only ~P(rule)**k of each cell's candidates. A cell that is thin to begin
+    with empties first -- on HEK293 the heavy-mutation Cas9 sites sit farther from the mutation
+    than the light ones, which is the same starvation `all_cut.cas9_cell_target` documents -- and
+    nothing in the Cas12a pool tells `choose_band` it is about to happen. Measured over 12 HEK293
+    contracts x depths 6-9, **8 of 9 declines were cell coverage, not pool size**; one had a Cas9
+    pool of 1013 against a requirement of 170 and still declined.
+
+    This probes the Cas9 side BEFORE the band is fixed, so the band can be chosen to keep every
+    cell alive. It is deliberately OPTIMISTIC: the real pool is further restricted to guides that
+    cut on every seed of `clean`, which does not exist until the group does. At `cut_p` 0.99 over a
+    ~25-seed clean set that is a ~0.78 factor, so a cell this calls viable is usually viable and a
+    cell it calls dead always is. It is a tie-break, not a guarantee.
+
+    Cost is one extra GPU screen of `band_probe_guides` guides over `candidates` -- ~1.2M pairs at
+    the defaults, against the 23.9M pairs/s `screen_guides_rule_gpu` sustains.
+    """
+    cell = contract.get("cell_type")
+    accessibility = cell_types.get(cell, {}).get("accessibility", 1.0)
+    regions = contract.get("mutation_regions") or {}
+    seeds = np.asarray(sorted(set(int(x) for x in candidates)), dtype=np.int64)
+    whole = set(int(x) for x in seeds)
+    jobs = [(i, m, abs(sites[i].start - ctx.mutation_map[m]))
+            for i, s in enumerate(sites) if s.cas == "Cas9" for m in ctx.mutations
+            if abs(s.start - ctx.mutation_map[m]) <= cfg.max_distance]
+    jobs.sort(key=lambda job: job[2])
+    cap = max(1, cfg.band_probe_guides // max(1, cfg.band_probe_sites))
+    seen_sites: dict[tuple, int] = {}
+    out: dict[tuple, list] = {}
+    for site_index, mutation, distance in jobs:
+        site = sites[site_index]
+        key = (mutation, site.strand)
+        if seen_sites.get(key, 0) >= cfg.band_probe_sites:
+            continue
+        guides = SA.enumerate_variants(site, ctx, cfg.cas9_gc[0], cfg.cas9_gc[1],
+                                       ctx.max_mismatches, True, cap)
+        if not guides:
+            continue
+        seen_sites[key] = seen_sites.get(key, 0) + 1
+        offset = stage3.REGION_ENERGY_OFFSETS.get(regions.get(mutation), 0.0)
+        params_of = _params_fn(site, distance, accessibility, offset)
+        got = MT.screen_guides_rule_gpu(guides, seeds, mutation, "Cas9", site.start,
+                                        site.strand, params_of, rule, len(seeds))
+        for guide in guides:
+            fails = got.get(guide)
+            if fails is None:
+                continue
+            out.setdefault(key, []).append(whole - set(int(x) for x in fails))
+        if len(seen_sites) >= 4 and min(seen_sites.values()) >= cfg.band_probe_sites:
+            break
+    return out
+
+
+def choose_band(ok: dict, k: int, candidates, need: int, cell_ok: dict | None = None,
+                stats: dict | None = None) -> tuple[list[int], list[int]]:
     """Greedily take a k-seed band, keeping only guides HDR-compliant on all of it.
 
     One seed per step, taking whichever candidate the most surviving guides comply on, and stopping
     early if the survivors would fall below `need` — a group cannot be formed from fewer guides
     than its own size, so a deeper band than that is worthless. Returns the band reached and the
     indices still alive on it; `len(band) < k` means the fill ran out and the caller should decline.
+
+    `cell_ok` (from `cas9_cell_probe`) makes the step CELL-AWARE: among the seeds that clear
+    `need`, take the best one that still leaves every (mutation, strand) cell holding a
+    rule-compliant Cas9 probe guide, rather than the best one outright. That is a tie-break on an
+    almost-flat surface — the greedy's `argmin`/`argmax` is heavily tied, as `fastgreedy` documents
+    for its own picks — so it usually costs nothing in surviving Cas12a pool while avoiding the
+    band seeds that empty a thin cell and decline the build at the last step.
+
+    When no seed clears `need` AND keeps every cell, it falls back to the plain argmax rather than
+    stopping: a band that might decline still beats no band. `stats` records how often that
+    happened, so a build that declines anyway can be told apart from one the probe never steered.
     """
     cand = sorted(set(int(x) for x in candidates))
     col = {s: j for j, s in enumerate(cand)}
@@ -247,19 +425,55 @@ def choose_band(ok: dict, k: int, candidates, need: int) -> tuple[list[int], lis
         for s in ok[i]:
             if s in col:
                 M[r, col[s]] = True
+
+    # Per-cell probe matrices in the same column space, carried alongside `alive`.
+    CM: dict = {}
+    calive: dict = {}
+    for key, sets in (cell_ok or {}).items():
+        if not sets:
+            continue
+        A = np.zeros((len(sets), len(cand)), dtype=bool)
+        for r, ss in enumerate(sets):
+            for seed in ss:
+                if seed in col:
+                    A[r, col[seed]] = True
+        CM[key] = A
+        calive[key] = np.ones(len(sets), dtype=bool)
+
     alive = np.ones(len(idx), dtype=bool)
     band: list[int] = []
     taken: set[int] = set()
+    steered = fell_back = 0
     for _ in range(k):
         counts = M[alive].sum(axis=0)
         for j in taken:
             counts[j] = -1
-        j = int(np.argmax(counts))
-        if counts[j] < need:
-            break
-        taken.add(j)
-        band.append(cand[j])
-        alive &= M[:, j]
+        pick = -1
+        if CM:
+            for cnd in np.argsort(-counts):
+                cnd = int(cnd)
+                if counts[cnd] < need:
+                    break
+                if all((calive[key] & CM[key][:, cnd]).any() for key in CM):
+                    pick = cnd
+                    break
+            if pick >= 0 and pick != int(np.argmax(counts)):
+                steered += 1
+            elif pick < 0:
+                fell_back += 1
+        if pick < 0:
+            pick = int(np.argmax(counts))
+            if counts[pick] < need:
+                break
+        taken.add(pick)
+        band.append(cand[pick])
+        alive &= M[:, pick]
+        for key in CM:
+            calive[key] &= CM[key][:, pick]
+    if stats is not None:
+        stats.update(band_steered=steered, band_fell_back=fell_back,
+                     probe_cells=len(CM),
+                     probe_alive={f"{m}|{st}": int(v.sum()) for (m, st), v in calive.items()})
     return band, [idx[r] for r in np.flatnonzero(alive)]
 
 
@@ -272,7 +486,9 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
     deadline = None if budget_s is None else started + budget_s
     joined = [int(x) for x in cfg.seeds]
     meta: dict = {"method": "conjunction", "k": cfg.band_k, "group_size": cfg.group_size,
-                  "band_width": cfg.band_width, "light_cell_rows": cfg.light_cell_rows,
+                  "band_width": cfg.band_width, "band_rule": cfg.band_rule,
+                  "band_cell_aware": cfg.band_cell_aware,
+                  "light_cell_rows": cfg.light_cell_rows,
                   "window": f"joined {len(joined)} seeds"}
 
     ctx = G.build_context(contract, reference, cell_types)
@@ -303,9 +519,24 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         return None, meta
 
     candidates = sub_window(joined, cfg.band_width, cfg.band_offset_frac)
-    ok = hdr_compliance(records, contract, cell_types, ctx, candidates)
+    ok = hdr_compliance(records, contract, cell_types, ctx, candidates, cfg.band_rule)
     MT.free_gpu_memory()
-    band, alive = choose_band(ok, cfg.band_k, candidates, cfg.group_size)
+    cell_ok = None
+    p_row = None
+    if cfg.band_cell_aware:
+        cell_ok = cas9_cell_probe(contract, cell_types, ctx, sites, cfg, candidates,
+                                  cfg.band_rule)
+        MT.free_gpu_memory()
+        meta["probe_guides"] = {f"{m}|{st}": len(v) for (m, st), v in cell_ok.items()}
+        # Per-row Cas9 compliance with the band rule, measured rather than assumed. This is what
+        # the on-band filter will charge the pool per band seed, so it sets how much bigger than
+        # `assemble`'s quota each cell has to be BEFORE the filter.
+        frac = [len(x) / max(1, len(candidates)) for v in cell_ok.values() for x in v]
+        p_row = float(np.mean(frac)) if frac else None
+        meta["probe_p_row"] = p_row
+    bstats: dict = {}
+    band, alive = choose_band(ok, cfg.band_k, candidates, cfg.group_size, cell_ok, bstats)
+    meta.update(bstats)
     meta["band"] = len(band)
     meta["band_seeds"] = list(band)
     if len(band) < cfg.band_k:
@@ -335,12 +566,18 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         MT.free_gpu_memory()
         return None, meta
 
-    cas9 = scan_cas9(clean, contract, cell_types, ctx, sites, cfg, n_rows - cfg.group_size,
-                     deadline)
+    want = n_rows - cfg.group_size
+    cell_floor = None
+    if p_row and p_row > 0:
+        survive = p_row ** len(band)
+        cell_floor = min(cfg.band_fill_cap,
+                         int(math.ceil(cas9_cell_target(contract, ctx, cfg, want) / survive)))
+        meta["cell_floor"] = cell_floor
+    cas9 = scan_cas9(clean, contract, cell_types, ctx, sites, cfg, want, deadline, cell_floor)
     MT.free_gpu_memory()
     meta["cas9_cut"] = len(cas9)
     if cas9:
-        ok9 = hdr_compliance(cas9, contract, cell_types, ctx, band)
+        ok9 = hdr_compliance(cas9, contract, cell_types, ctx, band, cfg.band_rule)
         cas9 = [cas9[i] for i in sorted(ok9) if len(ok9[i]) == len(band)]
         MT.free_gpu_memory()
     meta["cas9_pool"] = len(cas9)
@@ -365,7 +602,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
 def build_for_cell(contract: dict, reference: dict, cell_types: dict,
                    budget_s: float | None = None,
                    seed_list=None,
-                   hdr_range: tuple[int, int] | None = None) -> tuple[list[dict] | None, dict]:
+                   hdr_range: tuple[int, int] | None = None,
+                   band_offset_frac: float | None = None) -> tuple[list[dict] | None, dict]:
     """Build for whichever cell type this contract names, or decline where it is unmeasured.
 
     Takes the SAME seed space the all-HDR rung would have been given, so the two rungs play one
@@ -394,4 +632,9 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     mf = max(1, round(cfg.cas12a_max_fail * len(seeds) / 900))
     cfg = dataclasses.replace(cfg, seed_list=tuple(seeds), start_seed=seeds[0], end_seed=seeds[-1],
                               cas12a_max_fail=mf)
+    # Per-hotkey band rotation. None keeps `ConjunctionConfig`'s own default, which is the
+    # single-hotkey value the 12-contract replication was measured at; the fleet passes
+    # `joined_window.band_offset_frac`, so two siblings on one joined window hold different bands.
+    if band_offset_frac is not None:
+        cfg = dataclasses.replace(cfg, band_offset_frac=float(band_offset_frac))
     return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)

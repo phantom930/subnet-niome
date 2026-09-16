@@ -394,7 +394,12 @@ class Miner(BaseMinerNeuron):
     # on fresh contracts, so it keeps all-HDR. `conjunction.config_for` returns None for it too,
     # so the exclusion holds even if this tuple is widened by mistake.
     CONJUNCTION = True
-    CONJUNCTION_CELL_TYPES = ("HEK293", "CD34+_HSPC", "K562")
+    # 2026-09-15: HUDEP-2 ADDED by operator request. It had been excluded on a 0.89x 12-contract
+    # replication (0 of 6 on the fresh half), and `conjunction.CELL_CONFIG` now carries an entry for
+    # it, so the double guard that used to hold the exclusion from both sides is gone -- widening
+    # this tuple by mistake will now let it through. The fleet run measures HUDEP-2 at group 100 /
+    # k=10 as -4.7 final points against group 80 / k=8 (n=1); see `conjunction.CELL_CONFIG`.
+    CONJUNCTION_CELL_TYPES = ("HEK293", "CD34+_HSPC", "K562", "HUDEP-2")
     # Per cell type, like ALL_CUT_MIN_BUDGET_S and unlike ALL_HDR_MIN_BUDGET_S, because the cold
     # builds differ by 50%: measured end to end on contracts the replication never touched,
     # HEK293 **132s**, CD34+_HSPC **185s**, K562 **196s** (cold Cas12a bank + HDR screen + band +
@@ -407,7 +412,13 @@ class Miner(BaseMinerNeuron):
     # the budget it needs. **None of the three fits the ~225s in-TTL path**, so the conjunction is
     # prefetch-dependent exactly as K562/HUDEP-2 all-cut is: a round whose prefetch fails falls to
     # all-HDR, which is the build the fleet had before this rung existed.
-    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 430.0, "K562": 450.0}
+    #
+    # 2026-09-15: the group 100 / k=10 arm is a heavier build than the group 80 / k=8 one these
+    # numbers were measured at -- a deeper band means the on-band Cas9 filter keeps ~P(HDR)**10
+    # rather than **8, so `scan_cas9` at `pool_target` 500 runs longer before it can stop. The gates
+    # below are the PRE-FLIGHT cold builds at the shipped arm plus ALL_HDR_MIN_BUDGET_S plus ~25%.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 430.0, "K562": 450.0,
+                                "HUDEP-2": 450.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
     # 1-(1-union/900)^3, so the win comes from making sibling hotkeys' bands DISJOINT. Measured: 3
@@ -1639,6 +1650,11 @@ class Miner(BaseMinerNeuron):
         space = self._window_for(cell_type, task_id) if band_applies else None
         # A list is a joined (non-contiguous) band space; a tuple is one window.
         kw = ({"seed_list": space} if isinstance(space, list) else {"hdr_range": space})
+        # The conjunction's band is a deterministic function of (contract, joined space, width), so
+        # with every hotkey on the same joined window the sub-window OFFSET is the only thing that
+        # separates two siblings' bands. None (a hotkey not in `joined_window.BAND_HK`) keeps the
+        # config default, which is the single-hotkey value the replication was measured at.
+        conj_offset = JW.band_offset_frac(os.getenv("NIOME_INSTANCE"))
 
         if conj_applies:
             try:
@@ -1648,7 +1664,8 @@ class Miner(BaseMinerNeuron):
                         # still leave the rung below it enough budget to build.
                         conj_rows, conj_meta = CJ.build_for_cell(
                             contract, reference, cell_types,
-                            budget_s=max(0.0, budget - self.ALL_HDR_MIN_BUDGET_S), **kw)
+                            budget_s=max(0.0, budget - self.ALL_HDR_MIN_BUDGET_S),
+                            band_offset_frac=conj_offset, **kw)
                     else:
                         conj_rows, conj_meta = None, {
                             "reason": "another build holds the hedge slot"}

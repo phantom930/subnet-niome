@@ -34,7 +34,7 @@ except Exception:
 
 class FastGreedy:
     def __init__(self, candidates, window_lo=100, window_hi=999, per_cell_min=8, caps=None,
-                 seeds=None):
+                 seeds=None, prefer=None):
         """``caps`` optionally bounds how many picks a (mutation, cas_system, strand) cell may take.
 
         The min-union objective is blind to ``mutation_weight``, so on a contract with a heavy and a
@@ -82,6 +82,41 @@ class FastGreedy:
                                for c in candidates]
         self.caps = ({order[k]: v for k, v in self.caps_by_key.items() if k in order}
                      if self.caps_by_key else None)
+        # ``prefer``: one score per candidate, HIGHER is better, used ONLY to break ties among
+        # equal-cost picks. The min-union objective is untouched -- a candidate is eligible for the
+        # tie-break only when its marginal cost already equals the minimum -- so this cannot trade
+        # cut coverage for row quality; it spends slack the greedy was otherwise resolving by index
+        # order. CLAUDE.md measures that slack as large: the argmin is tied on 71 of 80 picks,
+        # median 12 candidates, max 577.
+        #
+        # None (the default) keeps ``argmin``'s first-minimum pick, which is what
+        # ``assert_matches_sa`` compares against SA. Passing an array changes restart 0 only;
+        # restarts 1..n still re-break ties uniformly, so the random arms remain what they were.
+        #
+        # **MEASURED AND DEAD -- nothing passes this, and it should stay that way.** Built to chase
+        # the one structural term with real headroom: on a live HEK293 build ``dist_score`` averaged
+        # 0.8497 (17.7% below ceiling) against ``gc_score``'s 0.9505 (5.2%) and ``offtarget_factor``
+        # at a perfect 1.0000, and the Cas12a half carried it -- dist 0.7061 there against Cas9's
+        # 0.9173, because the min-union selects for cut-failure coincidence and is blind to
+        # distance. Two arms over three HEK293 contracts, everything else identical:
+        #
+        #     arm    dist_score   gc_score   weighted   w x fid   wins
+        #     dist     +0.87%      +0.05%     +1.07%    +0.39%    1/3
+        #     base     +0.09%      +0.09%     +0.20%    +0.43%    1/3
+        #
+        # The targeted term moves and the PRODUCT does not, which is the same outcome CLAUDE.md
+        # records for GC tie-break, mutation-weight tie-break, band width, group_size,
+        # max_distance and light_cell_rows. ``ba815f07`` shows the mechanism cleanly: ``dist``
+        # raised weighted 348.11 -> 359.50 (+3.3%) and fidelity fell 0.8787 -> 0.8503 (-3.2%), so
+        # ``w x fid`` went 305.9 -> 305.7. Preferring nearer guides shifts the mutation mix, and
+        # the mutation coverage entropy term pays back exactly what weighted gains. On the third
+        # contract both arms reproduced the baseline byte-for-byte -- no tie ever preferred a
+        # different guide.
+        #
+        # What DID hold is the design guarantee: ``clean`` and ``union`` were identical on 3/3
+        # contracts, so the tie-break never traded cut coverage for row quality. The mechanism is
+        # sound; the gain is not there.
+        self._prefer = None if prefer is None else xp.asarray(np.asarray(prefer, dtype=np.float32))
 
     def _floors(self, group_size):
         per = min(self.per_cell_min, max(1, group_size // max(1, self.n_cells)))
@@ -129,8 +164,15 @@ class FastGreedy:
                     cost = xp.where(self.cell_id == c, BIG, cost)
             if bool((cost >= BIG).all()):
                 break
-            if rng is None:
+            if rng is None and self._prefer is None:
                 pick = int(xp.argmin(cost))               # first minimum, exactly as SA does
+            elif rng is None:
+                # Deterministic quality tie-break: among the equal-cost minima, take the best
+                # ``prefer``. Ties within ``prefer`` itself fall back to the lowest index, so the
+                # build stays deterministic.
+                m = cost.min()
+                ties = xp.flatnonzero(cost == m)
+                pick = int(ties[int(xp.argmax(self._prefer[ties]))])
             else:
                 m = cost.min()
                 ties = xp.flatnonzero(cost == m)
@@ -147,15 +189,29 @@ class FastGreedy:
             u |= set(self.fail_lists[i].tolist())
         return len(u)
 
+    def _prefer_total(self, chosen):
+        """Summed ``prefer`` over a chosen set, or 0.0 when no preference is configured."""
+        if self._prefer is None or not chosen:
+            return 0.0
+        return float(sum(float(self._prefer[i]) for i in chosen))
+
     def best(self, group_size, restarts=12, seed=0):
+        """Lowest union wins; ``prefer`` only settles builds that tie on union.
+
+        Union stays the sole objective -- a higher-quality build is never taken over a build that
+        covers more seeds. That matters because the clean set is what the whole construction is
+        for, and a tie-break that could trade it away would be a different algorithm rather than a
+        better-resolved one.
+        """
         best_idx = self.build(group_size, rng=None)        # restart 0 is the deterministic build
         best_u = self.union(best_idx)
+        best_p = self._prefer_total(best_idx)
         rng = np.random.default_rng(seed)
         for _ in range(max(0, restarts - 1)):
             c = self.build(group_size, rng=rng)
             u = self.union(c)
-            if u < best_u:
-                best_idx, best_u = c, u
+            if u < best_u or (u == best_u and self._prefer_total(c) > best_p):
+                best_idx, best_u, best_p = c, u, self._prefer_total(c)
         return best_idx, best_u
 
 

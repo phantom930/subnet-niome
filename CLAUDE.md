@@ -224,9 +224,34 @@ window, Monte-Carlo'd per seed (`conj_replicate.py`, `conj_mc.py`); p is a two-s
 | K562 | 8 / 80 / 150 / 6 | **1.30x** | 10/12 | 0.039 | 1.48x | 1.17x | 1.22-1.35 |
 | HUDEP-2 | 8 / 80 / 225 / 12 | **0.89x** | 3/12 | 0.146 | 0.90x | 0.88x | 0.87-0.91 |
 
-**HUDEP-2 is excluded on that last row and keeps all-HDR.** It lost on aggregate and went **0 of 6**
-on the fresh contracts. `conjunction.CELL_CONFIG` has no HUDEP-2 entry and
-`Miner.CONJUNCTION_CELL_TYPES` does not name it, so the exclusion holds from both sides.
+**HUDEP-2 was excluded on that last row and kept all-HDR** — it lost on aggregate and went **0 of
+6** on the fresh contracts. **That exclusion is no longer live in the code** (`CELL_CONFIG` carries
+a HUDEP-2 entry and `Miner.CONJUNCTION_CELL_TYPES` names all four cells, set by operator request),
+and **the 0.89x has now been re-measured on six fresh contracts and it holds**
+([hud_resolve.py](hud_resolve.py), each contract priced in the one field that played it, both
+constructions enumerated identically over all 900 seeds — band set on `hdr`, cut-clean set on
+`cut`, every regime scored at its measured consistency):
+
+| arm | mean own-field E[share] | vs all-HDR | wins | sign p |
+|---|---|---|---|---|
+| all-HDR, matched | 0.000291 | 1.00x | — | — |
+| **conjunction k=8 — what SHIPS today** | 0.000275 | **0.94x** | 2/6 | 0.688 |
+| conjunction k=12 + the Cas9 cell floor | 0.000325 | **1.12x** | 4/6 | 0.688 |
+
+**The mechanism was never identified before and it is simple: on HUDEP-2 all-HDR's own band is
+11.5, and the conjunction is pinned at k=8.** So the shipped arm gives up 3.5 band seeds — the term
+that dominates — to buy a clean set of 162.5 against all-HDR's 15.7, and that trade loses.
+`weighted x fidelity` is identical across all three arms (268.7 / 268.2 / 264.3), so none of this
+is term 1. At k=12 the conjunction finally MATCHES the band (12.0) while still holding 69.7 clean
+seeds, and only then does it cross over.
+
+**So the live HUDEP-2 arm is the one clearly wrong option.** k=8 is the arm this file priced at
+0.89x and it re-prices at 0.94x. Either take HUDEP-2 off the conjunction (the original decision) or
+move it to k=12 + `band_cell_aware` — but **1.12x at 4/6 and p = 0.688 is not a measured win
+either**, so the honest reading is that k=12 merely stops losing. Note also that all-HDR's
+cut-clean bonus is NOT negligible here, against what "Pricing a floor change" says for HEK293: 2-7
+seeds beyond the band at `v_clean` **0.2364** against a 0.1003 floor. Modelling all-HDR as
+band-plus-floor would understate the baseline and hand the conjunction a win it has not earned.
 
 **Four things to read before widening this.**
 
@@ -271,6 +296,152 @@ reachable 329** — the same starvation `all_cut.cas9_cell_target` documents, re
 route. `conjunction._OWN_DEFAULTS` is the guard. Note what did NOT diagnose it: an A/B of the two
 scan configs, because both arms carried the bug. What did was rebuilding the **matched all-HDR arm**,
 which reproduced its logged 305.1 exactly and so cleared the environment, leaving only the port.
+
+#### Band depth, and the per-cell defect that was capping it
+
+Priced over **12 HEK293 contracts**, each against the one field that played it, at group 80 /
+width 150 / rule `hdr` ([band_hit.py](band_hit.py), `BH_ARMS`). `+floor` is the band-scaled Cas9
+cell floor described below:
+
+| k | builds | E[share] when built | **× P(build)** | mean Cas9 pool | mean `w × fid` |
+|---|---|---|---|---|---|
+| 6 | 12/12 | 0.000093 | 0.000093 | 1910 | 251.5 |
+| 7 | 12/12 | 0.000112 | 0.000112 | 1268 | 249.1 |
+| 8 | 9/12 | 0.000129 | 0.000097 | 826 | 233.9 |
+| **8 +floor** | **12/12** | 0.000136 | **0.000136** | 2191 | 250.8 |
+| 9 | 7/12 | 0.000131 | 0.000077 | 619 | 236.1 |
+| **9 +floor** | **12/12** | **0.000163** | **0.000163** | 1280 | 250.1 |
+
+**Deeper is better conditional on building, and before the fix that was an availability trade that
+resolved to the SHALLOW arm.** Unfixed, k=7 (12/12) beat both k=8 and k=9, which are worth more per
+build and decline on 3 and 5 of 12. That is the same shape as the CD34+ group 25/42 sweep — score
+against availability — and it resolves the same way. **Fixed, it stops being a trade**: k=9 +floor
+builds everywhere and is **+46% on E[share] over k=7**, winning **12 of 12** paired within contract
+(sign p = 0.0005). Pair within contract or not at all: `total_weighted_score` moves 54% with the
+contract.
+
+**The declines were never pool decay, which is what the `pool_target` trap above trains you to
+assume. 8 of 9 were CELL COVERAGE** — stage 5 needs all four (mutation × strand) cells and the
+build requires `cells >= 4`. One decline held a Cas9 pool of **1013 against a requirement of 170**
+and failed anyway. The per-cell census on ba815f07 at k=8, before and after the on-band filter:
+
+| cell | before | after | survival |
+|---|---|---|---|
+| `HBB:c.*113A>G` + | 169,953 | 414 | 0.00244 |
+| `NC_000011.10:g.5226401A>G` − | 130,405 | 295 | 0.00226 |
+| `HBB:c.*113A>G` − | 125,307 | 304 | 0.00243 |
+| **`NC_000011.10:g.5226401A>G` +** | **1,154** | **0** | **0.00000** |
+
+**The survival rate is identical in every cell.** The dying cell is not unlucky in *which* seeds it
+complies on — it enters the filter **110× thinner** and `P(hdr)**8` leaves it an expected 2.8.
+
+**Cause: `scan_cas9`'s early exit waits for `cas9_cell_target`, which is the quota `assemble` will
+ask for.** That is the right floor for a pool that gets assembled directly and far too small for
+one the band filter decimates first. The thin cell cleared 73 at 1,154 candidates and the scan
+stopped; to *end* with 73 after `P(rule)**k` it needed ~30,000. `scan_cas9` now takes an optional
+`cell_floor`, and `conjunction` passes `cas9_cell_target / P(rule)**k` with **`P(rule)` measured**
+by `cas9_cell_probe` (0.446 on HEK293), not assumed. Capped by `band_fill_cap`.
+
+**The fix also lifts builds that were already succeeding, which is the part worth remembering.**
+Cas9 pool 826 → 2191 at k=8 and 619 → 1280 at k=9, `w × fid` 233.9 → 250.8 and 236.1 → 250.1. So
+the starvation was silently degrading *every* deep build by forcing the assembly to backfill from a
+depleted cell, not merely declining some — **the same defect as "The Cas9 scan's per-cell floor"
+below, re-created one level down by the band filter.** It is why k=8/k=9 read mediocre on term 1
+before the fix, and that is not a property of depth.
+
+Cost: successful builds **110 s against ~83 s** (+33%), against `CONJUNCTION_MIN_BUDGET_S` 380 s on
+HEK293. Prefetch dependence is unchanged.
+
+**Everything here is behind `band_cell_aware`, default False**, so the tuned rows in `CELL_CONFIG`
+were all measured without it and stay valid.
+
+**Three things this does NOT establish.**
+
+* **NOT HEK293-only — the floor's value tracks DEPTH, not cell type.** An earlier form of this
+  entry concluded "HEK293 only" from a k=8 sweep and that was wrong; it measured the wrong depth.
+  At k=8 the erythroid cells have slack, so the floor is inert exactly as that sweep found
+  (5 contracts each, **15/15 built either way, zero declines**; E[share] moved by **exactly zero**
+  on K562 and HUDEP-2, and CD34+'s +7% was a +0.93% term-1 gain crossing a rank step at n=5). They
+  go thin from **k=10** and then it pays, on all three:
+
+  | cell | k | base builds | **+floor builds** | base × P(build) | **+floor × P(build)** |
+  |---|---|---|---|---|---|
+  | CD34+_HSPC | 10 / 11 / 12 | 4/4, 1/4, 1/4 | **4/4, 4/4, 4/4** | 0.000077 / 0.000033 / 0.000040 | 0.000130 / **0.000153** / 0.000145 |
+  | K562 | 10 / 11 / 12 | 4/4, 3/4, 2/4 | **4/4, 4/4, 4/4** | 0.000166 / 0.000179 / 0.000177 | 0.000186 / 0.000193 / **0.000220** |
+  | HUDEP-2 | 10 / 11 / 12 | 4/4, 2/4, 1/4 | **4/4, 4/4, 4/4** | 0.000238 / 0.000234 / 0.000221 | 0.000238 / 0.000270 / **0.000303** |
+
+  **Six base declines at k=11-12, zero with the floor.** Paired within contract, pooled over 3
+  cells × 3 depths: **20W/2L, sign p = 0.00012**. Per cell it is not individually significant
+  (p 0.125-1.0 at n=4), so quote the pooled figure. Best availability-weighted arm per cell against
+  the shipped k=8: **CD34+ k=11 (1.43x), K562 k=12 (1.36x), HUDEP-2 k=12 (2.06x)** — and CD34+
+  turns over between 11 and 12 while the other two are still climbing at 12, so the optimum is per
+  cell and may sit past 12 on K562/HUDEP-2.
+
+  **Never read the "E[share] when built" column at deep k on a base arm — it is survivorship.**
+  HUDEP-2 k=12 base reads 0.000885 from the ONE contract of four it built, the softest; the floor
+  arm reads 0.000303 over all four and is the better arm. Only the availability-weighted column and
+  the within-contract pairing are valid.
+
+  **The failure mode differs by cell and the same fix covers both.** HEK293 declines on CELL
+  COVERAGE (3 of 4 cells, with a pool of 1013 against a requirement of 170); the erythroid cells
+  decline on POOL SIZE with all four cells present (106-257 against 150). `cell_floor` makes the
+  scan run longer either way, which is why one knob fixes two symptoms.
+
+* **Every cell has a hard Cas12a band-formation wall, and the optimum is now BRACKETED on all
+  four.** `choose_band` runs before `scan_cas9`, so when the Cas12a survivors fall below
+  `group_size` the build declines and no Cas9 floor can help. Swept with the floor ON — HEK293 at
+  k=10/11/12, the erythroid cells at k=13/14/15/16, 4 contracts each — **not one arm built**, and
+  every decline read "band reached N of K seeds before the surviving pool fell below the group".
+  **N is a single value per cell, identical on every contract**, so this is structural rather than
+  contract variance:
+
+  | cell | wall | optimum | E[share] at it | is the optimum the wall? |
+  |---|---|---|---|---|
+  | HEK293 | **9** | **k=9 +floor** | 0.000163 | yes — still climbing at 9 (k=7 0.000112, k=8 0.000136) |
+  | CD34+_HSPC | **12** | **k=11 +floor** | 0.000153 | **no** — turns over inside the feasible range (k=12 0.000145) |
+  | K562 | **12** | **k=12 +floor** | 0.000220 | yes — edge value, still climbing |
+  | HUDEP-2 | **12** | **k=12 +floor** | 0.000303 | yes — edge value, still climbing |
+
+  The wall sits where `pool * P(rule)**k` falls under `group_size` and tracks per-row compliance:
+  **9** at HEK293's P(HDR) ~ 0.37 / group 80, **12** at the erythroid 0.57 / group 100. Three of the
+  four optima are the wall itself, so for those cells the question is feasibility, not score, and
+  **only CD34+ has an interior maximum** — worth knowing, because a config that reads k=12
+  everywhere is at the wall on two cells and one past the peak on a third.
+
+  **Do not re-run k above these walls, and `group_size` is NOT the way through.** Dropping the
+  erythroid group 100 -> 80 was swept at k=12-16 with the floor on, 4 contracts per cell, and it
+  **does not move the optimum**:
+
+  | cell | g80 stalls at | g80 built k=13 | k=12 E[share] g100 -> g80 | paired at k=12 |
+  |---|---|---|---|---|
+  | CD34+_HSPC | 12 (x8), 13 (x6) | **1/4** | 0.000145 -> 0.000134 (**0.92x**) | 1W/1L, -0.000012 |
+  | K562 | 12 (x12), 13 (x3) | **1/4** | 0.000220 -> 0.000220 (1.00x) | 1W/1L, +0.000000 |
+  | HUDEP-2 | **12 (x16), never 13** | **0/4** | 0.000303 -> 0.000303 (1.00x) | 1W/1L, +0.000000 |
+
+  The arithmetic says why, and it generalises: `choose_band` stops when the best candidate's
+  surviving count falls under `need = group_size`, and the pool decays **~0.57x per band seed**. A
+  100 -> 80 cut is 0.8x against a 0.57x step, so it does not span one — it buys the 13th seed on
+  **1 contract in 4** (never on HUDEP-2) instead of on all of them. Reaching k=13 everywhere needs
+  group ~57, and k=14 needs ~33, both far under the sizes the cas-mix/fidelity work settled on.
+  Meanwhile group 80 raises `want` 150 -> 170, and the Cas9 pool and term 1 both fall for it
+  (`d cas9` -51 to -69, `d w x fid` -0.7 to -6.3). And k=13 at group 80 is *much* worse than k=12 at
+  either group — 0.000046 (CD34+) and 0.000003 (K562) — because it builds 1 of 4.
+
+  So the walls are a property of the BANK and the rule, not of the group. Raising them needs a
+  bigger Cas12a bank; `hdr_pool.py` already prices that route as not worth it against the memory
+  constraint.
+
+* **n = 1 hotkey, own-field E[share].** Same basis as the rest of this section, not a payout
+  observation. No real stamped seed hit a band in 36 draws at k=9 against 1.07 expected, which is
+  the whole point: at 9/900 this cannot be measured by counting rounds.
+
+**Cell-aware `choose_band` is implemented and is nearly inert — do not expect it to carry this.**
+The same `cas9_cell_probe` feeds `choose_band` an option to prefer band seeds that keep every cell
+holding a compliant Cas9 guide. Across 24 builds it steered **0 times on 19**, once on 4, twice on
+1, and never fell back; on the contract that motivated it, it reproduced the decline byte for byte.
+It cannot work, for the reason the census above shows: the constraint is per-cell *abundance* in a
+pool that does not exist until the band is already fixed. The probe earns its keep by MEASURING
+`P(rule)` for the floor, not by steering.
 
 ### All-HDR — the spike construction, and the fleet that plays it
 
@@ -668,6 +839,13 @@ all-cut, **72** on K562) — and the break requires every cell to reach it:
 **HEK293 is the only cell that starves**, because its heavy-mutation Cas9 sites sit farther from the
 mutation than the light ones; the other three already reach the ideal 79/79/6/6 split unaided and
 the floor is inert there to four decimal places.
+
+**This floor is the right number for a pool that gets ASSEMBLED and the wrong one for a pool that
+gets FILTERED first.** The conjunction's band filter keeps only ~`P(rule)**k` of these candidates
+after the scan has already stopped, so a cell that cleared the floor at 1,154 candidates leaves the
+filter holding zero — see "Band depth, and the per-cell defect that was capping it" above, where
+that is measured and `scan_cas9`'s optional `cell_floor` fixes it. The "inert on the other three"
+line is what makes the erythroid case an open question there rather than a foregone one.
 
 **Why fidelity *rose* here, without contradicting the `light_cell_rows`-is-dead entry.** The starved
 split was badly strand-imbalanced (light+ 97 against light− 26), and that asymmetry was itself
@@ -1111,6 +1289,7 @@ wide the window it was searched in.
 | two band hits as the explanation for the field's top block | needs a band of **~55 seeds** to produce the observed rate (4-9 such rows in **118 of 119** rounds); at band 12-16 the prediction is 0.13-0.23 miners per round against ~6 observed, 6-40x short. It is one hit on an elevated floor, not two hits. |
 | stage 4's overfitting as an exploit (degenerate feature vectors) | **real but not buildable.** Collapsing the feature matrix moves off-band `avg_r2` from **-0.249 to -0.032**, confirming the negative R² is pure overfitting — but `max(avg_r2, 0)` discards it, so cons moves only 0.1036 → 0.1052. Combined with a pinned `is_cut` it *is* worth 0.135 → **0.350**, except that the recovery needs `distance` cardinality **<=8** (flat from 61 down to 16: 0.1346 / 0.1359 / 0.1345), and 250 rows admit only ~8 per distance value (2 offsets x 2 mutations x 2 cas x 2 strands), forcing ~31 distinct. |
 | a cut-robustness tie-break inside all-HDR's Cas12a greedy | ceiling **+2.2 final points** (121.7 → 123.9), still under the cutoff. Two measured facts compound: perfecting the Cas12a half caps cut-clean at 162 of 900 because the Cas9 rows independently cover 738, and a cut-clean seed in an all-HDR composition is worth 0.162 rather than all-cut's 0.237. Priced before implementing — the go/no-go was `cutunion`, not a build. |
+| cell-aware `choose_band` as the fix for the conjunction's depth declines | **inert, and the diagnosis is elsewhere.** `cas9_cell_probe` lets `choose_band` prefer band seeds that keep every (mutation × strand) cell holding a rule-compliant Cas9 guide. Over 24 HEK293 builds it steered **0 times on 19**, once on 4, twice on 1, never fell back, and on the contract that motivated it reproduced the decline byte for byte. It cannot work: the on-band survival rate is **identical across cells** (0.00226-0.00244), so the dying cell is not unlucky in its seeds, it is 110x thinner going in — and that abundance lives in a pool that does not exist until the band is fixed. The probe is still worth having, to MEASURE `P(rule)` for the band-scaled `cell_floor` that does fix it. |
 | feature concentration (gc at 0.50, distance clustered) to buy all-cut's composition | **noise-dominated.** Concentrating gc at 0.50 for 79% of rows helped seed 373 (+0.051) and hurt seed 161 (-0.006); clustering distance to 39 levels did the reverse (+0.030 / -0.022). The R² on the two live targets is noise around a negative mean, so composition cannot be tuned seed-by-seed. |
 | the conjunction's clean set, measured at both of its bounds (`cas12a_union.py`) | **SUPERSEDED 2026-09-14 on the numbers, upheld on the bound.** Measured over the JOINED 300-seed space the clean set is **174-181 of 300** on the erythroid types and 40 on HEK293 — far above the 52-80 here, still far below the 559 the prize needs, so the row's conclusion about the prize stands while its figures do not. What is withdrawn is the valuation: "+0.7 to +2.4 round final" was priced at one field's cutoff of 126.32, and the 12-contract own-field replication measures **1.30-2.05x on E[curve share]** against matched all-HDR on three cell types. The original finding: **caps at 52-80 of 900 against the 559 the prize needs, and which bound binds depends on `group_size`.** (a) The HDR min-union buys **zero** cut-coincidence — the group's cut-fail union is **714** at group 42 against **724** for independent failures (848 at group 80), where all-cut reaches **341** with the same 42 rows by optimising cut instead. The two objectives are orthogonal, so a group selected for one gets nothing free on the other. (b) The HDR-on-band Cas9 pool costs `P(HDR)**2` per extra band seed (**906** candidates at band 15 against **3118** at band 13), and cut-strictness over `C` costs a further `0.99**\|C\|`. So group 42 is Cas9-bound at `\|C\|` = 80 and group 80 is Cas12a-bound at `\|C\|` = 52, worth **+0.7 to +2.4** round final (121.7 -> 122.4-124.1) against a 126.32 cutoff. **The scan's early exit is not the cause** — at group 42 the *full* pool (906) is smaller than the exit target (1664), though at group 80 it does truncate (3118 vs 1360). |
 | the joined window as the cause of our 0.89 fidelity (`fidelity_window.py`) | **mostly not it, and free on the product.** Four arms on one contract, group and everything else fixed: contiguous 100 -> **0.8956**, contiguous 225 -> 0.8916, joined 225 -> 0.8880, joined 300 -> 0.8773. So the contiguous window *this fidelity was measured at* already gives 0.8956, and non-contiguity costs only 0.9% at width 225 / 2.0% at width 300, entirely through the mutation term (0.722 -> 0.689 -> 0.653). Width alone costs ~nothing. And weighted rises as fidelity falls, so `weighted x fidelity` is **flat at 221.6-223.4 across all four**, independently reproducing the `narrow_width` result. The window is exonerated; h0's full 300 is free net. |

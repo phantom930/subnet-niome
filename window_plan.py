@@ -702,9 +702,16 @@ def main():
             print(head + f"beta {pr['beta']:+.2f}  JOINED "
                   + (f"ranks {top3}" if top3 else src) + " -> "
                   + ",".join(f"{w*100+100}-{w*100+199}" for w in wins3)
-                  + f"  x{len(assign)} hotkeys, width {sub_w} stride {JOINED_STRIDE}"
-                  f" rotated"
-                  + (f" + {len([n for n in assign if n in JOINED_FULL_HK])} at half-stride offset"
+                  + f"  x{len(assign)} hotkeys"
+                  # Only describe the rotating tier when one exists. With ROTATE_HK empty every
+                  # hotkey is FULL and the old text ("width W stride S rotated + N at half-stride
+                  # offset") described a layout nothing was playing.
+                  + (f", width {sub_w} stride {JOINED_STRIDE} rotated x{len(JOINED_HK)}"
+                     if any(n in JOINED_HK for n in assign) else "")
+                  + (f", {len([n for n in assign if n in JOINED_FULL_HK])} FULL"
+                     + (f" at width {JOINED_FULL_WIDTH}" if JOINED_FULL_WIDTH
+                        else " (whole joined space)")
+                     + f", band sub-window {JW.BAND_SUB_WIDTH} at stride {JW.BAND_STRIDE}"
                      if any(n in JOINED_FULL_HK for n in assign) else "")
                   + f", span {covered} of 900"
                   + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
@@ -712,8 +719,12 @@ def main():
             def _ord(n):
                 return (0, JOINED_FULL_HK.index(n)) if n in JOINED_FULL_HK else (1, JOINED_HK.index(n))
             for name in sorted(assign, key=_ord):
+                # The band offset is what separates two FULL hotkeys on one window, so print it
+                # here: without it the four rows below look like four identical assignments.
+                off = JW.band_offset_frac(name)
+                tag = "" if off is None else f"   band offset {int(round(off * JW.BAND_SPAN))}"
                 print(f"    {'FULL  ' if name in JOINED_FULL_HK else 'joined'} {name:<15} "
-                      + ",".join(f"{a}-{b}" for a, b in assign[name]))
+                      + ",".join(f"{a}-{b}" for a, b in assign[name]) + tag)
             continue
         if FIXED_WINDOWS:
             spans = sorted(assign.values())
