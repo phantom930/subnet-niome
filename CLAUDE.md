@@ -204,6 +204,23 @@ regimes where every other construction in this file has two:
 | clean, off band | `is_cut` | **0.212-0.238** | **40** of 300 (HEK293), **174-181** (CD34+/K562) |
 | everything else | none | 0.082-0.105 | the rest of 900 |
 
+**That seed column is the k=6/8 config and 2026-09-16 moved band depth to k=9 (HEK293) / k=12
+(erythroid), which roughly HALVES the clean set. Re-measured cold on real contracts, 4 hotkeys per
+arm:**
+
+| cell | config | band | clean, of 300 |
+|---|---|---|---|
+| HUDEP-2 | k=8, group 100, width 150 | 8 | **160-166** |
+| HUDEP-2 | **k=12** (shipped) | 12 | **67-76** |
+| K562 | **k=12** (shipped) | 12 | **60-71** |
+
+So the trade the depth change makes is explicit: **+50% band (8 -> 12 seeds, i.e. spike frequency)
+for -57% clean set (off-band floor)**. `CELL_CONFIG`'s own E[share] tables price that as a win, and
+this entry does not re-open it — but every number downstream that was computed at clean 174-181 is
+now describing a build that no longer ships. The live f99a804f round is the worked example of what
+is given up: all four hotkeys missed the band and scored **purely** on clean-seed hits (cons
+0.1008-0.1725), which at k=12 would have been lower still.
+
 **This is the construction the falsified table below records as dead, and that entry is stale rather
 than wrong.** It was measured at CONTIGUOUS cut windows of 100 / 300 / 900, where E[final] falls
 monotonically in k. Over the JOINED 300-seed space the fleet actually plays it reaches the clean sets
@@ -1173,8 +1190,13 @@ had no bonus seed. But in expectation the off-band floor moves only **0.0944 -> 
 the **f = 0.150** that [floor_price.py](floor_price.py) arm A needs for +22%: **the wide-cut-clean
 route is priced at zero even when it wins a round.**
 
-**The "~0.102 at the conjunction's 80-seed cap" that stood here is superseded.** The shipped
-conjunction's off-band floor, measured over its 12 contracts per cell, is **0.125 on CD34+ and K562**
+**The "~0.102 at the conjunction's 80-seed cap" that stood here is superseded — and the figures
+below are themselves now one config behind.** They are the k=6/8 build; at the shipped k=9/12 the
+clean set is **60-76 of 300**, not 174-181 (see "The conjunction" above), so the same arithmetic
+gives an off-band floor of roughly **(70 x 0.212 + 830 x 0.104) / 900 = 0.112** rather than 0.125 —
+i.e. the depth change spends about half of the floor gain this paragraph is about. The 0.212
+clean-seed value has NOT been re-measured at k=12, so treat 0.112 as arithmetic, not a measurement.
+The k=6/8 figures, for reference: the off-band floor is **0.125 on CD34+ and K562**
 (clean 174-181 of 900 at 0.212, the rest at 0.104) and **0.088 on HEK293** (clean 40, and a dirty
 value of 0.082 that sits *below* all-HDR's floor — HEK293 does not win here on the floor at all, it
 wins on term 1). Interpolating arm A, f 0.101 -> 0.125 is worth roughly **+11%**, which is far less
@@ -1319,19 +1341,43 @@ post-09-08 rows identified by ss58 address:
 
 | cell | weighted | fidelity | `w x fid` | vs the shared build's **244.0** |
 |---|---|---|---|---|
-| HUDEP-2 | 336.0 | 0.8931 | **298.3** | **we are +22.3% ahead** |
+| HUDEP-2 | 336.0 | 0.8931 | **298.3** | ~~**we are +22.3% ahead**~~ **WRONG — see below** |
 | CD34+_HSPC | 260.0 | 0.8936 | 233.3 | -4.4% |
 | K562 | 244.3 | 0.8994 | **220.1** | -9.8% |
 
 A 36% spread across cells, so pooling these to 225.8 and reading "the field beats us by 8.1%" is the
-same error as pooling fields across contracts — **an earlier draft of this entry said exactly that
-and it is withdrawn.** We are *ahead* of the shared build on HUDEP-2 and behind on K562, and the
-sweeps' flat 221-228 band was measured on the cells where we are behind. What survives: the flatness
-is a property of the all-HDR row composition rather than of stage 12, and the shared build reaches
-its number by going the *other* way on the trade than every arm swept here (more weighted, less
-fidelity). It does not license re-running the five levers, and **`floor_price.py` arm B measures
-that adopting the shared build's product at our current floor is worth -48.8%** — because it would
-cost HUDEP-2 its 298.3.
+same error as pooling fields across contracts. What survives: the flatness is a property of the
+all-HDR row composition rather than of stage 12, and the shared build reaches its number by going
+the *other* way on the trade than every arm swept here (more weighted, less fidelity). It does not
+license re-running the five levers.
+
+**The HUDEP-2 row is wrong and the "+22.3% ahead" claim is WITHDRAWN — it makes this section's own
+pooling error on the FIELD side.** `244.0` is a constant lifted from one snapshot of the shared
+build, but the cluster's `w x fid` moves 232 -> 329 with the contract, exactly as ours does. Paired
+per round against the same contract's field — which is this file's own rule, applied to the time
+axis as well as the cell axis — we are **behind on 11 of 12 HUDEP-2 rounds**:
+
+| date | round | ours | field median | cluster | ours/cluster |
+|---|---|---|---|---|---|
+| 09-10 | 442591a9 | 279.5 | 295.6 | 298.5 | 0.936 |
+| 09-10 | a6d107e0 | 215.1 | 234.8 | 234.9 | **0.916** |
+| 09-11 | 72fb2cd4 | 216.4 | 231.4 | 232.3 | 0.931 |
+| 09-11 | 7715f00d | 214.8 | 232.2 | 231.8 | 0.927 |
+| 09-13 | e91f05f8 | 261.4 | 250.6 | 250.6 | **1.043** |
+| 09-14 | 9f14cd8d | 221.0 | 238.1 | 238.1 | 0.928 |
+| 09-14 | aa071e5e | 303.4 | 321.8 | 321.9 | 0.942 |
+| 09-14 | 2bb728d0 | 297.0 | 316.5 | 316.6 | 0.938 |
+| 09-15 | 33c266d5 | 272.3 | 288.2 | 288.3 | 0.944 |
+| 09-15 | 254f8394 | 216.2 | 235.3 | 235.3 | 0.919 |
+| 09-16 | 8eb39898 | 301.8 | 327.0 | 328.5 | 0.919 |
+| 09-16 | f99a804f | 271.0 | 291.4 | 294.5 | 0.920 |
+
+**Mean 0.939, median 0.930, range 0.916-1.043** — so we are **~6% BEHIND** the shared build on
+HUDEP-2, not 22% ahead, and the one round above 1.0 is a single outlier. The cluster is 180-206 of
+248 rows per round, so "field median" and "cluster" coincide to within 1%; either is a fair bar.
+**Consequence for `floor_price.py` arm B:** its -48.8% is driven by "adopting the shared build's
+product would cost HUDEP-2 its 298.3", and that premise is false — the shared build's HUDEP-2
+product is *higher* than ours, so arm B needs re-running before it is cited again.
 
 **The same defect is live in [fleet_price.py](fleet_price.py)**, whose `AH_WXF` is the single
 constant `339.9 * 0.8931 = 303.6`: right for HUDEP-2 (298.3 measured) and **38% too high for K562**

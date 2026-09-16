@@ -468,6 +468,17 @@ def save_bank(path: str, bank: list[dict]) -> None:
             os.remove(tmp)
 
 
+def _pid_alive(pid: int) -> bool:
+    """Whether `pid` still exists. Signal 0 checks for the process without touching it."""
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True                              # exists, owned by another user
+    return True
+
+
 @contextlib.contextmanager
 def bank_slot(path: str, deadline: float | None = None):
     """Serialise the fleet's Cas12a bank build on `path` ACROSS PROCESSES. Yields whether to build.
@@ -492,10 +503,19 @@ def bank_slot(path: str, deadline: float | None = None):
     overlaps the followers' rather than blocking them. A lock held over the entire build would
     serialise four ~200s builds instead and be far worse than doing nothing.
 
-    Degrades rather than deadlocks, in three ways: a lock older than `BANK_LOCK_STALE_S` is taken
-    over, a waiter that reaches `deadline` builds its own bank rather than miss the round, and a
-    leader that dies or declines releases the lock so the next process gets a real attempt. Every
-    one of those paths ends in "build it yourself", which is exactly today's behaviour.
+    Degrades rather than deadlocks, in four ways: a lock whose holder PID no longer exists is taken
+    over immediately, a lock older than `BANK_LOCK_STALE_S` is taken over on age alone, a waiter
+    that reaches `deadline` builds its own bank rather than miss the round, and a leader that dies
+    or declines releases the lock so the next process gets a real attempt. Every one of those paths
+    ends in "build it yourself", which is exactly the behaviour before this existed.
+
+    **The PID check is not a refinement, it is the difference between a 15-second and a 15-minute
+    recovery, and it was added after being hit.** A leader killed mid-build -- `pm2 restart`, an
+    OOM -- leaves the lock behind, and on age alone every other hotkey then waits out
+    `BANK_LOCK_STALE_S` or its own deadline before building anything. Observed on 2026-09-16 09:35
+    when a research sweep was SIGKILLed holding the lock: the next run sat in the poll loop for
+    seven minutes until the lock was cleared by hand. pm2 restarts are routine, so the timeout
+    alone is not an acceptable backstop; it now only covers a holder that is alive but wedged.
     """
     lock = f"{path}.lock"
     held = False
@@ -505,7 +525,10 @@ def bank_slot(path: str, deadline: float | None = None):
                 yield False                      # somebody else produced it; just load it
                 return
             try:
-                os.close(os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+                fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                # Stamp the pid so a waiter can tell "still building" from "died holding it".
+                os.write(fd, str(os.getpid()).encode())
+                os.close(fd)
                 held = True
                 yield True                       # we are the leader
                 return
@@ -513,8 +536,17 @@ def bank_slot(path: str, deadline: float | None = None):
                 pass
             try:
                 age = time.time() - os.stat(lock).st_mtime
-            except FileNotFoundError:
+                holder = open(lock).read().strip()
+            except (FileNotFoundError, OSError):
                 continue                         # released between the create and the stat
+            # A leader killed mid-build (pm2 restart, OOM) would otherwise block the whole fleet
+            # for BANK_LOCK_STALE_S. Its pid is gone, so take over at once instead of waiting.
+            if holder.isdigit() and not _pid_alive(int(holder)):
+                logger.warning(f"bank lock {os.path.basename(lock)} is held by dead pid {holder}; "
+                               "taking over")
+                with contextlib.suppress(FileNotFoundError):
+                    os.unlink(lock)
+                continue
             if age > BANK_LOCK_STALE_S:
                 logger.warning(f"bank lock {os.path.basename(lock)} is {age:.0f}s old; taking over")
                 with contextlib.suppress(FileNotFoundError):
