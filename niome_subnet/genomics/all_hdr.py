@@ -80,8 +80,8 @@ import genExp as G
 from niome_subnet.genomics import fastgreedy as FG
 from niome_subnet.genomics import mt19937 as MT
 from niome_subnet.genomics import seed_agnostic as SA
-from niome_subnet.genomics.all_cut import (cas9_cell_target, BANK_DIR, _params_fn, assemble, bank_key, load_bank,
-                                           save_bank)
+from niome_subnet.genomics.all_cut import (cas9_cell_target, BANK_DIR, _params_fn, assemble, bank_key, bank_slot,
+                                           load_bank, save_bank)
 from niome_subnet.genomics.validation import stage3
 
 logger = logging.getLogger(__name__)
@@ -561,19 +561,28 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
 
     if not os.path.exists(path):
         bank_deadline = None if deadline is None else deadline - 20.0
-        bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
-        if not bank:
-            # An empty bank means either the deadline fired mid-scan or the scan finished and
-            # nothing qualified. Those need different fixes — more budget vs a reachable
-            # ``main_max_fail`` — so do not report them with one message.
-            if bank_deadline is not None and time.monotonic() >= bank_deadline:
-                meta["reason"] = "Cas12a HDR bank scan ran out of budget"
+        # Same collision as the conjunction's: the band offset that decorrelates siblings applies
+        # to the conjunction only, so every hotkey on a cell type reaches this with an identical
+        # `bank_key` and builds the identical bank. It bites hardest exactly when it hurts most --
+        # this is the FALLBACK rung, so the four processes arrive here together after the rung
+        # above them declined (measured live on 2026-09-16 07:39, three hotkeys byte-identical).
+        with bank_slot(path, bank_deadline) as build_it:
+            if build_it:
+                bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
+                if not bank:
+                    # An empty bank means either the deadline fired mid-scan or the scan finished
+                    # and nothing qualified. Those need different fixes — more budget vs a
+                    # reachable ``main_max_fail`` — so do not report them with one message.
+                    if bank_deadline is not None and time.monotonic() >= bank_deadline:
+                        meta["reason"] = "Cas12a HDR bank scan ran out of budget"
+                    else:
+                        meta["reason"] = (
+                            f"no Cas12a guide reaches HDR on all but {cfg.main_max_fail} of "
+                            f"{cfg.band_seeds().size} band seeds")
+                    return None, meta
+                save_bank(path, bank)
             else:
-                meta["reason"] = (
-                    f"no Cas12a guide reaches HDR on all but {cfg.main_max_fail} of "
-                    f"{cfg.band_seeds().size} band seeds")
-            return None, meta
-        save_bank(path, bank)
+                meta["bank_shared"] = True
     records = load_bank(path)
     meta["bank"] = len(records)
     if len(records) < cfg.group_size:

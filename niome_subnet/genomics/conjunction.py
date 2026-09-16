@@ -92,7 +92,7 @@ from niome_subnet.genomics import fastgreedy as FG
 from niome_subnet.genomics import mt19937 as MT
 from niome_subnet.genomics import seed_agnostic as SA
 from niome_subnet.genomics.all_cut import (AllCutConfig, BANK_DIR, _params_fn, assemble, bank_key,
-                                           cas9_cell_target,
+                                           bank_slot, cas9_cell_target,
                                            build_bank, config_for as all_cut_config_for, load_bank,
                                            save_bank, scan_cas9)
 from niome_subnet.genomics.validation import stage3
@@ -500,18 +500,25 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
 
     if not os.path.exists(path):
         bank_deadline = None if deadline is None else deadline - 20.0
-        bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
-        MT.free_gpu_memory()
-        if not bank:
-            # An empty bank is either the deadline firing mid-scan or nothing qualifying. Those
-            # need different fixes, so do not report them with one message.
-            if bank_deadline is not None and time.monotonic() >= bank_deadline:
-                meta["reason"] = "Cas12a cut bank scan ran out of budget"
+        # Every hotkey on this cell folds the same fields into `bank_key`, so without this the
+        # four prefetching miners build the identical bank four times and discard three. See
+        # `all_cut.bank_slot` for what that costs and what serialising it is measured to buy.
+        with bank_slot(path, bank_deadline) as build_it:
+            if build_it:
+                bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
+                MT.free_gpu_memory()
+                if not bank:
+                    # An empty bank is either the deadline firing mid-scan or nothing qualifying.
+                    # Those need different fixes, so do not report them with one message.
+                    if bank_deadline is not None and time.monotonic() >= bank_deadline:
+                        meta["reason"] = "Cas12a cut bank scan ran out of budget"
+                    else:
+                        meta["reason"] = (f"no Cas12a guide cuts on all but {cfg.cas12a_max_fail} "
+                                          f"of {len(joined)} joined seeds")
+                    return None, meta
+                save_bank(path, bank)
             else:
-                meta["reason"] = (f"no Cas12a guide cuts on all but {cfg.cas12a_max_fail} of "
-                                  f"{len(joined)} joined seeds")
-            return None, meta
-        save_bank(path, bank)
+                meta["bank_shared"] = True
     records = load_bank(path, limit=cfg.bank_keep)
     meta["bank"] = len(records)
     if len(records) < cfg.group_size:

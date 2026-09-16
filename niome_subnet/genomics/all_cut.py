@@ -64,6 +64,7 @@ candidates in 248s to fill 208 rows.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import logging
@@ -84,6 +85,12 @@ from niome_subnet.genomics.validation import stage3
 logger = logging.getLogger(__name__)
 
 BANK_DIR = "data/all_cut"
+
+# How long a bank lock may sit before another process concludes its holder died and takes over. A
+# bank build is 120-135s measured cold, and `PREPARE_BUDGET_S` is 900, so 900 cannot fire on a
+# healthy leader and only clears a lock left by a killed process.
+BANK_LOCK_STALE_S = 900.0
+BANK_LOCK_POLL_S = 0.5
 
 # Per cell type. They differ only in cas9_gc, and that one difference is the whole story of how
 # cut_p behaves in each: HEK293's accessibility of 0.35 means energy never clamps, so high GC is
@@ -461,6 +468,70 @@ def save_bank(path: str, bank: list[dict]) -> None:
             os.remove(tmp)
 
 
+@contextlib.contextmanager
+def bank_slot(path: str, deadline: float | None = None):
+    """Serialise the fleet's Cas12a bank build on `path` ACROSS PROCESSES. Yields whether to build.
+
+    Every hotkey on a cell type folds the same fields into `bank_key`, so four prefetching miners
+    compute the *same* bank at the same moment and three of the four copies are thrown away. That
+    is not merely wasteful: measured on 2026-09-16, four concurrent cold builds take 333s (HUDEP-2)
+    and 343s (K562) against 206s and 198s when one process builds the bank and the others wait for
+    it -- **-38% and -42% on the time the whole fleet becomes answerable**, because the bank alone
+    is 120-135s and contention inflates it to ~265s (2.1x the wall clock for 4x the work), while
+    the per-hotkey Cas9/band/assembly half is only 58-77s. Peak GPU falls 3380 -> 2504 MiB on
+    HUDEP-2, which matters on an 8 GB card. Priced against 369 real hotkey-rounds of validator lead
+    time, prefetch misses fall from 9.2-9.8% to 5.7-6.0% -- **3.3-4.1 pp, 35-42% fewer** -- against
+    an irreducible 3.8% whose lead is under 130s and which no build time reaches.
+
+    Output is unaffected and that was verified rather than assumed: across three arm pairs (HUDEP-2
+    at band_k 8 and 12, K562 at 12) every hotkey's band and clean count came out identical to the
+    concurrent arm, and to what the live fleet shipped on f99a804f.
+
+    **Followers wait for the bank FILE, not for the leader's build**, which is the whole design.
+    `save_bank` is atomic, so the file existing means it is complete; the leader's Cas9 half then
+    overlaps the followers' rather than blocking them. A lock held over the entire build would
+    serialise four ~200s builds instead and be far worse than doing nothing.
+
+    Degrades rather than deadlocks, in three ways: a lock older than `BANK_LOCK_STALE_S` is taken
+    over, a waiter that reaches `deadline` builds its own bank rather than miss the round, and a
+    leader that dies or declines releases the lock so the next process gets a real attempt. Every
+    one of those paths ends in "build it yourself", which is exactly today's behaviour.
+    """
+    lock = f"{path}.lock"
+    held = False
+    try:
+        while True:
+            if os.path.exists(path):
+                yield False                      # somebody else produced it; just load it
+                return
+            try:
+                os.close(os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+                held = True
+                yield True                       # we are the leader
+                return
+            except FileExistsError:
+                pass
+            try:
+                age = time.time() - os.stat(lock).st_mtime
+            except FileNotFoundError:
+                continue                         # released between the create and the stat
+            if age > BANK_LOCK_STALE_S:
+                logger.warning(f"bank lock {os.path.basename(lock)} is {age:.0f}s old; taking over")
+                with contextlib.suppress(FileNotFoundError):
+                    os.unlink(lock)
+                continue
+            if deadline is not None and time.monotonic() >= deadline:
+                logger.warning("ran out of budget waiting for the fleet's bank build; building our "
+                               "own")
+                yield True
+                return
+            time.sleep(BANK_LOCK_POLL_S)
+    finally:
+        if held:
+            with contextlib.suppress(FileNotFoundError):
+                os.unlink(lock)
+
+
 def load_bank(path: str, limit: int = 60_000) -> list[dict]:
     """Read a cached bank. Every array is materialised once: ``np.load`` is lazy and each ``d[key]``
     re-decompresses the whole array, so touching them inside the loop is O(rows) decompressions."""
@@ -696,11 +767,15 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
             return None, meta
         # Reserve the Cas9 half plus assembly (~10s measured) out of the budget.
         bank_deadline = None if deadline is None else deadline - 20.0
-        bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
-        if not bank:
-            meta["reason"] = "Cas12a bank scan ran out of budget"
-            return None, meta
-        save_bank(path, bank)
+        with bank_slot(path, bank_deadline) as build_it:
+            if build_it:
+                bank = build_bank(contract, reference, cell_types, ctx, sites, cfg, bank_deadline)
+                if not bank:
+                    meta["reason"] = "Cas12a bank scan ran out of budget"
+                    return None, meta
+                save_bank(path, bank)
+            else:
+                meta["bank_shared"] = True
     records = load_bank(path)
     meta["bank"] = len(records)
 
