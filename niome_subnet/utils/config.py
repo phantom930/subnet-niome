@@ -95,6 +95,41 @@ def add_args(cls, parser):
 
     parser.add_argument("--netuid", type=int, help="Subnet netuid", default=TESTNET_UID)
 
+    # Axon serving. bt.Axon.add_args used to register these for every neuron; this subnet serves a
+    # FastAPI app rather than a bt.Axon, so they are defined here. They belong on the *base* parser
+    # and not BaseMinerNeuron's, because BaseNeuron.__init__ parses argv with BaseNeuron.config() —
+    # a flag registered only by a subclass is rejected as unrecognized before that subclass is
+    # consulted.
+    parser.add_argument(
+        "--axon.ip",
+        type=str,
+        help="Address the miner's HTTP server binds to.",
+        default="0.0.0.0",
+    )
+
+    parser.add_argument(
+        "--axon.port",
+        type=int,
+        help="Port the miner's HTTP server binds to.",
+        default=8091,
+    )
+
+    parser.add_argument(
+        "--axon.external_ip",
+        type=str,
+        help="IP published on chain, when validators reach this miner at an address other than "
+             "the one it binds. Defaults to the resolved hostname.",
+        default=None,
+    )
+
+    parser.add_argument(
+        "--axon.external_port",
+        type=int,
+        help="Port published on chain, when it differs from --axon.port (a forwarded port). "
+             "Defaults to --axon.port.",
+        default=None,
+    )
+
     parser.add_argument(
         "--neuron.device",
         type=str,

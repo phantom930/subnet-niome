@@ -17,6 +17,7 @@
 
 import time
 import asyncio
+import socket
 import threading
 import argparse
 import logging
@@ -46,12 +47,6 @@ class BaseMinerNeuron(BaseNeuron):
     def add_args(cls, parser: argparse.ArgumentParser):
         super().add_args(parser)
         add_miner_args(cls, parser)
-        parser.add_argument(
-            "--axon.port",
-            type=int,
-            help="Port for the miner HTTP server.",
-            default=8091,
-        )
 
     def __init__(self, config=None):
         super().__init__(config=config)
@@ -65,7 +60,13 @@ class BaseMinerNeuron(BaseNeuron):
                 "You are allowing non-registered entities to send requests to your miner. This is a security risk."
             )
 
-        self.axon_port = getattr(getattr(self.config, "axon", None), "port", 8091)
+        # Where we listen, and — separately — what we tell the chain. A config handed in
+        # programmatically (tests, mock) may carry no axon namespace at all, hence the defaults.
+        axon_config = getattr(self.config, "axon", None)
+        self.axon_ip = getattr(axon_config, "ip", None) or "0.0.0.0"
+        self.axon_port = getattr(axon_config, "port", None) or 8091
+        self.external_ip = getattr(axon_config, "external_ip", None)
+        self.external_port = getattr(axon_config, "external_port", None)
 
         # Build the FastAPI app; subclass attaches routes in forward/blacklist/priority
         self.app = FastAPI()
@@ -114,20 +115,27 @@ class BaseMinerNeuron(BaseNeuron):
                 raise HTTPException(status_code=500, detail=str(e))
 
     def _serve_axon_on_chain(self):
-        """Register this miner's IP:port on chain."""
+        """Publish the address validators should dial.
+
+        That address is not necessarily the one uvicorn binds. A miner behind NAT listens on a
+        private address and is reached on a forwarded public one, so ``--axon.external_ip`` and
+        ``--axon.external_port`` say what to publish. Without them we fall back to resolving our
+        own hostname, which is right only on a directly addressable host — elsewhere it puts a
+        private or loopback address on chain and no validator can deliver a task.
+        """
+        ip = self.external_ip or socket.gethostbyname(socket.gethostname())
+        port = self.external_port or self.axon_port
         try:
-            import socket
-            ip = socket.gethostbyname(socket.gethostname())
             self.subtensor.execute(
                 bt.ServeAxon(
                     netuid=self.config.netuid,
                     ip=ip,
-                    port=self.axon_port,
+                    port=port,
                 ),
                 self.wallet,
             )
             logger.info(
-                f"Served miner axon {ip}:{self.axon_port} on network: {self.config.network} netuid: {self.config.netuid}"
+                f"Served miner axon {ip}:{port} on network: {self.config.network} netuid: {self.config.netuid}"
             )
         except Exception as e:
             logger.error(f"Failed to serve axon on chain: {e}")
@@ -146,9 +154,10 @@ class BaseMinerNeuron(BaseNeuron):
         logger.info(f"Miner starting at block: {self.block}")
 
         # Start the FastAPI server in a daemon thread.
+        logger.info(f"Miner HTTP server binding to {self.axon_ip}:{self.axon_port}")
         server_config = uvicorn.Config(
             self.app,
-            host="0.0.0.0",
+            host=self.axon_ip,
             port=self.axon_port,
             log_level="warning",
         )
