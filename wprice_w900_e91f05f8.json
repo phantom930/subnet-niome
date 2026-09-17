@@ -1,0 +1,34 @@
+{
+ "cell": "HUDEP-2",
+ "task": "e91f05f8-5acf-4b2c-b4b8-35ed7255921b",
+ "group": 100,
+ "cut_window": [
+  100,
+  999
+ ],
+ "arms": {
+  "11": {
+   "band": [
+    104,
+    105,
+    107,
+    108,
+    124,
+    146,
+    155,
+    158,
+    173,
+    207,
+    215
+   ],
+   "clean": 135,
+   "union": 765,
+   "weighted": 254.2991519096809,
+   "fidelity": 0.9087610973044311,
+   "band_cons": 1.0,
+   "clean_cons": 0.1823,
+   "dirty_cons": 0.1003,
+   "offwindow_cons": 0.0
+  }
+ }
+}

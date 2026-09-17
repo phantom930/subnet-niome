@@ -1,0 +1,113 @@
+{
+ "cell": "HUDEP-2",
+ "task": "33c266d5-50d4-4675-a586-1ca47d0737eb",
+ "group": 100,
+ "cut_window": [
+  100,
+  999
+ ],
+ "arms": {
+  "12": {
+   "band": [
+    107,
+    131,
+    134,
+    143,
+    144,
+    161,
+    169,
+    186,
+    193,
+    222,
+    284,
+    308
+   ],
+   "clean": 91,
+   "union": 809,
+   "weighted": 291.28346062263347,
+   "fidelity": 0.936264743506918,
+   "band_cons": 1.0,
+   "clean_cons": 0.1877,
+   "dirty_cons": 0.1001,
+   "offwindow_cons": 0.0,
+   "n_clean": 5,
+   "n_dirty": 5,
+   "build_s": 383.6
+  },
+  "10": {
+   "band": [
+    131,
+    134,
+    144,
+    161,
+    169,
+    186,
+    193,
+    222,
+    284,
+    308
+   ],
+   "clean": 165,
+   "union": 735,
+   "weighted": 289.7022212763735,
+   "fidelity": 0.9317540670554927,
+   "band_cons": 1.0,
+   "clean_cons": 0.2044,
+   "dirty_cons": 0.1065,
+   "offwindow_cons": 0.0,
+   "n_clean": 5,
+   "n_dirty": 5,
+   "build_s": 99.4
+  },
+  "8": {
+   "band": [
+    131,
+    134,
+    144,
+    161,
+    169,
+    186,
+    193,
+    308
+   ],
+   "clean": 227,
+   "union": 673,
+   "weighted": 295.189663237633,
+   "fidelity": 0.9287686760674371,
+   "band_cons": 1.0,
+   "clean_cons": 0.2209,
+   "dirty_cons": 0.1076,
+   "offwindow_cons": 0.0,
+   "n_clean": 5,
+   "n_dirty": 5,
+   "build_s": 78.9
+  },
+  "11": {
+   "band": [
+    131,
+    134,
+    143,
+    144,
+    161,
+    169,
+    186,
+    193,
+    222,
+    284,
+    308
+   ],
+   "clean": 142,
+   "union": 758,
+   "weighted": 289.04213370053367,
+   "fidelity": 0.9287440834216458,
+   "band_cons": 1.0,
+   "clean_cons": 0.1601,
+   "dirty_cons": 0.1016,
+   "offwindow_cons": 0.0,
+   "n_clean": 5,
+   "n_dirty": 5,
+   "build_s": 124.6
+  }
+ },
+ "declined": {}
+}

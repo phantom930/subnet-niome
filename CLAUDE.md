@@ -830,6 +830,82 @@ or you will see nothing else.
 reaches ~24 GB and OOM-killed four research processes; the miners survived only because the kernel
 picked the larger victims.
 
+**2026-09-17: the fleet is six hotkeys (h0-h5), and this subsection's "eleven hotkeys" framing above
+is stale on headcount even though the mechanism it describes still applies.** Verified against the
+chain (netuid 55, block 9087088), not against `miner.sh`'s comments, which had drifted: h0-h3 hold
+their unchanged uids 122/41/163/118, and **h4 (uid 190) and h5 (uid 234) are also registered** —
+`miner.sh`'s `DEREGISTERED` line still listed both and has been corrected. All six now sit in
+`joined_window.FULL_HK`/`BAND_HK` at `BAND_STRIDE` 50 (six offsets, 0/50/100/150/200/250, tiling the
+plan's 300-seed band space exactly once — up from four hotkeys at stride 75).
+
+Set alongside that, and the bigger change: these six hotkeys' CUT computation no longer shares the
+band's 300-seed space at all. `joined_window.conjunction_cut_seeds` hands them the full 100-999 (900
+seeds) for the Cas12a min-union regardless of what the plan predicts, while the BAND is still an
+explicit 150-wide slice of the plan's (or its fallback's) 300-seed region at this hotkey's usual
+offset — passed via a new `band_candidates` parameter on `conjunction.build_for_cell` rather than
+left to `sub_window` to carve out of the now-much-wider cut window. `conjunction.CELL_CONFIG`'s
+`band_k` moved one step below the old wall on every cell (HEK293 9 -> 8, the three erythroid cells
+12 -> 11) — set by operator request, **not re-measured at this k**, since the wall itself is a
+property of the Cas12a pool the wider cut window changes.
+
+**That wall has now been measured, and the wide cut is NOT cell-neutral — HEK293 is excluded from
+it as of 2026-09-17.** [conj_wall.py](conj_wall.py), 4 contracts per cell, a wide arm against a
+narrow control. The probe is cheap because `choose_band` is a greedy PREFIX that breaks when no
+candidate keeps `group_size` guides alive: ask for `band_k` 40 and it returns the wall, and
+`build_submission` declines at "band reached N of K" **before** `scan_cas9`, so one probe build
+costs a bank scan plus `hdr_compliance` and nothing else. `meta["band"]` is the wall.
+
+| cell | narrow (control) | **wide** | bank, wide | live `band_k` | |
+|---|---|---|---|---|---|
+| HEK293 | **9** x4 | **8** x4 | 140k-182k | 8 | **was AT the wall** |
+| HUDEP-2 | 12 x4 | 12 x4 | 300k (cap) | 11 | one below |
+| K562 | 12 x4 | 12 x4 | 300k (cap) | 11 | one below |
+| CD34+_HSPC | 12 x4 | 12 x4 | 300k (cap) | 11 | one below |
+
+Unanimous 4/4 within every cell, and **the narrow control returns this file's recorded 9/12/12/12
+on the same code path** — which is what clears the probe before the wide column is read.
+
+**The mechanism is the `bank_keep` cap, and it is why one cell moved and three did not.** The wall
+sits where `bank * P(rule)**k` falls under `group_size`; min-unioning the cut across 900 seeds
+instead of 300 is a strictly harder constraint, so fewer guides qualify. HEK293's bank falls to
+140k-182k, **below** the 300,000 cap, and the wall drops a seed. The erythroid banks are still
+pinned **at** the cap even over 900, so theirs does not move. Implied per-seed decay confirms it is
+still ordinary pool decay on both sides: **0.38-0.40** on HEK293 against its documented P(HDR) ~
+0.37, **0.513** on the erythroid cells.
+
+So the wide cut cost HEK293 twice, and neither cost was visible when it was set: `band_k` 8 sat
+**exactly at** the wall rather than one step below it — the build succeeds only while the wall holds
+at 8, with no slack for a thinner bank — and **k=9 became unreachable**, which is the arm the band-
+depth table above prices as HEK293's best (0.000163 against k=8's 0.000136, **-17%**).
+`joined_window.WIDE_CUT_CELLS` now gates the hotkey test by cell type, HEK293 is out of it, and the
+`cell` argument to `conjunction_cut_seeds` is **required** so a caller that forgets it raises rather
+than silently building the wide cut on an excluded cell. Verified end to end through `_build`'s own
+branch: HEK293 builds band 8 on a 300-seed cut with a surviving pool of **209 against group 80
+(2.6x = 1/0.38, the step of slack restored)**; K562 builds band 11 on the 900-seed cut at 206
+against group 100, unchanged.
+
+**What this does NOT change is the band.** In the wide path it is `sub_window(band_space, width,
+offset)` handed over as `band_candidates`; in the narrow path it is `sub_window(joined, width,
+offset)` over that same 300-seed space. Both produce the identical band, so excluding a cell moves
+only which seeds the Cas12a min-union optimises over. The erythroid cells keep the wide cut by
+operator request — their wall is 12 either way, so the measurement gives no reason to move them.
+
+**Still not measured: E[share] at the wide cut.** Every k-arm valuation in the band-depth table
+above was priced at the NARROW cut, so the *ranking* of k arms under the wide cut is inferred rather
+than measured. `band_hit.py` re-priced at the wide cut is the run that would close it, and it is
+full builds — hours on K562/CD34+.
+
+One cold build per cell at the new config (`conj_widecut_check.py`, one contract each — a first
+read, not a distribution): **HEK293 47s, HUDEP-2 62s, K562 491s, CD34+_HSPC 577s.** Build time does
+not scale uniformly with the wider cut across cells. `Miner.CONJUNCTION_MIN_BUDGET_S` raised for the
+two slow cells (K562 450 -> 700, CD34+_HSPC 430 -> 700) so the gate does not let a build start that
+the sample already could not finish in the budget it would receive; HEK293 and HUDEP-2 keep their
+existing gates, with wide margin over what was observed. This makes those two cells' rung fire only
+on a near-fully-prefetched round — a stricter version of the prefetch dependency the conjunction
+already had, and a decline is a safe fallback to all-HDR rather than a failure, since
+`budget - ALL_HDR_MIN_BUDGET_S` is reserved before either gate is checked. Re-measure on more
+contracts before trusting either the budgets or `band_k` as more than the operator's starting point.
+
 #### The Cas9 scan's per-cell floor — the one real defect found
 
 `scan_cas9` (in **both** [all_cut.py](niome_subnet/genomics/all_cut.py) and
@@ -1313,6 +1389,7 @@ wide the window it was searched in.
 | a cut-robustness tie-break inside all-HDR's Cas12a greedy | ceiling **+2.2 final points** (121.7 → 123.9), still under the cutoff. Two measured facts compound: perfecting the Cas12a half caps cut-clean at 162 of 900 because the Cas9 rows independently cover 738, and a cut-clean seed in an all-HDR composition is worth 0.162 rather than all-cut's 0.237. Priced before implementing — the go/no-go was `cutunion`, not a build. |
 | cell-aware `choose_band` as the fix for the conjunction's depth declines | **inert, and the diagnosis is elsewhere.** `cas9_cell_probe` lets `choose_band` prefer band seeds that keep every (mutation × strand) cell holding a rule-compliant Cas9 guide. Over 24 HEK293 builds it steered **0 times on 19**, once on 4, twice on 1, never fell back, and on the contract that motivated it reproduced the decline byte for byte. It cannot work: the on-band survival rate is **identical across cells** (0.00226-0.00244), so the dying cell is not unlucky in its seeds, it is 110x thinner going in — and that abundance lives in a pool that does not exist until the band is fixed. The probe is still worth having, to MEASURE `P(rule)` for the band-scaled `cell_floor` that does fix it. |
 | feature concentration (gc at 0.50, distance clustered) to buy all-cut's composition | **noise-dominated.** Concentrating gc at 0.50 for 79% of rows helped seed 373 (+0.051) and hurt seed 161 (-0.006); clustering distance to 39 levels did the reverse (+0.030 / -0.022). The R² on the two live targets is noise around a negative mean, so composition cannot be tuned seed-by-seed. |
+| `not_mhnhej` as the conjunction's band rule, on HEK293 and K562 (`conj_nomh.py`) | **dead on both cells, and it generalises the already-falsified standalone finding rather than escaping it.** `not_mhnhej` pins only `is_cut` — the same target the outer cut-min-union already pins — so a "band" seed is not a third regime at all: measured band value lands on top of the ordinary off-band clean value, not above it, on both cells (HEK293 **0.23-0.29 vs clean 0.17-0.27**; K562 **0.19-0.28 vs clean 0.24-0.30**, and on K562's k=25 arm clean was even slightly above band). It does buy a much bigger Cas12a pool from far higher per-row compliance (HEK293 14,000+ against `hdr`'s ~100, a ~4.5x wider clean set at 65-67 of 300 against 13-15; K562 ~26,000 against ~230-240, clean 219-220 of 300 against 95-98) — but at a per-seed value that never clears ~0.30, the best reachable round still scores under every field tested. `E[own-field share]` measured **exactly 0.000000 on 3/3 HEK293 contracts and 2/2 K562 contracts** at every `not_mhnhej` depth tried (HEK293 band_k 9/20, K562 11/25; group/width/light_cell_rows otherwise each cell's shipped config), against `hdr`'s real positive value on every one of those same contracts (HEK293 ~0.00009-0.00010; K562 0.000133/0.000491). The Cas12a band-formation wall differs sharply by cell (HEK293 **26 seeds**, K562 **~39-40**, tracking each cell's per-row compliance rate) but the verdict does not move with it — pushing deeper just declines outright on HEK293 (at 35/50) and, on K562, was tested **at** the wall itself (k=39/40, the deepest either contract reaches): band value does rise there (0.21-0.36) but the clean set collapses in lockstep (69-73 of 300 against 162-220 at k=11-25, clean value down to 0.16-0.18 from 0.24-0.30), and `E[own-field share]` is still exactly 0.000000 on both contracts. The full depth range from k=11 to the build limit is now measured on K562 and none of it pays — this is not a case of "deeper would have worked." |
 | the conjunction's clean set, measured at both of its bounds (`cas12a_union.py`) | **SUPERSEDED 2026-09-14 on the numbers, upheld on the bound.** Measured over the JOINED 300-seed space the clean set is **174-181 of 300** on the erythroid types and 40 on HEK293 — far above the 52-80 here, still far below the 559 the prize needs, so the row's conclusion about the prize stands while its figures do not. What is withdrawn is the valuation: "+0.7 to +2.4 round final" was priced at one field's cutoff of 126.32, and the 12-contract own-field replication measures **1.30-2.05x on E[curve share]** against matched all-HDR on three cell types. The original finding: **caps at 52-80 of 900 against the 559 the prize needs, and which bound binds depends on `group_size`.** (a) The HDR min-union buys **zero** cut-coincidence — the group's cut-fail union is **714** at group 42 against **724** for independent failures (848 at group 80), where all-cut reaches **341** with the same 42 rows by optimising cut instead. The two objectives are orthogonal, so a group selected for one gets nothing free on the other. (b) The HDR-on-band Cas9 pool costs `P(HDR)**2` per extra band seed (**906** candidates at band 15 against **3118** at band 13), and cut-strictness over `C` costs a further `0.99**\|C\|`. So group 42 is Cas9-bound at `\|C\|` = 80 and group 80 is Cas12a-bound at `\|C\|` = 52, worth **+0.7 to +2.4** round final (121.7 -> 122.4-124.1) against a 126.32 cutoff. **The scan's early exit is not the cause** — at group 42 the *full* pool (906) is smaller than the exit target (1664), though at group 80 it does truncate (3118 vs 1360). |
 | the joined window as the cause of our 0.89 fidelity (`fidelity_window.py`) | **mostly not it, and free on the product.** Four arms on one contract, group and everything else fixed: contiguous 100 -> **0.8956**, contiguous 225 -> 0.8916, joined 225 -> 0.8880, joined 300 -> 0.8773. So the contiguous window *this fidelity was measured at* already gives 0.8956, and non-contiguity costs only 0.9% at width 225 / 2.0% at width 300, entirely through the mutation term (0.722 -> 0.689 -> 0.653). Width alone costs ~nothing. And weighted rises as fidelity falls, so `weighted x fidelity` is **flat at 221.6-223.4 across all four**, independently reproducing the `narrow_width` result. The window is exonerated; h0's full 300 is free net. |
 | `max_distance` alone, at the band-preserving end (`dist_sweep.py`) | **the term improves and the product does not.** Distance only, GC bounds untouched, one contract, joined 225, group 80: `dist_score` climbs monotonically 0.8555 -> 0.9294 and `base structural` with it, 0.9088 -> **0.9464** (+4.1%) across maxd 400 -> 100. But `weighted` **oscillates** (251.6 / 248.6 / 257.6 / 248.8 / 255.9 / 256.7) instead of following, and `weighted x fidelity` is **flat at 223.0-228.3 — a 2.4% spread over a 4x range**. Mechanism: a tighter bound restricts eligible sites, shifting the mutation mix and dropping mean `mutation_weight`, which absorbs the base gain — fidelity moves the *other* way as it does so and the two largely cancel. Including band, `band x w x fid` peaks at maxd 200 (2700) and 300 (2698) against shipped 400's 2681 (**+0.7%, noise**) and falls 7% below maxd 150 where the band drops 12 -> 11. This also explains why the 210-config sweep read non-monotone across 400/150/100: it was sampling a flat surface. **Do not extrapolate base linearly** — a 4.1% base gain returned 2.0% weighted and 2.2% product, so even base = 1.000 reaches ~+5%, not the +10.5% that rank 10 requires. |

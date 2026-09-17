@@ -1,0 +1,62 @@
+[
+ {
+  "cell": "K562",
+  "task": "87bd27c0",
+  "block": 10,
+  "k": 12,
+  "split": [
+   4,
+   4,
+   4
+  ],
+  "pairsum": 48,
+  "cas9": 358,
+  "pool": 109,
+  "secs": 29
+ },
+ {
+  "cell": "K562",
+  "task": "87bd27c0",
+  "block": 0,
+  "k": 12,
+  "split": [
+   2,
+   0,
+   10
+  ],
+  "pairsum": 20,
+  "cas9": 351,
+  "pool": 135,
+  "secs": 51
+ },
+ {
+  "cell": "HEK293",
+  "task": "51517afd",
+  "block": 10,
+  "k": 8,
+  "split": [
+   3,
+   3,
+   2
+  ],
+  "pairsum": 21,
+  "cas9": 3491,
+  "pool": 194,
+  "secs": 53
+ },
+ {
+  "cell": "HEK293",
+  "task": "51517afd",
+  "block": 0,
+  "k": 9,
+  "split": [
+   2,
+   0,
+   7
+  ],
+  "pairsum": 14,
+  "cas9": 2108,
+  "pool": 105,
+  "secs": 83
+ }
+]

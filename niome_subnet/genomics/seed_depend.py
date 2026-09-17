@@ -45,7 +45,7 @@ from dataclasses import dataclass
 
 import genExp as G
 from niome_subnet.genomics import seed_agnostic as SA
-from niome_subnet.genomics.validation import stage5
+from niome_subnet.genomics.validation import stage3, stage5
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +173,58 @@ def enumerate_candidates(ctx, sites, cfg: SeedDependConfig,
                 continue
             record = G.simulate(entry, ctx)
             if not keep(record):
+                continue
+            by_cell[(mutation, site.cas, site.strand)].append({
+                "guide": guide, "mutation": mutation, "cas_system": site.cas,
+                "strand": site.strand, "start": site.start, "length": site.length,
+                "weighted_score": entry["stage2"]["weighted_score"],
+                "kmers": frozenset(stage5.extract_kmers(guide, 12)),
+                "entry": entry, "record": record,
+            })
+    for recs in by_cell.values():
+        recs.sort(key=lambda r: -r["weighted_score"])
+    return by_cell
+
+
+def enumerate_candidates_multi(ctx, sites, cfg: SeedDependConfig, seeds: tuple[int, ...],
+                               deadline: float | None = None) -> dict[tuple, list[dict]]:
+    """Every (site, mutation, guide) that satisfies the rule at EVERY seed in ``seeds``.
+
+    A guide's stage-3 draw is a fresh, independent-looking coin per seed (the RNG is reseeded from
+    ``sha256(seed|mutation|cas|guide|start|strand)``), so requiring the rule at k seeds instead of
+    one is the same mechanism that caps `all_hdr`/`conjunction`'s band depth: the surviving pool
+    shrinks by roughly `P(rule)` per additional seed. Unlike those constructions this pins EXACT,
+    named seeds rather than searching a window for a band that happens to hold — appropriate only
+    when the seeds are already known (a stamped, scored contract), never at build time on a live
+    round.
+
+    ``seeds[0]`` is checked first at the same cost as the single-seed path (`enumerate_candidates`),
+    which rejects the bulk of candidates before the extra `stage3.simulate` calls the remaining
+    seeds cost are spent on survivors only.
+    """
+    keep = RULES[cfg.rule]
+    by_cell: dict[tuple, list[dict]] = defaultdict(list)
+    jobs = [(s, m) for s in sites for m in ctx.mutations
+            if abs(s.start - ctx.mutation_map[m]) <= cfg.max_distance]
+    jobs.sort(key=lambda j: abs(j[0].start - ctx.mutation_map[j[1]]))
+    scanned = 0
+    for site, mutation in jobs:
+        if deadline is not None and time.monotonic() > deadline:
+            logger.info("seed-depend (multi): candidate scan stopped on the deadline at %d/%d jobs",
+                        scanned, len(jobs))
+            break
+        scanned += 1
+        guides = SA.enumerate_variants(site, ctx, cfg.gc_band[0], cfg.gc_band[1],
+                                       ctx.max_mismatches, True, cfg.variants_per_site)
+        for guide in guides:
+            experiment = G.make_experiment(site, guide, mutation, ctx, "cand")
+            entry = G.build_valid_entry(experiment, ctx)
+            if entry is None:
+                continue
+            record = stage3.simulate(entry, seeds[0])
+            if not keep(record):
+                continue
+            if not all(keep(stage3.simulate(entry, s)) for s in seeds[1:]):
                 continue
             by_cell[(mutation, site.cas, site.strand)].append({
                 "guide": guide, "mutation": mutation, "cas_system": site.cas,
@@ -322,6 +374,62 @@ def build(contract: dict, reference: dict, cell_types: dict, seed: int = 0,
 
     by_cell = enumerate_candidates(ctx, sites, cfg,
                                    None if deadline is None else deadline - 15.0)
+    meta["candidates"] = sum(len(v) for v in by_cell.values())
+    meta["cells_with_candidates"] = len(by_cell)
+    if meta["cells_with_candidates"] < 8:
+        meta["reason"] = f"only {meta['cells_with_candidates']} of 8 cells have candidates"
+        return None, meta
+
+    chosen, alloc = allocate(by_cell, pinned, ctx, n_rows, cfg)
+    meta.update(alloc)
+    if not chosen:
+        return None, meta
+
+    rows, seen = [], set()
+    for i, rec in enumerate(chosen):
+        key = (rec["cas_system"], rec["start"], rec["strand"], rec["guide"])
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append({"experiment_id": f"exp-{i:05d}", "guideRNA": rec["guide"],
+                     "target_alignment_start": rec["start"],
+                     "target_alignment_end": rec["start"] + rec["length"],
+                     "strand": rec["strand"], "mutation": rec["mutation"],
+                     "cas_system": rec["cas_system"],
+                     "cell_type": pinned.get("cell_type")})
+    meta.update(rows=len(rows), elapsed_s=round(time.monotonic() - started, 1))
+    if len(rows) < n_rows:
+        meta["reason"] = f"deduped to {len(rows)} rows of {n_rows}"
+        return None, meta
+    return rows, meta
+
+
+def build_multi(contract: dict, reference: dict, cell_types: dict, seeds: tuple[int, ...],
+                cfg: SeedDependConfig | None = None,
+                budget_s: float | None = None) -> tuple[list[dict] | None, dict]:
+    """The submission pinned to ALL of ``seeds`` at once, or ``(None, meta)`` to fall back.
+
+    Generalises `build`'s single-seed pin to k known seeds simultaneously — every row satisfies the
+    rule at every seed in ``seeds``, not just one, so the submission reaches consistency exactly 1.0
+    on ALL k of them rather than one, at the cost of a candidate pool that shrinks by roughly
+    `P(rule)` per additional seed (the same mechanism that caps `all_hdr`/`conjunction`'s band
+    depth). Only meaningful when those seeds are already known — pricing a stamped, scored round —
+    never at build time on a live one, where the real seeds are unknowable until they are stamped.
+    """
+    cfg = cfg or SeedDependConfig()
+    started = time.monotonic()
+    deadline = None if budget_s is None else started + budget_s
+    seeds = tuple(seeds)
+    meta: dict = {"method": "seed-depend-multi", "seeds": list(seeds), "rule": cfg.rule}
+
+    pinned = dict(contract)
+    pinned["seed"] = seeds[0]
+    ctx = G.build_context(pinned, reference, cell_types)
+    sites = G.enumerate_sites(ctx, cfg.flank, cfg.lengths)
+    n_rows = pinned["rules"].get("max_experiments") or ctx.max_experiments
+
+    by_cell = enumerate_candidates_multi(ctx, sites, cfg, seeds,
+                                        None if deadline is None else deadline - 15.0)
     meta["candidates"] = sum(len(v) for v in by_cell.values())
     meta["cells_with_candidates"] = len(by_cell)
     if meta["cells_with_candidates"] < 8:

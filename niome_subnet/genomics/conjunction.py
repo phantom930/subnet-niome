@@ -116,6 +116,15 @@ logger = logging.getLogger(__name__)
 # bands measured 0-3 shared seeds per pair on a live round, a fleet union of 31 of 900 against a
 # single hotkey's 8.
 #
+# **2026-09-17: grown to six hotkeys (h0-h5) and no longer "min-unions on cut over the same 300-seed
+# joined space" above.** `BAND_STRIDE` moved 75 -> 50 (six offsets, 0/50/100/150/200/250, still
+# tiling the 300-seed band space exactly once), and separately, only for these six,
+# `joined_window.conjunction_cut_seeds` now hands the CUT computation the full 100-999 instead of
+# the 300-seed band space -- the band is still drawn from that 300-seed space via an explicit
+# `band_candidates` slice, but the clean set it is scored against comes from a materially bigger
+# Cas12a bank. See the `CELL_CONFIG` block below for what that costs in build time and how little of
+# it has been measured.
+#
 # **`band_k` is 8 on every cell.** It was 10/8 briefly on 2026-09-15, then 8/6, and HEK293 came
 # back to 8 on the arm comparison recorded at the bottom of this block. What is measured, and what
 # is not:
@@ -205,14 +214,36 @@ logger = logging.getLogger(__name__)
 # 4/6, sign p = 0.688**. That is "stops losing", NOT a measured win, and all-HDR remains the
 # lower-variance choice on that cell. The mechanism is that HUDEP-2's all-HDR band is **11.5**, so
 # any conjunction pinned below ~12 is giving up the dominant term to buy a clean set.
+#
+# **2026-09-17: `band_k` dropped one step below the wall on every cell — HEK293 9 -> 8, the three
+# erythroid cells 12 -> 11 — set by operator request for the new six-hotkey (h0-h5) fleet layout,
+# NOT re-measured at this k.** `group_size`, `band_width` and `light_cell_rows` are unchanged from
+# the table above. Two things make this genuinely different from simply re-opening the k sweep:
+#
+#   * It ships alongside `joined_window.conjunction_cut_seeds()`, which widens these six hotkeys'
+#     CUT window from the 300-seed band space to the full 900. The wall each row above measured is a
+#     property of the CAS12A POOL feeding `choose_band` (`pool * P(rule)**k >= group_size`), and that
+#     pool's composition changes with the cut window: `cas12a_max_fail` reverts to the cell's native
+#     all-cut value (unscaled) instead of being scaled down by `seeds/900`, over 3x more seeds to
+#     screen. Whether that pool is bigger or smaller than the 300-seed one, and where the wall then
+#     sits, has not been measured — treat k=8/11 as the operator's starting point for a scheme this
+#     file has no data on, not as a re-derivation of the wall.
+#   * If the OLD (300-seed-cut) wall numbers above still applied unchanged at the new 900-seed cut,
+#     this step is a mixed bag, not a uniform regression: CD34+_HSPC's own row already shows k=11 as
+#     the better point (0.000153 against k=12's 0.000145 — an interior peak, not the wall), so that
+#     cell's move is aligned with old data. HEK293 (k=8 was 0.000136 against k=9's 0.000163, -17%)
+#     and K562/HUDEP-2 (still climbing at k=12 per the table above, so k=11 is a step down the same
+#     curve) would be regressions under the old numbers. But the cut window is no longer what those
+#     numbers were measured at, so none of this old wall data actually applies here — re-measure with
+#     the wide-cut bank before reading either direction as established.
 CELL_CONFIG: dict[str, dict] = {
-    "HEK293": {"band_k": 9, "group_size": 80, "band_width": 150, "light_cell_rows": 12,
+    "HEK293": {"band_k": 8, "group_size": 80, "band_width": 150, "light_cell_rows": 12,
                "band_cell_aware": True},
-    "CD34+_HSPC": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "CD34+_HSPC": {"band_k": 11, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
                    "band_cell_aware": True},
-    "K562": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "K562": {"band_k": 11, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
              "band_cell_aware": True},
-    "HUDEP-2": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "HUDEP-2": {"band_k": 11, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
                 "band_cell_aware": True},
 }
 
@@ -226,6 +257,13 @@ class ConjunctionConfig(AllCutConfig):
     seed_list: tuple[int, ...] = ()
     band_k: int = 8
     band_width: int = 150
+    # Research overrides for the fleet double-hit coordination experiment. `band_candidates`
+    # replaces the contiguous `sub_window` slice with an explicit seed set (per-class blocks, so a
+    # band can straddle all three oracle classes instead of the 1.5 a 150-wide slice spans), and
+    # `band_quota` caps how many band seeds may come from each class as (lo, hi, cap) triples. Both
+    # empty = shipped behaviour. See `class_blocks`.
+    band_candidates: tuple[int, ...] = ()
+    band_quota: tuple[tuple[int, int, int], ...] = ()
     # Let `choose_band` see the Cas9 side before it fixes the band. OFF by default: the band it
     # picks differs from the measured one, so every tuned (k, group, width) row above was measured
     # without it. See `cas9_cell_probe` for what it is for and what it costs.
@@ -304,13 +342,47 @@ def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates,
     ``mt19937.RULE_SPECS`` works; what changes is how many of stage 4's three targets a band seed
     pins, and therefore what a band seed is WORTH:
 
-        hdr      all 3 pinned                     cons exactly 1.0000
-        mh_any   is_cut pinned, is_hdr == mh      cons 0.77-0.85 (measured, K562 and HEK293)
+        hdr          all 3 pinned                    cons exactly 1.0000
+        mh_any       is_cut pinned, is_hdr == mh     cons 0.77-0.85 (measured, K562 and HEK293)
+        not_mhnhej   is_cut pinned only              cons 0.23-0.29 (measured, HEK293 -- see below)
 
     `mh_any` never makes `is_hdr` constant -- it makes it an exact function of `mh`, which stage 4
     hands the forest as a `build_X` feature, so `r2_score` pays it like a constant. `indel_length`
     is only partly recovered (the BLUNT branch carries an unpinned expovariate), which is the whole
     of the 0.8-vs-1.0 gap.
+
+    `not_mhnhej` ({"any": ("HDR", "BLUNT_NHEJ")}) admits two outcomes rather than one, so neither
+    `is_hdr` nor `indel_length` goes constant on a band seed -- it pins exactly what the outer
+    cut-min-union already pins, nothing more. **Tested end to end on HEK293 (`conj_nomh.py`) and
+    rejected: 3/3 contracts, band value 0.23-0.29 lands ON TOP of the ordinary off-band clean value
+    (0.17-0.27), i.e. no third regime at all.** The much higher per-row compliance does buy a far
+    bigger Cas12a pool (14,000+ against `hdr`'s ~100) and so a ~4.5x wider clean set (65-67 of 300
+    against 13-15) -- but at a per-seed value that never clears ~0.29, the best reachable round
+    (all three seeds in that wide clean set, itself rare) still scores under every one of the three
+    fields tested (cutoffs 101-128 vs a ceiling near 80-85), so `E[own-field share]` measured
+    **exactly 0.000000 on 3/3 contracts** at k=9 and k=20, against `hdr`'s ~0.00009-0.00010 on the
+    same three. Pushing `band_k` past ~26 (35, 50) declined outright on every contract -- the
+    Cas12a band-formation wall (survivors falling below `group_size` 80) sits at the same seed
+    count regardless of contract, since it is a property of the bank's per-seed compliance rate,
+    not of the seeds drawn. Do not re-run this rule inside the conjunction; it generalises the
+    already-falsified standalone finding (CLAUDE.md, "no-MH_NHEJ for a wider band") rather than
+    escaping it.
+
+    **Confirmed on K562 (2026-09-17, 2 contracts): same verdict, different wall.** Band value
+    0.19-0.28 against an off-band clean value of 0.24-0.30 (on the k=25 arm clean was even slightly
+    ABOVE band) -- `E[own-field share]` again **exactly 0.000000 on 2/2 contracts** at every depth
+    tried, against `hdr`'s real positive value on the same two (0.000133, 0.000491). The Cas12a
+    band-formation wall sits far deeper here (~39-40, against HEK293's 26) since K562's higher
+    per-row compliance leaves a much bigger pool per band seed -- but the wall moving does not
+    rescue the construction, because the defect (band value never exceeding the clean value) is
+    about what a `not_mhnhej`-compliant seed IS, not about how deep the band can go.
+
+    **Tested AT the wall too (k=39/40, the deepest either contract reaches): still zero.** Band
+    value does rise there (0.21-0.36) but the clean set collapses in lockstep -- 69-73 of 300
+    against 162-220 at k=11-25, clean value down to 0.16-0.18 from 0.24-0.30 -- and
+    `E[own-field share]` is unchanged at exactly 0.000000 on both contracts. So the full depth
+    range from k=11 to the build limit has now been measured on K562 and none of it pays; this is
+    not a case of "deeper would have worked."
 
     Grouped by (site, mutation) because the screen is per target: every guide of one target shares
     the gc/energy/cut_p columns, which is what makes the batched kernel worth using.
@@ -337,6 +409,35 @@ def hdr_compliance(records, contract: dict, cell_types: dict, ctx, candidates,
             bad = set(int(x) for x in fails) if fails is not None else whole
             ok[i] = whole - bad
     return ok
+
+
+def class_blocks(joined: list[int], block: int, hk: int, nhk: int = 10) -> list[int]:
+    """Hotkey `hk`'s candidate seeds: one block of `block` seeds inside EVERY 100-seed class.
+
+    The shipped `sub_window` takes a contiguous slice of the joined space, so at width 150 over 300
+    seeds every band spans at most 1.5 classes — and a band confined to one class can never hold two
+    of the round's three seeds, since the seeds sit one per class. Measured on 10 real fleet bands
+    x 10 tasks: **0 doubles in 100 hotkey-rounds**, mean pair-sum 14.1 of a reachable 21 at k=8.
+
+    P(hotkey holds >= 2 of 3 seeds) = (k1k2 + k1k3 + k2k3) / 100**2 for a band splitting (k1,k2,k3)
+    across the classes, so the per-hotkey shape wants an even split, and the fleet union equals the
+    SUM of those when hotkeys' per-class allocations are disjoint. Blocks of `block` seeds at stride
+    100/nhk give exactly that at block <= 100/nhk, and overlap (union < sum) above it.
+
+    `block` trades coordination against the greedy's freedom: `choose_band` earns its depth by
+    picking whichever seeds the most guides comply on, and `hdr_pool.py` measures that freedom at an
+    **11x** pool edge over an arbitrary band. A small block spends it. That trade is what the sweep
+    this exists for measures.
+    """
+    classes: dict[int, list[int]] = defaultdict(list)
+    for s in sorted(joined):
+        classes[s // 100].append(s)
+    out: list[int] = []
+    for _c, seeds in sorted(classes.items()):
+        n = len(seeds)
+        start = (hk * max(1, n // max(1, nhk))) % n
+        out.extend(seeds[(start + j) % n] for j in range(min(block, n)))
+    return sorted(set(out))
 
 
 def cas9_cell_probe(contract: dict, cell_types: dict, ctx, sites, cfg, candidates,
@@ -398,7 +499,8 @@ def cas9_cell_probe(contract: dict, cell_types: dict, ctx, sites, cfg, candidate
 
 
 def choose_band(ok: dict, k: int, candidates, need: int, cell_ok: dict | None = None,
-                stats: dict | None = None) -> tuple[list[int], list[int]]:
+                stats: dict | None = None,
+                quota: tuple = ()) -> tuple[list[int], list[int]]:
     """Greedily take a k-seed band, keeping only guides HDR-compliant on all of it.
 
     One seed per step, taking whichever candidate the most surviving guides comply on, and stopping
@@ -440,6 +542,23 @@ def choose_band(ok: dict, k: int, candidates, need: int, cell_ok: dict | None = 
         CM[key] = A
         calive[key] = np.ones(len(sets), dtype=bool)
 
+    # (lo, hi, cap) per class: how many band seeds may be drawn from each. Without it the greedy
+    # will happily take every seed from one class, which is worth ZERO for a double hit.
+    caps = [(lo, hi, cap) for lo, hi, cap in quota] if quota else []
+    used = [0] * len(caps)
+
+    def blocked(seed: int) -> bool:
+        for qi, (lo, hi, cap) in enumerate(caps):
+            if lo <= seed <= hi:
+                return used[qi] >= cap
+        return False
+
+    def charge(seed: int) -> None:
+        for qi, (lo, hi, _cap) in enumerate(caps):
+            if lo <= seed <= hi:
+                used[qi] += 1
+                return
+
     alive = np.ones(len(idx), dtype=bool)
     band: list[int] = []
     taken: set[int] = set()
@@ -449,22 +568,22 @@ def choose_band(ok: dict, k: int, candidates, need: int, cell_ok: dict | None = 
         for j in taken:
             counts[j] = -1
         pick = -1
+        order = [int(c) for c in np.argsort(-counts)]
+        allowed = [c for c in order if counts[c] >= need and not blocked(cand[c])]
+        if not allowed:
+            break
         if CM:
-            for cnd in np.argsort(-counts):
-                cnd = int(cnd)
-                if counts[cnd] < need:
-                    break
+            for cnd in allowed:
                 if all((calive[key] & CM[key][:, cnd]).any() for key in CM):
                     pick = cnd
                     break
-            if pick >= 0 and pick != int(np.argmax(counts)):
+            if pick >= 0 and pick != allowed[0]:
                 steered += 1
             elif pick < 0:
                 fell_back += 1
         if pick < 0:
-            pick = int(np.argmax(counts))
-            if counts[pick] < need:
-                break
+            pick = allowed[0]
+        charge(cand[pick])
         taken.add(pick)
         band.append(cand[pick])
         alive &= M[:, pick]
@@ -525,7 +644,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         meta["reason"] = f"cut bank {len(records)} short of group {cfg.group_size}"
         return None, meta
 
-    candidates = sub_window(joined, cfg.band_width, cfg.band_offset_frac)
+    candidates = (sorted(cfg.band_candidates) if cfg.band_candidates
+                  else sub_window(joined, cfg.band_width, cfg.band_offset_frac))
     ok = hdr_compliance(records, contract, cell_types, ctx, candidates, cfg.band_rule)
     MT.free_gpu_memory()
     cell_ok = None
@@ -542,7 +662,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         p_row = float(np.mean(frac)) if frac else None
         meta["probe_p_row"] = p_row
     bstats: dict = {}
-    band, alive = choose_band(ok, cfg.band_k, candidates, cfg.group_size, cell_ok, bstats)
+    band, alive = choose_band(ok, cfg.band_k, candidates, cfg.group_size, cell_ok, bstats,
+                              cfg.band_quota)
     meta.update(bstats)
     meta["band"] = len(band)
     meta["band_seeds"] = list(band)
@@ -567,7 +688,8 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         bad.update(int(x) for x in rec["fails"])
     clean = np.array(sorted(set(joined) - bad), dtype=np.int64)
     meta.update(union=len(bad), clean=int(clean.size),
-                clean_fraction=clean.size / max(1, len(joined)))
+                clean_fraction=clean.size / max(1, len(joined)),
+                clean_seeds=[int(x) for x in clean])
     if clean.size == 0:
         meta["reason"] = "the group's cut failures cover the whole joined window"
         MT.free_gpu_memory()
@@ -610,13 +732,19 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
                    budget_s: float | None = None,
                    seed_list=None,
                    hdr_range: tuple[int, int] | None = None,
-                   band_offset_frac: float | None = None) -> tuple[list[dict] | None, dict]:
+                   band_offset_frac: float | None = None,
+                   band_candidates=None) -> tuple[list[dict] | None, dict]:
     """Build for whichever cell type this contract names, or decline where it is unmeasured.
 
     Takes the SAME seed space the all-HDR rung would have been given, so the two rungs play one
     window layout and a hotkey's decorrelation carries over unchanged. A contiguous ``hdr_range``
     is accepted and expanded, but the measurement is over a joined space of ~300 seeds and a
     contiguous window is not the operating point any of these arms were tuned at.
+
+    ``band_candidates``, when given, is an explicit seed list the band is drawn from INSTEAD of a
+    sub-window of ``seed_list``/``hdr_range`` -- for a hotkey whose cut window and band region are
+    no longer the same space (`joined_window.conjunction_cut_seeds`). It takes precedence over
+    ``band_offset_frac``, which only matters when the band is still a slice of the cut window.
     """
     cell = contract.get("cell_type")
     cfg = config_for(cell)
@@ -644,4 +772,7 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     # `joined_window.band_offset_frac`, so two siblings on one joined window hold different bands.
     if band_offset_frac is not None:
         cfg = dataclasses.replace(cfg, band_offset_frac=float(band_offset_frac))
+    if band_candidates is not None:
+        cfg = dataclasses.replace(
+            cfg, band_candidates=tuple(sorted(set(int(x) for x in band_candidates))))
     return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)

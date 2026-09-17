@@ -64,8 +64,8 @@ HOTKEYS=(
   "niome_hotkey6  8097 52799 180-379"
   "niome_hotkey7  8098 52240 200-399"
   "niome_hotkey8  9001 52504 900-999"
-  "niome_hotkey9  9002 52384 900-999"
-  "niome_hotkey10  8099 52543 900-999"
+  "niome_hotkey9  8099 52543 900-999"
+  "niome_hotkey10  9002 52384 900-999"
 )
 
 # NIOME_SEED_DEPEND swaps a hotkey's construction for genomics/seed_depend.py, a submission pinned
@@ -231,7 +231,15 @@ ALL_CUT_HOTKEYS=""
 # 163 and 118 alongside h0's 122. All four play the conjunction on the SAME 300-seed joined window
 # and decorrelate through the band sub-window offset instead (joined_window.band_offset_frac,
 # width 150 at stride 75 -> offsets 0/75/150/225).
-DEREGISTERED="niome_hotkey4 niome_hotkey5 niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
+# 2026-09-17: h4/h5 came OFF this list too -- verified against the chain (netuid 55, block 9087088):
+# uid 190 (h4) and uid 234 (h5), alongside h0/h1/h2/h3's unchanged 122/41/163/118. window_plan.py
+# needs this line current or it silently excludes a registered hotkey from the window allocation --
+# a window nothing then covers, logged as though a band had been played there. All six now sit in
+# joined_window.FULL_HK/BAND_HK at BAND_STRIDE 50 (six offsets, 0/50/100/150/200/250, tiling the
+# 300-seed band space once) and additionally take the full 900-seed cut window via
+# joined_window.conjunction_cut_seeds -- see that file and conjunction.CELL_CONFIG's 2026-09-17
+# entries for what changed and what is still unmeasured about it.
+DEREGISTERED="niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so

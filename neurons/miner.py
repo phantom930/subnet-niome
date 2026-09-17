@@ -417,7 +417,24 @@ class Miner(BaseMinerNeuron):
     # numbers were measured at -- a deeper band means the on-band Cas9 filter keeps ~P(HDR)**10
     # rather than **8, so `scan_cas9` at `pool_target` 500 runs longer before it can stop. The gates
     # below are the PRE-FLIGHT cold builds at the shipped arm plus ALL_HDR_MIN_BUDGET_S plus ~25%.
-    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 430.0, "K562": 450.0,
+    #
+    # 2026-09-17: CD34+_HSPC and K562 raised again, for a different reason -- `joined_window.
+    # conjunction_cut_seeds` now hands `BAND_HK` hotkeys a 900-seed cut window instead of the
+    # 300-seed band space, and `cas12a_max_fail` un-scales to the cell's native all-cut value at
+    # that width (it was being divided by seeds/900 before). One cold build per cell at the new
+    # k=8/11 (`conj_widecut_check.py`, single contract each -- treat as a first read, not a
+    # distribution): HEK293 47s, HUDEP-2 62s, K562 491s, CD34+_HSPC 577s. HEK293/HUDEP-2 stay well
+    # inside their existing gates; K562/CD34+_HSPC's OLD gates (450/430s) would let a build start
+    # that the observed sample already could not finish in the ~260-310s of `budget_s` a
+    # just-over-gate `budget` would hand it. Raised to 700s so even a marginal trigger gives
+    # `budget_s` (`budget - ALL_HDR_MIN_BUDGET_S`) north of 500s; at PREPARE_BUDGET_S's full 900s
+    # that is 710s, ~220s of margin over the one sample measured. This makes the two cells' rung
+    # fire only on a near-fully-prefetched round, which is the same prefetch dependency the
+    # conjunction always had, just a stricter version of it -- a decline here is a safe fallback to
+    # all-HDR, not a failure, since `budget - ALL_HDR_MIN_BUDGET_S` is reserved before either gate
+    # is checked. Re-measure on more contracts before trusting these as more than a safe starting
+    # gate; build time plainly does not scale uniformly with cut width across cells.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 700.0, "K562": 700.0,
                                 "HUDEP-2": 450.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
@@ -1655,6 +1672,27 @@ class Miner(BaseMinerNeuron):
         # separates two siblings' bands. None (a hotkey not in `joined_window.BAND_HK`) keeps the
         # config default, which is the single-hotkey value the replication was measured at.
         conj_offset = JW.band_offset_frac(os.getenv("NIOME_INSTANCE"))
+        # A `BAND_HK` hotkey's CUT window is no longer `space` -- it is the full 900 from
+        # `conjunction_cut_seeds`, decoupled from the 300-seed region `space` still names. That
+        # region stays the source of the BAND instead: sliced explicitly via `band_candidates`
+        # (at this hotkey's usual offset) rather than left to `sub_window` to carve out of the
+        # (now much wider) cut window. Every hotkey outside `BAND_HK` is unaffected -- `wide_cut`
+        # is None and `conj_kw`/`conj_band_candidates` fall back to the plain `kw`/`None` below.
+        #
+        # The cell type is part of that test since 2026-09-17: `conj_wall.py` measures the wide cut
+        # LOWERING HEK293's band wall 9 -> 8 (putting `band_k` 8 at the wall and making k=9
+        # unreachable) while leaving the erythroid cells at 12, so HEK293 is out of
+        # `WIDE_CUT_CELLS` and takes the 300-seed cut. The band it builds is identical either way.
+        conj_kw, conj_band_candidates = kw, None
+        wide_cut = (JW.conjunction_cut_seeds(os.getenv("NIOME_INSTANCE"), cell_type)
+                    if space is not None else None)
+        if wide_cut is not None:
+            cj_cfg = CJ.config_for(cell_type)
+            band_space = space if isinstance(space, list) else list(range(space[0], space[1] + 1))
+            if cj_cfg is not None:
+                conj_band_candidates = CJ.sub_window(band_space, cj_cfg.band_width,
+                                                      conj_offset or 0.0)
+                conj_kw = {"seed_list": wide_cut}
 
         if conj_applies:
             try:
@@ -1665,7 +1703,8 @@ class Miner(BaseMinerNeuron):
                         conj_rows, conj_meta = CJ.build_for_cell(
                             contract, reference, cell_types,
                             budget_s=max(0.0, budget - self.ALL_HDR_MIN_BUDGET_S),
-                            band_offset_frac=conj_offset, **kw)
+                            band_offset_frac=None if conj_band_candidates else conj_offset,
+                            band_candidates=conj_band_candidates, **conj_kw)
                     else:
                         conj_rows, conj_meta = None, {
                             "reason": "another build holds the hedge slot"}
