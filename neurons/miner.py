@@ -19,12 +19,14 @@ import hashlib
 import json
 import logging
 import os
+import random
 import requests
 import sys
 import threading
 import time
 import traceback
 
+from dataclasses import replace
 from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlparse
 
@@ -60,6 +62,25 @@ class Miner(BaseMinerNeuron):
 
     MAX_RETRIES = 3
 
+    # Share of the remaining TTL the cut-support scan may spend. The rest of the build is under a
+    # second with chr11 prewarmed, so what this really reserves is upload headroom — a 250-row PUT
+    # plus the archive write, against a scan that is worth ~40% on consistency_factor but is worth
+    # nothing at all if the URL expires first.
+    SCAN_SHARE_OF_WINDOW = 0.35
+    # Share of the remaining TTL the two-stage construction's strong-cas coordinate widening may
+    # spend, on top of the scan above — a separate cost (stage 1/2 gating of new coordinates, then
+    # a second, narrower cut-support scan) that ``design.two_stage_construction`` only reaches for
+    # once the ordinary scan has already returned. Kept smaller than SCAN_SHARE_OF_WINDOW because
+    # the two-stage attempt is additive on top of a result the build already has in hand — losing
+    # it to a slow host costs nothing the shipped scan-and-retune path did not already provide.
+    TWO_STAGE_SHARE_OF_WINDOW = 0.20
+    # Share of the remaining TTL ``design.pin_with_widening`` may spend growing the candidate pool
+    # so a pin over many seeds can still fill every row. Larger than the two shares above because
+    # it is spent only when the alternative is a submission that is *short* — at the 1-3 seeds a
+    # live round issues it is never reached at all, and when it is reached it replaces the
+    # cut-support scan rather than adding to it.
+    PIN_WIDEN_SHARE_OF_WINDOW = 0.40
+
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
 
@@ -70,6 +91,11 @@ class Miner(BaseMinerNeuron):
         # contract, so later broadcasts reuse the first build and repeat only the upload.
         self._build_lock = asyncio.Lock()
         self._built: tuple[str, list[dict]] | None = None
+        # Seeds resolved per task id, so every validator broadcasting the same task is answered
+        # with the same submission. A drawn seed that changed between broadcasts would change the
+        # contract, which would miss the build memo below and — worse — send several validators
+        # rows pinned to several different guesses of one round's seed.
+        self._seeds_by_task: dict[str, list[int]] = {}
         # asyncio keeps only a weak reference to a running task, so a fire-and-forget create_task
         # can be garbage-collected mid-flight and the round would vanish without a log line.
         # Holding the handle until it completes is what makes the submission survive.
@@ -77,11 +103,13 @@ class Miner(BaseMinerNeuron):
 
         logger.info(
             "Generation config: guide_lengths=%s pam_search_flank=%d coordinates_per_cell=%d "
-            "guides_per_coordinate=%d",
+            "guides_per_coordinate=%d two_stage_enabled=%s two_stage_seconds=%.0f",
             self.generation_config.guide_lengths,
             self.generation_config.pam_search_flank,
             self.generation_config.coordinates_per_cell,
             self.generation_config.guides_per_coordinate,
+            self.generation_config.two_stage_enabled,
+            self.generation_config.two_stage_seconds,
         )
         threading.Thread(target=self._prewarm, name="niome-prewarm", daemon=True).start()
 
@@ -165,12 +193,17 @@ class Miner(BaseMinerNeuron):
                 f"mutations={len(contract.get('active_mutations') or [])} "
                 f"rules={contract.get('rules')}"
             )
+            # The broadcast contract carries seed 0. Stamping the resolved seeds onto it here, and
+            # not inside _build, is deliberate: the stamped contract is what the build memo below
+            # hashes, so repeat broadcasts of one task reuse one submission instead of rebuilding
+            # against a second guess.
+            contract, seeds, seed_source = self._resolve_seeds(task.id, contract)
 
             logger.info(f"{task_tag} step 3/5 fetching the cell-type accessibility table")
             cell_types = await asyncio.to_thread(self._fetch_cell_types)
             logger.info(f"{task_tag} step 3/5 done | {len(cell_types)} cell types")
 
-            logger.info(f"{task_tag} step 4/5 building the dataset")
+            logger.info(f"{task_tag} step 4/5 building the dataset against seeds {seeds} ({seed_source})")
             build_started = time.time()
             async with self._build_lock:
                 memo_key = self._build_key(task.id, contract)
@@ -194,7 +227,8 @@ class Miner(BaseMinerNeuron):
                 f"{deadline - time.time():.0f}s of TTL left"
             )
             await asyncio.to_thread(self._upload, presigned_url, rows, deadline)
-            self._record_upload(task.id, presigned_url, deadline, submitted=True, rows=len(rows))
+            self._record_upload(task.id, presigned_url, deadline, submitted=True, rows=len(rows),
+                                seeds=seeds, seed_source=seed_source)
             logger.info(
                 f"Submitted {len(rows)} rows for task {task.id} in {time.time() - started:.1f}s "
                 f"({deadline - time.time():.0f}s of the URL's TTL to spare)"
@@ -213,6 +247,71 @@ class Miner(BaseMinerNeuron):
     # Build
     # -----------------------------------------------------------------------------------------
 
+    def _resolve_seeds(self, task_id: str, contract: dict) -> tuple[dict, list[int], str]:
+        """Stamp the round seeds the design should build against onto ``contract``.
+
+        The plan itself is ``design.plan_seeds`` — the cell type's count, the operator's listed
+        seeds first, random draws for the rest. It lives in ``design`` rather than here so that
+        everything which builds gets the same plan and writes the same ``last_generated`` record;
+        a planner attached to this neuron is skipped by every harness that drives ``build``
+        directly, which is exactly how it came to look like it was doing nothing.
+
+        What this method adds on top is neuron-specific: the contract's own seeds win if the
+        backend ever stamps one, the plan is cached per task id so the several validators that
+        broadcast a task all receive one submission, and the result is stamped onto the contract
+        before the build memo hashes it.
+
+        Seeds are what makes ``design.pinned_outcome_build`` reachable: given the round's real
+        seeds, every row can be chosen to draw one fixed ``(outcome, indel_length)``, which makes
+        all three of stage 4's targets constant columns and ``consistency_factor`` exactly 1.0.
+
+        **A drawn seed is a bet, not information.** The backend stamps the real seed after the
+        broadcast, so a draw is right with probability 1/900, and on the 899 misses the rows are
+        pinned to outcomes under a seed nobody scores. What that costs is the question, and it is
+        much less than it sounds — measured end to end through ``benchmark_submission``, one task
+        per cell type, each scored under the seeds its round actually closed under:
+
+            task      cell type     seed-blind    drawn & missed    seeds correct
+            62cc85fb  HEK293 0.35      24.63          25.36            301.46
+            7ac3ef3a  K562   0.77      34.07          23.85            241.70
+            f6686c85  HUDEP2 0.82      36.33          34.77            355.50
+            65df5469  CD34+  0.87      22.20          27.04            249.06
+            mean                       29.31          27.76            286.93
+
+        A miss lands within noise of the seed-blind design (~5% below it on average, and *above* it
+        on two of four) because pinning to the wrong seed leaves the rows structurally intact —
+        term1 and coverage are untouched, and the cut-support scan it skipped was only holding
+        36-400 seeds of 900 anyway. So the trade is roughly: give up ~5% of a typical round for a
+        1/900 shot at ~10x it. Expected value is ~28.05 against 29.31, a ~4% loss, which the subnet's
+        rank-based payout (``SCORING_SYSTEM = "top"``, ten places) more than repays — a reliable
+        median score is worth little there and a 10x outlier is worth a great deal.
+
+        That is a deliberate variance trade, and this method is where to undo it: return ``[]``
+        instead of drawing to go back to the seed-blind design on every round.
+
+        Returns the stamped contract (a copy; the fetched one is left as received), the seeds, and
+        a one-word provenance for the logs.
+        """
+        contract_seeds = design.parse_seeds(contract)
+        if contract_seeds:
+            return dict(contract, seed=self._seed_field(contract_seeds)), contract_seeds, "contract"
+
+        if task_id in self._seeds_by_task:
+            seeds = self._seeds_by_task[task_id]
+            return dict(contract, seed=self._seed_field(seeds)), seeds, "cached"
+
+        seeds, source = design.plan_seeds(contract)
+        self._seeds_by_task[task_id] = seeds
+        if not seeds:
+            return dict(contract), [], source
+        return dict(contract, seed=self._seed_field(seeds)), seeds, source
+
+    @staticmethod
+    def _seed_field(seeds: list[int]) -> str:
+        """Seeds in the contract's own format — comma-joined, the way the backend writes a
+        multi-seed round and the way ``Context.seeds`` reads one back."""
+        return ",".join(str(seed) for seed in seeds)
+
     def _build(self, contract: dict, reference: dict, cell_types: dict,
                deadline: float) -> list[dict]:
         """Generate this task's submission and log what it should be worth."""
@@ -224,15 +323,34 @@ class Miner(BaseMinerNeuron):
             context.max_mismatches, context.base_padding,
         )
         if not context.seeds():
-            # Expected in production: the backend stamps the round seed after the broadcast, so a
-            # miner never designs against it. Worth stating once per task, because it is why the
-            # design optimises the two seed-independent factors and treats the third statistically.
+            # Reached only when ``_resolve_seeds`` was bypassed or returned nothing — a build
+            # driven straight from a broadcast contract. The design then optimises the two
+            # seed-independent factors and treats the third statistically.
             logger.info(
-                "Build: contract carries no round seed (the backend stamps it before validation), "
-                "so outcomes cannot be designed for — see genomics/design.py"
+                "Build: no round seed to design against (the backend stamps it after the "
+                "broadcast), so outcomes cannot be designed for — see genomics/design.py"
             )
 
-        rows, entries, diagnostics = design.build(context, self.generation_config)
+        # The cut-support scan is the only part of the build that takes real time, and this branch
+        # builds inside the presigned URL's TTL rather than ahead of it. Hand it what is actually
+        # left of the window instead of its standing budget, keeping the larger share for the
+        # upload: a narrower scan costs some of the seed band, a missed deadline costs the round.
+        build_config = replace(
+            self.generation_config,
+            seed_scan_seconds=min(
+                self.generation_config.seed_scan_seconds,
+                max(0.0, (deadline - time.time()) * self.SCAN_SHARE_OF_WINDOW),
+            ),
+            two_stage_seconds=min(
+                self.generation_config.two_stage_seconds,
+                max(0.0, (deadline - time.time()) * self.TWO_STAGE_SHARE_OF_WINDOW),
+            ),
+            pin_widen_seconds=min(
+                self.generation_config.pin_widen_seconds,
+                max(0.0, (deadline - time.time()) * self.PIN_WIDEN_SHARE_OF_WINDOW),
+            ),
+        )
+        rows, entries, diagnostics = design.build(context, build_config)
         if not rows:
             logger.error(f"Build produced no rows: {diagnostics.get('error', 'unknown reason')}")
             return []
@@ -243,6 +361,34 @@ class Miner(BaseMinerNeuron):
             diagnostics["total_weighted_score"], diagnostics["offtarget_factors"],
             diagnostics["distinct_feature_vectors"],
         )
+        # The share of the seed support on which every row cuts, which is the probability this
+        # submission lands the constant-``is_cut`` cliff — measured 0.311 against a 0.111 floor, so
+        # ~2.8x on the seeds it holds. A low share is expected on a low-accessibility cell type,
+        # where the per-row cut probability is too far below 1 to hold an intersection over 250 rows.
+        pinned_outcome = diagnostics.get("pinned_outcome")
+        support_size = diagnostics.get("seed_support_size") or 0
+        if pinned_outcome:
+            # The contract carried its round seeds, so the outcome was not played for — it was read.
+            # Every row draws the same (outcome, indel_length) under every one of those seeds, which
+            # makes all three of stage 4's targets constant columns and consistency_factor exactly
+            # 1.0. Only under these seeds: the design is worthless against any other, which is why
+            # the seeds are logged next to it.
+            logger.info(
+                "Construction: exact-outcome — every row draws %s under seeds %s, so "
+                "consistency_factor is 1.0 on this round",
+                tuple(pinned_outcome), diagnostics.get("pinned_seeds"),
+            )
+        elif support_size:
+            seeds_held = diagnostics.get("seeds_holding_cut", 0)
+            logger.info(
+                "Cut support: every row cuts on %d/%d seeds (%.1f%% of rounds hold a constant "
+                "is_cut)", seeds_held, support_size, 100 * seeds_held / support_size,
+            )
+            logger.info(
+                "Construction: %s",
+                "two-stage (min-union + strict-over-clean-set)" if diagnostics.get("two_stage_used")
+                else "scan-and-retune (two-stage did not clear _TWO_STAGE_MIN_GAIN or is off)",
+            )
         logger.info(f"Allocation: {diagnostics['allocation']}")
         if diagnostics["empty_cells"]:
             # Stage 5's geometric mean turns an unoccupied (mutation, cas, strand) cell into a
@@ -507,12 +653,17 @@ class Miner(BaseMinerNeuron):
             return fallback_deadline
 
     def _record_upload(self, task_id: str, presigned_url: str, deadline: float,
-                       submitted: bool, rows: int | None = None) -> None:
+                       submitted: bool, rows: int | None = None,
+                       seeds: list[int] | None = None, seed_source: str | None = None) -> None:
         """Note the current task's upload target and its outcome, so a lost round can be retried.
 
         Best-effort: a failure to write this must not be what loses the round. The file holds a
         signed URL, which is a write capability on one bucket key until it expires — ``data/`` is
         gitignored and the URL is worthless a few minutes later.
+
+        The seeds are recorded alongside because they are what the rows were designed for: a
+        submission pinned to a seed is only worth anything under that seed, so a score that comes
+        back low is explained by this line or it is not explained at all.
         """
         try:
             self._persist(settings.MINER_LAST_UPLOAD_PATH, {
@@ -521,6 +672,8 @@ class Miner(BaseMinerNeuron):
                 "expires_at": deadline,
                 "submitted": submitted,
                 "rows": rows,
+                "seeds": seeds,
+                "seed_source": seed_source,
             })
         except Exception as error:
             logger.warning(f"Could not record the upload target ({error})")

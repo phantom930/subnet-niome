@@ -66,6 +66,17 @@ MINER_LAST_UPLOAD_PATH = f"{MINER_DIR}/last_upload.json"
 MINER_OUTPUT_PATH = f"{MINER_DIR}/submission.json"
 MINER_GENOME_PATH = os.getenv("NIOME_GENOME_PATH", CHR11_PATH)
 
+# Round seeds the design should build against, supplied out of band. The backend stamps the real
+# seed only after the task is broadcast, so the contract a miner receives carries `seed: 0` and the
+# design has nothing to aim at — this file is how an operator supplies one anyway. Read fresh on
+# every task, so it can be edited without restarting the miner. Any of these parse:
+#
+#     {"seeds": [630, 765, 543]}      {"seeds": "630,765,543"}      [630, 765, 543]
+#
+# Absent, unreadable or empty means no seeds were supplied, and the miner draws its own — see
+# Miner._resolve_seeds, which is also where the odds of that are written down.
+MINER_SEEDS_PATH = os.getenv("NIOME_MINER_SEEDS_PATH", f"{MINER_DIR}/seeds.json")
+
 
 # ---- Timeout Values -----
 TASK_REQUEST_TIMEOUT = 60  # seconds

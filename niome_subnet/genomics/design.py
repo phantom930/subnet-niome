@@ -61,18 +61,141 @@ against the validator's own stage 4 rather than assumed:
    probability 0.95 against Cas12a's 0.87, so the optimum leans to roughly 30% Cas12a and pays for
    the coverage entropy that costs. Worth 8.8% over a coverage-only allocation.
 
-Note what is deliberately *not* here. Ranking guides by the share of ``SEED_SUPPORT`` they cut
-under looks like a third lever, and it was built and measured: with the evaluation seeds held out
-of the scanned support the cut rate came out at 0.9285 against 0.9295 for no selection at all. That
-is the expected result, not a surprise — every guide in a cell shares one feature vector and so one
-cut *probability*, and ``experiment_seed`` hashes the round seed in with the design, so a guide's
-outcomes under two seeds are independent draws. Inside the scanned support it did lift the mean
-score 2.9%, but only by +0.76 +/- 0.56 paired over 29 seeds, against 36 s of a 300 s upload window.
-It was removed rather than left switched off. Above accessibility ~0.72 ``energy`` clamps at 1.0 and
-Cas9 reaches its 0.99 cap at *any* GC, so the degeneracy costs nothing there — and the backend now
-issues K562 (0.77), HUDEP-2 (0.82) and CD34+_HSPC (0.87) alongside HEK293, roughly a quarter of
-tasks each. That is the first place to revisit, because it is the case where the trade above is free
-rather than paid for in ``gc_score``.
+3. The third lever is the ``0.7 * max(avg_r2, 0)`` term, which this file previously treated as
+   unreachable. It is reachable, and it does not have to be bought with ``gc_score`` at all.
+
+   ``consistency_factor`` does not pay for a high cut *rate*; it pays for a perfectly constant
+   ``is_cut`` column. A fold whose ``y_test`` never varies has zero total sum of squares, and
+   ``r2_score`` answers that 0/0 with 1.0 when the prediction is exact and 0.0 when it is not — so
+   the target is all-or-nothing. Measured at 250 rows, going from every row cutting to one row
+   failing takes the factor from **0.2394 to 0.1008**. That is the step the gc ~ 0.855 route above
+   is really buying, which is why the 0.4339 miner's ``total_weighted_score`` was only 16% below
+   this generator's instead of half: they were holding a constant ``is_cut``, not paying for it in
+   GC.
+
+   Ranking guides by the share of ``SEED_SUPPORT`` they cut under was built here once and correctly
+   measured as noise (0.9285 against 0.9295). The statistic was the wrong one. Selection that serves
+   an all-or-nothing target is not "the guides that cut most often" but "a set of guides that all cut
+   under the *same* seeds" — an intersection, not a ranking. The earlier experiment also held the
+   evaluation seeds out of the scanned support, which given that ``experiment_seed`` hashes the round
+   seed in with the row makes a null result arithmetic rather than evidence: outcomes under two seeds
+   are independent, so there is nothing to generalise to an unscanned seed.
+
+   What makes the lever real is that ``SEED_SUPPORT`` is enumerable. The stamped seed is one of its
+   900 members, so a design whose rows all cut under N of them holds the cliff with probability
+   N/900 — and that is a property the build can compute before uploading. ``select_for_diversity``
+   now maximises N by greedy intersection: on the reference task it goes from **1 seed to 215**,
+   which prices out at roughly +33% expected ``consistency_factor``. Above accessibility ~0.72
+   ``energy`` clamps at 1.0 and Cas9 sits at its 0.99 cap at *any* GC, so on K562 (0.77), HUDEP-2
+   (0.82) and CD34+_HSPC (0.87) — about three quarters of tasks — this costs nothing in
+   ``gc_score``. At HEK293's 0.35 the intersection is much harder to hold over 250 rows and the
+   scan finds far less of it, but it is not empty — measured 36 seeds of 900, worth +13.8%.
+
+   The scan then re-opens a decision the allocator had already made, which is the second half of
+   the lever. ``allocate_rows`` prices a cell's cut probability only through ``is_cut``'s
+   *normalised error*, a term that moves a few hundredths. The intersection is far more sensitive
+   to the same knob because it compounds once per row: a Cas12a row at 0.96 erodes the surviving
+   seed set four times faster than a Cas9 row at 0.99. So the mix that is right for the other three
+   factors is too Cas12a-heavy for this one, and ``retune_cas_mix`` re-prices it against the
+   measured intersection. It lands near 18 Cas12a rows of 250 against the allocator's 86-89, and
+   that is where most of the gain is: paired over 120 held-out seeds on K562, the scan alone takes
+   ``consistency_factor`` 0.110 -> 0.154 and the retune takes it to **0.244**, with ``final_score``
+   27.12 -> 37.72 -> **48.88**. It costs ``distribution_fidelity`` 0.920 -> 0.751, which is a large
+   and deliberate trade: coverage entropy enters the score at the 1/6 power, the intersection does
+   not.
+
+4. ``retune_cas_mix`` moves the whole submission's cas mix at once and asks one greedy intersection
+   to hold the seed set over every row simultaneously. There is a second, more effective shape of
+   the same idea (measured on ``origin/develop``'s ``all_cut.py``/``fastgreedy.py`` -- read via
+   ``git show origin/develop:...`` rather than vendored, since this repo has no prefetch loop, no
+   GPU, and every contract's mutation set is unique, so develop's disk-cached bank and ~900s
+   prepare budget do not transfer):
+
+     a. min-union a GROUP of weak-cas candidates (``min_union_select``) -- the complement of their
+        combined failures is a *clean set*, usually far smaller than the full seed support but far
+        easier to be strict over.
+     b. fill the strong-cas cells with candidates that are strict over that clean set (zero fails
+        within it, not over all of ``seed_support``) -- the relaxation that makes strictness
+        reachable at all.
+
+   The reachability of step b is what a naive port stalls on. Every guide substituted at one PAM
+   coordinate shares that coordinate's gc/distance/energy (``stage3.sequence_energy`` depends on
+   nothing else a substitution can move), so ``cut_probability`` is identical across them and
+   strictness over k clean seeds is close to an independent ``cut_probability**k`` per candidate --
+   pooling more *variants at the same coordinate* does not raise it. Measured directly: on
+   CD34+_HSPC, after a weak-cas min-union left 608 of 900 seeds clean, only 0-3 of 900 Cas9
+   candidates AT ONE COORDINATE were strict over that clean set, against the 82-93 needed. Only a
+   different coordinate moves ``distance_to_mutation`` and therefore energy's
+   ``0.6*exp(-d/1500)`` term enough to matter (0.990 vs 0.995 changes ``p**k`` by an order of
+   magnitude at k in the hundreds), which is why ``_widen_strong_cas_pool`` grows coordinate COUNT
+   for the strong-cas cells specifically rather than variants per coordinate -- the ordinary growth
+   loop in ``build`` already maximises the latter and stops once the total pool clears
+   ``rows_wanted``, far short of what step b needs.
+
+   ``two_stage_construction`` is gated behind ``Config.two_stage_enabled`` and a margin check
+   (``_TWO_STAGE_MIN_GAIN``) against whichever of the plain scan or ``retune_cas_mix`` already won,
+   using the same closed-form ``_predicted_objective`` both paths are scored by -- so turning it on
+   can only ever match or improve the shipped result, never regress it, and any exception during
+   the attempt falls back to the already-verified behaviour untouched.
+
+   Whether it *does* improve the result turned out to be a scan-width question, not an algorithm
+   one, and a real bug lived here: truncating the widened strong-cas pool by ``weighted_score``
+   alone (what the ordinary scan correctly does for a single-coordinate cell) collapsed a
+   57,600-candidate, 64-coordinate pool back onto its one or two nearest coordinates before
+   ``two_stage_construction`` ever saw it -- the exact single-cut-probability degeneracy the
+   widening exists to escape. Fixed by ``_round_robin_by_coordinate``
+   (``scan_cut_support(..., rank="coordinate_diverse")``), which orders the pool so a truncation to
+   any width still sees every coordinate before any coordinate sees a second candidate.
+
+   With that fixed, the remaining bottleneck is purely wall-clock: ``_widen_strong_cas_pool`` finds
+   the 57,600 candidates in seconds, but scanning enough of them to matter is not free. Measured on
+   CD34+_HSPC, rescan budget against outcome (see ``_TWO_STAGE_MIN_GAIN``'s own comment for the
+   table): 45s loses, 90s is barely positive but still below the gate, 180s clears it at objective
+   ratio 1.087. The construction can genuinely beat the shipped baseline, but only past a rescan
+   budget that leaves little of the 300s TTL for the upload once stacked on the ordinary scan's own
+   ~90s -- a build-time-vs-upload-margin trade this file does not make unilaterally.
+   ``Config.two_stage_seconds``/``Miner.TWO_STAGE_SHARE_OF_WINDOW`` are left conservative, so today
+   the gate reliably (and correctly) declines.
+
+5. Everything in 1-4 is a way of playing odds against a seed the design cannot see, and all of it is
+   conditional on that. A contract that *carries* its round seeds is a different problem, not a
+   better-informed version of the same one: stage 3 becomes readable, and the right move is to stop
+   estimating ``consistency_factor`` and take all of it.
+
+   ``pinned_outcome_build`` selects, per cell, only candidates that draw the *same*
+   ``(outcome, indel_length)`` under every one of the contract's seeds. That makes ``is_cut``,
+   ``is_hdr`` and ``indel_length`` all constant columns, which is the same 0/0 degeneracy point 3
+   describes — but applied to all three targets at once rather than to ``is_cut`` alone, so
+   ``consistency_score`` is ``(0.7*1.0 + 0.3*(1 - 0)) * 100`` = 100 and ``consistency_factor`` is
+   exactly **1.0**, not a fraction of it.
+
+   It is close to free. Every candidate in a cell shares that cell's coordinate, GC count and
+   off-target cleanliness, so they all carry an identical ``weighted_score`` and filtering to one
+   outcome cannot cost ``total_weighted_score`` anything — only a cell's remaining row supply, which
+   is what the objective check prices. Measured end to end through ``benchmark_submission`` on the
+   recorded task history, one task per cell type per seed count, seeds handed to both halves:
+
+       task      cell type    seeds          pinned outcome     rows     consistency   final
+       62cc85fb  HEK293 0.35  630,765,543    ('HDR', 0)         250/250     1.0000     301.46
+       8fbd60b7  HEK293 0.35  497            ('HDR', 0)         250/250     1.0000     260.76
+       7ac3ef3a  K562   0.77  752,452,560    ('HDR', 0)         250/250     1.0000     241.70
+       e0c604a4  K562   0.77  342            ('BLUNT_NHEJ', 1)  250/250     1.0000     246.44
+       f6686c85  HUDEP2 0.82  269,862,653    ('HDR', 0)         250/250     1.0000     355.50
+       e19e23f8  HUDEP2 0.82  477            ('HDR', 0)         250/250     1.0000     249.35
+       65df5469  CD34+  0.87  364,422,810    ('HDR', 0)         250/250     1.0000     249.06
+       8b7bbba1  CD34+  0.87  686            ('BLUNT_NHEJ', 1)  250/250     1.0000     251.35
+
+   Two of those pin to ``BLUNT_NHEJ`` rather than ``HDR``, which is why the target is not
+   pre-committed: every ``(outcome, indel_length)`` that can occupy all eight cells is priced and the
+   best one wins. Accessibility barely matters — it moves which outcomes are *common*, not whether
+   one can be held, because the guides at a coordinate differ in their stage-3 draw and nothing else.
+
+   This does not change what a live round does. The backend stamps the seed *after* the broadcast,
+   so a production contract arrives with ``seed: 0``, ``Context.seeds()`` is empty and the whole
+   construction is skipped — points 1-4 are still what ships. It is reached only by a contract that
+   carries seeds, and ``Config.pin_outcomes`` turns it off. Where it does apply it also *replaces*
+   the 90 s cut-support scan rather than adding to it (0.4 s total build against ~90 s), because a
+   scan can only improve the odds of a factor this already holds outright.
 
 Every formula below is imported from the validation stages rather than reimplemented, so the
 generator cannot drift from the pipeline that judges it. On the reference contract the result scores
@@ -83,12 +206,18 @@ generator cannot drift from the pipeline that judges it. On the reference contra
 from __future__ import annotations
 
 import itertools
+import json
 import logging
 import math
+import random
+import time
 
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
+
+import numpy as np
 
 import niome_subnet.utils.settings as settings
 
@@ -110,7 +239,8 @@ _AT_BASES = ("A", "T")
 # Stage 3's seed is stamped by the backend after the task is broadcast, so a miner only ever sees
 # ``seed: 0`` and cannot design against the real one. The observed seeds are three digits, so this
 # is the support a seed is drawn from — the population the design is built to hold up across,
-# rather than any one lucky draw. Nothing here reads it; it is the range an offline scorer samples.
+# rather than any one lucky draw. It is small enough to enumerate, which is the whole basis of the
+# cut-support selection in ``select_for_diversity``: the stamped seed is one of these 900.
 SEED_SUPPORT = tuple(range(100, 1000))
 
 # Typical normalised MAE for the two targets no seed-blind design can predict, measured over ten
@@ -141,6 +271,46 @@ class Config:
     guides_per_coordinate: int = 900
     # Row cap override; None follows the contract's rules.max_experiments.
     row_cap: int | None = None
+    # Seeds the cut-support scan intersects over. Every member is a seed the backend could stamp,
+    # and selection cannot generalise beyond what is scanned, so narrowing this only narrows the
+    # set of rounds the design holds a constant ``is_cut`` on. Empty disables the scan entirely.
+    seed_support: tuple[int, ...] = SEED_SUPPORT
+    # Use ``pinned_outcome_build`` when the contract hands the design the round seeds it will be
+    # scored under. Everything ``seed_support`` above exists for is a way of playing odds against a
+    # seed the miner cannot see; a contract that carries its seeds makes stage 3 readable instead,
+    # and ``consistency_factor`` goes from a fraction to exactly 1.0. Off falls back to the
+    # seed-blind path unmodified, which is also what an unstamped contract (``seed: 0``) gets.
+    pin_outcomes: bool = True
+    # Where ``read_seed_file`` looks for seeds when the contract carries none. None means
+    # ``settings.MINER_SEEDS_PATH``; point it at a missing file to build seed-blind regardless of
+    # what is on disk.
+    seeds_path: str | None = None
+    # Wall-clock ceiling for growing the candidate pool so a pin over many seeds can still fill
+    # every row (see ``pin_with_widening``). Each 4x step costs one more ``_build_pools`` pass:
+    # measured ~6s at 16 coordinates/cell and ~25s at 64, against a 300s upload window. Spent only
+    # when the pin cannot already fill the submission, so at the 1-3 seeds a live round actually
+    # issues this is never reached. Zero disables widening.
+    pin_widen_seconds: float = 60.0
+    # Candidates per cell the scan prices. More is monotonically better and monotonically slower —
+    # measured 100/200/300/450/600/900 -> 66/123/162/184/199/215 seeds held on the reference task —
+    # so this is capped by ``seed_scan_seconds`` below rather than tuned.
+    seed_scan_candidates_per_cell: int = 900
+    # Wall-clock ceiling for the scan. The upload window is 300 s (``SUBMISSION_TIMEOUT``) and the
+    # rest of the build is under a second with chr11 prewarmed, but the scan is ~900 Mersenne
+    # seedings per candidate and how fast that runs is a property of the host. The width is priced
+    # against a live sample rather than assumed, so a slow box scans narrower instead of missing
+    # the window.
+    seed_scan_seconds: float = 90.0
+    # Try ``two_stage_construction`` (see the module docstring's coordinate-diversity note) and
+    # take it over ``retune_cas_mix`` only when it predicts a clearly better score. Off falls back
+    # to exactly today's shipped scan-and-retune behaviour, unmodified -- the A/B knob a caller
+    # flips to compare the two.
+    two_stage_enabled: bool = True
+    # Wall-clock ceiling for widening the strong-cas coordinate pool (see
+    # ``_widen_strong_cas_pool``). Separate from ``seed_scan_seconds`` because it is spent before
+    # any scanning happens and on a different cost (stage 1/2 gating of new coordinates, not
+    # Mersenne seedings), so the two cannot share one budget without one starving the other.
+    two_stage_seconds: float = 45.0
 
 
 @dataclass
@@ -189,22 +359,288 @@ class Context:
         return float(self.contract.get("mutation_weights", {}).get(mutation, 1.0))
 
     def seeds(self) -> list[int]:
-        """The round seeds in the contract, or [] when it is unstamped.
+        """The round seeds in the contract, or [] when it is unstamped."""
+        return parse_seeds(self.contract)
 
-        ``benchmark_submission`` reads this as a comma-joined string, so a multi-seed round averages
-        several draws. A stamped contract is scored exactly; an unstamped one (``seed: 0``) has
-        nothing to score against and falls back to ``Config.seed_support``.
-        """
-        raw_seed_field = self.contract.get("seed")
+
+def parse_seeds(contract: dict) -> list[int]:
+    """The round seeds in a contract, or ``[]`` when it is unstamped.
+
+    ``benchmark_submission`` reads the field as a comma-joined string, so a multi-seed round
+    averages several draws. A stamped contract is scored exactly; an unstamped one (``seed: 0``)
+    has nothing to score against and falls back to ``Config.seed_support``.
+
+    Module level rather than only a ``Context`` method because a caller that has a contract but no
+    genome — the miner, deciding what to stamp before it builds anything — needs the same answer,
+    and must not get it from a second parser that could disagree with this one.
+    """
+    raw_seed_field = contract.get("seed")
+    try:
+        parsed_seeds = [
+            int(seed_text) for seed_text in str(raw_seed_field).split(",") if seed_text.strip()
+        ]
+    except (TypeError, ValueError):
+        return []
+    # A zero is the backend's placeholder for "not stamped yet", not a usable round seed.
+    return [seed for seed in parsed_seeds if seed]
+
+
+def read_seed_file(path: str | None = None) -> tuple[list[int], bool]:
+    """Round seeds supplied out of band, and whether the file is switched on.
+
+    Returns ``(seeds, enabled)``. ``enabled`` is the file's ``"enabled"`` flag, defaulting to True
+    when absent — a file that exists without saying otherwise is meant to be used. It is reported
+    separately from the seeds rather than folded into them because "switched off" and "no seeds
+    listed" are different instructions: the first means mine seed-blind, the second leaves the
+    miner free to draw one. Collapsing them would make the off switch turn the pin *on*, aimed at
+    a random seed.
+
+    Lives here rather than on the miner because the miner is not the only thing that builds: any
+    harness driving ``build`` goes through this module and no other, so a seed source attached to
+    the neuron is one the rest of the system silently ignores. Read fresh on every call, so the
+    file can be edited without restarting a long-lived miner.
+
+    Absent is the normal case and not worth a warning; malformed is worth one, because the
+    difference between "no file" and "a file I could not read" is the difference between a
+    deliberate fallback and a typo that quietly costs the round its pin.
+    """
+    path = path or settings.MINER_SEEDS_PATH
+    if not Path(path).exists():
+        return [], True
+    try:
+        with open(path) as seeds_file:
+            document = json.load(seeds_file)
+    except Exception as error:
+        logger.warning(f"Could not read {path} ({error}); continuing with no supplied seeds")
+        return [], True
+
+    enabled = bool(document.get("enabled", True)) if isinstance(document, dict) else True
+    if not enabled:
+        return [], False
+
+    raw = document.get("seeds") if isinstance(document, dict) else document
+    if raw is None:
+        return [], True
+    # A list of numbers, or the contract's own comma-joined string. Zero is the backend's
+    # "not stamped yet" placeholder rather than a seed, so it is dropped either way.
+    values = raw if isinstance(raw, list) else str(raw).split(",")
+    seeds = []
+    for value in values:
         try:
-            parsed_seeds = [
-                int(seed_text) for seed_text in str(raw_seed_field).split(",")
-                if seed_text.strip()
-            ]
+            seed = int(str(value).strip())
         except (TypeError, ValueError):
-            return []
-        # A zero is the backend's placeholder for "not stamped yet", not a usable round seed.
-        return [seed for seed in parsed_seeds if seed]
+            logger.warning(f"Ignoring unparseable seed {value!r} in {path}")
+            continue
+        if seed:
+            seeds.append(seed)
+    outside = [seed for seed in seeds if seed not in SEED_SUPPORT]
+    if outside:
+        # Not an error — a validator scores under whatever it was given, and the design is built
+        # for exactly the seeds named here. But every seed observed from the backend has been three
+        # digits, so this is nearly always a typo, and a typo costs the whole round its pin.
+        logger.warning(
+            f"Seeds {outside} in {path} are outside the observed support "
+            f"{SEED_SUPPORT[0]}-{SEED_SUPPORT[-1]}; building against them anyway"
+        )
+    return seeds, True
+
+
+def read_seed_count_override(path: str | None = None) -> int | None:
+    """``seeds.json``'s ``"seed_count"``, or None when it does not set one.
+
+    Zero is meaningful and is the reason this is separate from the seed list: it says "bet on no
+    seeds", i.e. mine seed-blind, which is not the same as listing none. Returned as None when
+    absent so the caller's measured per-cell-type default stands.
+    """
+    path = path or settings.MINER_SEEDS_PATH
+    if not Path(path).exists():
+        return None
+    try:
+        with open(path) as seeds_file:
+            document = json.load(seeds_file)
+    except Exception:
+        return None  # read_seed_file already warned about this file
+    if not isinstance(document, dict) or "seed_count" not in document:
+        return None
+    try:
+        return max(0, int(document["seed_count"]))
+    except (TypeError, ValueError):
+        logger.warning(f"Ignoring unparseable seed_count {document['seed_count']!r} in {path}")
+        return None
+
+
+# How many seeds to bet on, by cell type — the largest count that still fills all 250 rows at
+# consistency_factor 1.0 inside the build budget. It is a property of the cell type because
+# accessibility sets stage 3's energy, which sets how often a guide draws the pinned outcome: a
+# candidate survives only if it draws that outcome under *every* seed, so a cell's usable capacity
+# falls like ``pool * p**k`` while the 250 rows needed stay flat.
+#
+# Measured at 64 coordinates/cell (57,600 candidates), the widest pool ``pin_with_widening`` grows
+# to, with ``('HDR', 0)`` the winning target at every k on every cell type:
+#
+#     cell type    accessibility   k filling 250   first k that falls short
+#     HEK293           0.35              8          9 -> 213 rows, 10 -> pin fails
+#     K562             0.77             11         12 -> 185 rows
+#     HUDEP-2          0.82             11         12 -> 167 rows
+#     CD34+_HSPC       0.87             11         12 -> 185 rows
+SEEDS_BY_CELL_TYPE = {
+    "HEK293": 8,
+    "K562": 11,
+    "HUDEP-2": 11,
+    "CD34+_HSPC": 11,
+}
+# For a cell type the table does not name — a new one the backend starts issuing. The lowest
+# measured value, since an unknown type may be less accessible than any of these. Overshooting is
+# recoverable rather than fatal (``pin_with_widening`` drops seeds until the rows fit) but costs
+# build time, so re-measure and add the row rather than leaning on this.
+FALLBACK_SEED_COUNT = 8
+
+
+def seed_count_for(contract: dict, seeds_path: str | None = None) -> int:
+    """How many seeds to bet on for this contract. ``seed_count`` in the file overrides the table."""
+    override = read_seed_count_override(seeds_path)
+    if override is not None:
+        return override
+    cell_type = contract.get("cell_type")
+    count = SEEDS_BY_CELL_TYPE.get(cell_type)
+    if count is None:
+        logger.warning(
+            "No measured seed count for cell type %r; using the conservative fallback of %d. "
+            "Re-measure and add it to design.SEEDS_BY_CELL_TYPE.", cell_type, FALLBACK_SEED_COUNT,
+        )
+        return FALLBACK_SEED_COUNT
+    return count
+
+
+def plan_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int], str]:
+    """Which seeds to bet on this round, in priority order, recording the choice.
+
+    Lives here rather than on the miner for the reason ``read_seed_file`` does: the neuron is not
+    the only thing that builds. A planner attached to it is skipped by every harness that drives
+    ``build`` directly, which is both a silently different design and — since this is what writes
+    ``last_generated`` — a record that never appears.
+
+    The count comes from the cell type (``seed_count_for``). The set is then assembled
+    **highest-conviction first**, because ``pin_with_widening`` drops from the end when even the
+    widest pool cannot fill the submission:
+
+    1. the seeds listed in ``seeds.json`` when it is ``"enabled": true`` — an operator who lists
+       seeds is asserting something the build cannot work out for itself, so they go first and are
+       never given up in favour of a random draw;
+    2. random seeds from ``SEED_SUPPORT`` to make up the count.
+
+    ``"enabled": false`` means "ignore the listed seeds", not "do not pin": the round still bets,
+    just on its own draws. ``"seed_count": 0`` is the off switch, and so is
+    ``Config.pin_outcomes = False``.
+    """
+    count = seed_count_for(contract, seeds_path)
+    if count <= 0:
+        logger.info("Seed count is 0 for this contract — building seed-blind")
+        return [], "seed-blind"
+
+    listed, enabled = read_seed_file(seeds_path)
+    # dict.fromkeys dedupes while keeping the operator's ordering, which is their priority.
+    chosen = list(dict.fromkeys(listed)) if enabled else []
+    if listed and not enabled:
+        logger.info(
+            '%s has "enabled": false — ignoring its %d listed seed(s) and drawing all %d',
+            seeds_path or settings.MINER_SEEDS_PATH, len(listed), count,
+        )
+    if len(chosen) > count:
+        # Never truncate: a listed seed may be real knowledge, worth more than the rows it might
+        # cost. The build drops from the end only if it genuinely cannot fit them.
+        logger.warning(
+            "%s lists %d seeds, more than the %d this cell type can hold at 250 rows — keeping "
+            "them all; the build will drop the lowest-priority ones if it must",
+            seeds_path or settings.MINER_SEEDS_PATH, len(chosen), count,
+        )
+    elif len(chosen) < count:
+        remaining = [seed for seed in SEED_SUPPORT if seed not in set(chosen)]
+        chosen += random.sample(remaining, count - len(chosen))
+
+    source = "file+drawn" if (enabled and listed) else "drawn"
+    logger.info(
+        "Betting on %d seed(s) for %s (%s): %s",
+        len(chosen), contract.get("cell_type"), source, chosen,
+    )
+    record_generated_seeds(contract, chosen, source, seeds_path)
+    return chosen, source
+
+
+def record_generated_seeds(
+    contract: dict, seeds: list[int], source: str, seeds_path: str | None = None
+) -> None:
+    """Note the seeds this round drew, into ``seeds.json``'s ``last_generated``.
+
+    A record, never an input: ``read_seed_file`` reads ``seeds`` and nothing else, so what is
+    written here cannot feed back into the next round's plan. That separation is the point — a
+    drawn set written into ``seeds`` would silently become permanent priority seeds next task.
+
+    Read-modify-write so an operator's ``seeds``, ``enabled``, ``seed_count`` and notes survive,
+    and best-effort throughout: losing the record must never cost the round.
+    """
+    path = seeds_path or settings.MINER_SEEDS_PATH
+    try:
+        document = {}
+        if Path(path).exists():
+            with open(path) as seeds_file:
+                loaded = json.load(seeds_file)
+            if not isinstance(loaded, dict):
+                # A bare list is a valid seeds file but has nowhere to hold a record, and
+                # rewriting it as an object would change what the operator wrote.
+                return
+            document = loaded
+        document["last_generated"] = {
+            "seeds": seeds,
+            "source": source,
+            "cell_type": contract.get("cell_type"),
+            "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        }
+        # Indented and atomic: this file is edited by hand, so it has to stay readable, and a task
+        # arriving mid-write must not leave half a document where the seeds live.
+        temporary_path = f"{path}.tmp"
+        Path(temporary_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(temporary_path, "w") as output_file:
+            json.dump(document, output_file, indent=2)
+            output_file.write("\n")
+        Path(temporary_path).replace(path)
+    except Exception as error:
+        logger.warning(f"Could not record the generated seeds in {path} ({error})")
+
+
+def draw_seeds(count: int = 1) -> list[int]:
+    """``count`` seeds drawn from ``SEED_SUPPORT`` — a guess at what the backend will stamp.
+
+    Right with probability ``count/900`` per seed. What a wrong guess costs is measured in
+    ``Miner._resolve_seeds``: less than it sounds, because a submission pinned to the wrong seed
+    still has its ``total_weighted_score`` and coverage intact.
+    """
+    return random.sample(SEED_SUPPORT, min(count, len(SEED_SUPPORT)))
+
+
+def resolve_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int], str]:
+    """The seeds to build against, and where they came from.
+
+    The provenance is ``"contract"`` when the backend stamped them, otherwise whatever
+    ``plan_seeds`` decided — ``"file+drawn"``, ``"drawn"``, or ``"seed-blind"`` when the count is 0.
+
+    Contract first: if the backend ever broadcasts a stamped contract that is ground truth, and no
+    local file should be able to override it (the file governs what to *guess*, not what is known).
+    Today it never does, so in practice the plan decides.
+
+    Note this draws random seeds, so two builds of the same unstamped contract are not identical.
+    That is deliberate — it is what a live round does — and ``last_generated`` in the seed file
+    records which seeds any given build actually used. Pin a benchmark by listing the seeds
+    explicitly, or turn the whole thing off with ``"seed_count": 0``.
+    """
+    contract_seeds = parse_seeds(contract)
+    if contract_seeds:
+        return contract_seeds, "contract"
+    # No seeds on the contract, so this round plans its own: the cell type's count, the operator's
+    # listed seeds first, random draws for the rest. ``plan_seeds`` also writes ``last_generated``,
+    # which is why planning must happen here rather than only on the neuron — a harness driving
+    # ``build`` directly would otherwise both bet differently and leave no record of what it bet on.
+    return plan_seeds(contract, seeds_path)
 
 
 @dataclass(frozen=True)
@@ -598,14 +1034,160 @@ def gate_and_score(row: dict, context: Context) -> dict | None:
 # from what the others rejected.
 # ---------------------------------------------------------------------------------------------
 
-def select_for_diversity(
-    pools: dict[tuple, list[dict]], rows_per_cell: dict[tuple, int]
-) -> list[dict]:
-    """Fill each cell's allocation with the guides that repeat the fewest 12-mers.
+def cut_support_mask(entry: dict, seeds: tuple[int, ...], stream: random.Random) -> int:
+    """Bitmask over ``seeds`` of the rounds in which this row cuts.
 
-    The greedy step is exact for the marginal cost it is minimising: adding a guide raises the
-    pool's entropy least where its windows are already common, so picking the candidate with the
-    lowest summed window census is the locally optimal move at every step.
+    ``stage3.simulate`` draws the microhomology trigger *before* the cut, so the cut is the second
+    draw from the row's stream. The order is reproduced rather than approximated — reading the
+    first draw would score a different guide — and the seed and the probability come from stage 3
+    itself, so this cannot drift from the simulation it is predicting.
+
+    ``stream`` is reseeded rather than reallocated because the scan does this ~900 times per
+    candidate and the Mersenne seeding is the whole cost.
+    """
+    experiment = entry["experiment"]
+    energy = stage3.sequence_energy(stage3.extract_features(entry))
+    cut_probability = stage3.cut_probability(experiment["cas_system"], energy)
+    mask = 0
+    for bit, seed in enumerate(seeds):
+        stream.seed(stage3.experiment_seed(seed, experiment))
+        stream.random()  # microhomology_trigger consumes the first draw
+        if stream.random() <= cut_probability:
+            mask |= 1 << bit
+    return mask
+
+
+def _round_robin_by_coordinate(pool: list[dict]) -> list[dict]:
+    """``pool`` reordered so a truncation to any width keeps a spread of coordinates.
+
+    ``_widen_strong_cas_pool`` grows coordinate COUNT specifically so the strong-cas cells span a
+    range of ``cut_probability`` — different coordinates carry different ``distance_to_mutation``
+    and therefore different energy. Ranking by ``weighted_score`` alone (what the ordinary,
+    single-coordinate scan below does) throws that away: every substitution variant at the nearest
+    coordinate has a higher ``dist_score`` than every variant at a farther one, so a plain top-N
+    truncation collapses a 64-coordinate pool back onto whichever one or two coordinates are
+    closest — exactly the single-cut-probability degeneracy the widening exists to escape. Measured
+    on CD34+_HSPC: truncating the widened pool by weighted_score alone left ``two_stage_construction``
+    holding *fewer* seeds (217) than the plain retune it was meant to beat (397). Round-robining
+    across coordinates, strongest guide first within each, keeps the spread through the truncation.
+    """
+    by_coordinate: dict[int, list[dict]] = {}
+    for entry in pool:
+        by_coordinate.setdefault(entry["experiment"]["target_alignment_start"], []).append(entry)
+    for entries in by_coordinate.values():
+        entries.sort(key=lambda entry: -entry["stage2"]["weighted_score"])
+    # Coordinates ordered by their own best candidate, so if the eventual width can't cover every
+    # coordinate once, the strongest coordinates are still the ones represented.
+    ordered_coordinates = sorted(
+        by_coordinate.values(), key=lambda entries: -entries[0]["stage2"]["weighted_score"]
+    )
+    result: list[dict] = []
+    round_index = 0
+    while len(result) < len(pool):
+        progressed = False
+        for entries in ordered_coordinates:
+            if round_index < len(entries):
+                result.append(entries[round_index])
+                progressed = True
+        if not progressed:
+            break
+        round_index += 1
+    return result
+
+
+def scan_cut_support(
+    pools: dict[tuple, list[dict]], rows_per_cell: dict[tuple, int],
+    seeds: tuple[int, ...], candidates_per_cell: int, budget_seconds: float,
+    rank: bool | str = "weighted_score",
+) -> tuple[dict[tuple, list[dict]], dict[tuple, list[int]]]:
+    """Cut masks for the strongest candidates in each cell, priced against a wall-clock budget.
+
+    Returns the pools truncated to what was actually scanned, alongside the masks, so the two stay
+    index-aligned for ``select_for_diversity``. A cell is never truncated below its own allocation:
+    an unscanned candidate is still a usable row, but a cell that cannot fill its rows would cost a
+    coverage-entropy cliff worth far more than the intersection.
+
+    ``rank`` selects how a cell's pool is ordered before truncation. ``"weighted_score"`` (the
+    default, and what every ordinary scan uses) ranks purely by row value, which is correct where a
+    cell sits at one coordinate. ``"coordinate_diverse"`` round-robins across coordinates first —
+    see ``_round_robin_by_coordinate`` — for the one caller (the two-stage construction's widened
+    strong-cas rescan) where the pool spans many coordinates on purpose and a value-only ranking
+    would erase that.
+    """
+    if not seeds or candidates_per_cell <= 0 or not pools:
+        return pools, {}
+
+    # Rank by what a row is worth before truncating, so the candidates dropped for scan width are
+    # the ones the k-mer pass would have reached for last anyway -- unless the caller has already
+    # spent a wall-clock budget building coordinate spread into the pool, in which case truncating
+    # by value alone would spend that budget for nothing.
+    if rank == "coordinate_diverse":
+        ranked = {cell: _round_robin_by_coordinate(pool) for cell, pool in pools.items()}
+    else:
+        ranked = {
+            cell: sorted(pool, key=lambda entry: -entry["stage2"]["weighted_score"])
+            for cell, pool in pools.items()
+        }
+    stream = random.Random()
+    # ``build`` only ever passes cells that produced candidates, but the width below is priced off
+    # a real candidate, so the probe has to find one rather than assume the first cell has one.
+    first_cell = next((cell for cell, pool in ranked.items() if pool), None)
+    if first_cell is None:
+        return pools, {}
+    started = time.monotonic()
+    first_mask = cut_support_mask(ranked[first_cell][0], seeds, stream)
+    seconds_per_candidate = max(time.monotonic() - started, 1e-9)
+
+    affordable = int(budget_seconds / (seconds_per_candidate * len(ranked)))
+    width = max(1, min(candidates_per_cell, affordable))
+
+    scanned: dict[tuple, list[dict]] = {}
+    masks: dict[tuple, list[int]] = {}
+    for cell, pool in ranked.items():
+        cell_width = min(len(pool), max(width, rows_per_cell.get(cell, 0)))
+        scanned[cell] = pool[:cell_width]
+        cell_masks = [first_mask] if cell == first_cell else []
+        for entry in scanned[cell][len(cell_masks):]:
+            cell_masks.append(cut_support_mask(entry, seeds, stream))
+        masks[cell] = cell_masks
+    return scanned, masks
+
+
+def select_for_diversity(
+    pools: dict[tuple, list[dict]], rows_per_cell: dict[tuple, int],
+    cut_masks: dict[tuple, list[int]] | None = None, seed_count: int = 0,
+) -> tuple[list[dict], int]:
+    """Fill each cell's allocation, holding the round seeds on which *every* row cuts.
+
+    Two objectives, in strict priority order.
+
+    The first is ``consistency_factor``'s cliff. Stage 4 scores ``is_cut`` with ``r2_score``, and a
+    fold whose ``y_test`` never varies has zero total sum of squares — sklearn answers that 0/0 with
+    1.0 when the prediction is exact and 0.0 when it is not. So a submission in which every row cuts
+    scores r2 1.0 on that target and one in which a single row fails scores ~0: 0.2394 against
+    0.1008, measured at 250 rows. A Cas9 row cuts with probability 0.99 even at fully open
+    chromatin and a Cas12a row with 0.96, so a design that ignores this holds the cliff on almost
+    no rounds at all — on the reference task the k-mer pass alone held it on 1 seed out of 900.
+
+    The stamped seed is not visible at build time, but it is drawn from ``SEED_SUPPORT``, so every
+    seed it could be is enumerable. Guides chosen to cut under the *same* subset of that support
+    hold the cliff across the whole subset, and the stamped seed lands inside it with probability
+    ``|subset| / |SEED_SUPPORT|``. Note this is an intersection, not a ranking: a guide's outcomes
+    under two seeds are independent draws (``experiment_seed`` hashes the seed in with the row), so
+    ranking guides by their overall cut rate is noise and nothing here generalises to an unscanned
+    seed.
+
+    The greedy is adaptive rather than aimed at a subset fixed up front, which is what makes it
+    work: taking the candidate that keeps the most of the *currently* surviving set is a maximum
+    over the whole pool at every step, so the set decays far more slowly than any pre-committed
+    target could be satisfied. Measured 215 of 900 seeds held against a pre-committed target's ~89.
+
+    The k-mer objective is the tiebreak and costs almost nothing, because once the surviving set is
+    small enough many candidates preserve it exactly and the choice among those is free. It is exact
+    for the marginal cost it minimises: adding a guide raises the pool's entropy least where its
+    windows are already common, so the lowest summed window census is the locally optimal move.
+
+    Returns the chosen entries and the number of seeds on which all of them cut (0 when no scan ran).
     """
     # Candidates are held as (windows, entry) pairs indexed per cell, and consumed by index. A
     # dict is not hashable and compares by value, so neither a set membership test nor list.remove
@@ -618,34 +1200,162 @@ def select_for_diversity(
     window_census: Counter = Counter()
     rows_left = {cell: rows_per_cell.get(cell, 0) for cell in pools}
     chosen_entries: list[dict] = []
+    # Every scanned seed starts alive and each pick can only clear bits, so this is the set of
+    # rounds on which every row chosen so far cuts.
+    surviving = (1 << seed_count) - 1 if cut_masks and seed_count else 0
 
     while any(count > 0 for count in rows_left.values()):
         progressed = False
         for cell, cell_candidates in candidates_by_cell.items():
             if rows_left[cell] <= 0 or len(used_indices[cell]) >= len(cell_candidates):
                 continue
+            cell_masks = cut_masks.get(cell) if cut_masks else None
+
+            def rank(candidate_index: int, cell_masks=cell_masks) -> tuple:
+                windows, entry = cell_candidates[candidate_index]
+                census = sum(window_census[window] for window in windows)
+                weighted_score = entry["stage2"]["weighted_score"]
+                if cell_masks is None or candidate_index >= len(cell_masks):
+                    return (0, census, -weighted_score)
+                # Negated so that keeping the most seeds alive sorts first under ``min``.
+                return (-(surviving & cell_masks[candidate_index]).bit_count(),
+                        census, -weighted_score)
+
             best_index = min(
                 (
                     candidate_index for candidate_index in range(len(cell_candidates))
                     if candidate_index not in used_indices[cell]
                 ),
-                key=lambda candidate_index: (
-                    sum(
-                        window_census[window]
-                        for window in cell_candidates[candidate_index][0]
-                    ),
-                    -cell_candidates[candidate_index][1]["stage2"]["weighted_score"],
-                ),
+                key=rank,
             )
             used_indices[cell].add(best_index)
             for window in cell_candidates[best_index][0]:
                 window_census[window] += 1
+            if cell_masks is not None and best_index < len(cell_masks):
+                surviving &= cell_masks[best_index]
             chosen_entries.append(cell_candidates[best_index][1])
             rows_left[cell] -= 1
             progressed = True
         if not progressed:
             break
-    return chosen_entries
+    return chosen_entries, surviving.bit_count()
+
+
+# ---------------------------------------------------------------------------------------------
+# Min-union selection — the weak-cas half of the two-stage construction
+#
+# ``select_for_diversity`` greedily keeps the most of whatever seed set currently survives, which
+# is the right objective when every cell has to hold the same intersection. The two-stage
+# construction (see ``two_stage_construction``) asks a narrower question of one cas system only:
+# out of a bank of candidates, which small group's *combined* failures cover the fewest seeds? That
+# is min-set-cover's greedy relative, min-union, and it needs its own selector because the
+# objective is the union's size, not the surviving intersection of a fixed pool.
+#
+# Ported from develop's ``fastgreedy.FastGreedy.build`` (see the module the task description
+# points at), adapted to this repo's bitmask representation and made CPU-only — this repo has no
+# GPU and must not depend on one, so the ``cupy`` fallback there does not apply here.
+# ---------------------------------------------------------------------------------------------
+
+def _fail_indices(mask: int, seed_count: int) -> np.ndarray:
+    """The seed indices a cut-support mask does NOT set — fastgreedy's 'fails' list.
+
+    Reads the same bitmask ``cut_support_mask`` already builds rather than rescanning: unpacked
+    through bytes so the one-time int-to-array conversion (there are as many of these as
+    candidates, not as many as greedy steps) is bulk numpy rather than a 900-iteration Python loop
+    per candidate.
+    """
+    n_bytes = (seed_count + 7) // 8
+    packed = np.frombuffer(mask.to_bytes(n_bytes, "little"), dtype=np.uint8)
+    cuts = np.unpackbits(packed, bitorder="little", count=seed_count).astype(bool)
+    return np.flatnonzero(~cuts)
+
+
+def min_union_select(
+    masks: list[int], cell_of: list, seed_count: int, group_size: int,
+    cell_floor: dict, cell_cap: dict | None = None,
+) -> tuple[list[int], int]:
+    """Greedy min-union group: the ``group_size`` candidates whose combined failures cover the
+    fewest seeds, subject to per-cell floors (and optional caps).
+
+    At each step every remaining candidate's marginal cost — how many *currently uncovered* seeds
+    its own failures would newly cover — is computed for the whole bank at once as
+    ``uncovered[idx].sum(axis=1)``, a vectorised gather-sum, rather than one popcount per candidate
+    per step; ``idx`` pads each candidate's fail list out to the bank's longest one with a sentinel
+    column pointed at an always-covered slot, so padding never contributes to the cost. ``argmin``
+    keeps the *first* minimum on a tie, reproducing what a sequential Python scan (as
+    ``seed_agnostic.min_union_group`` does) would keep.
+
+    ``cell_floor`` guarantees at least that many picks land in a cell before any cell may exceed
+    its floor — the coverage-entropy floor every other selector in this file also enforces, so a
+    narrow bank cannot empty a stage-5 cell. ``cell_cap`` optionally bounds a cell once its floor is
+    met, which is how the caller pins the group's cell shape to a target split (``_shifted_toward``)
+    instead of letting it drift wherever the union happens to be cheapest.
+
+    Returns the chosen indices (into ``masks``/``cell_of``) and the group's *clean set* as a
+    bitmask in ``cut_support_mask``'s one-bit-per-seed format — the complement of the union of
+    every chosen candidate's failures. This falls out of the algorithm for free: it is exactly the
+    ``uncovered`` state left once every chosen candidate's fail bits have been cleared.
+    """
+    n = len(masks)
+    if seed_count <= 0:
+        return [], 0
+    if n == 0 or group_size <= 0:
+        return [], (1 << seed_count) - 1  # nothing chosen -> nothing failed -> everything clean
+
+    fail_lists = [_fail_indices(mask, seed_count) for mask in masks]
+    max_fail = max((len(fails) for fails in fail_lists), default=0)
+    idx = np.full((n, max(max_fail, 1)), seed_count, dtype=np.int32)  # sentinel column = seed_count
+    for row, fails in enumerate(fail_lists):
+        if len(fails):
+            idx[row, :len(fails)] = fails
+
+    cells = sorted(set(cell_of))
+    cell_index = {cell: position for position, cell in enumerate(cells)}
+    cell_id = np.asarray([cell_index[cell] for cell in cell_of], dtype=np.int32)
+    floor_by_id = {
+        cell_index[cell]: min(value, sum(1 for candidate_cell in cell_of if candidate_cell == cell))
+        for cell, value in cell_floor.items() if cell in cell_index
+    }
+    cap_by_id = None
+    if cell_cap:
+        cap_by_id = {
+            cell_index[cell]: value for cell, value in cell_cap.items() if cell in cell_index
+        }
+
+    uncovered = np.ones(seed_count + 1, dtype=bool)
+    uncovered[seed_count] = False  # the sentinel: padding costs nothing
+
+    chosen: list[int] = []
+    taken = np.zeros(n, dtype=bool)
+    cell_count: Counter = Counter()
+    BIG = np.int64(1 << 30)
+
+    for _ in range(min(group_size, n)):
+        slots_left = group_size - len(chosen)
+        unmet = sum(max(0, floor_by_id.get(cid, 0) - cell_count[cid]) for cid in floor_by_id)
+        cost = uncovered[idx].sum(axis=1).astype(np.int64)
+        cost = np.where(taken, BIG, cost)
+        if slots_left <= unmet:
+            # No slack left: every remaining pick must land in a cell still below its floor.
+            need = {cid for cid in floor_by_id if cell_count[cid] < floor_by_id[cid]}
+            if not need:
+                break
+            cost = np.where(np.isin(cell_id, list(need)), cost, BIG)
+        if cap_by_id is not None:
+            full = [cid for cid, cap in cap_by_id.items() if cell_count[cid] >= cap]
+            if full:
+                cost = np.where(np.isin(cell_id, full), BIG, cost)
+        if bool((cost >= BIG).all()):
+            break
+        pick = int(np.argmin(cost))  # first minimum, matching a sequential scan's tie behaviour
+        chosen.append(pick)
+        taken[pick] = True
+        cell_count[int(cell_id[pick])] += 1
+        uncovered[idx[pick]] = False
+
+    packed_clean = np.packbits(uncovered[:seed_count].astype(np.uint8), bitorder="little")
+    clean_mask = int.from_bytes(packed_clean.tobytes(), "little")
+    return chosen, clean_mask
 
 
 # ---------------------------------------------------------------------------------------------
@@ -699,15 +1409,25 @@ def _consistency_estimate(
     return max(0.0, 0.3 * (1 - avg_nmae))
 
 
-def _allocation_objective(
-    rows_per_cell: dict[tuple, int], value_per_row: dict[tuple, float], context: Context,
-    cut_probability_by_cell: dict[tuple, float],
-    mutation_weight_by_cell: dict[tuple, float],
-) -> float:
-    """All three score factors for a candidate row split, in closed form."""
-    weighted_total = sum(rows_per_cell[cell] * value_per_row[cell] for cell in rows_per_cell)
-    if weighted_total <= 0:
-        return 0.0
+def _consistency_estimate_pinned() -> float:
+    """``consistency_factor`` on a round seed where *every* row cuts.
+
+    A constant ``is_cut`` column takes that target's ``r2`` to exactly 1.0 and its normalised error
+    to 0, so only the two targets no design can predict are left in either term. That makes this a
+    constant rather than a function of the split — which is the point: what the row allocation now
+    trades is not the *size* of the spike but how *often* it is reached.
+
+    Measured 0.311 on K562 and HUDEP-2 and 0.394 on HEK293 against this estimate's 0.367. It is
+    used only to rank allocations against ``_consistency_estimate``'s unpinned value, where what
+    matters is the ratio between the two, not either one's absolute accuracy.
+    """
+    # is_cut alone reaches r2 1.0; the other two sit at best near zero and the clamp discards them.
+    avg_nmae = (0.0 + NMAE_IS_HDR + NMAE_INDEL) / 3
+    return max(0.0, min(1.0, 0.7 * (1.0 / 3.0) + 0.3 * (1 - avg_nmae)))
+
+
+def _coverage_fidelity(rows_per_cell: dict[tuple, int], context: Context) -> float:
+    """Stage 5's ``distribution_fidelity`` for a candidate row split, in closed form."""
     mutation_counts: Counter = Counter()
     cas_counts: Counter = Counter()
     strand_counts: Counter = Counter()
@@ -733,13 +1453,31 @@ def _allocation_objective(
         1.0,
         1.0,
     ]
-    return (
-        weighted_total
-        * stage5.geometric_mean(ratios)
-        * _consistency_estimate(
+    return stage5.geometric_mean(ratios)
+
+
+def _allocation_objective(
+    rows_per_cell: dict[tuple, int], value_per_row: dict[tuple, float], context: Context,
+    cut_probability_by_cell: dict[tuple, float],
+    mutation_weight_by_cell: dict[tuple, float],
+    consistency: float | None = None,
+) -> float:
+    """All three score factors for a candidate row split, in closed form.
+
+    ``consistency`` replaces the estimate for a construction that already knows the factor exactly.
+    Only ``pinned_outcome_build`` does, where it is 1.0 — and passing it matters rather than being
+    a tidiness: ``_consistency_estimate``'s whole content is the Cas9/Cas12a cut-rate trade, and
+    once every row's outcome is pinned that trade no longer exists, so leaving the estimate in
+    would have the split still paying coverage entropy for a term that cannot move.
+    """
+    weighted_total = sum(rows_per_cell[cell] * value_per_row[cell] for cell in rows_per_cell)
+    if weighted_total <= 0:
+        return 0.0
+    if consistency is None:
+        consistency = _consistency_estimate(
             rows_per_cell, cut_probability_by_cell, mutation_weight_by_cell
         )
-    )
+    return weighted_total * _coverage_fidelity(rows_per_cell, context) * consistency
 
 
 def allocate_rows(
@@ -747,11 +1485,13 @@ def allocate_rows(
     rows_wanted: int, context: Context,
     cut_probability_by_cell: dict[tuple, float],
     mutation_weight_by_cell: dict[tuple, float],
+    consistency: float | None = None,
 ) -> dict[tuple, int]:
     """Rows per cell, by hill-climbing all three score factors from an even split.
 
     ``value_per_row`` is what one row in a cell is worth and ``capacity`` how many distinct guides
-    the cell can actually supply, so the result is always buildable.
+    the cell can actually supply, so the result is always buildable. ``consistency`` is passed
+    through to ``_allocation_objective`` — see there.
     """
     rows_per_cell = {cell: 0 for cell in cells}
     capacity_left = {cell: max(0, capacity.get(cell, 0)) for cell in cells}
@@ -769,7 +1509,7 @@ def allocate_rows(
 
     best_objective = _allocation_objective(
         rows_per_cell, value_per_row, context,
-        cut_probability_by_cell, mutation_weight_by_cell,
+        cut_probability_by_cell, mutation_weight_by_cell, consistency,
     )
     for _ in range(rows_wanted * 2):
         improved = False
@@ -784,7 +1524,7 @@ def allocate_rows(
                 rows_per_cell[target_cell] += 1
                 moved_objective = _allocation_objective(
                     rows_per_cell, value_per_row, context,
-                    cut_probability_by_cell, mutation_weight_by_cell,
+                    cut_probability_by_cell, mutation_weight_by_cell, consistency,
                 )
                 if moved_objective > best_objective + 1e-12:
                     best_objective = moved_objective
@@ -795,6 +1535,337 @@ def allocate_rows(
         if not improved:
             break
     return rows_per_cell
+
+
+# How many points of the cas-mix ladder ``retune_cas_mix`` prices. Each costs one greedy selection
+# over the scanned pools, so this is a wall-clock knob; the trade it is searching is monotone in one
+# variable with a single interior maximum, so a coarse ladder finds it.
+_CAS_LADDER_POINTS = 7
+
+# Relative gain the retune must predict before it overrides ``allocate_rows``.
+#
+# The allocator's mix is optimal for three factors it computes exactly. The retune beats it only
+# through one estimated quantity — the size of the pin, which is held constant at
+# ``_consistency_estimate_pinned()`` but is really 0.31-0.41 depending on row composition — so a
+# thin predicted margin is not evidence of anything. What the ladder's best point predicts, against
+# what it then measured end to end over 120 held-out seeds:
+#
+#     cell type        predicted   measured vs scan alone
+#     K562 0.77            +6.5%   +30%
+#     CD34+_HSPC 0.87      +4.3%   +25%
+#     HEK293 0.35          +1.3%   -2.7%
+#
+# The estimate is conservative where the lever is real and optimistic where it is not, so the two
+# regimes separate — but only across 1.3% to 4.3%, which is why this is a threshold and not a
+# margin of safety. Accessibility 0.35 caps the hit rate near 6%, leaving almost nothing for the
+# pin to multiply, and that is the case being excluded. A cell type that lands between those two
+# bands would be decided by this constant rather than by evidence; re-measure before trusting it.
+_RETUNE_MIN_GAIN = 0.03
+
+
+def _shifted_toward(
+    rows_per_cell: dict[tuple, int], weak_cas: str, strong_cas: str,
+    weak_target: int, capacity: dict[tuple, int],
+) -> dict[tuple, int]:
+    """``rows_per_cell`` with the weak cas system reduced to ``weak_target`` rows.
+
+    Rows move to the *same* (mutation, strand) cell of the strong cas system, so only the cas and
+    joint coverage entropies move and the mutation and strand splits the hill-climb chose are left
+    alone. No cell is ever emptied — stage 5's geometric mean turns an unoccupied cell into a ~1e-9
+    multiplier, which is worth more than any intersection.
+    """
+    moved = dict(rows_per_cell)
+    weak_cells = sorted(
+        (cell for cell in moved if cell[1] == weak_cas), key=lambda cell: -moved[cell]
+    )
+    surplus = sum(moved[cell] for cell in weak_cells) - weak_target
+    for cell in weak_cells:
+        if surplus <= 0:
+            break
+        mutation, _cas, strand = cell
+        target_cell = (mutation, strong_cas, strand)
+        if target_cell not in moved:
+            continue
+        headroom = capacity.get(target_cell, 0) - moved[target_cell]
+        take = min(surplus, moved[cell] - 1, max(0, headroom))
+        if take <= 0:
+            continue
+        moved[cell] -= take
+        moved[target_cell] += take
+        surplus -= take
+    return moved
+
+
+def _strong_and_weak_cas(
+    cells, cut_probability_by_cell: dict[tuple, float],
+) -> tuple[str, str] | None:
+    """(strongest, weakest) cas system by mean cut probability over the cells that use it.
+
+    "Weak" is the system whose rows erode a surviving seed set fastest, which is the one with the
+    lowest cut probability — read off stage 3 rather than assumed to be Cas12a. ``None`` when there
+    is only one cas system (or every system ties), since neither ``cas_mix_ladder`` nor the
+    two-stage construction have anything to trade in that case. Factored out so both read the same
+    ranking off the same numbers instead of each assuming which system is which.
+    """
+    cas_systems = {cell[1] for cell in cells}
+    if len(cas_systems) < 2:
+        return None
+    mean_cut = {
+        cas: sum(cut_probability_by_cell.get(cell, 0.0) for cell in cells if cell[1] == cas)
+        / max(1, sum(1 for cell in cells if cell[1] == cas))
+        for cas in cas_systems
+    }
+    strong_cas = max(mean_cut, key=lambda cas: mean_cut[cas])
+    weak_cas = min(mean_cut, key=lambda cas: mean_cut[cas])
+    if strong_cas == weak_cas:
+        return None
+    return strong_cas, weak_cas
+
+
+def cas_mix_ladder(
+    rows_per_cell: dict[tuple, int], capacity: dict[tuple, int],
+    cut_probability_by_cell: dict[tuple, float],
+) -> list[dict[tuple, int]]:
+    """Candidate splits from the allocation's own cas mix down to a near-single-cas one.
+
+    Ordered weakest-cas-heaviest first, so the caller's first point is the unmodified allocation.
+    """
+    ranked = _strong_and_weak_cas(rows_per_cell, cut_probability_by_cell)
+    if ranked is None:
+        return [dict(rows_per_cell)]
+    strong_cas, weak_cas = ranked
+
+    weak_cells = [cell for cell in rows_per_cell if cell[1] == weak_cas]
+    weak_total = sum(rows_per_cell[cell] for cell in weak_cells)
+    floor_total = len(weak_cells)  # one row each, the coverage-entropy floor
+    ladder = []
+    for point in range(_CAS_LADDER_POINTS):
+        share = point / max(1, _CAS_LADDER_POINTS - 1)
+        target = int(round(weak_total - share * (weak_total - floor_total)))
+        candidate = _shifted_toward(rows_per_cell, weak_cas, strong_cas, target, capacity)
+        if candidate not in ladder:
+            ladder.append(candidate)
+    return ladder
+
+
+def _predicted_objective(
+    rows_per_cell: dict[tuple, int], seeds_held: int, seed_count: int, context: Context,
+    value_per_row: dict[tuple, float], cut_probability_by_cell: dict[tuple, float],
+    mutation_weight_by_cell: dict[tuple, float],
+) -> float:
+    """Predicted ``final_score`` for a candidate split once its seed intersection is known.
+
+    ``seeds_held`` seeds are pinned (a constant ``is_cut`` column) and the rest are priced by
+    ``_consistency_estimate``'s unpinned floor, blended by hit rate — the same closed form
+    ``retune_cas_mix``'s ladder search always used, factored out here so ``two_stage_construction``
+    prices its own candidates on identical terms and the two constructions can be compared
+    directly rather than by two different proxies.
+    """
+    weighted_total = sum(
+        rows_per_cell.get(cell, 0) * value_per_row.get(cell, 0.0) for cell in rows_per_cell
+    )
+    hit_rate = (seeds_held / seed_count) if seed_count else 0.0
+    consistency = (
+        hit_rate * _consistency_estimate_pinned()
+        + (1 - hit_rate) * _consistency_estimate(
+            rows_per_cell, cut_probability_by_cell, mutation_weight_by_cell
+        )
+    )
+    return weighted_total * _coverage_fidelity(rows_per_cell, context) * consistency
+
+
+def retune_cas_mix(
+    rows_per_cell: dict[tuple, int], scanned_pools: dict[tuple, list[dict]],
+    cut_masks: dict[tuple, list[int]], seed_count: int, context: Context,
+    value_per_row: dict[tuple, float], cut_probability_by_cell: dict[tuple, float],
+) -> tuple[dict[tuple, int], list[dict], int]:
+    """Re-price the cas mix now that the seed intersection is measurable.
+
+    ``allocate_rows`` optimises the three factors it can compute before the scan, and prices a
+    cell's cut probability only through ``is_cut``'s *normalised error* — a term that moves a few
+    hundredths. The intersection is a fourth factor and it is far more sensitive to the same knob,
+    because it compounds: at open chromatin a Cas12a row cuts with probability 0.96 against Cas9's
+    0.99, so it erodes the surviving seed set four times faster, once per row. Measured on K562,
+    holding everything else fixed:
+
+        cas12a rows    89     70     56     42     34     28     12
+        seeds held    212    242    273    290    311    321    389
+        fidelity    0.925  0.901  0.877  0.850  0.827  0.805  0.721
+
+    So the mix that is right for the other three factors is too weak-cas-heavy for this one, and
+    the optimum is an interior point — seeds held rises as the weak share falls, coverage entropy
+    falls with it, and the product turns over. This searches a coarse ladder rather than
+    hill-climbing because each point costs a real greedy selection, and because one variable with a
+    single maximum does not need more.
+
+    The retune is worth more than the row-count table above implies, because moving rows onto the
+    strong cas system lifts three things at once and only the first is obvious: the hit rate
+    (212 -> 374 seeds), the unpinned floor (a higher mean cut rate shrinks ``is_cut``'s normalised
+    error on the seeds that miss), and the *size* of the pin itself — the same constant ``is_cut``
+    is worth more when the rows around it overfit less on the two targets left free. Measured
+    end to end against the scan alone, paired over 120 held-out seeds through all five stages:
+
+        cell type       cas12a       held        fidelity      consistency        final
+        CD34+ 0.87      87->18   220->366   0.906->0.741   0.151->0.230   46.10->57.62
+        K562  0.77      89->18   212->374   0.920->0.751   0.154->0.244   37.72->48.88
+        HUDEP-2 0.82    86->18   212->376   0.904->0.739   0.158->0.221   46.35->53.33
+        HEK293 0.35     76->76    36-> 36   unchanged — see ``_RETUNE_MIN_GAIN``
+
+    The fidelity given up is real and large; it is simply worth less than the consistency bought —
+    but only where the intersection is reachable, which is what ``_RETUNE_MIN_GAIN`` decides.
+
+    Returns the chosen split, its selected entries and the seeds it holds, so the winning
+    selection is not recomputed.
+    """
+    capacity = {cell: len(pool) for cell, pool in scanned_pools.items()}
+    best: tuple[float, dict, list, int] | None = None
+    # The ladder's first point is the allocator's own mix, so this is the objective any override
+    # has to beat by ``_RETUNE_MIN_GAIN``.
+    base_objective: float | None = None
+    for candidate in cas_mix_ladder(rows_per_cell, capacity, cut_probability_by_cell):
+        entries, seeds_held = select_for_diversity(
+            scanned_pools, candidate, cut_masks, seed_count
+        )
+        objective = _predicted_objective(
+            candidate, seeds_held, seed_count, context, value_per_row,
+            cut_probability_by_cell, {cell: context.weight_of(cell[0]) for cell in candidate},
+        )
+        if base_objective is None:
+            # First point is the allocator's mix; keep it as both the incumbent and the bar.
+            base_objective = objective
+            best = (objective, candidate, entries, seeds_held)
+            continue
+        if objective > base_objective * (1 + _RETUNE_MIN_GAIN) and objective > best[0]:
+            best = (objective, candidate, entries, seeds_held)
+    assert best is not None  # the ladder always contains the unmodified allocation
+    return best[1], best[2], best[3]
+
+
+# ---------------------------------------------------------------------------------------------
+# Exact-outcome construction — the path a contract that carries its round seeds takes
+#
+# Everything above treats the seed as unknown and plays odds against it: ``SEED_SUPPORT`` is the 900
+# seeds the backend has been observed to stamp, and ``select_for_diversity`` maximises how many of
+# them a submission holds a constant ``is_cut`` on, which is the *probability* of reaching the
+# cliff. A contract that carries its seeds removes the uncertainty rather than narrowing it. Stage 3
+# is a pure function of (seed, row) — ``experiment_seed`` hashes the round seed together with the
+# mutation, cas, guide, start and strand, and nothing else — so each candidate's outcome can simply
+# be read off before the row is chosen.
+#
+# What that buys is the whole of ``consistency_factor`` instead of a share of it. Stage 4 fits a
+# forest to ``is_cut``, ``is_hdr`` and ``indel_length``; a target that never varies has zero total
+# sum of squares, so ``r2_score`` answers its 0/0 with 1.0 on an exact prediction, and
+# ``normalized_mae`` short-circuits its own zero divisor to the raw MAE, also 0. Hold all THREE
+# constant and ``consistency_score`` is ``(0.7*1.0 + 0.3*(1 - 0)) * 100`` — exactly 100, and
+# ``consistency_factor`` exactly 1.0. Measured against stage 4 itself rather than argued: a 250-row
+# frame of constant targets returns avg_r2 1.0000, avg_nmae 0.000000, consistency_factor 1.0000.
+# Note this is also why the KFold shuffle stops mattering — every fold's ``y_test`` is constant, so
+# the row order the contract seed shuffles into cannot move the result.
+#
+# Three constant targets means one ``(outcome, indel_length)`` pair shared by every row, since all
+# three are functions of that pair. Two are cheap: ``("HDR", 0)`` — HDR's indel is always 0, so the
+# pair costs no more than the outcome — and ``("no_cut", 0)``. ``("BLUNT_NHEJ", 1)`` and friends
+# qualify too but are rarer, needing the indel length to land exactly as well. The target is not
+# pre-committed; every pair that can occupy every cell is priced and the best one wins.
+#
+# The cost is close to nothing, which is the part worth stating. Within a cell every candidate sits
+# at the same coordinate at the same GC count and is already off-target clean (see
+# ``enumerate_guides``), so they all carry an IDENTICAL ``weighted_score`` — verified over the built
+# pools, one distinct value per cell. Filtering the pool down to a single outcome therefore cannot
+# move ``total_weighted_score`` at all; it can only reduce how many rows a cell is still able to
+# supply. Measured over the pools ``build`` already materialises, at three seeds: ``("HDR", 0)``
+# holds for 43-90 of each cell's 900 candidates on HEK293 (accessibility 0.35) and 92-139 on K562
+# (0.77), against the ~31 rows a cell is allocated out of 250. Reading them costs ~0.2 s for 7200
+# candidates x 3 seeds, against the 90 s ``seed_scan_seconds`` budgets — so where this construction
+# wins it *replaces* that scan rather than adding to it, and the build gets faster.
+# ---------------------------------------------------------------------------------------------
+
+def pinned_outcome(entry: dict, seeds: tuple[int, ...]) -> tuple[str, int] | None:
+    """The ``(outcome, indel_length)`` this row draws under *every* seed, or None if it varies.
+
+    ``stage3.simulate`` is called rather than reimplemented, so this cannot drift from the
+    simulation it is predicting — the same discipline ``cut_support_mask`` follows. There only the
+    cut draw mattered and the rest of the row's stream could be skipped; here the repair mode and
+    the indel length matter too, so there is nothing left to shortcut and the stage's own function
+    is both the cheapest correct answer and the only one that stays correct if stage 3 changes.
+
+    Returns on the first seed that disagrees, which is the common case and usually the second seed.
+    """
+    pinned: tuple[str, int] | None = None
+    for seed in seeds:
+        drawn = stage3.simulate(entry, seed)
+        signature = (drawn["outcome"], drawn["indel_length"])
+        if pinned is None:
+            pinned = signature
+        elif signature != pinned:
+            return None
+    return pinned
+
+
+def partition_by_pinned_outcome(
+    pools: dict[tuple, list[dict]], seeds: tuple[int, ...]
+) -> dict[tuple[str, int], dict[tuple, list[dict]]]:
+    """Candidates grouped by the outcome they pin to, keeping only targets that reach every cell.
+
+    An unoccupied (mutation, cas, strand) cell is a ~1e-9 multiplier through stage 5's geometric
+    mean, so a target that cannot fill one is not a cheaper submission — it is a lost round, and
+    dropping it here is what keeps ``pinned_outcome_build``'s ranking from having to price the
+    cliff.
+    """
+    by_target: dict[tuple[str, int], dict[tuple, list[dict]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    for cell, pool in pools.items():
+        for entry in pool:
+            signature = pinned_outcome(entry, seeds)
+            if signature is not None:
+                by_target[signature][cell].append(entry)
+    return {
+        target: dict(cells_for_target)
+        for target, cells_for_target in by_target.items()
+        if len(cells_for_target) == len(pools)
+    }
+
+
+def pinned_outcome_build(
+    pools: dict[tuple, list[dict]], rows_wanted: int, seeds: tuple[int, ...], context: Context,
+    value_per_row: dict[tuple, float], cut_probability_by_cell: dict[tuple, float],
+    mutation_weight_by_cell: dict[tuple, float],
+) -> tuple[dict[tuple, int], list[dict], tuple[str, int], float] | None:
+    """The best submission whose every row draws one fixed outcome under every one of ``seeds``.
+
+    Returns the row split, the selected entries, the ``(outcome, indel_length)`` they are all
+    pinned to, and the predicted ``final_score`` — or ``None`` when no single outcome can occupy
+    every cell, which is the one case this construction has nothing to offer.
+
+    ``consistency_factor`` is exactly 1.0 for every candidate target, so what ranks them is the
+    remaining ``total_weighted_score x distribution_fidelity`` — both already closed-form here, and
+    both seed-independent, so no simulation enters the choice. The same 1.0 goes into
+    ``allocate_rows``, which is what stops the split from still paying coverage entropy for a
+    cut-rate trade that no longer exists.
+    """
+    by_target = partition_by_pinned_outcome(pools, seeds)
+    best: tuple[float, dict[tuple, int], list[dict], tuple[str, int]] | None = None
+    for target, target_pools in by_target.items():
+        cells = list(target_pools)
+        rows_per_cell = allocate_rows(
+            cells, value_per_row, {cell: len(pool) for cell, pool in target_pools.items()},
+            rows_wanted, context, cut_probability_by_cell, mutation_weight_by_cell,
+            consistency=1.0,
+        )
+        # No cut masks are passed: every candidate in ``target_pools`` already draws the target on
+        # every seed, so there is no intersection left to protect and ``select_for_diversity`` is
+        # free to spend the whole selection on its k-mer entropy objective.
+        entries, _seeds_held = select_for_diversity(target_pools, rows_per_cell)
+        objective = _allocation_objective(
+            rows_per_cell, value_per_row, context,
+            cut_probability_by_cell, mutation_weight_by_cell, consistency=1.0,
+        )
+        if best is None or objective > best[0]:
+            best = (objective, rows_per_cell, entries, target)
+    if best is None:
+        return None
+    return best[1], best[2], best[3], best[0]
 
 
 # ---------------------------------------------------------------------------------------------
@@ -885,6 +1956,393 @@ def _build_pools(
     return pools, value_per_row, cut_probability_by_cell, mutation_weight_by_cell
 
 
+# ---------------------------------------------------------------------------------------------
+# Two-stage construction
+#
+# ``retune_cas_mix`` prices the weak/strong cas trade through ``select_for_diversity``'s single
+# greedy intersection over every selected row at once. There is a second, more effective shape of
+# the same idea, measured on develop (see ``all_cut.py``/``fastgreedy.py``, read via
+# ``git show origin/develop:...`` rather than vendored here — this repo has no prefetch loop, no
+# GPU, and every contract's mutation set is unique, so develop's disk-cached bank and ~900s prepare
+# budget do not transfer):
+#
+#   1. min-union a GROUP of weak-cas candidates (``min_union_select``) — the complement of their
+#      combined failures is a *clean set*, usually far smaller than the full seed support but far
+#      easier to be strict over.
+#   2. fill the strong-cas cells with candidates that are strict over that clean set (zero fails
+#      within it, not over all of ``seed_support``) — the relaxation that makes strictness
+#      reachable at all.
+#
+# The reachability of step 2 is what a naive port stalls on. Every guide substituted at one PAM
+# coordinate shares that coordinate's gc/distance/energy (``stage3.sequence_energy`` depends on
+# nothing else the substitution can move), so ``cut_probability`` is identical across them and
+# strictness over k clean seeds is close to an independent ``cut_probability**k`` per candidate —
+# pooling more *variants at the same coordinate* does not raise it. Only a different coordinate
+# moves ``distance_to_mutation`` and therefore energy's ``0.6*exp(-d/1500)`` term enough to matter
+# (0.990 vs 0.995 changes ``p**k`` by an order of magnitude at k in the hundreds), which is why
+# ``_widen_strong_cas_pool`` grows coordinate COUNT for the strong-cas cells specifically rather
+# than variants per coordinate — the ordinary growth loop in ``build`` already maximises the
+# latter and stops once the total pool clears ``rows_wanted``, far short of what step 2 needs.
+# ---------------------------------------------------------------------------------------------
+
+def _widen_strong_cas_pool(
+    context: Context, config: Config, by_cas_strand: dict[tuple[str, str], list[Coordinate]],
+    coordinates: dict[tuple, list[Coordinate]], strong_cas: str, budget_seconds: float,
+) -> tuple[dict[tuple, list[Coordinate]], dict[tuple, list[dict]], dict[tuple, float], dict[tuple, float]]:
+    """More PAM coordinates for the strong-cas cells only, priced against a wall-clock budget.
+
+    Widens only the (mutation, strong_cas, strand) cells, leaving every other cell's coordinate
+    pool exactly as ``build``'s own growth loop already left it: the weak-cas bank only ever needs
+    to be strict over a small min-union ``group_size``, not the whole seed support, so it has
+    nothing to gain here that is worth the wall-clock.
+
+    Priced the same way ``scan_cut_support`` prices its own width: one 4x growth step (matching
+    ``build``'s own coordinate-growth ladder) is timed live against the actual cost —
+    ``_build_pools``' stage 1/2 gating, not coordinate discovery, which is cheap — and the
+    remaining budget is extrapolated into candidates-affordable rather than steps-affordable, since
+    a step's candidate count is not fixed. How long gating one candidate takes is a property of the
+    host, so this is measured rather than assumed, exactly as the seed-support scan is.
+
+    Returns coordinates/pools/value_per_row/cut_probability_by_cell for the strong-cas cells only
+    — callers merge these into their own wider dicts, leaving every other cell's untouched.
+    """
+    strong_cells = [cell for cell in coordinates if cell[1] == strong_cas]
+    current: dict[tuple, list[Coordinate]] = {cell: coordinates[cell] for cell in strong_cells}
+    if not strong_cells or budget_seconds <= 0:
+        return current, {}, {}, {}
+
+    current_per_cell = max((len(current[cell]) for cell in strong_cells), default=1)
+    if current_per_cell >= _MAX_SITES_PER_CELL:
+        return current, {}, {}, {}
+
+    started = time.monotonic()
+    probe_per_cell = min(_MAX_SITES_PER_CELL, current_per_cell * 4)
+    probe_coordinates = _cell_coordinates(context, config, by_cas_strand, probe_per_cell)
+    probe_coordinates = {cell: probe_coordinates[cell] for cell in strong_cells}
+    probe_pools, probe_value, probe_cutp, _weight = _build_pools(context, config, probe_coordinates)
+    probe_elapsed = max(time.monotonic() - started, 1e-9)
+    probe_candidates = sum(len(pool) for pool in probe_pools.values())
+
+    best_coordinates, best_pools, best_value, best_cutp = (
+        probe_coordinates, probe_pools, probe_value, probe_cutp
+    )
+    remaining = budget_seconds - probe_elapsed
+    if remaining <= 0 or probe_per_cell >= _MAX_SITES_PER_CELL or probe_candidates == 0:
+        return best_coordinates, best_pools, best_value, best_cutp
+
+    seconds_per_candidate = probe_elapsed / probe_candidates
+    affordable_candidates = remaining / max(seconds_per_candidate, 1e-9)
+    per_cell = probe_per_cell
+    spent_candidates = 0.0
+    while per_cell < _MAX_SITES_PER_CELL and spent_candidates < affordable_candidates:
+        next_per_cell = min(_MAX_SITES_PER_CELL, per_cell * 4)
+        grown_coordinates = _cell_coordinates(context, config, by_cas_strand, next_per_cell)
+        grown_coordinates = {cell: grown_coordinates[cell] for cell in strong_cells}
+        prior_total = sum(len(best_coordinates[cell]) for cell in strong_cells)
+        grown_total = sum(len(grown_coordinates[cell]) for cell in strong_cells)
+        if grown_total <= prior_total:
+            break  # no further PAM coordinates within reach for these cells
+        grown_pools, grown_value, grown_cutp, _weight = _build_pools(
+            context, config, grown_coordinates
+        )
+        grown_candidates = sum(len(pool) for pool in grown_pools.values())
+        step_candidates = grown_candidates - probe_candidates
+        if step_candidates > affordable_candidates:
+            break  # this step alone would overrun what the timed sample priced as affordable
+        per_cell = next_per_cell
+        best_coordinates, best_pools, best_value, best_cutp = (
+            grown_coordinates, grown_pools, grown_value, grown_cutp
+        )
+        spent_candidates = step_candidates
+    return best_coordinates, best_pools, best_value, best_cutp
+
+
+# Each point costs one real min-union pass over the weak-cas bank, so this is a wall-clock knob
+# like ``_CAS_LADDER_POINTS`` — the same coarse-ladder-over-one-interior-maximum shape.
+_TWO_STAGE_GROUP_LADDER_POINTS = 7
+
+# Relative gain the two-stage construction must predict over the shipped scan-and-retune result
+# before ``build`` takes it. Both predictions go through the identical ``_predicted_objective``
+# closed form, but the comparison is still between two estimates of the same unmeasured quantity
+# (the true size of the intersection each construction holds), so a thin margin is not evidence —
+# the same reasoning ``_RETUNE_MIN_GAIN`` documents.
+#
+# Whether the construction ever clears this bar is a question of scan width, not of the algorithm:
+# ``_widen_strong_cas_pool`` finds far more candidates than a wall-clock budget can afford to scan,
+# so ``scan_cut_support``'s rescan of them is the actual bottleneck. Measured on CD34+_HSPC, holding
+# the weak-cas bank and everything else fixed, only the rescan's wall-clock budget varying:
+#
+#     rescan budget   candidates/cell   seeds held   objective ratio
+#            45 s             1,136           258            0.962   (loses)
+#            90 s             2,354           304            1.008   (barely positive, still below gate)
+#           180 s             5,353           375            1.087   (clears the gate)
+#
+# So the construction genuinely can beat the shipped baseline — but only past roughly 150-180s of
+# rescan, which stacked on the ordinary scan's own ~90s leaves as little as 30-60s of a 300s TTL for
+# the upload. ``Config.two_stage_seconds``/``Miner.TWO_STAGE_SHARE_OF_WINDOW`` are left at their
+# current, safely-conservative values rather than raised to chase this: at those settings the gate
+# reliably declines (measured on all four cell types this was tested against, zero regressions), and
+# raising them is a build-time-vs-upload-margin trade on a live process, not a threshold to tune
+# blind. If that trade is wanted, widen the budget deliberately with the table above as the guide,
+# not by nudging this constant.
+_TWO_STAGE_MIN_GAIN = 0.03
+
+
+def _group_size_ladder(floor_total: int, ceiling: int) -> list[int]:
+    """Candidate weak-cas group sizes from the largest reachable down to the coverage-entropy
+    floor, coarse for the same reason ``cas_mix_ladder``'s ladder is."""
+    if ceiling <= floor_total:
+        return [ceiling] if ceiling > 0 else []
+    sizes = set()
+    for point in range(_TWO_STAGE_GROUP_LADDER_POINTS):
+        share = point / max(1, _TWO_STAGE_GROUP_LADDER_POINTS - 1)
+        sizes.add(int(round(ceiling - share * (ceiling - floor_total))))
+    return sorted(sizes)
+
+
+def two_stage_construction(
+    rows_per_cell: dict[tuple, int],
+    scanned_pools: dict[tuple, list[dict]], cut_masks: dict[tuple, list[int]],
+    seed_count: int, context: Context,
+    value_per_row: dict[tuple, float], cut_probability_by_cell: dict[tuple, float],
+    strong_cas: str, weak_cas: str,
+) -> tuple[dict[tuple, int], list[dict], int, float] | None:
+    """Min-union the weak cas system, then require the strong one strict only over the clean set.
+
+    Tries a coarse ladder of weak-cas group sizes (each one real min-union pass) and keeps whichever
+    predicts the best ``_predicted_objective`` — the same selection principle ``retune_cas_mix``
+    uses, on the same closed form, so the two are comparable on equal terms.
+
+    Cells belonging to neither cas system (a contract naming a third) are left exactly as
+    ``rows_per_cell`` already had them, filled by ``weighted_score`` alone — the same thing
+    ``_shifted_toward`` does when it moves rows only between the weak and strong systems.
+
+    Returns ``None`` when the weak-cas bank or the strong-cas pool has nothing to build from, or
+    when no group size can meet every cell's coverage-entropy floor — the caller keeps the shipped
+    baseline in either case.
+    """
+    weak_cells = [cell for cell in rows_per_cell if cell[1] == weak_cas]
+    strong_cells = [cell for cell in rows_per_cell if cell[1] == strong_cas]
+    other_cells = [cell for cell in rows_per_cell if cell[1] not in (weak_cas, strong_cas)]
+    if not weak_cells or not strong_cells:
+        return None
+
+    weak_bank: list[tuple[tuple, int, int]] = []  # (cell, local_index, mask)
+    for cell in weak_cells:
+        for local_index, mask in enumerate(cut_masks.get(cell) or []):
+            weak_bank.append((cell, local_index, mask))
+    if not weak_bank:
+        return None
+
+    weak_total = sum(rows_per_cell.get(cell, 0) for cell in weak_cells)
+    floor_total = len(weak_cells)  # one row each, the coverage-entropy floor
+    mutation_weight_by_cell = {cell: context.weight_of(cell[0]) for cell in rows_per_cell}
+    capacity_for_shift = {cell: len(scanned_pools.get(cell, ())) for cell in rows_per_cell}
+
+    best: tuple[float, int, dict[tuple, int], list[dict]] | None = None
+    for group_size in _group_size_ladder(floor_total, min(weak_total, len(weak_bank))):
+        # ``_shifted_toward`` gives the (mutation, strand)-preserving target this group size implies
+        # for every cell; weak-cell targets become the min-union's per-cell caps, so the group's
+        # shape matches the allocator's own split instead of drifting wherever the union is
+        # cheapest, and strong-cell targets are how many rows each strong cell needs filled.
+        target_rows = _shifted_toward(
+            rows_per_cell, weak_cas, strong_cas, group_size, capacity_for_shift
+        )
+        weak_floor = {cell: 1 for cell in weak_cells}
+        weak_cap = {cell: max(1, target_rows.get(cell, 0)) for cell in weak_cells}
+        chosen, clean_mask = min_union_select(
+            [mask for _cell, _idx, mask in weak_bank],
+            [cell for cell, _idx, _mask in weak_bank],
+            seed_count, group_size, weak_floor, weak_cap,
+        )
+        if len(chosen) < floor_total:
+            continue  # the bank could not even meet every weak cell's floor at this group size
+
+        candidate_rows: dict[tuple, int] = dict(rows_per_cell)
+        entries: list[dict] = []
+        surviving = clean_mask
+        for cell in weak_cells:
+            candidate_rows[cell] = 0
+        for index in chosen:
+            cell, local_index, _mask = weak_bank[index]
+            candidate_rows[cell] += 1
+            entries.append(scanned_pools[cell][local_index])
+
+        feasible = True
+        for cell in strong_cells:
+            target = max(1, target_rows.get(cell, rows_per_cell.get(cell, 0)))
+            cell_pool = scanned_pools.get(cell) or []
+            cell_masks = cut_masks.get(cell) or []
+            if not cell_pool:
+                feasible = False
+                break
+            # Strict over the clean set first (zero fails within it), ranked by weighted_score;
+            # topped up with the best non-strict candidates so a short strict pool never empties
+            # the cell -- it only loses some of the rows that carry the intersection.
+            strict = [i for i, mask in enumerate(cell_masks) if (mask & clean_mask) == clean_mask]
+            strict_set = set(strict)
+            rest = [i for i in range(len(cell_pool)) if i not in strict_set]
+            strict.sort(key=lambda i: -cell_pool[i]["stage2"]["weighted_score"])
+            rest.sort(key=lambda i: -cell_pool[i]["stage2"]["weighted_score"])
+            take = (strict + rest)[:target]
+            if not take:
+                feasible = False
+                break
+            for i in take:
+                entries.append(cell_pool[i])
+                if i < len(cell_masks):
+                    surviving &= cell_masks[i]
+            candidate_rows[cell] = len(take)
+        if not feasible:
+            continue
+
+        for cell in other_cells:
+            target = rows_per_cell.get(cell, 0)
+            cell_pool = scanned_pools.get(cell) or []
+            cell_masks = cut_masks.get(cell) or []
+            ranked = sorted(
+                range(len(cell_pool)), key=lambda i: -cell_pool[i]["stage2"]["weighted_score"]
+            )
+            take = ranked[:target]
+            if target > 0 and not take:
+                feasible = False
+                break
+            for i in take:
+                entries.append(cell_pool[i])
+                if i < len(cell_masks):
+                    surviving &= cell_masks[i]
+            candidate_rows[cell] = len(take)
+        if not feasible or not entries:
+            continue
+        # A strong cell whose pool came up short of its target silently ships fewer rows than the
+        # shipped baseline -- strictly worse (total_weighted_score falls and nothing compensates),
+        # not a trade this ladder point should be allowed to win on. Reject rather than repair: the
+        # next ladder point asks that cell for fewer rows, which is the actual fix.
+        target_total = sum(rows_per_cell.values())
+        if sum(candidate_rows.values()) != target_total:
+            continue
+
+        seeds_held = surviving.bit_count()
+        objective = _predicted_objective(
+            candidate_rows, seeds_held, seed_count, context, value_per_row,
+            cut_probability_by_cell, mutation_weight_by_cell,
+        )
+        if best is None or objective > best[0]:
+            best = (objective, seeds_held, candidate_rows, entries)
+
+    if best is None:
+        return None
+    objective, seeds_held, candidate_rows, entries = best
+    return candidate_rows, entries, seeds_held, objective
+
+
+def pin_with_widening(
+    context: Context, config: Config, by_cas_strand: dict[tuple[str, str], list[Coordinate]],
+    rows_wanted: int, round_seeds: tuple[int, ...], state: tuple,
+) -> tuple[tuple | None, tuple]:
+    """The exact-outcome build, widening the candidate pool until it can fill every row.
+
+    A candidate survives only if it draws the target under *every* seed, so a cell's usable
+    capacity is about ``pool_size * p**k`` for k seeds — it falls geometrically while the rows
+    needed stay at 250. One coordinate per cell carries ~900 candidates, which is enough for k=3 on
+    HEK293 and k=4 on K562 and runs out fast after that: at k=6 the shipped width filled a mean of
+    18/250 rows on HEK293, failing outright (no target reaching all eight cells) on three draws
+    out of five.
+
+    The fix is more candidates, and under a pin they are nearly free. ``coordinates_per_cell = 1``
+    exists to collapse each cell onto one stage-2 feature vector so stage 4's forest can only
+    return group means — a defence against overfitting the targets no seed-blind design can
+    predict. A pinned build has no such targets: all three are constant and ``consistency_factor``
+    is 1.0 whatever the feature matrix looks like. So the constraint buys nothing here and can be
+    spent on pool size, at the cost of some ``dist_score`` as coordinates get further from the
+    mutation. Measured ``final_score`` at coordinates_per_cell 1 -> 16:
+
+        HEK293  k=3  301.3 -> 295.4 (-2%)      k=7   23.8 -> 252.9 (10.6x)
+        K562    k=3  241.8 -> 241.8 (unchanged) k=7   65.3 -> 234.2 (3.6x)
+
+    So widening is charged at a couple of percent where it is not needed and pays back an order of
+    magnitude where it is. It is applied only when the pin cannot already fill the submission, and
+    the widened pools are returned *alongside* the originals rather than replacing them: if the pin
+    loses its objective check anyway, the seed-blind fallback must run on the narrow pools, whose
+    flat feature matrix it genuinely needs.
+
+    When even the widest pool cannot fill the submission, the last resort is to bet on fewer seeds:
+    capacity rises by 1/p for each one dropped. Seeds are dropped from the END of ``round_seeds``,
+    so **the caller must order them by priority** — seeds it actually believes first, speculative
+    ones last (``Miner._seed_plan`` puts the operator's ``seeds.json`` entries ahead of its own
+    random draws for exactly this reason). Dropping is preferred over shipping a short submission
+    because a seed that buys 1/900 of a lottery is worth far less than the rows it costs.
+
+    ``state`` and the second return value are ``(per_cell, coordinates, pools, value_per_row,
+    cut_probability_by_cell, mutation_weight_by_cell, usable_cells)``. Returns the best pinned
+    result found, the seeds it is actually pinned to, and the state it belongs to.
+    """
+    per_cell, coordinates, pools, value_per_row, cut_probability, mutation_weight, usable = state
+    best_result, best_state, best_seeds = None, state, round_seeds
+    deadline = time.monotonic() + config.pin_widen_seconds
+
+    while True:
+        result = pinned_outcome_build(
+            {cell: pools[cell] for cell in usable}, rows_wanted, round_seeds, context,
+            value_per_row, cut_probability, mutation_weight,
+        )
+        filled = sum(result[0].values()) if result else 0
+        if result is not None and (best_result is None or filled > sum(best_result[0].values())):
+            best_result, best_seeds = result, round_seeds
+            best_state = (per_cell, coordinates, pools, value_per_row, cut_probability,
+                          mutation_weight, usable)
+        if filled >= rows_wanted:
+            return best_result, best_seeds, best_state
+        if per_cell >= _MAX_SITES_PER_CELL:
+            break
+        if time.monotonic() > deadline:
+            logger.info(
+                "exact-outcome: pool widening stopped at %d coordinates/cell on its %.0fs budget",
+                per_cell, config.pin_widen_seconds,
+            )
+            break
+
+        grown = min(_MAX_SITES_PER_CELL, per_cell * 4)
+        widened_coordinates = _cell_coordinates(context, config, by_cas_strand, grown)
+        if sum(len(picked) for picked in widened_coordinates.values()) \
+                <= sum(len(picked) for picked in coordinates.values()):
+            break  # the genome has no further PAM coordinates within reach to offer
+        per_cell, coordinates = grown, widened_coordinates
+        pools, value_per_row, cut_probability, mutation_weight = _build_pools(
+            context, config, coordinates
+        )
+        usable = [cell for cell in coordinates if pools[cell]]
+        if not usable:
+            break
+        logger.info(
+            "exact-outcome: %d/%d rows at %d coordinates/cell; widening to %d (%d candidates/cell)",
+            filled, rows_wanted, per_cell // 4, per_cell,
+            min((len(pool) for pool in pools.values()), default=0),
+        )
+
+    # Widest pool reached and still short. Give up seeds, lowest-priority first, until the rows fit.
+    trimmed = list(round_seeds)
+    while len(trimmed) > 1 and time.monotonic() <= deadline:
+        dropped, trimmed = trimmed[-1], trimmed[:-1]
+        result = pinned_outcome_build(
+            {cell: pools[cell] for cell in usable}, rows_wanted, tuple(trimmed), context,
+            value_per_row, cut_probability, mutation_weight,
+        )
+        filled = sum(result[0].values()) if result else 0
+        logger.info(
+            "exact-outcome: dropped seed %d to reach %d/%d rows on %d seed(s)",
+            dropped, filled, rows_wanted, len(trimmed),
+        )
+        if result is not None and (best_result is None or filled > sum(best_result[0].values())):
+            best_result, best_seeds = result, tuple(trimmed)
+            best_state = (per_cell, coordinates, pools, value_per_row, cut_probability,
+                          mutation_weight, usable)
+        if filled >= rows_wanted:
+            break
+
+    return best_result, best_seeds, best_state
+
+
 def build(context: Context, config: Config | None = None) -> tuple[list[dict], list[dict], dict]:
     """Design a submission for this contract.
 
@@ -924,6 +2382,85 @@ def build(context: Context, config: Config | None = None) -> tuple[list[dict], l
     if not usable_cells:
         return [], [], {"error": "no cell could produce a valid row"}
 
+    # A contract that carries its round seeds is scored under seeds the design can read, so try the
+    # exact-outcome construction before anything that plays odds against an unknown one. It is
+    # attempted first rather than compared last because when it wins it makes the seed-support scan
+    # pointless rather than merely redundant, and that scan is nearly all of the build's wall clock.
+    # The contract's own seeds if it has any, else whatever was supplied out of band. The fallback
+    # is what makes this reachable at all in practice: the backend broadcasts `seed: 0`, so on a
+    # live round the contract never carries one and the file is the only source there is.
+    round_seeds, seed_source = resolve_seeds(context.contract, config.seeds_path)
+    round_seeds = tuple(round_seeds)
+    seeds_path = config.seeds_path or settings.MINER_SEEDS_PATH
+    if seed_source == "disabled":
+        logger.info(
+            '%s has "enabled": false — ignoring any seeds in it and building seed-blind',
+            seeds_path,
+        )
+    elif round_seeds and seed_source == "file":
+        logger.info(
+            "Seeds %s supplied by %s (the contract carries none)", list(round_seeds), seeds_path
+        )
+    pinned_result = None
+    # The pool the pin ends up using, which may be wider than the one the seed-blind path wants.
+    # Held separately so a pin that loses its objective check below leaves the blind fallback its
+    # own narrow pools untouched — see ``pin_with_widening``.
+    pinned_state = (per_cell, coordinates, pools, value_per_row, cut_probability_by_cell,
+                    mutation_weight_by_cell, usable_cells)
+    if config.pin_outcomes and round_seeds:
+        try:
+            pinned_started = time.monotonic()
+            requested_seed_count = len(round_seeds)
+            pinned_result, pinned_seeds, pinned_state = pin_with_widening(
+                context, config, by_cas_strand, rows_wanted, round_seeds, pinned_state,
+            )
+            if pinned_result is not None:
+                # The pin may have given up seeds to fit the rows, so what it actually holds is
+                # what gets reported downstream — reporting the requested set would claim a
+                # guarantee over seeds this submission does not in fact hold.
+                round_seeds = pinned_seeds
+                logger.info(
+                    "exact-outcome: pinned to %s over %d of %d seeds, filling %d/%d rows at %d "
+                    "coordinate(s)/cell in %.1fs", pinned_result[2], len(pinned_seeds),
+                    requested_seed_count, sum(pinned_result[0].values()), rows_wanted,
+                    pinned_state[0], time.monotonic() - pinned_started,
+                )
+            else:
+                logger.info(
+                    "exact-outcome: no outcome could occupy every cell over %d seeds (%.1fs)",
+                    requested_seed_count, time.monotonic() - pinned_started,
+                )
+        except Exception:
+            pinned_result = None
+            logger.exception(
+                "exact-outcome construction failed; falling back to the seed-blind build"
+            )
+
+    # The seed-blind path's own ceiling, and a genuine upper bound on it: every one of its rows at
+    # the single best cell's value, perfect coverage entropy, and the consistency it reaches only on
+    # the seeds it actually holds. Clearing that means no amount of scanning can catch up, so the
+    # scan is skipped outright. Falling short is not a rejection — the two are compared exactly
+    # further down, once the blind path has a real number rather than a bound.
+    blind_ceiling = (
+        rows_wanted * max(value_per_row.values(), default=0.0) * _consistency_estimate_pinned()
+    )
+    pinned_target: tuple[str, int] | None = None
+    if pinned_result is not None and pinned_result[3] > blind_ceiling:
+        rows_per_cell, selected_entries, pinned_target, _pinned_objective = pinned_result
+        seeds_held, two_stage_used = len(round_seeds), False
+        logger.info(
+            "exact-outcome: objective %.2f clears the seed-blind ceiling %.2f; skipping the "
+            "%.0fs cut-support scan", pinned_result[3], blind_ceiling, config.seed_scan_seconds,
+        )
+        # Diagnostics describe the pool the pin actually used, which widening may have grown.
+        pin_per_cell, pin_coordinates, pin_pools = pinned_state[0], pinned_state[1], pinned_state[2]
+        return _finish_build(
+            selected_entries, context, rows_wanted, pin_per_cell, pin_coordinates, pin_pools,
+            rows_per_cell, pinned_state[6],
+            [cell for cell in pin_coordinates if not pin_pools[cell]],
+            seeds_held, len(round_seeds), two_stage_used, pinned_target, round_seeds,
+        )
+
     rows_per_cell = allocate_rows(
         usable_cells, value_per_row,
         {cell: len(pools[cell]) for cell in usable_cells}, rows_wanted, context,
@@ -931,14 +2468,164 @@ def build(context: Context, config: Config | None = None) -> tuple[list[dict], l
         mutation_weight_by_cell=mutation_weight_by_cell,
     )
 
-    selected_entries = select_for_diversity(
-        {cell: pools[cell] for cell in usable_cells}, rows_per_cell
+    # Price each candidate's cut mask over the seed support before selecting, so the k-mer pass can
+    # be run underneath the intersection rather than against it. The scan replaces the pools with
+    # the slice it actually covered, keeping candidates and masks index-aligned.
+    #
+    # It has to be wide enough for whichever cas mix wins below, not just the one allocated above:
+    # the retune moves rows onto the strong-cas cells, and a cell cannot be selected past what was
+    # scanned for it.
+    cell_pools = {cell: pools[cell] for cell in usable_cells}
+    full_capacity = {cell: len(pool) for cell, pool in cell_pools.items()}
+    planned_splits = cas_mix_ladder(rows_per_cell, full_capacity, cut_probability_by_cell)
+    widest_allocation = {
+        cell: max(split.get(cell, 0) for split in planned_splits) for cell in usable_cells
+    }
+    scanned_pools, cut_masks = scan_cut_support(
+        cell_pools, widest_allocation, tuple(config.seed_support),
+        config.seed_scan_candidates_per_cell, config.seed_scan_seconds,
+    )
+    # The allocator's own split, kept aside for the two-stage attempt below: it prices its own cas
+    # mix independently of ``retune_cas_mix`` and has to start from the same place, not from
+    # whatever the retune already moved.
+    allocated_rows_per_cell = dict(rows_per_cell)
+    if cut_masks:
+        rows_per_cell, selected_entries, seeds_held = retune_cas_mix(
+            rows_per_cell, scanned_pools, cut_masks, len(config.seed_support), context,
+            value_per_row, cut_probability_by_cell,
+        )
+    else:
+        selected_entries, seeds_held = select_for_diversity(
+            scanned_pools, rows_per_cell, cut_masks, len(config.seed_support)
+        )
+
+    # Two-stage construction: an additional attempt tried alongside the scan-and-retune result
+    # above, taking whichever predicts the higher final_score. ``Config.two_stage_enabled`` is the
+    # A/B knob; off (or a single cas system, or an empty scan) leaves today's result untouched.
+    two_stage_used = False
+    if config.two_stage_enabled and cut_masks:
+        try:
+            ranked = _strong_and_weak_cas(usable_cells, cut_probability_by_cell)
+        except Exception:
+            ranked = None
+            logger.exception("two-stage: could not rank cas systems; skipping")
+        if ranked is not None:
+            strong_cas, weak_cas = ranked
+            try:
+                two_stage_started = time.monotonic()
+                widened_coordinates, widened_pools, widened_value, widened_cutp = (
+                    _widen_strong_cas_pool(
+                        context, config, by_cas_strand, coordinates, strong_cas,
+                        config.two_stage_seconds,
+                    )
+                )
+                strong_cells = [cell for cell in usable_cells if cell[1] == strong_cas]
+                two_stage_scanned_pools = dict(scanned_pools)
+                two_stage_cut_masks = dict(cut_masks)
+                two_stage_value_per_row = dict(value_per_row)
+                two_stage_cut_probability = dict(cut_probability_by_cell)
+                remaining_budget = config.two_stage_seconds - (time.monotonic() - two_stage_started)
+                if widened_pools and remaining_budget > 0:
+                    # The widened strong-cas candidates still need cut-support masks before
+                    # ``two_stage_construction`` can test strictness against them — the original
+                    # scan above never saw these coordinates. ``rank="coordinate_diverse"`` is what
+                    # makes the widening pay off: a plain weighted_score cap here would collapse the
+                    # pool straight back onto the nearest one or two coordinates (see
+                    # ``_round_robin_by_coordinate``). The ceiling is left at the pool's own size —
+                    # a wall-clock budget, not a candidate count, is what should decide how wide this
+                    # scans, exactly as ``_widen_strong_cas_pool`` was priced.
+                    widened_ceiling = max(
+                        (len(widened_pools.get(cell, ())) for cell in strong_cells), default=0
+                    )
+                    rescanned_pools, rescanned_masks = scan_cut_support(
+                        {cell: widened_pools.get(cell, []) for cell in strong_cells},
+                        {cell: allocated_rows_per_cell.get(cell, 0) for cell in strong_cells},
+                        tuple(config.seed_support), widened_ceiling,
+                        remaining_budget, rank="coordinate_diverse",
+                    )
+                    two_stage_scanned_pools.update(rescanned_pools)
+                    two_stage_cut_masks.update(rescanned_masks)
+                    two_stage_value_per_row.update(widened_value)
+                    two_stage_cut_probability.update(widened_cutp)
+
+                two_stage_result = two_stage_construction(
+                    allocated_rows_per_cell, two_stage_scanned_pools, two_stage_cut_masks,
+                    len(config.seed_support), context,
+                    two_stage_value_per_row, two_stage_cut_probability, strong_cas, weak_cas,
+                )
+            except Exception:
+                two_stage_result = None
+                logger.exception(
+                    "two-stage construction failed; keeping the shipped scan-and-retune result"
+                )
+            if two_stage_result is not None:
+                candidate_rows, candidate_entries, candidate_seeds_held, candidate_objective = (
+                    two_stage_result
+                )
+                baseline_objective = _predicted_objective(
+                    rows_per_cell, seeds_held, len(config.seed_support), context,
+                    value_per_row, cut_probability_by_cell,
+                    {cell: context.weight_of(cell[0]) for cell in rows_per_cell},
+                )
+                if candidate_objective > baseline_objective * (1 + _TWO_STAGE_MIN_GAIN):
+                    rows_per_cell, selected_entries, seeds_held = (
+                        candidate_rows, candidate_entries, candidate_seeds_held
+                    )
+                    two_stage_used = True
+
+    # The exact-outcome build was computed but did not clear the upper bound above, so the two are
+    # compared on real numbers instead. Reached only when pinning cost enough rows or enough
+    # coverage entropy to be genuinely arguable — which is the one case where a bound is not an
+    # answer. Both sides are the same closed form, so this is a comparison and not a heuristic.
+    seed_support_size = len(config.seed_support)
+    if pinned_result is not None:
+        blind_objective = _predicted_objective(
+            rows_per_cell, seeds_held, seed_support_size, context, value_per_row,
+            cut_probability_by_cell, {cell: context.weight_of(cell[0]) for cell in rows_per_cell},
+        )
+        if pinned_result[3] > blind_objective:
+            rows_per_cell, selected_entries, pinned_target, _pinned_objective = pinned_result
+            seeds_held, seed_support_size, two_stage_used = len(round_seeds), len(round_seeds), False
+            # Taking the pin means taking the pool it was built from, widened or not.
+            per_cell, coordinates, pools = pinned_state[0], pinned_state[1], pinned_state[2]
+            usable_cells = pinned_state[6]
+            unfillable_cells = [cell for cell in coordinates if not pools[cell]]
+            logger.info(
+                "exact-outcome: objective %.2f beats the seed-blind build's %.2f; taking it",
+                pinned_result[3], blind_objective,
+            )
+        else:
+            logger.info(
+                "exact-outcome: objective %.2f does not beat the seed-blind build's %.2f; "
+                "keeping the seed-blind result", pinned_result[3], blind_objective,
+            )
+
+    return _finish_build(
+        selected_entries, context, rows_wanted, per_cell, coordinates, pools, rows_per_cell,
+        usable_cells, unfillable_cells, seeds_held, seed_support_size, two_stage_used,
+        pinned_target, round_seeds,
     )
 
+
+def _finish_build(
+    selected_entries: list[dict], context: Context, rows_wanted: int, per_cell: int,
+    coordinates: dict[tuple, list[Coordinate]], pools: dict[tuple, list[dict]],
+    rows_per_cell: dict[tuple, int], usable_cells: list[tuple], unfillable_cells: list[tuple],
+    seeds_held: int, seed_support_size: int, two_stage_used: bool,
+    pinned_target: tuple[str, int] | None, round_seeds: tuple[int, ...],
+) -> tuple[list[dict], list[dict], dict]:
+    """Turn a selection into the upload array and its diagnostics.
+
+    Shared by both constructions so neither can acquire its own re-gating or its own idea of what a
+    diagnostic means — the numbers the miner logs and the dashboard parses have to describe the two
+    paths on identical terms to be comparable at all.
+    """
     # Re-number and re-gate in upload order. experiment_id is assigned last because it is the join
     # key stage 4 merges on and the field ``truncate_submission`` dedups, so it has to be unique in
     # exactly the array that gets sent — and the array is ordered strongest-first so that anything
-    # the cap ever cuts is the cheapest row, not an arbitrary one.
+    # the cap ever cuts is the cheapest row, not an arbitrary one. Renumbering is safe for a pinned
+    # build because ``stage3.experiment_seed`` hashes the mutation, cas, guide, start and strand and
+    # *not* the experiment_id, so neither this nor the sort can move a row's outcome.
     selected_entries.sort(key=lambda entry: -entry["stage2"]["weighted_score"])
     rows: list[dict] = []
     entries: list[dict] = []
@@ -978,6 +2665,21 @@ def build(context: Context, config: Config | None = None) -> tuple[list[dict], l
             cell_label(cell): len(pools[cell]) for cell in usable_cells
         },
         "empty_cells": [list(cell) for cell in unfillable_cells],
+        # Rounds out of ``seed_support`` on which every selected row cuts, which is where
+        # ``consistency_factor`` roughly doubles. A lower bound on what gets uploaded: the re-gate
+        # above only ever drops rows, and dropping a row can only widen the intersection. On a
+        # pinned build the support *is* the contract's seeds, so this reads |seeds| of |seeds|.
+        "seeds_holding_cut": seeds_held,
+        "seed_support_size": seed_support_size,
+        # Whether the two-stage construction (min-union weak cas + strict-over-clean-set strong
+        # cas) beat the shipped scan-and-retune result by ``_TWO_STAGE_MIN_GAIN`` and was taken.
+        "two_stage_used": two_stage_used,
+        # The ``(outcome, indel_length)`` every row is pinned to, or None when the build was seed
+        # blind. Set means all three of stage 4's targets are constant and ``consistency_factor``
+        # is exactly 1.0 under ``pinned_seeds`` — and only under those seeds.
+        "pinned_outcome": list(pinned_target) if pinned_target else None,
+        "pinned_seeds": list(round_seeds),
+        "predicted_consistency_factor": 1.0 if pinned_target else None,
         "offtarget_factors": dict(
             Counter(entry["features"]["offtarget_factor"] for entry in entries)
         ),
