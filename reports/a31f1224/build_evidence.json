@@ -1,0 +1,327 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-18 15:09:17,022 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,088 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,088 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:16,503 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 137/900 | cas9 pool 2230 | rows 250 cells 8/8 | 718.3s",
+      "2026-09-18 15:21:16,526 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 720s, waiting for a validator to ask for it",
+      "2026-09-18 15:44:19,712 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:44:23,740 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 720s) \u2014 no build needed",
+      "2026-09-18 15:44:23,905 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 4.2s (285s of the URL's TTL to spare)",
+      "2026-09-18 15:44:53,127 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey/result/2026-09-18T15:44:53",
+      "2026-09-18 15:50:23,326 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:23,517 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:23,517 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:18,052 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 137/900 | cas9 pool 2230 | rows 250 cells 8/8 | 353.8s",
+      "2026-09-18 15:56:18,061 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 355s, waiting for a validator to ask for it",
+      "2026-09-18 19:56:28,000 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey/result/2026-09-18T15:44:53 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey/result/2026-09-18T15:44:53/validation.log",
+      "2026-09-18 19:57:00,866 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey/result/2026-09-18T15:44:53 in 33s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 20.3129 = weighted 231.7540 x consistency 0.0938 x fidelity 0.9340"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:23.518010+00:00",
+      "all_hdr_built": true,
+      "band": "[431, 411, 437, 235, 213, 269, 298, 449, 273, 221, 247]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-18 15:09:17,991 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:18,065 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:18,065 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:13,290 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 134/900 | cas9 pool 2247 | rows 250 cells 8/8 | 714.5s",
+      "2026-09-18 15:21:13,296 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 715s, waiting for a validator to ask for it",
+      "2026-09-18 15:34:32,766 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:34:33,244 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 715s) \u2014 no build needed",
+      "2026-09-18 15:34:33,387 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 0.6s (284s of the URL's TTL to spare)",
+      "2026-09-18 15:35:02,305 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey1/result/2026-09-18T15:35:02",
+      "2026-09-18 15:50:25,437 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:25,513 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:25,513 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:24,784 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 144/900 | cas9 pool 2056 | rows 250 cells 8/8 | 358.6s",
+      "2026-09-18 15:56:24,793 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 359s, waiting for a validator to ask for it",
+      "2026-09-18 18:04:58,084 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey1/result/2026-09-18T15:35:02 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey1/result/2026-09-18T15:35:02/validation.log",
+      "2026-09-18 18:05:29,473 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey1/result/2026-09-18T15:35:02 in 31s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 21.1415 = weighted 232.5756 x consistency 0.0975 x fidelity 0.9325"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:25.513669+00:00",
+      "all_hdr_built": true,
+      "band": "[431, 411, 437, 470, 249, 276, 267, 443, 270, 261, 426]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-18 15:09:17,107 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,175 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,175 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:09,991 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 150/900 | cas9 pool 1938 | rows 250 cells 8/8 | 712.1s",
+      "2026-09-18 15:21:09,999 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 713s, waiting for a validator to ask for it",
+      "2026-09-18 15:49:00,800 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:49:01,281 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 713s) \u2014 no build needed",
+      "2026-09-18 15:49:01,441 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 0.6s (284s of the URL's TTL to spare)",
+      "2026-09-18 15:49:31,510 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey2/result/2026-09-18T15:49:31",
+      "2026-09-18 15:50:26,864 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:26,941 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:26,941 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:22,560 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 135/900 | cas9 pool 2234 | rows 250 cells 8/8 | 354.9s",
+      "2026-09-18 15:56:22,567 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 356s, waiting for a validator to ask for it",
+      "2026-09-18 17:58:27,884 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey2/result/2026-09-18T15:49:31 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey2/result/2026-09-18T15:49:31/validation.log",
+      "2026-09-18 17:59:01,045 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey2/result/2026-09-18T15:49:31 in 33s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 21.8603 = weighted 233.5049 x consistency 0.1003 x fidelity 0.9331"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:26.942282+00:00",
+      "all_hdr_built": true,
+      "band": "[431, 800, 403, 458, 479, 444, 463, 289, 440, 416, 412]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-18 15:09:17,396 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,487 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,487 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:10,876 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 139/900 | cas9 pool 2123 | rows 250 cells 8/8 | 712.7s",
+      "2026-09-18 15:21:10,884 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 713s, waiting for a validator to ask for it",
+      "2026-09-18 15:29:13,976 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:29:14,703 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 713s) \u2014 no build needed",
+      "2026-09-18 15:29:14,871 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 0.9s (283s of the URL's TTL to spare)",
+      "2026-09-18 15:29:45,641 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey3/result/2026-09-18T15:29:45",
+      "2026-09-18 15:50:28,933 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:29,066 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:29,066 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:26,726 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 150/900 | cas9 pool 1938 | rows 250 cells 8/8 | 357.1s",
+      "2026-09-18 15:56:26,734 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 358s, waiting for a validator to ask for it",
+      "2026-09-18 17:50:23,429 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey3/result/2026-09-18T15:29:45 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey3/result/2026-09-18T15:29:45/validation.log",
+      "2026-09-18 17:50:52,655 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey3/result/2026-09-18T15:29:45 in 29s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 21.7135 = weighted 233.8613 x consistency 0.0997 x fidelity 0.9317"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:29.066958+00:00",
+      "all_hdr_built": true,
+      "band": "[431, 800, 403, 830, 499, 445, 808, 802, 497, 437, 435]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-18 15:09:18,038 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:18,104 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:18,105 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:10,213 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 141/900 | cas9 pool 2075 | rows 250 cells 8/8 | 711.3s",
+      "2026-09-18 15:21:10,221 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 712s, waiting for a validator to ask for it",
+      "2026-09-18 15:22:19,106 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:22:19,598 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 712s) \u2014 no build needed",
+      "2026-09-18 15:22:19,736 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 0.6s (283s of the URL's TTL to spare)",
+      "2026-09-18 15:22:48,305 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey4/result/2026-09-18T15:22:48",
+      "2026-09-18 15:50:30,865 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:30,932 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:30,933 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:28,133 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 137/900 | cas9 pool 2182 | rows 250 cells 8/8 | 356.6s",
+      "2026-09-18 15:56:28,142 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 357s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:30.933801+00:00",
+      "all_hdr_built": true,
+      "band": "[431, 800, 859, 427, 424, 824, 813, 835, 856, 498, 420]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-18 15:09:17,337 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,403 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,403 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:16:28,689 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:16:29,411 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] prepared build is still running (432s in); waiting up to 179s for it",
+      "2026-09-18 15:19:28,000 | WARNING | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] prepared round unusable (still building (611s so far)); building now",
+      "2026-09-18 15:19:28,000 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:19:28,000 | INFO | __main__ | Build: hedges skipped (a prepared build is still holding the GPU); using the ordinary construction",
+      "2026-09-18 15:19:28,003 | INFO | __main__ | Build: seed-agnostic path not used (hedges skipped)",
+      "2026-09-18 15:19:28,003 | INFO | __main__ | Build: building context (k-mer index over gene_region +/- 50 kb)",
+      "2026-09-18 15:19:28,003 | INFO | __main__ | Build: context ready | mutations=2 cas=['Cas9', 'Cas12a'] max_experiments=250",
+      "2026-09-18 15:19:28,004 | INFO | __main__ | Build: enumerating PAM sites in gene_region +/- 3000",
+      "2026-09-18 15:19:28,004 | INFO | __main__ | Build: 2762 PAM sites enumerated",
+      "2026-09-18 15:19:28,004 | INFO | __main__ | Build: config resolved | construction=hdr selection=nearest gc_tolerance=0.03 cut_p_floors={'Cas9': 0.99, 'Cas12a': 0.96} cas_share={'Cas9': 0.7, 'Cas12a': 0.3} backfill_cas=Cas9",
+      "2026-09-18 15:19:28,489 | INFO | __main__ | Build: fitted weight_skew=1.75",
+      "2026-09-18 15:19:28,489 | INFO | __main__ | Build: generating rows (construction=hdr, 24 variants/site)",
+      "2026-09-18 15:19:29,114 | INFO | __main__ | Build: generated 250 rows, 250 of them stage-1 valid",
+      "2026-09-18 15:19:29,114 | INFO | __main__ | Build: scoring locally through the validator's own pipeline",
+      "2026-09-18 15:19:31,887 | INFO | __main__ | Build: wrote the submission to data/inst/niome_hotkey5/submission.json",
+      "2026-09-18 15:19:32,078 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 183.4s (101s of the URL's TTL to spare)",
+      "2026-09-18 15:20:01,140 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey5/result/2026-09-18T15:20:01",
+      "2026-09-18 15:21:05,006 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 131/900 | cas9 pool 2179 | rows 250 cells 8/8 | 706.8s",
+      "2026-09-18 15:21:05,015 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 708s, waiting for a validator to ask for it",
+      "2026-09-18 15:50:31,949 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:32,014 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:32,015 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:33,047 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 139/900 | cas9 pool 2123 | rows 250 cells 8/8 | 360.4s",
+      "2026-09-18 15:56:33,055 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 361s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:32.015575+00:00",
+      "all_hdr_built": true,
+      "band": "[859, 800, 860, 874, 487, 450, 824, 856, 822, 809, 806]"
+    }
+  },
+  "h6": {
+    "log_path": "/root/.pm2/logs/miner-h6-error.log",
+    "events": [
+      "2026-09-18 15:09:17,056 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,121 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,122 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:21:09,877 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 128/900 | cas9 pool 2397 | rows 250 cells 8/8 | 711.9s",
+      "2026-09-18 15:21:09,886 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 713s, waiting for a validator to ask for it",
+      "2026-09-18 15:43:27,615 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:43:28,448 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 713s) \u2014 no build needed",
+      "2026-09-18 15:43:28,609 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 1.0s (283s of the URL's TTL to spare)",
+      "2026-09-18 15:43:56,680 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey6/result/2026-09-18T15:43:56",
+      "2026-09-18 15:50:33,217 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:33,287 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:33,288 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:39,818 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 146/900 | cas9 pool 2022 | rows 250 cells 8/8 | 365.9s",
+      "2026-09-18 15:56:39,826 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 367s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:33.288500+00:00",
+      "all_hdr_built": true,
+      "band": "[859, 800, 860, 874, 487, 824, 889, 497, 829, 895, 846]"
+    }
+  },
+  "h7": {
+    "log_path": "/root/.pm2/logs/miner-h7-error.log",
+    "events": [
+      "2026-09-18 15:06:44,743 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:06:45,204 | WARNING | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] prepared round is for task 55635d76-a5c5-493f-a55e-66d9bdaaa35a under a different contract key; building this one instead",
+      "2026-09-18 15:06:45,204 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:06:45,205 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:09:17,718 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:09:17,788 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:09:17,788 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T14:17)",
+      "2026-09-18 15:09:45,320 | INFO | __main__ | Build: all-HDR (CD34+_HSPC) | band joined 300 seeds 200-299,400-499,800-899 group 100 clean 11/300 | cas9 pool 4321 | rows 250 cells 8/8 | 179.7s",
+      "2026-09-18 15:09:45,512 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 180.8s (103s of the URL's TTL to spare)",
+      "2026-09-18 15:10:14,981 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey7/result/2026-09-18T15:10:14",
+      "2026-09-18 15:21:17,044 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 135/900 | cas9 pool 2234 | rows 250 cells 8/8 | 691.0s",
+      "2026-09-18 15:21:17,050 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 719s, waiting for a validator to ask for it",
+      "2026-09-18 15:50:35,162 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:50:35,242 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:50:35,243 | INFO | __main__ | Build: window 200-299,400-499,800-899 from the round plan (generated 2026-09-18T15:17)",
+      "2026-09-18 15:56:39,717 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 141/900 | cas9 pool 2139 | rows 250 cells 8/8 | 363.8s",
+      "2026-09-18 15:56:39,724 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 365s, waiting for a validator to ask for it",
+      "2026-09-18 18:23:34,860 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey7/result/2026-09-18T15:10:14 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey7/result/2026-09-18T15:10:14/validation.log",
+      "2026-09-18 18:24:08,523 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey7/result/2026-09-18T15:10:14 in 34s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 22.0005 = weighted 230.6923 x consistency 0.1008 x fidelity 0.9458"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        200,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T15:17:33.192759+00:00",
+      "at": "2026-09-18T15:50:35.243741+00:00",
+      "all_hdr_built": true,
+      "band": "[859, 215, 883, 874, 222, 257, 861, 819, 842, 213, 235]"
+    }
+  },
+  "h8": {
+    "log_path": "/root/.pm2/logs/miner-h8-error.log",
+    "events": [
+      "2026-09-18 15:11:30,225 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:11:30,309 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:11:30,310 | INFO | __main__ | Build: window 100-199,300-399,800-899 from the built-in fallback layout (env_pin_no_entry)",
+      "2026-09-18 15:21:17,351 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 131/900 | cas9 pool 2376 | rows 250 cells 8/8 | 586.3s",
+      "2026-09-18 15:21:17,359 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 587s, waiting for a validator to ask for it",
+      "2026-09-18 15:44:39,948 | INFO | __main__ | Received genomics task a31f1224-969b-4195-bb49-8220aa8800e5 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 15:44:40,409 | INFO | __main__ | [a31f1224-969b-4195-bb49-8220aa8800e5] using the prepared submission (250 rows in 587s) \u2014 no build needed",
+      "2026-09-18 15:44:40,535 | INFO | __main__ | Submitted 250 rows for task a31f1224-969b-4195-bb49-8220aa8800e5 in 0.6s (283s of the URL's TTL to spare)",
+      "2026-09-18 15:45:09,059 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task a31f1224-969b-4195-bb49-8220aa8800e5 -> data/inst/niome_hotkey8/result/2026-09-18T15:45:09",
+      "2026-09-18 18:20:24,170 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey8/result/2026-09-18T15:45:09 with calc.py against task a31f1224-969b-4195-bb49-8220aa8800e5; output -> data/inst/niome_hotkey8/result/2026-09-18T15:45:09/validation.log",
+      "2026-09-18 18:20:57,433 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey8/result/2026-09-18T15:45:09 in 33s | task a31f1224-969b-4195-bb49-8220aa8800e5 seed 287 | 250/250 rows valid | final_score 24.7543 = weighted 232.3312 x consistency 0.1141 x fidelity 0.9338"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        100,
+        899
+      ],
+      "source": "env_pin_no_entry_joined",
+      "plan_generated_at": null,
+      "at": "2026-09-18T15:11:30.310311+00:00",
+      "all_hdr_built": true,
+      "band": "[168, 892, 116, 895, 885, 143, 157, 868, 864, 120, 184]"
+    }
+  },
+  "h9": {
+    "log_path": "/root/.pm2/logs/miner-h9-error.log",
+    "events": [
+      "2026-09-18 15:11:30,357 | INFO | __main__ | Prefetch: preparing task a31f1224-969b-4195-bb49-8220aa8800e5 (created 2026-09-18T15:04:31.395506) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-18 15:11:30,432 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 15:11:30,432 | INFO | __main__ | Build: window 100-199,300-399,800-899 from the built-in fallback layout (env_pin_no_entry)",
+      "2026-09-18 15:21:14,518 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 134/900 | cas9 pool 2215 | rows 250 cells 8/8 | 583.3s",
+      "2026-09-18 15:21:14,526 | INFO | __main__ | Prefetch: task a31f1224-969b-4195-bb49-8220aa8800e5 ready \u2014 250 rows in 584s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        100,
+        899
+      ],
+      "source": "env_pin_no_entry_joined",
+      "plan_generated_at": null,
+      "at": "2026-09-18T15:11:30.432778+00:00",
+      "all_hdr_built": true,
+      "band": "[168, 892, 116, 895, 885, 143, 157, 123, 182, 163, 158]"
+    }
+  }
+}

@@ -49,6 +49,10 @@ import requests  # noqa: E402
 
 import niome_subnet.utils.settings as settings  # noqa: E402
 from niome_subnet.genomics.validation import stage12, stage3, stage4, stage5  # noqa: E402
+# The canonical comma-joined-seed parser. Imported rather than restated so `Context.seed` cannot
+# drift from what the validator does with the same field — the same rule that has this file call
+# the validator's stage functions instead of reimplementing the scoring maths.
+from niome_subnet.genomics.validation import _parse_seeds  # noqa: E402
 
 TASKS_URL = f"{settings.BASE_URL}/api/v3/tasks"
 NUCLEOTIDES = ("A", "C", "G", "T")
@@ -137,8 +141,40 @@ class Context:
     strands: tuple[str, str] = ("+", "-")
 
     @property
-    def seed(self) -> int:
+    def seed_raw(self):
+        """The contract's seed field exactly as issued — `0`, `"122"` or `"448,931,493"`."""
         return self.contract["seed"]
+
+    @property
+    def seed(self) -> int:
+        """The FIRST round seed, as the `-> int` annotation has always claimed.
+
+        `contract["seed"]` is a comma-joined list of round seeds in the current 3-seed regime
+        ("448,931,493") and the integer `0` on a broadcast contract before the stamp. This
+        property carried the `int` annotation but returned that value RAW, so every consumer
+        doing integer work on it — `random.Random(ctx.seed ^ 0x5EED)` in `_generate` and its
+        twin, `stage3.simulate`, `stage4_in_memory(fold_seed=...)` — raised
+        `TypeError: unsupported operand type(s) for ^: 'str' and 'int'` the moment a STAMPED
+        contract reached it.
+
+        **Measured live, 2026-09-18.** h7 was called ~2h into task 11276911 (CD34+, seeds
+        448/931/493, so already stamped), its all-HDR declined on budget, it fell through every
+        rung to the ordinary construction — and submitted NOTHING. That rung is the ladder's
+        safety net, the build `_build` is supposed to always be able to fall back on, and it was
+        broken on every stamped contract. It stayed hidden because the rungs above parse the
+        seed list themselves, and because an emergency build normally runs against the BROADCAST
+        copy where `seed` is the integer 0 (`0 ^ 0x5EED` is fine) — which is exactly why h0 and
+        h6 survived the same emergency path on the same round that h7 died on.
+
+        Taking the FIRST seed is the documented single-seed behaviour rather than a new choice:
+        stages 3-5 re-run per seed and average, so a build tuned to one seed captures its share
+        of the mean. **On an unstamped contract this returns 0 exactly as before**, so nothing
+        that already worked changes — the fix strictly converts a crash into a build. Parsing
+        goes through the validator's own `_parse_seeds` rather than a local copy, for the reason
+        this file imports the validator's stage functions instead of reimplementing them.
+        """
+        seeds = _parse_seeds(self.contract["seed"])
+        return seeds[0] if seeds else 0
 
     @property
     def max_experiments(self) -> int:

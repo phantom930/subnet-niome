@@ -12990,9 +12990,9 @@
     "8457e626-a711-474c-880e-f823b26656d5"
    ],
    "applied": {
-    "applied_at": "2026-09-17T20:17:08.508009+00:00",
+    "applied_at": "2026-09-19T02:21:18.285587+00:00",
     "predicted_window": "900-999",
-    "predicted_p_hit": 0.3917,
+    "predicted_p_hit": 0.3987,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "900-999",
@@ -13002,8 +13002,8 @@
     "assignments": {
      "niome_hotkey": [
       [
-       200,
-       299
+       600,
+       699
       ],
       [
        800,
@@ -13012,8 +13012,8 @@
      ],
      "niome_hotkey1": [
       [
-       200,
-       299
+       600,
+       699
       ],
       [
        800,
@@ -13022,8 +13022,8 @@
      ],
      "niome_hotkey2": [
       [
-       200,
-       299
+       600,
+       699
       ],
       [
        800,
@@ -13032,8 +13032,8 @@
      ],
      "niome_hotkey3": [
       [
-       200,
-       299
+       600,
+       699
       ],
       [
        800,
@@ -13042,8 +13042,8 @@
      ],
      "niome_hotkey4": [
       [
-       200,
-       299
+       600,
+       699
       ],
       [
        800,
@@ -13052,8 +13052,48 @@
      ],
      "niome_hotkey5": [
       [
-       200,
-       299
+       600,
+       699
+      ],
+      [
+       800,
+       999
+      ]
+     ],
+     "niome_hotkey6": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       999
+      ]
+     ],
+     "niome_hotkey7": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       999
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       600,
+       699
+      ],
+      [
+       800,
+       999
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       600,
+       699
       ],
       [
        800,
@@ -13067,7 +13107,11 @@
      "niome_hotkey2": "joined-full",
      "niome_hotkey3": "joined-full",
      "niome_hotkey4": "joined-full",
-     "niome_hotkey5": "joined-full"
+     "niome_hotkey5": "joined-full",
+     "niome_hotkey6": "joined-full",
+     "niome_hotkey7": "joined-full",
+     "niome_hotkey8": "joined-full",
+     "niome_hotkey9": "joined-full"
     }
    }
   },
@@ -13474,9 +13518,9 @@
     "33c266d5-50d4-4675-a586-1ca47d0737eb"
    ],
    "applied": {
-    "applied_at": "2026-09-17T20:17:08.508009+00:00",
+    "applied_at": "2026-09-19T02:21:18.285587+00:00",
     "predicted_window": "800-899",
-    "predicted_p_hit": 0.3351,
+    "predicted_p_hit": 0.339,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "800-899",
@@ -13519,6 +13563,30 @@
        100,
        399
       ]
+     ],
+     "niome_hotkey6": [
+      [
+       100,
+       399
+      ]
+     ],
+     "niome_hotkey7": [
+      [
+       100,
+       399
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       100,
+       399
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       100,
+       399
+      ]
      ]
     },
     "roles": {
@@ -13527,7 +13595,11 @@
      "niome_hotkey2": "joined-full",
      "niome_hotkey3": "joined-full",
      "niome_hotkey4": "joined-full",
-     "niome_hotkey5": "joined-full"
+     "niome_hotkey5": "joined-full",
+     "niome_hotkey6": "joined-full",
+     "niome_hotkey7": "joined-full",
+     "niome_hotkey8": "joined-full",
+     "niome_hotkey9": "joined-full"
     }
    }
   },
@@ -13617,12 +13689,12 @@
     "56506921-7886-4584-ba21-c82f76b011ad"
    ],
    "applied": {
-    "applied_at": "2026-09-17T20:17:08.508009+00:00",
-    "predicted_window": "300-399",
-    "predicted_p_hit": 0.3095,
+    "applied_at": "2026-09-19T02:21:18.285587+00:00",
+    "predicted_window": "600-699",
+    "predicted_p_hit": 0.3089,
     "band_width": 0,
     "conc_rank": 1,
-    "rank1_window": "300-399",
+    "rank1_window": "600-699",
     "spread_width": 100,
     "n_concentrated": 0,
     "played": true,
@@ -13630,61 +13702,101 @@
      "niome_hotkey": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
       ]
      ],
      "niome_hotkey1": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
       ]
      ],
      "niome_hotkey2": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
       ]
      ],
      "niome_hotkey3": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
       ]
      ],
      "niome_hotkey4": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
       ]
      ],
      "niome_hotkey5": [
       [
        300,
-       499
+       399
       ],
       [
-       800,
-       899
+       600,
+       799
+      ]
+     ],
+     "niome_hotkey6": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       799
+      ]
+     ],
+     "niome_hotkey7": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       799
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       799
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       799
       ]
      ]
     },
@@ -13694,7 +13806,11 @@
      "niome_hotkey2": "joined-full",
      "niome_hotkey3": "joined-full",
      "niome_hotkey4": "joined-full",
-     "niome_hotkey5": "joined-full"
+     "niome_hotkey5": "joined-full",
+     "niome_hotkey6": "joined-full",
+     "niome_hotkey7": "joined-full",
+     "niome_hotkey8": "joined-full",
+     "niome_hotkey9": "joined-full"
     }
    }
   },
@@ -13783,20 +13899,24 @@
     "920e1837-75a5-4133-9d8a-a54a8cd2bfe7"
    ],
    "applied": {
-    "applied_at": "2026-09-17T20:17:08.508009+00:00",
-    "predicted_window": "300-399",
-    "predicted_p_hit": 0.3256,
+    "applied_at": "2026-09-19T02:21:18.285587+00:00",
+    "predicted_window": "900-999",
+    "predicted_p_hit": 0.3295,
     "band_width": 0,
     "conc_rank": 1,
-    "rank1_window": "300-399",
+    "rank1_window": "900-999",
     "spread_width": 100,
     "n_concentrated": 0,
     "played": true,
     "assignments": {
      "niome_hotkey": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13805,8 +13925,12 @@
      ],
      "niome_hotkey1": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13815,8 +13939,12 @@
      ],
      "niome_hotkey2": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13825,8 +13953,12 @@
      ],
      "niome_hotkey3": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13835,8 +13967,12 @@
      ],
      "niome_hotkey4": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13845,8 +13981,68 @@
      ],
      "niome_hotkey5": [
       [
-       200,
+       300,
        399
+      ],
+      [
+       600,
+       699
+      ],
+      [
+       900,
+       999
+      ]
+     ],
+     "niome_hotkey6": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       699
+      ],
+      [
+       900,
+       999
+      ]
+     ],
+     "niome_hotkey7": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       699
+      ],
+      [
+       900,
+       999
+      ]
+     ],
+     "niome_hotkey8": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       699
+      ],
+      [
+       900,
+       999
+      ]
+     ],
+     "niome_hotkey9": [
+      [
+       300,
+       399
+      ],
+      [
+       600,
+       699
       ],
       [
        900,
@@ -13860,7 +14056,11 @@
      "niome_hotkey2": "joined-full",
      "niome_hotkey3": "joined-full",
      "niome_hotkey4": "joined-full",
-     "niome_hotkey5": "joined-full"
+     "niome_hotkey5": "joined-full",
+     "niome_hotkey6": "joined-full",
+     "niome_hotkey7": "joined-full",
+     "niome_hotkey8": "joined-full",
+     "niome_hotkey9": "joined-full"
     }
    }
   }

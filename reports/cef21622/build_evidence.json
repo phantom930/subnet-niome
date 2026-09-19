@@ -1,0 +1,146 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-17 22:08:37,872 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,859 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:11:06,436 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 143/900 | cas9 pool 801 | rows 250 cells 8/8 | 147.1s",
+      "2026-09-17 22:11:06,442 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 149s, waiting for a validator to ask for it",
+      "2026-09-17 22:22:22,384 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 149s) \u2014 no build needed",
+      "2026-09-17 22:22:22,565 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 18.0s (266s of the URL's TTL to spare)",
+      "2026-09-17 22:22:52,454 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey/result/2026-09-17T22:22:52"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.859522+00:00",
+      "all_hdr_built": true,
+      "band": "[427, 412, 403, 348, 397, 428, 350, 372, 364, 344, 400]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-17 22:08:37,750 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,646 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:11:01,106 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 137/900 | cas9 pool 871 | rows 250 cells 8/8 | 142.0s",
+      "2026-09-17 22:11:01,111 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 143s, waiting for a validator to ask for it",
+      "2026-09-17 22:13:18,417 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 143s) \u2014 no build needed",
+      "2026-09-17 22:13:18,593 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 11.7s (272s of the URL's TTL to spare)",
+      "2026-09-17 22:13:48,525 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey1/result/2026-09-17T22:13:48"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.647332+00:00",
+      "all_hdr_built": true,
+      "band": "[427, 412, 403, 453, 471, 450, 352, 499, 486, 447, 449]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-17 22:08:37,822 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,664 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:10:59,269 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 140/900 | cas9 pool 750 | rows 250 cells 8/8 | 140.2s",
+      "2026-09-17 22:10:59,274 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 141s, waiting for a validator to ask for it",
+      "2026-09-17 22:51:02,142 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 141s) \u2014 no build needed",
+      "2026-09-17 22:51:02,313 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 0.4s (284s of the URL's TTL to spare)",
+      "2026-09-17 22:51:31,290 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey2/result/2026-09-17T22:51:31"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.664551+00:00",
+      "all_hdr_built": true,
+      "band": "[427, 412, 403, 453, 471, 450, 804, 406, 456, 470, 417]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-17 22:08:37,920 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,873 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:10:56,592 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 142/900 | cas9 pool 766 | rows 250 cells 8/8 | 137.3s",
+      "2026-09-17 22:10:56,597 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 139s, waiting for a validator to ask for it",
+      "2026-09-17 22:34:15,832 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 139s) \u2014 no build needed",
+      "2026-09-17 22:34:15,999 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 0.9s (288s of the URL's TTL to spare)",
+      "2026-09-17 22:34:45,883 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey3/result/2026-09-17T22:34:45"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.873792+00:00",
+      "all_hdr_built": true,
+      "band": "[450, 852, 894, 806, 818, 832, 465, 816, 817, 880, 461]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-17 22:08:37,681 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,636 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:10:57,601 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 134/900 | cas9 pool 887 | rows 250 cells 8/8 | 138.5s",
+      "2026-09-17 22:10:57,606 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 140s, waiting for a validator to ask for it",
+      "2026-09-17 22:55:13,468 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 140s) \u2014 no build needed",
+      "2026-09-17 22:55:13,599 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 0.4s (283s of the URL's TTL to spare)",
+      "2026-09-17 22:55:42,784 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey4/result/2026-09-17T22:55:42"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.636396+00:00",
+      "all_hdr_built": true,
+      "band": "[852, 333, 890, 310, 300, 829, 841, 886, 824, 316, 885]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-17 22:08:37,630 | INFO | __main__ | Prefetch: preparing task cef21622-627f-4171-bb83-53bfc44b4f91 (created 2026-09-17T22:08:27.490979) | cell_type=CD34+_HSPC mutations=2 budget=900s",
+      "2026-09-17 22:08:38,610 | INFO | __main__ | Build: window 300-499,800-899 from the round plan (generated 2026-09-17T21:20)",
+      "2026-09-17 22:11:06,393 | INFO | __main__ | Build: conjunction (CD34+_HSPC) | band 11 k=11 group 100 clean 133/900 | cas9 pool 910 | rows 250 cells 8/8 | 147.3s",
+      "2026-09-17 22:11:06,397 | INFO | __main__ | Prefetch: task cef21622-627f-4171-bb83-53bfc44b4f91 ready \u2014 250 rows in 149s, waiting for a validator to ask for it",
+      "2026-09-17 22:57:57,924 | INFO | __main__ | [cef21622-627f-4171-bb83-53bfc44b4f91] using the prepared submission (250 rows in 149s) \u2014 no build needed",
+      "2026-09-17 22:57:58,118 | INFO | __main__ | Submitted 250 rows for task cef21622-627f-4171-bb83-53bfc44b4f91 in 1.8s (283s of the URL's TTL to spare)",
+      "2026-09-17 22:58:26,100 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task cef21622-627f-4171-bb83-53bfc44b4f91 -> data/inst/niome_hotkey5/result/2026-09-17T22:58:26"
+    ],
+    "window_record": {
+      "cell": "CD34+_HSPC",
+      "window": [
+        300,
+        899
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T21:20:21.738699+00:00",
+      "at": "2026-09-17T22:08:38.611343+00:00",
+      "all_hdr_built": true,
+      "band": "[385, 873, 377, 858, 867, 860, 874, 314, 876, 392, 898]"
+    }
+  }
+}

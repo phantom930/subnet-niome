@@ -25,7 +25,7 @@ PY=/root/workspace/subnet-niome/.venv/bin/python
 ROOT=/root/workspace/subnet-niome
 cd "$ROOT"
 
-EXTERNAL_IP=184.144.255.144
+EXTERNAL_IP=76.71.171.67
 
 # One row per hotkey:  <wallet-hotkey>  <axon.port>  <axon.external-port>  <NIOME_HDR_WINDOW>
 #
@@ -239,7 +239,14 @@ ALL_CUT_HOTKEYS=""
 # 300-seed band space once) and additionally take the full 900-seed cut window via
 # joined_window.conjunction_cut_seeds -- see that file and conjunction.CELL_CONFIG's 2026-09-17
 # entries for what changed and what is still unmeasured about it.
-DEREGISTERED="niome_hotkey6 niome_hotkey7 niome_hotkey8 niome_hotkey9 niome_hotkey10"
+# 2026-09-17: h6 is registered at uid 175 (verified at block 9089945) and joins
+# FULL_HK/BAND_HK with band offset 25; h0-h5 retain offsets 0/50/100/150/200/250.
+# 2026-09-18: h7 is registered at uid 65 (verified at block 9092582) and joins
+# FULL_HK/BAND_HK with band offset 75.
+# 2026-09-18, verified against the chain (netuid 55, block 9095293) rather than this line's own
+# history: h8 (uid 211) and h9 (uid 245) ARE registered and were wrongly listed here, which is
+# why neither had a pm2 app and both sat dark from 2026-09-13. Only h10 is genuinely off.
+DEREGISTERED="niome_hotkey10"
 
 # Hotkeys preferred for the wide spread windows, in the order they should be filled. They are only
 # used as spread when the concentrated block does not need them: HEK293 concentrates 8 and so

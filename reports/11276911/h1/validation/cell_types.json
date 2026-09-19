@@ -1,0 +1,22 @@
+{
+  "CD34+_HSPC": {
+    "accessibility": 0.87,
+    "basis": "sourced",
+    "note": "Peripheral-blood/bone-marrow-derived CD34+ hematopoietic stem/progenitor cells -- the actual ex vivo editing substrate used in real HBB gene therapies (Casgevy/exa-cel, and the Cas12a-based RUBY/EdiThal trials). A designed sgRNA targeting the HBB locus produced up to 87% indels in CD34+ HSPCs in published comparisons (source: PMC6236008, gene correction of HBB mutations in CD34+ HSPCs)."
+  },
+  "HEK293": {
+    "accessibility": 0.35,
+    "basis": "estimated",
+    "note": "Standard non-erythroid control/negative-context cell line (embryonic kidney lineage). HBB is not natively expressed in this lineage, so chromatin at the locus is assumed substantially less accessible than in erythroid contexts -- but no precise sourced figure for HBB-locus accessibility specifically in HEK293 was found. This is a placeholder assumption, not literature-derived; treat it as the roughest of the four values here."
+  },
+  "HUDEP-2": {
+    "accessibility": 0.82,
+    "basis": "estimated",
+    "note": "Immortalized human umbilical-cord-derived erythroid progenitor line, a widely used research surrogate for primary erythroid cells; ATAC-seq-characterized as having open chromatin at globin loci in the literature. No single indel-efficiency figure directly comparable to the CD34+_HSPC/K562 pair was found during this pass -- this value is a reasoned estimate (similar to, slightly below CD34+_HSPC) based on its established role as a good erythroid model, not a directly sourced number. Revisit if a real comparative figure turns up."
+  },
+  "K562": {
+    "accessibility": 0.77,
+    "basis": "sourced",
+    "note": "Chronic myelogenous leukemia cell line, erythroid-like, standard low-cost CRISPR screening substrate. Same source comparison as above found up to 77% indels at the same HBB-locus target -- directly comparable to the CD34+_HSPC figure, hence both marked 'sourced'."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "content": {
+    "contract": {
+      "active_mutations": [
+        "HBB:c.323G>A",
+        "NC_000011.10:g.5226541A>T"
+      ],
+      "cell_type": "HEK293",
+      "mutation_regions": {
+        "HBB:c.323G>A": "exon3",
+        "NC_000011.10:g.5226541A>T": null
+      },
+      "mutation_weights": {
+        "HBB:c.323G>A": 1.54,
+        "NC_000011.10:g.5226541A>T": 0.65
+      },
+      "rules": {
+        "base_padding": 400,
+        "cas_systems": [
+          "Cas9",
+          "Cas12a"
+        ],
+        "max_experiments": 250,
+        "max_mismatches": 3,
+        "proximity_gate": false
+      },
+      "seed": "117,842,989",
+      "version": "v1"
+    },
+    "hbb_reference": {
+      "challenge": {
+        "active_mutations": [
+          "HBB:c.323G>A",
+          "NC_000011.10:g.5226541A>T"
+        ],
+        "cell_type": "HEK293",
+        "mutation_regions": {
+          "HBB:c.323G>A": "exon3",
+          "NC_000011.10:g.5226541A>T": null
+        },
+        "mutation_weights": {
+          "HBB:c.323G>A": 1.54,
+          "NC_000011.10:g.5226541A>T": 0.65
+        },
+        "rules": {
+          "base_padding": 400,
+          "cas_systems": [
+            "Cas9",
+            "Cas12a"
+          ],
+          "max_experiments": 250,
+          "max_mismatches": 3,
+          "proximity_gate": false
+        },
+        "seed": "117,842,989",
+        "version": "v1"
+      },
+      "chromosome": "11",
+      "gene_region": {
+        "end": 5227064,
+        "start": 5225464
+      },
+      "mutation_map": {
+        "HBB:c.323G>A": 5225719,
+        "NC_000011.10:g.5226541A>T": 5226541
+      },
+      "window_id": "HBB_v1"
+    }
+  },
+  "created_at": "2026-09-17T17:19:11.656625",
+  "id": "7bca65ce-693d-4ad9-bf60-6297014bed83"
+}

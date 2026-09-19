@@ -1,0 +1,237 @@
+{
+  "stage": "5 \u2014 distribution fidelity",
+  "seed_dependent": false,
+  "formula": "geometric mean of six ratios, clipped at 1e-9; final_score = total_weighted_score * consistency_factor * fidelity_factor",
+  "pipeline_output": {},
+  "terms": {
+    "mutation_coverage_entropy_ratio": {
+      "value": 0.8267463724926178,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9687879232822173,
+      "log_share": 0.41008772027526813,
+      "factor_if_perfect": 0.9554104160205508,
+      "final_score_if_perfect": 21.64788926876993,
+      "cost_now": 0.6756755806349127
+    },
+    "cas_system_coverage_entropy_ratio": {
+      "value": 0.9043814577244937,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9833888389555945,
+      "log_share": 0.21663016283700254,
+      "factor_if_perfect": 0.9412249114010376,
+      "final_score_if_perfect": 21.326471134661748,
+      "cost_now": 0.35425744652673263
+    },
+    "strand_coverage_entropy_ratio": {
+      "value": 0.9944066525627802,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9990655953646349,
+      "log_share": 0.012089953177090844,
+      "factor_if_perfect": 0.9264557573728985,
+      "final_score_if_perfect": 20.99182855003696,
+      "cost_now": 0.019614861901944097
+    },
+    "joint_coverage_entropy_ratio": {
+      "value": 0.8650316498382796,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9761247687697733,
+      "log_share": 0.3125150994102888,
+      "factor_if_perfect": 0.948229265798967,
+      "final_score_if_perfect": 21.48517726331917,
+      "cost_now": 0.5129635751841546
+    },
+    "kmer_diversity_entropy_ratio": {
+      "value": 0.9776697139633095,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9962431776197082,
+      "log_share": 0.04867706430034963,
+      "factor_if_perfect": 0.9290804630955981,
+      "final_score_if_perfect": 21.051299681914262,
+      "cost_now": 0.07908599377924708
+    },
+    "distinct_guide_ratio": {
+      "value": 1.0,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 1.0,
+      "log_share": -0.0,
+      "factor_if_perfect": 0.9255900728187486,
+      "final_score_if_perfect": 20.972213688135014,
+      "cost_now": 0.0
+    }
+  },
+  "distribution_fidelity_score": 0.9255900728187486,
+  "distribution_fidelity_factor": 0.9255900728187486,
+  "delta_vs_pipeline": 0.9255900728187486,
+  "coverage": {
+    "mutation": {
+      "support": [
+        "HBB:c.92G>C",
+        "NC_000011.10:g.5225769G>A"
+      ],
+      "support_size": 2,
+      "counts": {
+        "HBB:c.92G>C": 185,
+        "NC_000011.10:g.5225769G>A": 65
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 0.8267463724926178,
+      "entropy_max": 1.0,
+      "ratio": 0.8267463724926178
+    },
+    "cas_system": {
+      "support": [
+        "Cas9",
+        "Cas12a"
+      ],
+      "support_size": 2,
+      "counts": {
+        "Cas9": 170,
+        "Cas12a": 80
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 0.9043814577244937,
+      "entropy_max": 1.0,
+      "ratio": 0.9043814577244937
+    },
+    "strand": {
+      "support": [
+        "+",
+        "-"
+      ],
+      "support_size": 2,
+      "counts": {
+        "+": 114,
+        "-": 136
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 0.9944066525627802,
+      "entropy_max": 1.0,
+      "ratio": 0.9944066525627802
+    },
+    "joint": {
+      "support": [
+        [
+          "HBB:c.92G>C",
+          "Cas9",
+          "+"
+        ],
+        [
+          "HBB:c.92G>C",
+          "Cas9",
+          "-"
+        ],
+        [
+          "HBB:c.92G>C",
+          "Cas12a",
+          "+"
+        ],
+        [
+          "HBB:c.92G>C",
+          "Cas12a",
+          "-"
+        ],
+        [
+          "NC_000011.10:g.5225769G>A",
+          "Cas9",
+          "+"
+        ],
+        [
+          "NC_000011.10:g.5225769G>A",
+          "Cas9",
+          "-"
+        ],
+        [
+          "NC_000011.10:g.5225769G>A",
+          "Cas12a",
+          "+"
+        ],
+        [
+          "NC_000011.10:g.5225769G>A",
+          "Cas12a",
+          "-"
+        ]
+      ],
+      "support_size": 8,
+      "counts": {
+        "HBB:c.92G>C | Cas9 | +": 73,
+        "HBB:c.92G>C | Cas9 | -": 73,
+        "HBB:c.92G>C | Cas12a | +": 10,
+        "HBB:c.92G>C | Cas12a | -": 29,
+        "NC_000011.10:g.5225769G>A | Cas9 | +": 12,
+        "NC_000011.10:g.5225769G>A | Cas9 | -": 12,
+        "NC_000011.10:g.5225769G>A | Cas12a | +": 19,
+        "NC_000011.10:g.5225769G>A | Cas12a | -": 22
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 8,
+      "empty_cells": [],
+      "entropy": 2.5950949495148388,
+      "entropy_max": 3.0,
+      "ratio": 0.8650316498382796
+    }
+  },
+  "kmer_diversity": {
+    "k": 12,
+    "total_kmers": 2610,
+    "distinct_kmers": 2348,
+    "entropy": 11.096389049726024,
+    "entropy_max": 11.349834091457247,
+    "ratio": 0.9776697139633095,
+    "most_repeated": [
+      [
+        "GGTGGTGAGGCC",
+        9
+      ],
+      [
+        "TTGATACCAACC",
+        8
+      ],
+      [
+        "TGATACCAACCT",
+        8
+      ],
+      [
+        "CCTTGATACCAA",
+        8
+      ],
+      [
+        "CTTGATACCAAC",
+        8
+      ],
+      [
+        "TTGGTGGTGAGG",
+        8
+      ],
+      [
+        "TGGTGGTGAGGC",
+        8
+      ],
+      [
+        "GTTGGTGGTGAG",
+        7
+      ],
+      [
+        "AGGTTGGTATCA",
+        6
+      ],
+      [
+        "GATACCAACCTG",
+        5
+      ]
+    ]
+  },
+  "distinct_guides": {
+    "guides": 250,
+    "distinct": 250,
+    "ratio": 1.0,
+    "duplicated_guides": {}
+  },
+  "cas_specific_shift_diagnostic": {},
+  "note": "the cas_specific_shift diagnostic is reported by the validator but not scored; an empty joint cell is scored, and costs the whole product its sixth root"
+}

@@ -1,0 +1,5002 @@
+[
+  {
+    "experiment_id": "exp-00088",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 8,
+      "gc_score": 1.0,
+      "dist_score": 0.9801986733067553,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00090",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 9,
+      "gc_score": 1.0,
+      "dist_score": 0.9777512371933363,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00091",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 9,
+      "gc_score": 1.0,
+      "dist_score": 0.9777512371933363,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00000",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 19,
+      "gc_score": 1.0,
+      "dist_score": 0.9536104731326264,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00094",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 20,
+      "gc_score": 1.0,
+      "dist_score": 0.951229424500714,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00096",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 21,
+      "gc_score": 1.0,
+      "dist_score": 0.9488543210558013,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00002",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 22,
+      "gc_score": 1.0,
+      "dist_score": 0.9464851479534838,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00177",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 25,
+      "gc_score": 1.0,
+      "dist_score": 0.9394130628134758,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00005",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 28,
+      "gc_score": 1.0,
+      "dist_score": 0.9323938199059483,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00089",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 8,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9801986733067553,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00007",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 39,
+      "gc_score": 1.0,
+      "dist_score": 0.9071023415558017,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00092",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 9,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9777512371933363,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00093",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 9,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9777512371933363,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00009",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 48,
+      "gc_score": 1.0,
+      "dist_score": 0.8869204367171575,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00001",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 19,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9536104731326264,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00095",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 20,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.951229424500714,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00097",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 21,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9488543210558013,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00003",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 22,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9464851479534838,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00176",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 22,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9464851479534838,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00098",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 56,
+      "gc_score": 1.0,
+      "dist_score": 0.8693582353988059,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00099",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 56,
+      "gc_score": 1.0,
+      "dist_score": 0.8693582353988059,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00011",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 57,
+      "gc_score": 1.0,
+      "dist_score": 0.8671875542922549,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00102",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 57,
+      "gc_score": 1.0,
+      "dist_score": 0.8671875542922549,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00004",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 25,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9394130628134758,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00178",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 58,
+      "gc_score": 1.0,
+      "dist_score": 0.8650222931107413,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00179",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 59,
+      "gc_score": 1.0,
+      "dist_score": 0.8628624383213754,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00182",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 63,
+      "gc_score": 1.0,
+      "dist_score": 0.8542768136084795,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00185",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 67,
+      "gc_score": 1.0,
+      "dist_score": 0.8457766172888441,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00104",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 69,
+      "gc_score": 1.0,
+      "dist_score": 0.8415582888117733,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00006",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 36,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9139311852712282,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00013",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 70,
+      "gc_score": 1.0,
+      "dist_score": 0.8394570207692074,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00186",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 73,
+      "gc_score": 1.0,
+      "dist_score": 0.8331846439283305,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00106",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 78,
+      "gc_score": 1.0,
+      "dist_score": 0.8228346580560184,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00107",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 78,
+      "gc_score": 1.0,
+      "dist_score": 0.8228346580560184,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00008",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 45,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8935973471085157,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00111",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 80,
+      "gc_score": 1.0,
+      "dist_score": 0.8187307530779818,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00113",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 83,
+      "gc_score": 1.0,
+      "dist_score": 0.8126132417730977,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00010",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 54,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8737159116880344,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00100",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 56,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8693582353988059,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00101",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 56,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8693582353988059,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00103",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 57,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8671875542922549,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00115",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 92,
+      "gc_score": 1.0,
+      "dist_score": 0.794533602503334,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00117",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 93,
+      "gc_score": 1.0,
+      "dist_score": 0.7925497493467781,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00180",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 61,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8585588939563946,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00181",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 62,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8564151774836135,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00119",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 98,
+      "gc_score": 1.0,
+      "dist_score": 0.7827045382418681,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00183",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 64,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8521437889662113,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00184",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 66,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8478937040879159,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00012",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 67,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8457766172888441,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00105",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 69,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8415582888117733,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00016",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 107,
+      "gc_score": 1.0,
+      "dist_score": 0.7652903306228257,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00213",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 107,
+      "gc_score": 1.0,
+      "dist_score": 0.7652903306228257,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00017",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 108,
+      "gc_score": 1.0,
+      "dist_score": 0.7633794943368531,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00121",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 108,
+      "gc_score": 1.0,
+      "dist_score": 0.7633794943368531,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00123",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 109,
+      "gc_score": 1.0,
+      "dist_score": 0.7614734291752052,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00215",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 111,
+      "gc_score": 1.0,
+      "dist_score": 0.7576755646029744,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00187",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 76,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8269591339433623,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00125",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 113,
+      "gc_score": 1.0,
+      "dist_score": 0.7538966419593209,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00188",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 77,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8248943182036034,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00108",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 78,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8228346580560184,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00109",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 78,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8228346580560184,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00110",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 79,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8207801406277248,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00112",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 80,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8187307530779818,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00127",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 120,
+      "gc_score": 1.0,
+      "dist_score": 0.7408182206817179,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00114",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 83,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8126132417730977,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00189",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 125,
+      "gc_score": 1.0,
+      "dist_score": 0.7316156289466418,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00129",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 126,
+      "gc_score": 1.0,
+      "dist_score": 0.7297888742690568,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00019",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 128,
+      "gc_score": 1.0,
+      "dist_score": 0.7261490370736909,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00116",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 92,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.794533602503334,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00118",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 93,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7925497493467781,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00021",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 133,
+      "gc_score": 1.0,
+      "dist_score": 0.7171286688639856,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00120",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 98,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7827045382418681,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00131",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 137,
+      "gc_score": 1.0,
+      "dist_score": 0.7099931193855512,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00132",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 137,
+      "gc_score": 1.0,
+      "dist_score": 0.7099931193855512,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00135",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 138,
+      "gc_score": 1.0,
+      "dist_score": 0.7082203534678,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00014",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 104,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7710515858035663,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00015",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 105,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7691263643685705,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00192",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 145,
+      "gc_score": 1.0,
+      "dist_score": 0.695934313678642,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00214",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 107,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7652903306228257,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00137",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 147,
+      "gc_score": 1.0,
+      "dist_score": 0.6924633268086434,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00122",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 108,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7633794943368531,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00023",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 148,
+      "gc_score": 1.0,
+      "dist_score": 0.6907343306373547,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00124",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 109,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7614734291752052,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00216",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 111,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7576755646029744,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00126",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 113,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7538966419593209,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00194",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 154,
+      "gc_score": 1.0,
+      "dist_score": 0.6804506362045877,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00128",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 120,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7408182206817179,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00026",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 165,
+      "gc_score": 1.0,
+      "dist_score": 0.661993196690834,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00139",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 165,
+      "gc_score": 1.0,
+      "dist_score": 0.661993196690834,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00027",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 166,
+      "gc_score": 1.0,
+      "dist_score": 0.6603402807049829,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00018",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 125,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7316156289466418,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00143",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 167,
+      "gc_score": 1.0,
+      "dist_score": 0.6586914918480358,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00130",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 126,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7297888742690568,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00190",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 128,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7261490370736909,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00020",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 130,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7225273536420722,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00030",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 173,
+      "gc_score": 1.0,
+      "dist_score": 0.6488848531344534,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00031",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 174,
+      "gc_score": 1.0,
+      "dist_score": 0.6472646670780347,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00133",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 137,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7099931193855512,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00134",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 137,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7099931193855512,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00136",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 138,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7082203534678,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00145",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 184,
+      "gc_score": 1.0,
+      "dist_score": 0.631283645506926,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00191",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 142,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7011734432085724,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00022",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 145,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.695934313678642,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00138",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 147,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6924633268086434,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00147",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 193,
+      "gc_score": 1.0,
+      "dist_score": 0.6172383654143164,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00034",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 195,
+      "gc_score": 1.0,
+      "dist_score": 0.6141598762237378,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00193",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 151,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6855732015842932,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00035",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 196,
+      "gc_score": 1.0,
+      "dist_score": 0.6126263941844161,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00038",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 199,
+      "gc_score": 1.0,
+      "dist_score": 0.6080488833507213,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00197",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 202,
+      "gc_score": 1.0,
+      "dist_score": 0.6035055754270405,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00198",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 203,
+      "gc_score": 1.0,
+      "dist_score": 0.6019986958727489,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00149",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 204,
+      "gc_score": 1.0,
+      "dist_score": 0.6004955788122659,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00151",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 207,
+      "gc_score": 1.0,
+      "dist_score": 0.596008708766031,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00024",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 162,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6669768108584744,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00025",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 163,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6653114513980284,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00140",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 165,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.661993196690834,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00142",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 166,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6603402807049829,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00144",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 167,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6586914918480358,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00041",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 216,
+      "gc_score": 1.0,
+      "dist_score": 0.5827482523739896,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00028",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 170,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6537697851298473,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00029",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 171,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6521374019961392,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00146",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 184,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.631283645506926,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00200",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 241,
+      "gc_score": 1.0,
+      "dist_score": 0.54744132061185,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00032",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 192,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6187833918061408,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00201",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 242,
+      "gc_score": 1.0,
+      "dist_score": 0.5460744266397094,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00033",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 193,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6172383654143164,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00148",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 193,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6172383654143164,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00202",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 243,
+      "gc_score": 1.0,
+      "dist_score": 0.5447109456345129,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00037",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 197,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6110967410620523,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00195",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 199,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6080488833507213,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00196",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 200,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6065306597126334,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00150",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 204,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6004955788122659,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00141",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 207,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.596008708766031,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00040",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 213,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.5871352951128217,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00217",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 275,
+      "gc_score": 1.0,
+      "dist_score": 0.5028315779709409,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00043",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 284,
+      "gc_score": 1.0,
+      "dist_score": 0.4916441974609651,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00199",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 238,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.5515625658678298,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00218",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 301,
+      "gc_score": 1.0,
+      "dist_score": 0.47118711127528673,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00046",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 328,
+      "gc_score": 1.0,
+      "dist_score": 0.4404316545059993,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00047",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 329,
+      "gc_score": 1.0,
+      "dist_score": 0.43933195057241364,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00042",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 281,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.4953453910686223,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00219",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 301,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.47118711127528673,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00050",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 370,
+      "gc_score": 1.0,
+      "dist_score": 0.39653141907499284,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00051",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 371,
+      "gc_score": 1.0,
+      "dist_score": 0.39554132865600117,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00053",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 380,
+      "gc_score": 1.0,
+      "dist_score": 0.38674102345450123,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00055",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 396,
+      "gc_score": 1.0,
+      "dist_score": 0.3715766910220457,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00044",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 325,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.44374731008107987,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00045",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 326,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.44263932736135114,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00057",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 413,
+      "gc_score": 1.0,
+      "dist_score": 0.35611555788535143,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00059",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 426,
+      "gc_score": 1.0,
+      "dist_score": 0.3447278547672202,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00220",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 446,
+      "gc_score": 1.0,
+      "dist_score": 0.32791527889958855,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00048",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 367,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.39951658509768784,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00049",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 368,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.39851904108451414,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00052",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 377,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.38965248546548575,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00054",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 393,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.3743739929746928,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00056",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 410,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.3587964654059516,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00062",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 504,
+      "gc_score": 1.0,
+      "dist_score": 0.2836540264997704,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00058",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 423,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.3473230334330827,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00036",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 537,
+      "gc_score": 1.0,
+      "dist_score": 0.26119187199512567,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00221",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 446,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.32791527889958855,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00060",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 471,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.3080478964943976,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00061",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 501,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.28578942944988966,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00222",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 631,
+      "gc_score": 1.0,
+      "dist_score": 0.2064906801593065,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00063",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 534,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.2631581754560287,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00039",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 545,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.25601992640813004,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00225",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 748,
+      "gc_score": 1.0,
+      "dist_score": 0.1541236618151314,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00227",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 759,
+      "gc_score": 1.0,
+      "dist_score": 0.1499430085623719,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00223",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 631,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.2064906801593065,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00229",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 851,
+      "gc_score": 1.0,
+      "dist_score": 0.1191347587632496,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00231",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 852,
+      "gc_score": 1.0,
+      "dist_score": 0.11883729385240965,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00233",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 872,
+      "gc_score": 1.0,
+      "dist_score": 0.11304153064044985,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00224",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 685,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.18041419287047078,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00235",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 905,
+      "gc_score": 1.0,
+      "dist_score": 0.10408993436656665,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00237",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 941,
+      "gc_score": 1.0,
+      "dist_score": 0.09513103709044061,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00239",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 980,
+      "gc_score": 1.0,
+      "dist_score": 0.0862935864993705,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00226",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 748,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.1541236618151314,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00228",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 759,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.1499430085623719,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00230",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 851,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.1191347587632496,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00232",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 852,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.11883729385240965,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00234",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 872,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.11304153064044985,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00236",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 905,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.10408993436656665,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00238",
+    "mutation": "HBB:c.305A>T",
+    "mutation_weight": 1.26,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 941,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.09513103709044061,
+      "consistency": 0.3,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 1.26,
+      "region_energy_offset": 0.03
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00064",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 2,
+      "gc_score": 1.0,
+      "dist_score": 0.9950124791926823,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00152",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 5,
+      "gc_score": 1.0,
+      "dist_score": 0.9875778004938814,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00068",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 6,
+      "gc_score": 1.0,
+      "dist_score": 0.9851119396030626,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00069",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 7,
+      "gc_score": 1.0,
+      "dist_score": 0.9826522356650732,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00154",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 7,
+      "gc_score": 1.0,
+      "dist_score": 0.9826522356650732,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00155",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 18,
+      "gc_score": 1.0,
+      "dist_score": 0.9559974818331,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00156",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 18,
+      "gc_score": 1.0,
+      "dist_score": 0.9559974818331,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00159",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 19,
+      "gc_score": 1.0,
+      "dist_score": 0.9536104731326264,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00071",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 21,
+      "gc_score": 1.0,
+      "dist_score": 0.9488543210558013,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00072",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 31,
+      "gc_score": 1.0,
+      "dist_score": 0.9254270243966368,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00073",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 32,
+      "gc_score": 1.0,
+      "dist_score": 0.9231163463866358,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00065",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 3,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9925280548191384,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00066",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 4,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9900498337491681,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00067",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 5,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9875778004938814,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00153",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 5,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9875778004938814,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00204",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 39,
+      "gc_score": 1.0,
+      "dist_score": 0.9071023415558017,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00205",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 40,
+      "gc_score": 1.0,
+      "dist_score": 0.9048374180359595,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00206",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 40,
+      "gc_score": 1.0,
+      "dist_score": 0.9048374180359595,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00161",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 44,
+      "gc_score": 1.0,
+      "dist_score": 0.8958341352965282,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00070",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 18,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9559974818331,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00157",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 18,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9559974818331,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00158",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 18,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9559974818331,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00160",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 19,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9536104731326264,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00078",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 54,
+      "gc_score": 1.0,
+      "dist_score": 0.8737159116880344,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00079",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 55,
+      "gc_score": 1.0,
+      "dist_score": 0.8715343499971578,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00080",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 56,
+      "gc_score": 1.0,
+      "dist_score": 0.8693582353988059,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00081",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 57,
+      "gc_score": 1.0,
+      "dist_score": 0.8671875542922549,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00084",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 60,
+      "gc_score": 1.0,
+      "dist_score": 0.8607079764250578,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00163",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 62,
+      "gc_score": 1.0,
+      "dist_score": 0.8564151774836135,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00165",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 65,
+      "gc_score": 1.0,
+      "dist_score": 0.8500160902253981,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00074",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 34,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9185122844014574,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00075",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 35,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9162188716508777,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00167",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 69,
+      "gc_score": 1.0,
+      "dist_score": 0.8415582888117733,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00169",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 70,
+      "gc_score": 1.0,
+      "dist_score": 0.8394570207692074,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00203",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 37,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9116492109644617,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00087",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 73,
+      "gc_score": 1.0,
+      "dist_score": 0.8331846439283305,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00076",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 40,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.9048374180359595,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00171",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 74,
+      "gc_score": 1.0,
+      "dist_score": 0.8311042838521256,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00207",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 43,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8980765224508026,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00162",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 44,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8958341352965282,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00077",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 51,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8802934158342212,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00173",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 86,
+      "gc_score": 1.0,
+      "dist_score": 0.8065414401773269,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00210",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 87,
+      "gc_score": 1.0,
+      "dist_score": 0.8045276049198279,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00211",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 88,
+      "gc_score": 1.0,
+      "dist_score": 0.8025187979624785,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00175",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 92,
+      "gc_score": 1.0,
+      "dist_score": 0.794533602503334,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00082",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 58,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8650222931107413,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00083",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 59,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8628624383213754,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00085",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 60,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8607079764250578,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00164",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 62,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8564151774836135,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00086",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 63,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8542768136084795,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00166",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 65,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8500160902253981,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00168",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 69,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8415582888117733,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00170",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 70,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8394570207692074,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00172",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 74,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8311042838521256,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00208",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 84,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8105842459701871,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00209",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 85,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8085603163214524,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00174",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas9",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 86,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8065414401773269,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00212",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 89,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.8005150067502288,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00240",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 134,
+      "gc_score": 1.0,
+      "dist_score": 0.7153380863525599,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00242",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 166,
+      "gc_score": 1.0,
+      "dist_score": 0.6603402807049829,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00241",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.4782608695652174,
+      "distance": 134,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.7153380863525599,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00243",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 166,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.6603402807049829,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00244",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 215,
+      "gc_score": 1.0,
+      "dist_score": 0.5842069456117358,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00246",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 216,
+      "gc_score": 1.0,
+      "dist_score": 0.5827482523739896,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00248",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5,
+      "distance": 217,
+      "gc_score": 1.0,
+      "dist_score": 0.5812932013147178,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00245",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 215,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.5842069456117358,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": false
+  },
+  {
+    "experiment_id": "exp-00247",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 216,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.5827482523739896,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  },
+  {
+    "experiment_id": "exp-00249",
+    "mutation": "NC_000011.10:g.5225703A>G",
+    "mutation_weight": 0.65,
+    "cas": "Cas12a",
+    "outcome": "HDR",
+    "indel_length": 0,
+    "features": {
+      "gc": 0.5217391304347826,
+      "distance": 217,
+      "gc_score": 0.9565217391304348,
+      "dist_score": 0.5812932013147178,
+      "consistency": 1.0,
+      "cell_type_accessibility": 0.87,
+      "mutation_weight": 0.65,
+      "region_energy_offset": 0.0
+    },
+    "energy": 1.0,
+    "mh": true
+  }
+]

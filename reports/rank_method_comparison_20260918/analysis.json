@@ -1,0 +1,6006 @@
+{
+  "generated_at": "2026-09-18T04:59:16.655372+00:00",
+  "source": "https://niome-api.genomes.io/api/v3/tasks",
+  "fetched_at": "2026-09-18T04:49:10.033652+00:00",
+  "latest_task": "2026-09-18T03:03:14.557809",
+  "since": "2026-08-27T00:00:00",
+  "history_tasks": 202,
+  "min_history": 10,
+  "candidate_assumption": "Five existing baselines: uniform, marginal, hot_hand, cold_hand, repeat_last.",
+  "history_rule": "created_at strictly before target; excludes unstamped tasks; one initial task per cell is not a scored prediction.",
+  "interpretation": "Selector-only comparison keeps baseline definitions; also checks all baseline inputs restricted to the target cell.",
+  "code_sha256": {
+    "strategy_rank.py": "40f6c6f109afbe91603e18b14fff267cfb8e6784989559712799b25ee99e4999",
+    "auto_rank_alt.py": "711f08bb01869f6235ed61da497a592064eebc76249abe3abd0db5298fa61431",
+    "seed_model/evaluate.py": "fc0ab3e6509b0891d9ccf6773de6cb29fa98c2310dc1af6edf747a3a9b107d42",
+    "seed_model/data.py": "9a0c45ea4a368852f54fdb7d08ee1f8f1c12789b694748fbaddab25176d39d83",
+    "window_plan.py": "212b3e9d8fadd502fe2a9e2ca372816d4bf7cde6b04e1d23f8760a95b70e291f"
+  },
+  "summary_latest_10": {
+    "tasks": 10,
+    "total_seeds": 30,
+    "current_matched": 14,
+    "spec_matched": 14,
+    "changed_methods": 0,
+    "spec_fallbacks": 0,
+    "spec_partial_horizons": 0,
+    "current_methods": {
+      "repeat_last": 2,
+      "cold_hand": 7,
+      "uniform": 1
+    },
+    "spec_methods": {
+      "repeat_last": 2,
+      "cold_hand": 7,
+      "uniform": 1
+    }
+  },
+  "summary_latest_20": {
+    "tasks": 20,
+    "total_seeds": 60,
+    "current_matched": 26,
+    "spec_matched": 27,
+    "changed_methods": 1,
+    "spec_fallbacks": 0,
+    "spec_partial_horizons": 0,
+    "current_methods": {
+      "repeat_last": 5,
+      "cold_hand": 10,
+      "uniform": 5
+    },
+    "spec_methods": {
+      "repeat_last": 4,
+      "cold_hand": 11,
+      "uniform": 5
+    }
+  },
+  "warmup_counts_entire_history": {
+    "tasks": 202,
+    "current_no_qualifying_horizon": 44,
+    "spec_uniform_fallbacks": 44,
+    "spec_partial_horizon_tasks": 80
+  },
+  "strict_cell_baselines_changed_picks_or_windows_latest_20": 0,
+  "latest_20": [
+    {
+      "task_id": "59b6d75a-824b-4021-bd7a-3360b43ef0e4",
+      "created_at": "2026-09-18T03:03:14.557809",
+      "cell": "CD34+_HSPC",
+      "history_count": 51,
+      "scored_history_count": 50,
+      "actual_seeds": [
+        312,
+        733,
+        818
+      ],
+      "actual_windows": [
+        300,
+        700,
+        800
+      ],
+      "current": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "cell": "CD34+_HSPC",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.3,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 1.3,
+                "rank": 3.5
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.4,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.5,
+                "rank": 1.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.15,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 1.25,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.7,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.75,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.15,
+                "rank": 3.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.6333333333333333,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 2.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.3333333333333333,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 2.6666666666666665,
+            "marginal": 5.666666666666667,
+            "hot_hand": 5.333333333333333,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "repeat_last"
+        }
+      },
+      "spec": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.3,
+                "marginal": 0.8,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 1.5
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.25,
+                "marginal": 0.7,
+                "hot_hand": 0.75,
+                "cold_hand": 1.15,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.6333333333333333,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.3333333333333333
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.5,
+                "cold_hand": 2.5,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 4.666666666666667,
+            "hot_hand": 4.333333333333333,
+            "cold_hand": 2.5,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.3,
+                "marginal": 0.7,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 1.5
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.25,
+                "marginal": 0.8,
+                "hot_hand": 0.75,
+                "cold_hand": 1.15,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.8,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.3333333333333333
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.5,
+                "cold_hand": 2.5,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 4.166666666666667,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 2.5,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697",
+      "created_at": "2026-09-18T00:35:26.785386",
+      "cell": "HEK293",
+      "history_count": 52,
+      "scored_history_count": 51,
+      "actual_seeds": [
+        350,
+        758,
+        865
+      ],
+      "actual_windows": [
+        300,
+        700,
+        800
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "HEK293",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.5,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.95,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 0.95,
+                "rank": 3.5
+              },
+              "marginal": {
+                "mean_seeds": 0.85,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 5.0
+              },
+              "marginal": {
+                "mean_seeds": 1.0,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 4.0,
+            "uniform": 3.6666666666666665,
+            "marginal": 3.8333333333333335,
+            "hot_hand": 5.833333333333333,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.5
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 1.0,
+                "hot_hand": 0.6,
+                "cold_hand": 1.5,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.5,
+                "marginal": 2.5,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.85,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3,
+                "repeat_last": 1.0
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 1.0,
+                "hot_hand": 0.9333333333333333,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.5,
+                "repeat_last": 1.5,
+                "marginal": 3.0,
+                "uniform": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.1666666666666665,
+            "marginal": 3.1666666666666665,
+            "hot_hand": 5.0,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.5,
+                "hot_hand": 0.6,
+                "cold_hand": 1.5,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.65,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3,
+                "repeat_last": 1.0
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 0.9,
+                "hot_hand": 0.9333333333333333,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.5,
+                "repeat_last": 1.5,
+                "uniform": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.6666666666666665,
+            "marginal": 5.0,
+            "hot_hand": 4.0,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.1666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "cef21622-627f-4171-bb83-53bfc44b4f91",
+      "created_at": "2026-09-17T22:08:27.490979",
+      "cell": "CD34+_HSPC",
+      "history_count": 50,
+      "scored_history_count": 49,
+      "actual_seeds": [
+        115,
+        940,
+        977
+      ],
+      "actual_windows": [
+        100,
+        900,
+        900
+      ],
+      "current": {
+        "method": "repeat_last",
+        "windows": [
+          300,
+          400,
+          800
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "cell": "CD34+_HSPC",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.3,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 4.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.6,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.5,
+                "rank": 2.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.25,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.65,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.15,
+                "rank": 3.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.6333333333333333,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 2.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 2.8333333333333335,
+            "marginal": 5.666666666666667,
+            "hot_hand": 5.333333333333333,
+            "cold_hand": 2.1666666666666665,
+            "repeat_last": 1.3333333333333333
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "repeat_last"
+        }
+      },
+      "spec": {
+        "method": "repeat_last",
+        "windows": [
+          300,
+          400,
+          800
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.8,
+                "hot_hand": 0.6,
+                "cold_hand": 1.6,
+                "repeat_last": 1.5
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.25,
+                "marginal": 0.65,
+                "hot_hand": 0.8,
+                "cold_hand": 1.15,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.6333333333333333,
+                "hot_hand": 0.8,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.4
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.5,
+                "cold_hand": 2.5,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 4.666666666666667,
+            "hot_hand": 4.333333333333333,
+            "cold_hand": 2.1666666666666665,
+            "repeat_last": 1.3333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "repeat_last",
+        "windows": [
+          300,
+          400,
+          800
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.8,
+                "hot_hand": 0.6,
+                "cold_hand": 1.6,
+                "repeat_last": 1.5
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.25,
+                "marginal": 0.9,
+                "hot_hand": 0.8,
+                "cold_hand": 1.15,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.8666666666666667,
+                "hot_hand": 0.8,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.4
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.5,
+                "cold_hand": 2.5,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 4.0,
+            "hot_hand": 5.0,
+            "cold_hand": 2.1666666666666665,
+            "repeat_last": 1.3333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "af21b154-5ee4-4c34-98cb-ebd58f04cdc2",
+      "created_at": "2026-09-17T19:44:49.986698",
+      "cell": "K562",
+      "history_count": 46,
+      "scored_history_count": 45,
+      "actual_seeds": [
+        292,
+        391,
+        785
+      ],
+      "actual_windows": [
+        200,
+        300,
+        700
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.9,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.7,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.4,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.7,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7,
+                "rank": 4.5
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.95,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.45,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.8666666666666667,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3666666666666667,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7333333333333333,
+                "rank": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.6666666666666665,
+            "uniform": 2.3333333333333335,
+            "marginal": 4.166666666666667,
+            "hot_hand": 6.0,
+            "cold_hand": 1.0,
+            "repeat_last": 4.833333333333333
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.7,
+                "hot_hand": 0.4,
+                "cold_hand": 1.7,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.5,
+                "repeat_last": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.8,
+                "hot_hand": 0.6,
+                "cold_hand": 1.45,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0333333333333334,
+                "marginal": 0.8666666666666667,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3666666666666667,
+                "repeat_last": 0.7333333333333333
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.1666666666666665,
+            "hot_hand": 5.0,
+            "cold_hand": 1.0,
+            "repeat_last": 3.8333333333333335
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.4,
+                "hot_hand": 0.4,
+                "cold_hand": 1.7,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.7,
+                "hot_hand": 0.6,
+                "cold_hand": 1.45,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.5,
+                "repeat_last": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0333333333333334,
+                "marginal": 0.7666666666666667,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3666666666666667,
+                "repeat_last": 0.7333333333333333
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 3.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "7bca65ce-693d-4ad9-bf60-6297014bed83",
+      "created_at": "2026-09-17T17:19:11.656625",
+      "cell": "HEK293",
+      "history_count": 51,
+      "scored_history_count": 50,
+      "actual_seeds": [
+        117,
+        842,
+        989
+      ],
+      "actual_windows": [
+        100,
+        800,
+        900
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "HEK293",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.5,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.95,
+                "rank": 4.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.75,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.25,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.05,
+                "rank": 2.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 6.0
+              },
+              "marginal": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.0,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.8333333333333335,
+            "uniform": 4.0,
+            "marginal": 4.0,
+            "hot_hand": 5.5,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 2.3333333333333335
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.9,
+                "hot_hand": 0.6,
+                "cold_hand": 1.5,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.9,
+                "hot_hand": 0.75,
+                "cold_hand": 1.25,
+                "repeat_last": 1.05
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 1.0,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.0,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.3333333333333335,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 4.666666666666667,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 2.3333333333333335
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.6,
+                "hot_hand": 0.6,
+                "cold_hand": 1.5,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.75,
+                "hot_hand": 0.75,
+                "cold_hand": 1.25,
+                "repeat_last": 1.05
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 0.9666666666666667,
+                "hot_hand": 1.0,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "hot_hand": 3.0,
+                "uniform": 4.5,
+                "marginal": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.1666666666666665,
+            "marginal": 4.5,
+            "hot_hand": 4.0,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 2.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "1bdd141b-baee-4f0b-8c57-116709b5396f",
+      "created_at": "2026-09-17T14:54:13.884814",
+      "cell": "HEK293",
+      "history_count": 50,
+      "scored_history_count": 49,
+      "actual_seeds": [
+        201,
+        316,
+        856
+      ],
+      "actual_windows": [
+        200,
+        300,
+        800
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "HEK293",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 5.0
+              },
+              "marginal": {
+                "mean_seeds": 0.95,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.15,
+                "rank": 2.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 6.0
+              },
+              "marginal": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 3.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 4.166666666666667,
+            "uniform": 4.666666666666667,
+            "marginal": 3.5,
+            "hot_hand": 5.333333333333333,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 2.0
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.9,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 3.0,
+                "marginal": 3.0,
+                "repeat_last": 3.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.95,
+                "hot_hand": 0.8,
+                "cold_hand": 1.2,
+                "repeat_last": 1.15
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "marginal": 3.0,
+                "uniform": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 1.0666666666666667,
+                "hot_hand": 1.0333333333333334,
+                "cold_hand": 1.1,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.0,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 4.0,
+            "marginal": 3.0,
+            "hot_hand": 4.666666666666667,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 2.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.7,
+                "hot_hand": 0.7,
+                "cold_hand": 1.3,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.5,
+                "repeat_last": 2.5,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.8,
+                "hot_hand": 0.8,
+                "cold_hand": 1.2,
+                "repeat_last": 1.15
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9666666666666667,
+                "marginal": 1.0,
+                "hot_hand": 1.0333333333333334,
+                "cold_hand": 1.1,
+                "repeat_last": 1.1666666666666667
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "hot_hand": 3.0,
+                "marginal": 4.0,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.5,
+            "marginal": 4.333333333333333,
+            "hot_hand": 4.0,
+            "cold_hand": 1.3333333333333333,
+            "repeat_last": 1.8333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "392b3538-c4df-48c6-be18-009f928fc665",
+      "created_at": "2026-09-17T12:29:37.788940",
+      "cell": "K562",
+      "history_count": 45,
+      "scored_history_count": 44,
+      "actual_seeds": [
+        127,
+        178,
+        181
+      ],
+      "actual_windows": [
+        100,
+        100,
+        100
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          100,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.8,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.6,
+                "rank": 5.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 3.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.5,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 3.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.9,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 0.95,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 3.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.75,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.75,
+                "rank": 5.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 3.5
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 3.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2666666666666666,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.8333333333333335,
+            "uniform": 3.5,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 5.666666666666667,
+            "cold_hand": 1.0,
+            "repeat_last": 4.666666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          100,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.6,
+                "marginal": 0.8,
+                "hot_hand": 0.5,
+                "cold_hand": 1.5,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "marginal": 2.5,
+                "repeat_last": 2.5,
+                "uniform": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.9,
+                "hot_hand": 0.75,
+                "cold_hand": 1.3,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9333333333333333,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.2666666666666666,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.5,
+                "marginal": 2.5,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.8333333333333335,
+            "marginal": 2.6666666666666665,
+            "hot_hand": 4.666666666666667,
+            "cold_hand": 1.0,
+            "repeat_last": 3.8333333333333335
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          100,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.6,
+                "marginal": 0.5,
+                "hot_hand": 0.5,
+                "cold_hand": 1.5,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.85,
+                "hot_hand": 0.75,
+                "cold_hand": 1.3,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9333333333333333,
+                "marginal": 0.8333333333333334,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.2666666666666666,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.3333333333333335,
+            "marginal": 3.5,
+            "hot_hand": 4.5,
+            "cold_hand": 1.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "be83a838-ad18-4b8b-a9c0-e24cd643084a",
+      "created_at": "2026-09-17T10:04:50.190350",
+      "cell": "K562",
+      "history_count": 44,
+      "scored_history_count": 43,
+      "actual_seeds": [
+        524,
+        671,
+        980
+      ],
+      "actual_windows": [
+        500,
+        600,
+        900
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.95,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.25,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.75,
+                "rank": 5.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 3.5
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 3.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7333333333333333,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2666666666666666,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.3333333333333335,
+            "uniform": 3.1666666666666665,
+            "marginal": 3.8333333333333335,
+            "hot_hand": 6.0,
+            "cold_hand": 1.0,
+            "repeat_last": 4.666666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.8,
+                "marginal": 0.8,
+                "hot_hand": 0.5,
+                "cold_hand": 1.4,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 3.0,
+                "marginal": 3.0,
+                "repeat_last": 3.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.9,
+                "hot_hand": 0.7,
+                "cold_hand": 1.25,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9333333333333333,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.7333333333333333,
+                "cold_hand": 1.2666666666666666,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.5,
+                "marginal": 2.5,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 2.8333333333333335,
+            "hot_hand": 5.0,
+            "cold_hand": 1.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.8,
+                "marginal": 0.6,
+                "hot_hand": 0.5,
+                "cold_hand": 1.4,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.5,
+                "repeat_last": 2.5,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.85,
+                "hot_hand": 0.7,
+                "cold_hand": 1.25,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 0.9333333333333333,
+                "marginal": 0.8333333333333334,
+                "hot_hand": 0.7333333333333333,
+                "cold_hand": 1.2666666666666666,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.1666666666666665,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 5.0,
+            "cold_hand": 1.0,
+            "repeat_last": 3.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "495d5c6e-0ee8-4560-9e39-97c2b8383409",
+      "created_at": "2026-09-17T07:40:25.878887",
+      "cell": "K562",
+      "history_count": 43,
+      "scored_history_count": 42,
+      "actual_seeds": [
+        499,
+        819,
+        916
+      ],
+      "actual_windows": [
+        400,
+        800,
+        900
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.95,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.05,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.65,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.75,
+                "rank": 5.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7333333333333333,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2333333333333334,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.3333333333333335,
+            "uniform": 2.6666666666666665,
+            "marginal": 4.333333333333333,
+            "hot_hand": 6.0,
+            "cold_hand": 1.0,
+            "repeat_last": 4.666666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.7,
+                "hot_hand": 0.5,
+                "cold_hand": 1.3,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.05,
+                "marginal": 0.9,
+                "hot_hand": 0.65,
+                "cold_hand": 1.2,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.7333333333333333,
+                "cold_hand": 1.2333333333333334,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 5.0,
+            "cold_hand": 1.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.6,
+                "hot_hand": 0.5,
+                "cold_hand": 1.3,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.05,
+                "marginal": 0.8,
+                "hot_hand": 0.65,
+                "cold_hand": 1.2,
+                "repeat_last": 0.75
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.8333333333333334,
+                "hot_hand": 0.7333333333333333,
+                "cold_hand": 1.2333333333333334,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 5.0,
+            "cold_hand": 1.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "f85c9450-f8b9-4e0e-a158-e53db9832f42",
+      "created_at": "2026-09-17T05:15:18.716827",
+      "cell": "HUDEP-2",
+      "history_count": 49,
+      "scored_history_count": 48,
+      "actual_seeds": [
+        152,
+        311,
+        414
+      ],
+      "actual_windows": [
+        100,
+        300,
+        400
+      ],
+      "current": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "HUDEP-2",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.7,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              },
+              "repeat_last": {
+                "mean_seeds": 0.6,
+                "rank": 5.5
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.85,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.75,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.05,
+                "rank": 2.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8666666666666667,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "cold_hand": {
+                "mean_seeds": 0.9,
+                "rank": 5.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.6666666666666665,
+            "uniform": 1.5,
+            "marginal": 5.333333333333333,
+            "hot_hand": 1.8333333333333333,
+            "cold_hand": 5.0,
+            "repeat_last": 4.666666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "uniform"
+        }
+      },
+      "spec": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.7,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.6
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "cold_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.75,
+                "hot_hand": 1.05,
+                "cold_hand": 0.8,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "cold_hand": 3.5,
+                "repeat_last": 3.5,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.8666666666666667,
+                "hot_hand": 1.0,
+                "cold_hand": 0.9,
+                "repeat_last": 0.9333333333333333
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "repeat_last": 3.0,
+                "cold_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.3333333333333333,
+            "marginal": 4.333333333333333,
+            "hot_hand": 1.6666666666666667,
+            "cold_hand": 4.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 1.3,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.6
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "marginal": 2.0,
+                "uniform": 3.0,
+                "cold_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 1.1,
+                "hot_hand": 1.05,
+                "cold_hand": 0.8,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.5,
+                "marginal": 1.5,
+                "hot_hand": 3.0,
+                "cold_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 1.0,
+                "cold_hand": 0.9,
+                "repeat_last": 0.9333333333333333
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.0,
+                "hot_hand": 3.0,
+                "repeat_last": 4.0,
+                "cold_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.8333333333333333,
+            "marginal": 1.8333333333333333,
+            "hot_hand": 2.3333333333333335,
+            "cold_hand": 4.666666666666667,
+            "repeat_last": 4.333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "62cc85fb-174e-42be-84a7-7561de59bf45",
+      "created_at": "2026-09-17T02:51:24.416551",
+      "cell": "HEK293",
+      "history_count": 49,
+      "scored_history_count": 48,
+      "actual_seeds": [
+        543,
+        630,
+        765
+      ],
+      "actual_windows": [
+        500,
+        600,
+        700
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "cell": "HEK293",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 0.95,
+                "rank": 4.5
+              },
+              "marginal": {
+                "mean_seeds": 0.95,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.85,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 6.0
+              },
+              "marginal": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 4.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 1.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 1.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 4.0,
+            "uniform": 4.166666666666667,
+            "marginal": 4.333333333333333,
+            "hot_hand": 5.166666666666667,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.1666666666666665
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.8,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.95,
+                "hot_hand": 0.85,
+                "cold_hand": 1.2,
+                "repeat_last": 1.1
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.5,
+                "marginal": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 1.0333333333333334,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 1.1333333333333333
+              },
+              "ranks": {
+                "cold_hand": 1.5,
+                "repeat_last": 1.5,
+                "marginal": 3.5,
+                "hot_hand": 3.5,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.5,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 4.5,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.1666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          300,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.7,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.85,
+                "hot_hand": 0.85,
+                "cold_hand": 1.2,
+                "repeat_last": 1.1
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.9666666666666667,
+                "hot_hand": 1.0333333333333334,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 1.1333333333333333
+              },
+              "ranks": {
+                "cold_hand": 1.5,
+                "repeat_last": 1.5,
+                "hot_hand": 3.0,
+                "uniform": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.0,
+            "marginal": 4.666666666666667,
+            "hot_hand": 4.0,
+            "cold_hand": 1.1666666666666667,
+            "repeat_last": 2.1666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "3fd0e6e3-5fee-4a8c-9547-edbe5059546c",
+      "created_at": "2026-09-17T00:26:18.340389",
+      "cell": "HEK293",
+      "history_count": 48,
+      "scored_history_count": 47,
+      "actual_seeds": [
+        392,
+        524,
+        606
+      ],
+      "actual_windows": [
+        300,
+        500,
+        600
+      ],
+      "current": {
+        "method": "repeat_last",
+        "windows": [
+          200,
+          400,
+          600
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "HEK293",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 0.95,
+                "rank": 4.5
+              },
+              "marginal": {
+                "mean_seeds": 0.95,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.15,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.1,
+                "rank": 2.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 6.0
+              },
+              "marginal": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 4.5
+              },
+              "repeat_last": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 4.166666666666667,
+            "marginal": 4.333333333333333,
+            "hot_hand": 4.5,
+            "cold_hand": 2.1666666666666665,
+            "repeat_last": 2.1666666666666665
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "repeat_last"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          300,
+          600,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.8,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.95,
+                "hot_hand": 0.9,
+                "cold_hand": 1.15,
+                "repeat_last": 1.1
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.5,
+                "marginal": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 1.0666666666666667,
+                "hot_hand": 1.1333333333333333,
+                "cold_hand": 1.0666666666666667,
+                "repeat_last": 1.2
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "hot_hand": 2.0,
+                "marginal": 3.5,
+                "cold_hand": 3.5,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.5,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 4.0,
+            "cold_hand": 1.8333333333333333,
+            "repeat_last": 2.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          300,
+          600,
+          900
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.7,
+                "hot_hand": 0.7,
+                "cold_hand": 1.4,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 0.95,
+                "marginal": 0.9,
+                "hot_hand": 0.9,
+                "cold_hand": 1.15,
+                "repeat_last": 1.1
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "repeat_last": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 1.1333333333333333,
+                "cold_hand": 1.0666666666666667,
+                "repeat_last": 1.2
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "hot_hand": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "uniform": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 3.3333333333333335,
+            "marginal": 4.333333333333333,
+            "hot_hand": 3.6666666666666665,
+            "cold_hand": 1.6666666666666667,
+            "repeat_last": 2.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "f6686c85-9251-48f5-80c3-2f1618f1b349",
+      "created_at": "2026-09-16T22:01:28.234615",
+      "cell": "HUDEP-2",
+      "history_count": 48,
+      "scored_history_count": 47,
+      "actual_seeds": [
+        269,
+        653,
+        862
+      ],
+      "actual_windows": [
+        200,
+        600,
+        800
+      ],
+      "current": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "HUDEP-2",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.5,
+                "rank": 1.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.7,
+                "rank": 5.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.85,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.15,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 5.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "cold_hand": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 4.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 5.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.5,
+            "uniform": 1.6666666666666667,
+            "marginal": 4.833333333333333,
+            "hot_hand": 1.8333333333333333,
+            "cold_hand": 4.666666666666667,
+            "repeat_last": 5.5
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "uniform"
+        }
+      },
+      "spec": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.8,
+                "hot_hand": 1.5,
+                "cold_hand": 0.7,
+                "repeat_last": 0.5
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.8,
+                "hot_hand": 1.1,
+                "cold_hand": 0.8,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "marginal": 4.0,
+                "cold_hand": 4.0,
+                "repeat_last": 4.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 1.0,
+                "cold_hand": 0.9666666666666667,
+                "repeat_last": 0.9333333333333333
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.3333333333333333,
+            "marginal": 3.8333333333333335,
+            "hot_hand": 1.6666666666666667,
+            "cold_hand": 3.6666666666666665,
+            "repeat_last": 4.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 1.4,
+                "hot_hand": 1.5,
+                "cold_hand": 0.7,
+                "repeat_last": 0.5
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "marginal": 2.0,
+                "uniform": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 1.1,
+                "hot_hand": 1.1,
+                "cold_hand": 0.8,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.5,
+                "hot_hand": 2.5,
+                "cold_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 1.0,
+                "cold_hand": 0.9666666666666667,
+                "repeat_last": 0.9333333333333333
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.0,
+                "hot_hand": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.6666666666666667,
+            "marginal": 2.1666666666666665,
+            "hot_hand": 2.1666666666666665,
+            "cold_hand": 4.166666666666667,
+            "repeat_last": 4.833333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "88dd2782-4fca-415a-a88d-01fb55e8187e",
+      "created_at": "2026-09-16T19:37:02.555036",
+      "cell": "HUDEP-2",
+      "history_count": 47,
+      "scored_history_count": 46,
+      "actual_seeds": [
+        258,
+        777,
+        989
+      ],
+      "actual_windows": [
+        200,
+        700,
+        900
+      ],
+      "current": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "cell": "HUDEP-2",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.6,
+                "rank": 5.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.4,
+                "rank": 6.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.85,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.15,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.75,
+                "rank": 6.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2333333333333334,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 3.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 1.3333333333333333,
+            "marginal": 4.333333333333333,
+            "hot_hand": 2.0,
+            "cold_hand": 4.333333333333333,
+            "repeat_last": 5.333333333333333
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "uniform"
+        }
+      },
+      "spec": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.9,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.8,
+                "hot_hand": 1.1,
+                "cold_hand": 0.75,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "marginal": 3.5,
+                "repeat_last": 3.5,
+                "cold_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.2333333333333334,
+                "marginal": 0.9,
+                "hot_hand": 0.9666666666666667,
+                "cold_hand": 1.0333333333333334,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "cold_hand": 2.0,
+                "hot_hand": 3.0,
+                "marginal": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.3333333333333333,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 2.0,
+            "cold_hand": 3.6666666666666665,
+            "repeat_last": 4.333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 1,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 1.3,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "marginal": 2.0,
+                "uniform": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 1.05,
+                "hot_hand": 1.1,
+                "cold_hand": 0.75,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "cold_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.2333333333333334,
+                "marginal": 1.0,
+                "hot_hand": 0.9666666666666667,
+                "cold_hand": 1.0333333333333334,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "cold_hand": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.6666666666666667,
+            "marginal": 2.6666666666666665,
+            "hot_hand": 2.3333333333333335,
+            "cold_hand": 3.6666666666666665,
+            "repeat_last": 4.666666666666667
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "7ac3ef3a-30d7-45f4-bb5d-f148877deb8f",
+      "created_at": "2026-09-16T17:12:16.339558",
+      "cell": "K562",
+      "history_count": 42,
+      "scored_history_count": 41,
+      "actual_seeds": [
+        452,
+        560,
+        752
+      ],
+      "actual_windows": [
+        400,
+        500,
+        700
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.5,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.4,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.95,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.15,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.35,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 4.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2333333333333334,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7666666666666667,
+                "rank": 5.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.6666666666666665,
+            "uniform": 2.3333333333333335,
+            "marginal": 4.5,
+            "hot_hand": 5.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 4.666666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.5,
+                "hot_hand": 0.4,
+                "cold_hand": 1.3,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.8,
+                "hot_hand": 0.6,
+                "cold_hand": 1.35,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.5,
+                "repeat_last": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0333333333333334,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.2333333333333334,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.5,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 3.6666666666666665
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          600,
+          800,
+          900
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.7,
+                "hot_hand": 0.4,
+                "cold_hand": 1.3,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.75,
+                "hot_hand": 0.6,
+                "cold_hand": 1.35,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0333333333333334,
+                "marginal": 0.9,
+                "hot_hand": 0.7666666666666667,
+                "cold_hand": 1.2333333333333334,
+                "repeat_last": 0.7666666666666667
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 3.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "9910aa69-4ecf-48ab-8540-24a05d6c1f7e",
+      "created_at": "2026-09-16T14:47:53.525021",
+      "cell": "HUDEP-2",
+      "history_count": 46,
+      "scored_history_count": 45,
+      "actual_seeds": [
+        134,
+        282,
+        455
+      ],
+      "actual_windows": [
+        100,
+        200,
+        400
+      ],
+      "current": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "HUDEP-2",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.6,
+                "rank": 4.5
+              },
+              "uniform": {
+                "mean_seeds": 0.9,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 3.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.6,
+                "rank": 4.5
+              },
+              "repeat_last": {
+                "mean_seeds": 0.4,
+                "rank": 6.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.85,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 1.15,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.1,
+                "rank": 2.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.75,
+                "rank": 6.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.85,
+                "rank": 3.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.5
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 3.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.0333333333333334,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8666666666666667,
+                "rank": 6.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 4.166666666666667,
+            "uniform": 1.3333333333333333,
+            "marginal": 4.166666666666667,
+            "hot_hand": 2.0,
+            "cold_hand": 4.166666666666667,
+            "repeat_last": 5.166666666666667
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "uniform"
+        }
+      },
+      "spec": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 0.8,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.8,
+                "hot_hand": 1.1,
+                "cold_hand": 0.75,
+                "repeat_last": 0.85
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "cold_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.9666666666666667,
+                "cold_hand": 1.0333333333333334,
+                "repeat_last": 0.8666666666666667
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "cold_hand": 2.0,
+                "hot_hand": 3.0,
+                "marginal": 4.0,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.3333333333333333,
+            "marginal": 3.6666666666666665,
+            "hot_hand": 2.0,
+            "cold_hand": 3.6666666666666665,
+            "repeat_last": 4.333333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.9,
+                "marginal": 1.4,
+                "hot_hand": 1.4,
+                "cold_hand": 0.6,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "marginal": 1.5,
+                "hot_hand": 1.5,
+                "uniform": 3.0,
+                "cold_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 1.1,
+                "hot_hand": 1.1,
+                "cold_hand": 0.75,
+                "repeat_last": 0.85
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.5,
+                "hot_hand": 2.5,
+                "repeat_last": 4.0,
+                "cold_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 1.0666666666666667,
+                "hot_hand": 0.9666666666666667,
+                "cold_hand": 1.0333333333333334,
+                "repeat_last": 0.8666666666666667
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.6666666666666667,
+            "marginal": 2.0,
+            "hot_hand": 2.6666666666666665,
+            "cold_hand": 4.0,
+            "repeat_last": 4.666666666666667
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "65df5469-1369-41ed-b6dc-94e0dae70dbd",
+      "created_at": "2026-09-16T12:22:34.494516",
+      "cell": "CD34+_HSPC",
+      "history_count": 49,
+      "scored_history_count": 48,
+      "actual_seeds": [
+        364,
+        422,
+        810
+      ],
+      "actual_windows": [
+        300,
+        400,
+        800
+      ],
+      "current": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          500
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "cell": "CD34+_HSPC",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.4,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 4.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.5,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.6,
+                "rank": 1.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.1,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.65,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.15,
+                "rank": 3.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.35,
+                "rank": 1.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.6666666666666666,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8333333333333334,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 3.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.4333333333333333,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 2.6666666666666665,
+            "marginal": 5.833333333333333,
+            "hot_hand": 5.166666666666667,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "repeat_last"
+        }
+      },
+      "spec": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          500
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.9,
+                "hot_hand": 0.9,
+                "cold_hand": 1.5,
+                "repeat_last": 1.6
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.65,
+                "hot_hand": 0.9,
+                "cold_hand": 1.15,
+                "repeat_last": 1.35
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.6666666666666666,
+                "hot_hand": 0.8333333333333334,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.4333333333333333
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.3333333333333335,
+            "marginal": 4.833333333333333,
+            "hot_hand": 4.166666666666667,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          500
+        ],
+        "matched_seeds": 0,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 1.1,
+                "hot_hand": 0.9,
+                "cold_hand": 1.5,
+                "repeat_last": 1.6
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 1.0,
+                "hot_hand": 0.9,
+                "cold_hand": 1.15,
+                "repeat_last": 1.35
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.9,
+                "hot_hand": 0.8333333333333334,
+                "cold_hand": 1.1666666666666667,
+                "repeat_last": 1.4333333333333333
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.3333333333333335,
+            "marginal": 4.0,
+            "hot_hand": 5.0,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "fb8fe56f-5e04-442f-9bcd-08a21fc910f3",
+      "created_at": "2026-09-16T09:58:03.315496",
+      "cell": "CD34+_HSPC",
+      "history_count": 48,
+      "scored_history_count": 47,
+      "actual_seeds": [
+        152,
+        192,
+        556
+      ],
+      "actual_windows": [
+        100,
+        100,
+        500
+      ],
+      "current": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          700
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "CD34+_HSPC",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.3,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1,
+                "rank": 4.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.4,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.6,
+                "rank": 1.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.6,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.05,
+                "rank": 3.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.3,
+                "rank": 1.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 4.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.6666666666666666,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8333333333333334,
+                "rank": 5.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1,
+                "rank": 3.0
+              },
+              "repeat_last": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.6666666666666665,
+            "uniform": 2.6666666666666665,
+            "marginal": 5.833333333333333,
+            "hot_hand": 5.166666666666667,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "repeat_last"
+        }
+      },
+      "spec": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          700
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 0.9,
+                "hot_hand": 0.9,
+                "cold_hand": 1.4,
+                "repeat_last": 1.6
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.0,
+                "marginal": 4.5,
+                "hot_hand": 4.5
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.6,
+                "hot_hand": 0.9,
+                "cold_hand": 1.05,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.6666666666666666,
+                "hot_hand": 0.8333333333333334,
+                "cold_hand": 1.1,
+                "repeat_last": 1.4
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "hot_hand": 4.0,
+                "marginal": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.3333333333333335,
+            "marginal": 4.833333333333333,
+            "hot_hand": 4.166666666666667,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "repeat_last",
+        "windows": [
+          100,
+          200,
+          700
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "repeat_last",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.1,
+                "marginal": 1.1,
+                "hot_hand": 0.9,
+                "cold_hand": 1.4,
+                "repeat_last": 1.6
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "cold_hand": 2.0,
+                "uniform": 3.5,
+                "marginal": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.95,
+                "hot_hand": 0.9,
+                "cold_hand": 1.05,
+                "repeat_last": 1.3
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.9,
+                "hot_hand": 0.8333333333333334,
+                "cold_hand": 1.1,
+                "repeat_last": 1.4
+              },
+              "ranks": {
+                "repeat_last": 1.0,
+                "uniform": 2.0,
+                "cold_hand": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.5,
+            "marginal": 3.8333333333333335,
+            "hot_hand": 5.0,
+            "cold_hand": 2.6666666666666665,
+            "repeat_last": 1.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "87bd27c0-3b10-4eb8-a474-b83ab062c441",
+      "created_at": "2026-09-16T07:33:37.612187",
+      "cell": "K562",
+      "history_count": 41,
+      "scored_history_count": 40,
+      "actual_seeds": [
+        294,
+        805,
+        814
+      ],
+      "actual_windows": [
+        200,
+        800,
+        800
+      ],
+      "current": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "cell": "K562",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "uniform": {
+                "mean_seeds": 1.0,
+                "rank": 2.5
+              },
+              "marginal": {
+                "mean_seeds": 0.6,
+                "rank": 5.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.5,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.7,
+                "rank": 4.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 1.05,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.15,
+                "rank": 2.0
+              },
+              "marginal": {
+                "mean_seeds": 0.85,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.65,
+                "rank": 6.0
+              },
+              "cold_hand": {
+                "mean_seeds": 1.25,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 5.0
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.0
+              },
+              "uniform": {
+                "mean_seeds": 1.0666666666666667,
+                "rank": 3.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9666666666666667,
+                "rank": 4.0
+              },
+              "hot_hand": {
+                "mean_seeds": 0.8,
+                "rank": 5.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.8,
+                "rank": 5.5
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 2.5,
+            "uniform": 2.5,
+            "marginal": 4.333333333333333,
+            "hot_hand": 5.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 4.833333333333333
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "cold_hand"
+        }
+      },
+      "spec": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.6,
+                "hot_hand": 0.5,
+                "cold_hand": 1.2,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "repeat_last": 3.0,
+                "marginal": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.85,
+                "hot_hand": 0.65,
+                "cold_hand": 1.25,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0666666666666667,
+                "marginal": 0.9666666666666667,
+                "hot_hand": 0.8,
+                "cold_hand": 1.2,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.3333333333333335,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 3.8333333333333335
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "cold_hand",
+        "windows": [
+          200,
+          800,
+          900
+        ],
+        "matched_seeds": 3,
+        "ranking": {
+          "winner": "cold_hand",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 1.0,
+                "marginal": 0.8,
+                "hot_hand": 0.5,
+                "cold_hand": 1.2,
+                "repeat_last": 0.7
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "repeat_last": 4.0,
+                "hot_hand": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.15,
+                "marginal": 0.8,
+                "hot_hand": 0.65,
+                "cold_hand": 1.25,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.5,
+                "repeat_last": 3.5,
+                "hot_hand": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.0666666666666667,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.8,
+                "cold_hand": 1.2,
+                "repeat_last": 0.8
+              },
+              "ranks": {
+                "cold_hand": 1.0,
+                "uniform": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 2.0,
+            "marginal": 3.1666666666666665,
+            "hot_hand": 4.833333333333333,
+            "cold_hand": 1.0,
+            "repeat_last": 4.0
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    },
+    {
+      "task_id": "f99a804f-d209-49c0-ac50-b3efa19dd7fe",
+      "created_at": "2026-09-16T05:08:58.605774",
+      "cell": "HUDEP-2",
+      "history_count": 45,
+      "scored_history_count": 44,
+      "actual_seeds": [
+        316,
+        383,
+        749
+      ],
+      "actual_windows": [
+        300,
+        300,
+        700
+      ],
+      "current": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "cell": "HUDEP-2",
+          "note": "model included",
+          "pool": [
+            "model",
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "model": {
+                "mean_seeds": 0.7,
+                "rank": 3.5
+              },
+              "uniform": {
+                "mean_seeds": 0.7,
+                "rank": 3.5
+              },
+              "marginal": {
+                "mean_seeds": 0.7,
+                "rank": 3.5
+              },
+              "hot_hand": {
+                "mean_seeds": 1.4,
+                "rank": 1.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.7,
+                "rank": 3.5
+              },
+              "repeat_last": {
+                "mean_seeds": 0.4,
+                "rank": 6.0
+              }
+            },
+            "20": {
+              "model": {
+                "mean_seeds": 0.9,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.2,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.75,
+                "rank": 6.0
+              },
+              "hot_hand": {
+                "mean_seeds": 1.05,
+                "rank": 2.0
+              },
+              "cold_hand": {
+                "mean_seeds": 0.85,
+                "rank": 4.5
+              },
+              "repeat_last": {
+                "mean_seeds": 0.85,
+                "rank": 4.5
+              }
+            },
+            "30": {
+              "model": {
+                "mean_seeds": 1.0,
+                "rank": 3.0
+              },
+              "uniform": {
+                "mean_seeds": 1.1666666666666667,
+                "rank": 1.0
+              },
+              "marginal": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.5
+              },
+              "hot_hand": {
+                "mean_seeds": 0.9333333333333333,
+                "rank": 4.5
+              },
+              "cold_hand": {
+                "mean_seeds": 1.1333333333333333,
+                "rank": 2.0
+              },
+              "repeat_last": {
+                "mean_seeds": 0.9,
+                "rank": 6.0
+              }
+            }
+          },
+          "avg_rank": {
+            "model": 3.1666666666666665,
+            "uniform": 1.8333333333333333,
+            "marginal": 4.666666666666667,
+            "hot_hand": 2.5,
+            "cold_hand": 3.3333333333333335,
+            "repeat_last": 5.5
+          },
+          "used_sizes": [
+            10,
+            20,
+            30
+          ],
+          "winner": "uniform"
+        }
+      },
+      "spec": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.7,
+                "marginal": 0.7,
+                "hot_hand": 1.4,
+                "cold_hand": 0.7,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "uniform": 3.0,
+                "marginal": 3.0,
+                "cold_hand": 3.0,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 0.75,
+                "hot_hand": 1.05,
+                "cold_hand": 0.85,
+                "repeat_last": 0.85
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "hot_hand": 2.0,
+                "cold_hand": 3.5,
+                "repeat_last": 3.5,
+                "marginal": 5.0
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 0.9333333333333333,
+                "hot_hand": 0.9333333333333333,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "cold_hand": 2.0,
+                "marginal": 3.5,
+                "hot_hand": 3.5,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.6666666666666667,
+            "marginal": 3.8333333333333335,
+            "hot_hand": 2.1666666666666665,
+            "cold_hand": 2.8333333333333335,
+            "repeat_last": 4.5
+          },
+          "fallback": false,
+          "partial": false
+        }
+      },
+      "strict_cell_baselines": {
+        "method": "uniform",
+        "windows": [
+          100,
+          200,
+          300
+        ],
+        "matched_seeds": 2,
+        "ranking": {
+          "winner": "uniform",
+          "pool": [
+            "uniform",
+            "marginal",
+            "hot_hand",
+            "cold_hand",
+            "repeat_last"
+          ],
+          "available": 30,
+          "sizes": {
+            "10": {
+              "tasks_used": 10,
+              "means": {
+                "uniform": 0.7,
+                "marginal": 1.3,
+                "hot_hand": 1.4,
+                "cold_hand": 0.7,
+                "repeat_last": 0.4
+              },
+              "ranks": {
+                "hot_hand": 1.0,
+                "marginal": 2.0,
+                "uniform": 3.5,
+                "cold_hand": 3.5,
+                "repeat_last": 5.0
+              }
+            },
+            "20": {
+              "tasks_used": 20,
+              "means": {
+                "uniform": 1.2,
+                "marginal": 1.05,
+                "hot_hand": 1.05,
+                "cold_hand": 0.85,
+                "repeat_last": 0.85
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "marginal": 2.5,
+                "hot_hand": 2.5,
+                "cold_hand": 4.5,
+                "repeat_last": 4.5
+              }
+            },
+            "30": {
+              "tasks_used": 30,
+              "means": {
+                "uniform": 1.1666666666666667,
+                "marginal": 1.0333333333333334,
+                "hot_hand": 0.9333333333333333,
+                "cold_hand": 1.1333333333333333,
+                "repeat_last": 0.9
+              },
+              "ranks": {
+                "uniform": 1.0,
+                "cold_hand": 2.0,
+                "marginal": 3.0,
+                "hot_hand": 4.0,
+                "repeat_last": 5.0
+              }
+            }
+          },
+          "avg_rank": {
+            "uniform": 1.8333333333333333,
+            "marginal": 2.5,
+            "hot_hand": 2.5,
+            "cold_hand": 3.3333333333333335,
+            "repeat_last": 4.833333333333333
+          },
+          "fallback": false,
+          "partial": false
+        }
+      }
+    }
+  ]
+}

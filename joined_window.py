@@ -84,7 +84,8 @@ ROTATE_HK: list[str] = []
 # shift where `choose_band`'s formation wall sits. Re-measure before trusting `CELL_CONFIG`'s numbers
 # as anything more than the operator's chosen starting point.
 FULL_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_hotkey3",
-                      "niome_hotkey4", "niome_hotkey5"]
+                      "niome_hotkey4", "niome_hotkey5", "niome_hotkey6", "niome_hotkey7",
+                      "niome_hotkey8", "niome_hotkey9"]
 
 # --- the BAND sub-window, which is what decorrelates the fleet now -------------------------------
 #
@@ -105,41 +106,148 @@ FULL_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_h
 #
 # 2026-09-17: six hotkeys (h0-h5) at BAND_STRIDE 50 -- offsets 0/50/100/150/200/250 -- so 6 x 50 =
 # 300 still tiles the space exactly once, at BAND_SUB_WIDTH 150 (unchanged) each seed now sits in
-# 150/50 = 3 of the 6 slices on average, one more of overlap than the four-hotkey layout. Set by
-# operator request alongside `conjunction_cut_seeds()` below, which is the bigger change: these six
-# hotkeys' CUT window is no longer this same 300-seed space, only their BAND is.
+# 150/50 = 3 of the 6 slices on average, one more of overlap than the four-hotkey layout.
+#
+# 2026-09-18 (morning): TEN hotkeys (h0-h9) at BAND_STRIDE 30, all on the predicted 300.
+#
+# **2026-09-18: the band space is the FULL 900 and the ten hotkeys are SPLIT over it.** Until now
+# every band hotkey drew its sub-window from the plan's three predicted classes, so the other 600
+# seeds held no band on any hotkey at all -- a round drawing outside the prediction could not spike
+# anywhere in the fleet. Two groups now cover the whole space, each tiling its own half exactly
+# once:
+#
+#   BAND_HK  h0-h5  6 x STRIDE  50 = 300   the three PREDICTED classes, 3x overlap at width 150
+#   REST_HK  h6-h9  4 x STRIDE 150 = 600   everything the plan did NOT predict, DISJOINT at width 150
+#
+# `count * stride == span` is the invariant, not a nicety: `band_offset_frac` is
+# `(index * stride) % span`, so a count and stride that do not multiply to the span wrap the
+# sequence onto itself and two hotkeys draw the identical band from the identical pool. That is the
+# collision `BAND_OFFSET_OVERRIDES` was patching by hand at ten hotkeys x stride 50, and it throws
+# away the single thing this layout exists to provide. Both groups satisfy it exactly.
+#
+# **The asymmetry between the two groups is deliberate.** h0-h5 stay concentrated on the predicted
+# region at 3x overlap (width 150 / stride 50), which is the layout CLAUDE.md prices and the one the
+# 12-contract replication was measured near. h6-h9 spread over twice as much space at ZERO overlap
+# (width 150 / stride 150), which is the cheapest possible hedge against the prediction being
+# worthless -- and CLAUDE.md measures it as worthless: every strategy in `strategy_rank`'s pool sits
+# between 0.93x and 1.06x chance with |z| <= 1.1 over the 160-task cold walk-forward, and SeedFormer
+# learned to emit the uniform distribution. Under a uniform generator band position is FREE, so the
+# 600-seed half is worth exactly the seeds it holds; nothing is given up by putting four hotkeys
+# there, and a round that draws outside the prediction stops being a fleet-wide miss.
+#
+# What each group costs in sibling correlation, at BAND_SUB_WIDTH 150: inside h0-h5 adjacent
+# hotkeys share 100 of 150 candidate seeds (h0 0-149 against h1 50-199), which is LESS correlated
+# than the stride-30 layout this replaces (120 of 150). Inside h6-h9 they share NOTHING -- the four
+# sub-windows partition the 600. Whether overlapping candidate windows make the resulting BANDS
+# correlated is still unmeasured; `widecut_price.py` found bands essentially disjoint (0-1 of 11)
+# when the POOLS differed, but within a group here the pool is identical per cell and only the
+# window moves. `band_overlap.py` is the tool, and h6-h9 are now the control arm for it.
 BAND_SUB_WIDTH = 150
-BAND_STRIDE = 50
+
+# Group A -- the plan's three predicted width-100 classes.
 BAND_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_hotkey3",
                       "niome_hotkey4", "niome_hotkey5"]
-# The joined space these offsets are expressed against: 3 classes x 100 seeds. The offset is carried
-# as a FRACTION so it stays proportional if a plan ever yields a space of another size.
+BAND_STRIDE = 50
+# The joined space group A's offsets are expressed against: 3 classes x 100 seeds. The offset is
+# carried as a FRACTION so it stays proportional if a plan ever yields a space of another size.
 BAND_SPAN = 300
+
+# Group B -- the 600 seeds of 100-999 the plan did NOT predict, i.e. the complement of group A's
+# space. Four hotkeys at stride 150 and width 150 partition it, so no two of them share a candidate
+# seed. `REST_SPAN` is 900 - BAND_SPAN by construction; it is written out rather than computed so a
+# plan that yields a differently-sized space fails the assertion below instead of silently
+# rescaling one group and not the other.
+REST_HK: list[str] = ["niome_hotkey6", "niome_hotkey7", "niome_hotkey8", "niome_hotkey9"]
+REST_STRIDE = 150
+REST_SPAN = 600
+
+# The whole seed space a round can draw from. Both the band split above and the wide cut window
+# below are expressed against this one list so they cannot drift apart.
+FULL_SPACE = list(range(100, 1000))
+
+# Per-hotkey offset overrides, for a headcount that does NOT divide its group's span by the stride.
+# EMPTY, and it should stay empty: both groups tile exactly (6 x 50 = 300, 4 x 150 = 600), and an
+# override on an even tiling pulls one hotkey off it rather than fixing anything. Re-populate only
+# if a count and stride stop multiplying to the span, and prefer moving the STRIDE.
+BAND_OFFSET_OVERRIDES: dict[str, int] = {}
+
+assert len(BAND_HK) * BAND_STRIDE == BAND_SPAN, "group A does not tile its span exactly"
+assert len(REST_HK) * REST_STRIDE == REST_SPAN, "group B does not tile its span exactly"
+assert BAND_SPAN + REST_SPAN == len(FULL_SPACE), "the two band groups do not cover 100-999"
+assert not (set(BAND_HK) & set(REST_HK)), "a hotkey cannot be in both band groups"
+
+
+def band_layout(instance):
+    """``(hotkeys, stride, span, on_predicted)`` for a band hotkey, else None.
+
+    ``on_predicted`` is what separates the two groups: True means this hotkey's sub-window is cut
+    out of the plan's three predicted classes, False means out of the 600 seeds the plan left over.
+    """
+    if instance in BAND_HK:
+        return BAND_HK, BAND_STRIDE, BAND_SPAN, True
+    if instance in REST_HK:
+        return REST_HK, REST_STRIDE, REST_SPAN, False
+    return None
+
+
+def band_offset(instance):
+    """This hotkey's band sub-window offset, in seeds of ITS OWN space, or None."""
+    layout = band_layout(instance)
+    if layout is None:
+        return None
+    hotkeys, stride, span, _ = layout
+    return BAND_OFFSET_OVERRIDES.get(instance, hotkeys.index(instance) * stride) % span
 
 
 def band_offset_frac(instance):
-    """This hotkey's band sub-window offset, as a fraction of the joined space, or None.
+    """This hotkey's band sub-window offset as a fraction of its own space, or None.
 
     None means "not a band hotkey here" and the caller keeps `ConjunctionConfig`'s own default,
     which is the single-hotkey value the 12-contract replication was measured at.
 
-    Only meaningful for a hotkey whose band is drawn directly from `cfg.seeds` (the cut window) via
-    `conjunction.sub_window` -- since 2026-09-17 that is no longer true for `BAND_HK`, whose cut
-    window is the full 900 from `conjunction_cut_seeds()`. Those hotkeys pass an explicit
-    `band_candidates` list instead (computed with this same fraction, against the 300-seed band
-    space rather than the 900-seed cut space) and this return value is unused for them.
+    **The fraction is against the hotkey's OWN group span (300 for h0-h5, 600 for h6-h9), not
+    against the 900-seed whole.** `conjunction.sub_window` turns it back into an index with
+    `int(round(n * frac))` on whatever list it is handed, so the only correct pairing is this
+    fraction with the list `band_space()` returns for the same hotkey. Pair it with the other
+    group's space and the offset lands in the wrong place — which is why `band_space` exists rather
+    than leaving each caller to slice the plan window itself.
     """
-    if instance not in BAND_HK:
+    layout = band_layout(instance)
+    if layout is None:
         return None
-    return ((BAND_HK.index(instance) * BAND_STRIDE) % BAND_SPAN) / float(BAND_SPAN)
+    return band_offset(instance) / float(layout[2])
 
 
-# 2026-09-17: the CUT window for `BAND_HK` hotkeys, decoupled from the 300-seed band space above.
-# Every previously-tuned `conjunction.CELL_CONFIG` row assumed cut == band space (300 seeds); this
-# widens the cut to the full 100-999 for exactly the hotkeys that also get a `BAND_STRIDE` band
-# offset, so the two lists are the same on purpose -- see the `FULL_HK`/`BAND_HK` comments above.
-# Which CELL TYPES take the wide cut, on top of the `BAND_HK` hotkey test below. Both gates must
-# pass, so this is a per-cell veto on a per-hotkey layout.
+def band_space(instance, predicted):
+    """The seeds this hotkey cuts its band sub-window out of, or None if it plays no band.
+
+    ``predicted`` is the plan's joined space — the three predicted width-100 classes, 300 seeds, as
+    a sorted seed list. A group A hotkey draws from exactly that; a group B hotkey draws from its
+    complement in 100-999, the 600 seeds no group A hotkey can reach.
+
+    Returning the complement here rather than at the call site is what keeps the two groups from
+    drifting: the 600 is DEFINED as "whatever the plan did not predict", so a plan that moves its
+    classes moves both groups together and the fleet still covers 100-999 exactly once per group.
+    """
+    layout = band_layout(instance)
+    if layout is None or not predicted:
+        return None
+    pred = sorted({int(s) for s in predicted})
+    if layout[3]:
+        return pred
+    rest = [s for s in FULL_SPACE if s not in set(pred)]
+    # A plan covering the whole space would leave group B nothing to build on. Fall back to the
+    # predicted space rather than hand `sub_window` an empty list — a correlated band beats no band.
+    return rest or pred
+
+
+# 2026-09-17: the CUT window for band hotkeys, decoupled from the band space above. Every
+# previously-tuned `conjunction.CELL_CONFIG` row assumed cut == band space (300 seeds); this widens
+# the cut to the full 100-999 for exactly the hotkeys that also get a rotating band offset, i.e.
+# every hotkey `band_layout()` names -- BOTH groups since 2026-09-18, which is why the gate tests
+# `band_layout` rather than `BAND_HK` (group B would otherwise silently lose the wide cut).
+# Which CELL TYPES take the wide cut is the second gate below. Both must pass, so this is a per-cell
+# veto on a per-hotkey layout.
 #
 # 2026-09-17, measured (`conj_wall.py`, 4 contracts per cell, wide arm against a narrow control):
 # the wide cut LOWERS HEK293's band-formation wall from 9 to 8 and leaves all three erythroid cells
@@ -159,31 +267,102 @@ def band_offset_frac(instance):
 # with no slack for a contract whose bank comes in thinner -- and it makes k=9 unreachable, which is
 # the arm CLAUDE.md prices as HEK293's best (0.000163 against k=8's 0.000136, -17%).
 #
-# HEK293 is therefore excluded and keeps the 300-seed joined cut. The erythroid cells keep the wide
+# HEK293 was therefore excluded and kept the 300-seed joined cut. The erythroid cells keep the wide
 # cut by operator request: their wall is 12 either way, so the measurement gives no reason to move
 # them, and their gates in `Miner.CONJUNCTION_MIN_BUDGET_S` are already calibrated for it.
 #
-# What this does NOT change is the band. In the wide path the band is `sub_window(band_space, width,
-# offset)` handed over as `band_candidates`; in the narrow path it is `sub_window(joined, width,
-# offset)` over that same 300-seed space. Both produce the identical band, so excluding a cell here
-# moves only which seeds the Cas12a min-union optimises over.
-WIDE_CUT_CELLS: frozenset = frozenset({"CD34+_HSPC", "K562", "HUDEP-2"})
+# **2026-09-18: HEK293 is back IN, by operator request, so all four cells now take the 900-seed cut
+# and this frozenset is inert.** It is kept as a set of all four rather than deleted so the veto can
+# be re-narrowed to one cell without rebuilding the mechanism. The measurement above is unchanged
+# and is the evidence AGAINST this: `band_k` 8 now sits exactly AT the wide-cut wall of 8 with no
+# step of slack, and k=9 -- the arm CLAUDE.md prices as HEK293's best, 0.000163 against k=8's
+# 0.000136 -- is unreachable. What changed on the other side of the ledger is the 2026-09-18 band
+# split: with `REST_HK` drawing from the 600 seeds the plan did NOT predict, a NARROW HEK293 cut put
+# h6-h9's band entirely outside their own cut window, and widening the cut restores band ⊆ cut for
+# all ten hotkeys. Measured margin at the wide cut, so the "no slack" is a number rather than a
+# worry: see the live check recorded in CLAUDE.md.
+#
+# **What excluding a cell here does to the BAND, which is not nothing and was once recorded wrong.**
+# The band CANDIDATE set is identical either way -- `band_space()` picks it, and that function does
+# not know about the cut at all -- but the chosen band is not: `choose_band` picks from the guides
+# that survive the cut min-union, and those pools differ between a 300-seed and a 900-seed cut.
+# Measured overlap is 0 or 1 of 11 on 8 of 8 contracts, so the two arms build essentially DISJOINT
+# bands of the same size. (An earlier form of this comment claimed they "produce the identical band";
+# that is wrong and CLAUDE.md records the correction.) Under a uniform generator band position is
+# free, so same-size-different-place costs nothing -- which is what `widecut_price.py` then measured
+# directly, at +1.1% with sign p = 0.688.
+#
+# **One consequence of the 2026-09-18 split, specific to HEK293.** A group B hotkey (h6-h9) draws
+# its band from the 600 seeds the plan did NOT predict, while HEK293 -- excluded here -- keeps the
+# predicted 300 as its CUT window. So on HEK293 those four hotkeys hold a band that lies entirely
+# OUTSIDE their own cut space. That is mechanically sound rather than a bug: the band is pinned by
+# `hdr_compliance` over `band_candidates`, which is computed per seed against the bank and never
+# consults `cfg.seeds`, and a guide satisfying the `hdr` rule on a seed necessarily cut on it -- so
+# every band row still pins all three of stage 4's targets there. What it does mean is that the
+# band and the off-band clean floor now come from disjoint seed sets on that one cell, and that the
+# wall (`bank * P(rule)**k` against `group_size`) is being asked about seeds the bank was not
+# selected on. Unmeasured; HEK293's live `band_k` is 8 against a narrow-cut wall of 9, so there is
+# one step of slack for it to spend.
+# **2026-09-18 (evening): the cut span is now a per-cell MODE, not a per-cell boolean.**
+# `hek_cutspan.py` priced all three spans on HEK293 and found E[own-field share] cannot separate
+# them at k=8 (±4%, nothing above 3 of 4 paired) -- so the decision fell to the non-score terms, and
+# there the 900-seed cut is the one arm that is dominated: it walls at 8 where the 300- and
+# 450-seed spans wall at 9, and it holds a fifth less off-band floor (cut-clean 19.2 against 24.0 of
+# 900, enumerated from the shipped rows over all 900, not from `meta["clean"]`). `hek_k9.py` then
+# measured the step the wall controls: k=8 -> k=9 is worth **+10.4% at cut 450** and +12.2% at cut
+# 300, 4W/0L on both, building 4/4. So HEK293 moves to `union` + k=9, worth ~1.13x the shipped
+# wide/k=8 arm (chained across two runs at an anchor that reproduces to 0.0%).
+#
+#   "wide"   the full 100-999. Erythroid cells: their wall is 12 either way, so the wide cut costs
+#            them no depth, and `widecut_price.py` priced it a wash (+1.1%, p = 0.688) on score.
+#   "union"  the predicted space PLUS this hotkey's own band sub-window. For `BAND_HK` that IS the
+#            predicted space (their band already sits inside it); for `REST_HK` it is 300 + 150 =
+#            450 seeds, which is the narrowest span that still satisfies band ⊆ cut.
+#
+# What `union` costs: TWO bank keys per (contract, cell) instead of one, since h0-h5 min-union over
+# 300 seeds and h6-h9 over 450. `bank_slot` means one hotkey pays each scan and the rest load warm,
+# but it is two cold scans per round rather than one.
+CUT_MODE: dict[str, str] = {
+    "HEK293": "union",
+    "CD34+_HSPC": "wide",
+    "K562": "wide",
+    "HUDEP-2": "wide",
+}
+
+# Kept as a derived view so callers that predate `CUT_MODE` keep working. Note a cell on "union" is
+# NOT in here -- a research script testing `cell in WIDE_CUT_CELLS` will correctly see HEK293 as no
+# longer taking the full 900.
+WIDE_CUT_CELLS: frozenset = frozenset(c for c, m in CUT_MODE.items() if m == "wide")
 
 
-def conjunction_cut_seeds(instance, cell):
-    """The full 900-seed cut window for a wide-cut hotkey and cell, else None for the band's space.
+def conjunction_cut_seeds(instance, cell, predicted=None, band_candidates=None):
+    """This hotkey's CUT window for one cell, or None to keep the band space.
 
     `None` means "build the cut over whatever space the band is drawn from" -- the behaviour every
-    hotkey had before this existed, and what any hotkey outside `BAND_HK`, or any cell outside
-    `WIDE_CUT_CELLS`, still gets.
+    hotkey had before any of this existed, and what any hotkey outside both band groups, or any cell
+    outside `CUT_MODE`, still gets.
 
     `cell` is REQUIRED rather than defaulted on purpose. A caller that forgets it gets a TypeError
-    instead of silently building the wide cut on a cell measured to be hurt by it, which is the same
-    reasoning `miner.sh`'s `assert_disjoint_windows` uses when it exits rather than warning.
+    instead of silently building the wrong cut span on a cell measured to be hurt by it, which is
+    the same reasoning `miner.sh`'s `assert_disjoint_windows` uses when it exits rather than
+    warning. `predicted` and `band_candidates` are required for the same reason, but only on a
+    "union" cell -- a caller that omits them there raises rather than quietly falling back to a span
+    that was measured as the worse arm. Research scripts written against the old two-argument
+    signature therefore raise on HEK293 and keep working on the erythroid cells, which is the
+    intended failure: they need updating, not a silent default.
     """
-    if instance not in BAND_HK or cell not in WIDE_CUT_CELLS:
+    if band_layout(instance) is None:
         return None
-    return list(range(100, 1000))
+    mode = CUT_MODE.get(cell)
+    if mode == "wide":
+        return list(FULL_SPACE)
+    if mode == "union":
+        if predicted is None or band_candidates is None:
+            raise TypeError(
+                f"cut mode 'union' on {cell} needs both `predicted` and `band_candidates`; "
+                f"got predicted={predicted is not None} band_candidates={band_candidates is not None}")
+        return sorted(set(int(s) for s in predicted) | set(int(s) for s in band_candidates))
+    return None
 
 # The width a FULL_HK hotkey takes out of the joined space. `None` (or anything >= the joined span)
 # means the WHOLE space -- 300 seeds at three width-100 classes -- with no rotation offset, which is

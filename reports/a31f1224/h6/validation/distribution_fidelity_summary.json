@@ -1,0 +1,33 @@
+{
+  "n_valid_experiments": 250,
+  "mutation_coverage_entropy_ratio": 0.8144326879441559,
+  "cas_system_coverage_entropy_ratio": 0.9709505944546686,
+  "strand_coverage_entropy_ratio": 0.9634967421655787,
+  "joint_coverage_entropy_ratio": 0.8363905162232136,
+  "kmer_diversity_entropy_ratio": 0.9933507384651564,
+  "distinct_guide_ratio": 1.0,
+  "distribution_fidelity_score": 0.9266215216683851,
+  "cas_specific_shift_diagnostic": {
+    "insufficient_data": false,
+    "compared": [
+      "Cas9",
+      "Cas12a"
+    ],
+    "repair_mode_jensen_shannon_divergence": 0.015211208952476477,
+    "indel_length_wasserstein_distance": 0.215
+  },
+  "coverage_detail": {
+    "mutation_counts": {
+      "NC_000011.10:g.5226136A>T": 63,
+      "HBB:c.28T>A": 187
+    },
+    "cas_system_counts": {
+      "Cas12a": 100,
+      "Cas9": 150
+    },
+    "strand_counts": {
+      "-": 153,
+      "+": 97
+    }
+  }
+}

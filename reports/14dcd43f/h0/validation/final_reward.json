@@ -1,0 +1,33 @@
+{
+  "n_valid_experiments": 250,
+  "total_weighted_score": 349.2518514995637,
+  "consistency_score": 9.360325066429445,
+  "consistency_factor": 0.09360325066429445,
+  "final_reward": 32.69110860088261,
+  "model_results": {
+    "is_cut": {
+      "r2_mean": -0.12221448474432765,
+      "r2_std": 0.1432921763727398,
+      "mae_mean": 0.06092422579327215,
+      "mae_std": 0.015378054226311883,
+      "residual_std_mean": 0.18734486992348248,
+      "n_folds": 5
+    },
+    "is_hdr": {
+      "r2_mean": -0.23901408394741797,
+      "r2_std": 0.2342910096324755,
+      "mae_mean": 0.47562761486582505,
+      "mae_std": 0.03354722092783929,
+      "residual_std_mean": 0.5423642360519658,
+      "n_folds": 5
+    },
+    "indel_length": {
+      "r2_mean": -0.41390224115005764,
+      "r2_std": 0.4228777399530865,
+      "mae_mean": 2.467536771231116,
+      "mae_std": 0.4535816599116544,
+      "residual_std_mean": 3.535381322835788,
+      "n_folds": 5
+    }
+  }
+}

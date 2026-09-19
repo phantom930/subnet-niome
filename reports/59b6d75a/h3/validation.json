@@ -1,0 +1,149 @@
+{
+  "submission": "/root/workspace/subnet-niome/data/inst/niome_hotkey3/result/2026-09-18T03:57:20/submission.json",
+  "folder": "/root/workspace/subnet-niome/data/inst/niome_hotkey3/result/2026-09-18T03:57:20",
+  "task_id": "59b6d75a-824b-4021-bd7a-3360b43ef0e4",
+  "task_created_at": "2026-09-18T03:03:14.557809",
+  "task_matched_by": "file reports/59b6d75a/task.json",
+  "contract_pairing": {
+    "verified": true,
+    "differences": {},
+    "archived_seed": 0,
+    "task_seed": "733,312,818",
+    "compared_against": "/root/workspace/subnet-niome/data/inst/niome_hotkey3/result/2026-09-18T03:57:20/contract.json"
+  },
+  "real_seed": "733,312,818",
+  "scored_seed": 733,
+  "scored_seeds": [
+    733,
+    312,
+    818
+  ],
+  "per_seed_final_score": {
+    "733": 30.488735186000117,
+    "312": 29.30744105724785,
+    "818": 29.720913521004864
+  },
+  "final_score_is_mean_of": 3,
+  "compare_seed": null,
+  "cell_type": "CD34+_HSPC",
+  "accessibility": 0.87,
+  "construction": "hdr",
+  "rows": {
+    "submitted": 250,
+    "scored": 250,
+    "dropped_by_truncation": 0,
+    "valid": 250,
+    "invalid": 0,
+    "rejection_reasons": {}
+  },
+  "stages": {
+    "stage12": {
+      "total_weighted_score": 337.47157390226636,
+      "mean_structural_score": 0.8747183717477574,
+      "offtarget_factor_counts": {
+        "1.0": 250
+      }
+    },
+    "stage3": {
+      "outcomes": {
+        "BLUNT_NHEJ": 69,
+        "MH_NHEJ": 44,
+        "HDR": 135,
+        "no_cut": 2
+      },
+      "cut_rate": 0.992,
+      "expected_no_cut": 5.500000000000005,
+      "conforming_rows": 135.0,
+      "replay_matches_pipeline": true
+    },
+    "stage4": {
+      "avg_r2": -0.31531865245946394,
+      "avg_nmae": 0.6727165598352371,
+      "consistency_score": 9.818503204942886,
+      "consistency_factor": 0.09818503204942886,
+      "per_target": {
+        "is_cut": {
+          "r2_mean": -0.009593894794221836,
+          "r2_std": 0.019187789588443672,
+          "mae_mean": 0.02063419553420361,
+          "mae_std": 0.015508465978403375,
+          "normalized_mae": 0.23162568256251062,
+          "residual_std_mean": 0.09313591217210139
+        },
+        "is_hdr": {
+          "r2_mean": -0.3508156851722707,
+          "r2_std": 0.16933991774150708,
+          "mae_mean": 0.4949321113760621,
+          "mae_std": 0.029628982308694953,
+          "normalized_mae": 0.9930470741258028,
+          "residual_std_mean": 0.5639500295019657
+        },
+        "indel_length": {
+          "r2_mean": -0.5855463774118992,
+          "r2_std": 0.5706817643540342,
+          "mae_mean": 1.7299514818846013,
+          "mae_std": 0.185463036568025,
+          "normalized_mae": 0.7934769228173981,
+          "residual_std_mean": 2.53852747474538
+        }
+      }
+    },
+    "stage5": {
+      "distribution_fidelity_factor": 0.9201463866229335,
+      "terms": {
+        "mutation_coverage_entropy_ratio": 0.7298563169471574,
+        "cas_system_coverage_entropy_ratio": 0.9709505944546686,
+        "strand_coverage_entropy_ratio": 0.9992612140227841,
+        "joint_coverage_entropy_ratio": 0.8640278449063952,
+        "kmer_diversity_entropy_ratio": 0.9919739729295535,
+        "distinct_guide_ratio": 1.0
+      },
+      "empty_joint_cells": []
+    }
+  },
+  "score": {
+    "total_weighted_score": 337.4715739022664,
+    "consistency_score": 9.609274019682987,
+    "consistency_factor": 0.09609274019682985,
+    "distribution_fidelity_score": 0.9201463866229335,
+    "distribution_fidelity_factor": 0.9201463866229335,
+    "final_score": 29.83902992141761
+  },
+  "benchmark_submission": {
+    "uid": 0,
+    "breakdown": {
+      "n_valid_experiments": 250,
+      "total_weighted_score": 337.4715739022664,
+      "consistency_score": 10.764522213362833,
+      "consistency_factor": 0.10764522213362833,
+      "distribution_fidelity_score": 0.9201463866229335,
+      "distribution_fidelity_factor": 0.9201463866229335
+    },
+    "final_score": 33.426344150075,
+    "log": ""
+  },
+  "replica_delta": 3.5873142286573945,
+  "at_compare_seed": null,
+  "artifacts": {
+    "stage12_detail.json": "per-row stage 1 verdict and stage 2 arithmetic",
+    "stage3_detail.json": "per-row RNG replay of the simulation",
+    "stage4_detail.json": "per-target, per-fold consistency detail",
+    "stage5_detail.json": "distribution fidelity, term by term",
+    "stage{3,4,5}_detail.seed<N>.json": "the same, per round seed (3 of them); the flat files above are the first seed",
+    "validation.json": "headline numbers and the task pairing",
+    "validation.txt": "the printed five-stage report",
+    "validation/": "the validator's own inputs and outputs"
+  },
+  "redirected_paths": {
+    "CONTRACT_PATH": "reports/59b6d75a/h3/validation/contract.json",
+    "HBB_REFERENCE_PATH": "reports/59b6d75a/h3/validation/hbb_reference.json",
+    "MINER_SUBMISSION_PATH": "reports/59b6d75a/h3/validation/submission.json",
+    "LAST_UPLOAD_PATH": "reports/59b6d75a/h3/validation/last_upload.json",
+    "VALID_EXPERIMENTS_PATH": "reports/59b6d75a/h3/validation/valid_experiments.json",
+    "INVALID_EXPERIMENTS_PATH": "reports/59b6d75a/h3/validation/invalid_experiments.json",
+    "STAGE3_DATASET": "reports/59b6d75a/h3/validation/stage3_dataset.json",
+    "STAGE3_SUMMARY_PATH": "reports/59b6d75a/h3/validation/stage3_summary.json",
+    "FINAL_REWARD_PATH": "reports/59b6d75a/h3/validation/final_reward.json",
+    "DISTRIBUTION_FIDELITY_PATH": "reports/59b6d75a/h3/validation/distribution_fidelity_summary.json"
+  }
+}

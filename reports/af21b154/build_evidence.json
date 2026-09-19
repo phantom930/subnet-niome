@@ -1,0 +1,146 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-17 19:44:57,861 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:57,944 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:22,445 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 138/900 | cas9 pool 669 | rows 250 cells 8/8 | 504.1s",
+      "2026-09-17 19:53:22,451 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 505s, waiting for a validator to ask for it",
+      "2026-09-17 19:54:53,682 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 505s) \u2014 no build needed",
+      "2026-09-17 19:54:53,851 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 0.5s (284s of the URL's TTL to spare)",
+      "2026-09-17 19:55:23,539 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey/result/2026-09-17T19:55:23"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:57.945025+00:00",
+      "all_hdr_built": true,
+      "band": "[233, 298, 809, 815, 806, 245, 218, 274, 839, 845, 288]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-17 19:44:57,642 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:57,715 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:20,506 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 135/900 | cas9 pool 702 | rows 250 cells 8/8 | 502.3s",
+      "2026-09-17 19:53:20,511 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 503s, waiting for a validator to ask for it",
+      "2026-09-17 20:04:19,208 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 503s) \u2014 no build needed",
+      "2026-09-17 20:04:19,394 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 0.6s (284s of the URL's TTL to spare)",
+      "2026-09-17 20:04:48,876 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey1/result/2026-09-17T20:04:48"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:57.715764+00:00",
+      "all_hdr_built": true,
+      "band": "[880, 832, 295, 857, 877, 826, 879, 280, 285, 288, 800]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-17 19:44:57,768 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:57,880 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:23,976 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 135/900 | cas9 pool 699 | rows 250 cells 8/8 | 505.6s",
+      "2026-09-17 19:53:23,980 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 506s, waiting for a validator to ask for it",
+      "2026-09-17 20:21:20,519 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 506s) \u2014 no build needed",
+      "2026-09-17 20:21:20,683 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 0.4s (288s of the URL's TTL to spare)",
+      "2026-09-17 20:21:49,570 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey2/result/2026-09-17T20:21:49"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:57.881396+00:00",
+      "all_hdr_built": true,
+      "band": "[924, 848, 827, 808, 859, 919, 873, 870, 844, 874, 846]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-17 19:44:57,598 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:57,671 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:25,285 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 135/900 | cas9 pool 681 | rows 250 cells 8/8 | 506.7s",
+      "2026-09-17 19:53:25,291 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 508s, waiting for a validator to ask for it",
+      "2026-09-17 20:19:12,882 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 508s) \u2014 no build needed",
+      "2026-09-17 20:19:13,027 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 1.8s (282s of the URL's TTL to spare)",
+      "2026-09-17 20:19:42,668 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey3/result/2026-09-17T20:19:42"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:57.671623+00:00",
+      "all_hdr_built": true,
+      "band": "[924, 927, 974, 956, 882, 893, 931, 930, 925, 875, 916]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-17 19:44:57,972 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:58,046 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:21,889 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 137/900 | cas9 pool 684 | rows 250 cells 8/8 | 503.4s",
+      "2026-09-17 19:53:21,894 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 504s, waiting for a validator to ask for it",
+      "2026-09-17 20:44:47,443 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 504s) \u2014 no build needed",
+      "2026-09-17 20:44:47,608 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 0.5s (283s of the URL's TTL to spare)",
+      "2026-09-17 20:45:20,333 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey4/result/2026-09-17T20:45:20"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:58.046764+00:00",
+      "all_hdr_built": true,
+      "band": "[233, 938, 936, 226, 924, 205, 996, 215, 911, 902, 230]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-17 19:44:57,687 | INFO | __main__ | Prefetch: preparing task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 (created 2026-09-17T19:44:49.986698) | cell_type=K562 mutations=2 budget=900s",
+      "2026-09-17 19:44:57,780 | INFO | __main__ | Build: window 200-299,800-999 from the round plan (generated 2026-09-17T19:17)",
+      "2026-09-17 19:53:21,376 | INFO | __main__ | Build: conjunction (K562) | band 11 k=11 group 100 clean 139/900 | cas9 pool 635 | rows 250 cells 8/8 | 503.1s",
+      "2026-09-17 19:53:21,381 | INFO | __main__ | Prefetch: task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 ready \u2014 250 rows in 504s, waiting for a validator to ask for it",
+      "2026-09-17 20:36:15,841 | INFO | __main__ | [af21b154-5ee4-4c34-98cb-ebd58f04cdc2] using the prepared submission (250 rows in 504s) \u2014 no build needed",
+      "2026-09-17 20:36:16,019 | INFO | __main__ | Submitted 250 rows for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 in 1.5s (283s of the URL's TTL to spare)",
+      "2026-09-17 20:36:51,247 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task af21b154-5ee4-4c34-98cb-ebd58f04cdc2 -> data/inst/niome_hotkey5/result/2026-09-17T20:36:51"
+    ],
+    "window_record": {
+      "cell": "K562",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-17T19:17:26.330027+00:00",
+      "at": "2026-09-17T19:44:57.780368+00:00",
+      "all_hdr_built": true,
+      "band": "[233, 995, 978, 292, 264, 953, 960, 988, 991, 214, 222]"
+    }
+  }
+}

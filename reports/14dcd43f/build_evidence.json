@@ -1,0 +1,413 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-18 19:53:36,395 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:36,473 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:36,474 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:36,476 | INFO | __main__ | Build: band candidates 200-349 (150 seeds, predicted space of 300, offset 0) | cut 900 seeds",
+      "2026-09-18 19:54:42,222 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 19:54:42,222 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 19:54:42,222 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 19:54:42,222 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 19:54:42,223 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 285s",
+      "2026-09-18 19:54:42,224 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 19:54:42,224 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 19:54:42,323 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 19:54:42,415 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 19:54:42,415 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 19:54:42,492 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 19:54:42,492 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 19:54:42,716 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=284s agree=True",
+      "2026-09-18 19:54:42,716 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] prepared build is still running (66s in); waiting up to 179s for it",
+      "2026-09-18 19:56:27,783 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 18/900 | cas9 pool 2218 | rows 250 cells 8/8 | 171.0s",
+      "2026-09-18 19:56:27,788 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 171s, waiting for a validator to ask for it",
+      "2026-09-18 19:56:27,789 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 171s) \u2014 no build needed",
+      "2026-09-18 19:56:27,789 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 105.3s | 250 rows",
+      "2026-09-18 19:56:27,789 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 179s of TTL left",
+      "2026-09-18 19:56:27,996 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 105.8s (179s of the URL's TTL to spare)",
+      "2026-09-18 19:57:00,869 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey/result/2026-09-18T19:57:00"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:36.474488+00:00",
+      "all_hdr_built": true,
+      "band": "[332, 260, 205, 325, 333, 206, 346, 318]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-18 19:53:36,392 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:36,467 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:36,467 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:36,469 | INFO | __main__ | Build: band candidates 250-399 (150 seeds, predicted space of 300, offset 50) | cut 900 seeds",
+      "2026-09-18 19:56:28,600 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 21/900 | cas9 pool 2042 | rows 250 cells 8/8 | 171.9s",
+      "2026-09-18 19:56:28,605 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 172s, waiting for a validator to ask for it",
+      "2026-09-18 20:13:02,519 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:13:02,519 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:13:02,519 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:13:02,519 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:13:02,520 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 284s",
+      "2026-09-18 20:13:02,520 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:13:02,520 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:13:02,612 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:13:02,698 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:13:02,698 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:13:03,101 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:13:03,101 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:13:04,001 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=283s agree=True",
+      "2026-09-18 20:13:04,001 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 172s) \u2014 no build needed",
+      "2026-09-18 20:13:04,001 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.9s | 250 rows",
+      "2026-09-18 20:13:04,001 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 283s of TTL left",
+      "2026-09-18 20:13:04,181 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 1.7s (283s of the URL's TTL to spare)",
+      "2026-09-18 20:13:33,110 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey1/result/2026-09-18T20:13:33"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:36.468068+00:00",
+      "all_hdr_built": true,
+      "band": "[378, 330, 332, 393, 270, 267, 384, 380]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-18 19:53:30,477 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:30,585 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:30,586 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:30,588 | INFO | __main__ | Build: band candidates 300-949 (150 seeds, predicted space of 300, offset 100) | cut 900 seeds",
+      "2026-09-18 19:56:24,527 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 20/900 | cas9 pool 2038 | rows 250 cells 8/8 | 173.6s",
+      "2026-09-18 19:56:24,532 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 174s, waiting for a validator to ask for it",
+      "2026-09-18 20:34:54,920 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:34:54,920 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:34:54,920 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:34:54,920 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:34:54,920 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 284s",
+      "2026-09-18 20:34:54,921 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:34:54,921 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:34:55,078 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:34:55,171 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:34:55,171 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:34:55,398 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:34:55,398 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:34:55,604 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=283s agree=True",
+      "2026-09-18 20:34:55,605 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 174s) \u2014 no build needed",
+      "2026-09-18 20:34:55,605 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:34:55,605 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 283s of TTL left",
+      "2026-09-18 20:34:55,782 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.9s (283s of the URL's TTL to spare)",
+      "2026-09-18 20:35:24,901 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey2/result/2026-09-18T20:35:24"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:30.586659+00:00",
+      "all_hdr_built": true,
+      "band": "[378, 903, 935, 381, 300, 302, 350, 334]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-18 19:53:32,401 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:32,503 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:32,504 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:32,506 | INFO | __main__ | Build: band candidates 350-999 (150 seeds, predicted space of 300, offset 150) | cut 900 seeds",
+      "2026-09-18 19:56:26,684 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2194 | rows 250 cells 8/8 | 173.9s",
+      "2026-09-18 19:56:26,690 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 174s, waiting for a validator to ask for it",
+      "2026-09-18 20:45:48,977 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:45:48,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:45:48,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:45:48,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:45:48,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 284s",
+      "2026-09-18 20:45:48,978 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:45:48,978 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:45:49,065 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:45:49,157 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:45:49,157 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:45:52,711 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:45:52,711 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:45:55,186 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=278s agree=True",
+      "2026-09-18 20:45:55,186 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 174s) \u2014 no build needed",
+      "2026-09-18 20:45:55,186 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 2.5s | 250 rows",
+      "2026-09-18 20:45:55,187 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 278s of TTL left",
+      "2026-09-18 20:45:55,345 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 6.4s (278s of the URL's TTL to spare)",
+      "2026-09-18 20:46:24,374 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey3/result/2026-09-18T20:46:24"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:32.504740+00:00",
+      "all_hdr_built": true,
+      "band": "[951, 362, 378, 920, 955, 382, 906, 359]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-18 19:53:36,185 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:36,314 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:36,315 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:36,316 | INFO | __main__ | Build: band candidates 200-999 (150 seeds, predicted space of 300, offset 200) | cut 900 seeds",
+      "2026-09-18 19:56:25,363 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2076 | rows 250 cells 8/8 | 168.6s",
+      "2026-09-18 19:56:25,368 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 169s, waiting for a validator to ask for it",
+      "2026-09-18 20:39:52,956 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:39:52,956 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:39:52,956 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:39:52,956 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:39:52,957 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 284s",
+      "2026-09-18 20:39:52,957 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:39:52,958 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:39:53,047 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:39:53,129 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:39:53,129 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:39:53,198 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:39:53,198 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:39:53,378 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=284s agree=True",
+      "2026-09-18 20:39:53,378 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 169s) \u2014 no build needed",
+      "2026-09-18 20:39:53,378 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:39:53,378 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 284s of TTL left",
+      "2026-09-18 20:39:53,553 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.6s (283s of the URL's TTL to spare)",
+      "2026-09-18 20:40:21,922 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey4/result/2026-09-18T20:40:21"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:36.315436+00:00",
+      "all_hdr_built": true,
+      "band": "[951, 208, 961, 949, 221, 944, 929, 945]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-18 19:53:30,507 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:30,590 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:30,590 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:30,591 | INFO | __main__ | Build: band candidates 200-999 (150 seeds, predicted space of 300, offset 250) | cut 900 seeds",
+      "2026-09-18 19:56:21,868 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2035 | rows 250 cells 8/8 | 171.0s",
+      "2026-09-18 19:56:21,873 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 171s, waiting for a validator to ask for it",
+      "2026-09-18 20:40:08,262 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:40:08,262 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:40:08,262 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:40:08,262 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:40:08,262 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 290s",
+      "2026-09-18 20:40:08,263 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:40:08,263 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:40:08,364 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:40:08,450 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:40:08,450 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:40:08,533 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:40:08,533 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:40:08,734 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=289s agree=True",
+      "2026-09-18 20:40:08,734 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 171s) \u2014 no build needed",
+      "2026-09-18 20:40:08,734 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:40:08,734 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 289s of TTL left",
+      "2026-09-18 20:40:08,878 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.6s (289s of the URL's TTL to spare)",
+      "2026-09-18 20:40:36,647 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey5/result/2026-09-18T20:40:36"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:30.590992+00:00",
+      "all_hdr_built": true,
+      "band": "[951, 208, 256, 289, 252, 243, 297, 241]"
+    }
+  },
+  "h6": {
+    "log_path": "/root/.pm2/logs/miner-h6-error.log",
+    "events": [
+      "2026-09-18 19:53:31,382 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:31,452 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:31,453 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:31,460 | INFO | __main__ | Build: band candidates 100-449 (150 seeds, complement space of 600, offset 0) | cut 900 seeds",
+      "2026-09-18 19:56:26,649 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 20/900 | cas9 pool 2167 | rows 250 cells 8/8 | 174.9s",
+      "2026-09-18 19:56:26,654 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 175s, waiting for a validator to ask for it",
+      "2026-09-18 20:01:36,541 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:01:36,541 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:01:36,541 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:01:36,541 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:01:36,541 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 289s",
+      "2026-09-18 20:01:36,542 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:01:36,542 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:01:36,652 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:01:36,763 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:01:36,763 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:01:36,835 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:01:36,835 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:01:37,023 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=289s agree=True",
+      "2026-09-18 20:01:37,023 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 175s) \u2014 no build needed",
+      "2026-09-18 20:01:37,023 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:01:37,023 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 289s of TTL left",
+      "2026-09-18 20:01:37,204 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.7s (289s of the URL's TTL to spare)",
+      "2026-09-18 20:02:05,988 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey6/result/2026-09-18T20:02:05"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:31.453942+00:00",
+      "all_hdr_built": true,
+      "band": "[154, 124, 111, 433, 174, 145, 136, 426]"
+    }
+  },
+  "h7": {
+    "log_path": "/root/.pm2/logs/miner-h7-error.log",
+    "events": [
+      "2026-09-18 19:53:31,200 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:31,293 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:31,293 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:31,300 | INFO | __main__ | Build: band candidates 450-599 (150 seeds, complement space of 600, offset 150) | cut 900 seeds",
+      "2026-09-18 19:56:26,886 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 21/900 | cas9 pool 2088 | rows 250 cells 8/8 | 175.3s",
+      "2026-09-18 19:56:26,891 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 176s, waiting for a validator to ask for it",
+      "2026-09-18 20:47:54,731 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:47:54,731 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:47:54,731 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:47:54,731 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:47:54,732 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 284s",
+      "2026-09-18 20:47:54,732 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:47:54,732 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:47:54,816 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:47:54,899 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:47:54,899 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:47:54,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:47:54,977 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:47:55,180 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=284s agree=True",
+      "2026-09-18 20:47:55,180 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 176s) \u2014 no build needed",
+      "2026-09-18 20:47:55,180 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:47:55,180 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 284s of TTL left",
+      "2026-09-18 20:47:55,303 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.6s (284s of the URL's TTL to spare)",
+      "2026-09-18 20:48:23,919 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey7/result/2026-09-18T20:48:23"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:31.293921+00:00",
+      "all_hdr_built": true,
+      "band": "[552, 450, 542, 574, 550, 583, 458, 532]"
+    }
+  },
+  "h8": {
+    "log_path": "/root/.pm2/logs/miner-h8-error.log",
+    "events": [
+      "2026-09-18 19:53:32,457 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:32,529 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:32,530 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:32,535 | INFO | __main__ | Build: band candidates 600-749 (150 seeds, complement space of 600, offset 300) | cut 900 seeds",
+      "2026-09-18 19:56:28,090 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2005 | rows 250 cells 8/8 | 175.3s",
+      "2026-09-18 19:56:28,094 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 176s, waiting for a validator to ask for it",
+      "2026-09-18 20:17:03,486 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:17:03,486 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:17:03,486 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:17:03,486 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:17:03,487 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 285s",
+      "2026-09-18 20:17:03,487 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:17:03,487 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:17:03,576 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:17:03,659 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:17:03,659 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:17:07,503 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:17:07,503 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:17:07,877 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=280s agree=True",
+      "2026-09-18 20:17:07,878 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 176s) \u2014 no build needed",
+      "2026-09-18 20:17:07,878 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.4s | 250 rows",
+      "2026-09-18 20:17:07,878 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 280s of TTL left",
+      "2026-09-18 20:17:08,032 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 4.5s (280s of the URL's TTL to spare)",
+      "2026-09-18 20:17:58,884 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey8/result/2026-09-18T20:17:58"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:32.530438+00:00",
+      "all_hdr_built": true,
+      "band": "[728, 749, 727, 676, 694, 732, 720, 687]"
+    }
+  },
+  "h9": {
+    "log_path": "/root/.pm2/logs/miner-h9-error.log",
+    "events": [
+      "2026-09-18 19:53:30,208 | INFO | __main__ | Prefetch: preparing task 14dcd43f-6f42-4d7b-8349-475662dd7a85 (created 2026-09-18T19:53:29.058938) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 19:53:30,283 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 19:53:30,283 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T19:17)",
+      "2026-09-18 19:53:30,289 | INFO | __main__ | Build: band candidates 750-899 (150 seeds, complement space of 600, offset 450) | cut 900 seeds",
+      "2026-09-18 19:56:25,310 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 18/900 | cas9 pool 2109 | rows 250 cells 8/8 | 174.4s",
+      "2026-09-18 19:56:25,320 | INFO | __main__ | Prefetch: task 14dcd43f-6f42-4d7b-8349-475662dd7a85 ready \u2014 250 rows in 175s, waiting for a validator to ask for it",
+      "2026-09-18 20:37:50,232 | INFO | __main__ | Received genomics task 14dcd43f-6f42-4d7b-8349-475662dd7a85 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 20:37:50,232 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] contract_url=[URL redacted] hbb_ref_url=[URL redacted]",
+      "2026-09-18 20:37:50,232 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] upload target [URL redacted]",
+      "2026-09-18 20:37:50,232 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] build+upload scheduled in the background; acking validator",
+      "2026-09-18 20:37:50,232 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 1/5 starting submission; upload deadline in 285s",
+      "2026-09-18 20:37:50,233 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 fetching contract and HBB reference",
+      "2026-09-18 20:37:50,233 | INFO | __main__ | GET contract ([URL redacted]",
+      "2026-09-18 20:37:50,320 | INFO | __main__ | GET hbb_reference ([URL redacted]",
+      "2026-09-18 20:37:50,408 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 2/5 done in 0.2s | seed=0 cell_type=HEK293 mutations=2 rules={'base_padding': 400, 'max_mismatches': 3, 'cas_systems': ['Cas9', 'Cas12a'], 'proximity_gate': False, 'max_experiments': 250}",
+      "2026-09-18 20:37:50,408 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 fetching cell-type accessibility table",
+      "2026-09-18 20:37:50,474 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 3/5 done | 4 cell types",
+      "2026-09-18 20:37:50,474 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 obtaining the dataset",
+      "2026-09-18 20:37:50,662 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] seed_state s3=0 api=0 ttl_left=284s agree=True",
+      "2026-09-18 20:37:50,662 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] using the prepared submission (250 rows in 175s) \u2014 no build needed",
+      "2026-09-18 20:37:50,662 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 4/5 done in 0.2s | 250 rows",
+      "2026-09-18 20:37:50,662 | INFO | __main__ | [14dcd43f-6f42-4d7b-8349-475662dd7a85] step 5/5 uploading 250 rows, 284s of TTL left",
+      "2026-09-18 20:37:50,788 | INFO | __main__ | Submitted 250 rows for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 in 0.6s (284s of the URL's TTL to spare)",
+      "2026-09-18 20:38:19,157 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 14dcd43f-6f42-4d7b-8349-475662dd7a85 -> data/inst/niome_hotkey9/result/2026-09-18T20:38:19"
+    ],
+    "current_window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T19:17:11.999319+00:00",
+      "at": "2026-09-18T19:53:30.283901+00:00",
+      "all_hdr_built": true,
+      "band": "[756, 882, 866, 768, 829, 892, 762, 852]"
+    }
+  }
+}

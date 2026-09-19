@@ -434,7 +434,14 @@ class Miner(BaseMinerNeuron):
     # all-HDR, not a failure, since `budget - ALL_HDR_MIN_BUDGET_S` is reserved before either gate
     # is checked. Re-measure on more contracts before trusting these as more than a safe starting
     # gate; build time plainly does not scale uniformly with cut width across cells.
-    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 380.0, "CD34+_HSPC": 700.0, "K562": 700.0,
+    # HEK293 raised 380 -> 600 on 2026-09-18 with the move to the `union` cut. The rung is
+    # handed `budget - ALL_HDR_MIN_BUDGET_S`, so a 380 gate leaves only 190s of build time at
+    # the boundary -- fine for the 900-seed cut (50-75s cold, its bank collapses below the
+    # `bank_keep` cap and scans fast) and NOT fine for `union`, whose bank sits AT the cap and
+    # whose narrow-span sibling measured 228-258s cold. 600 leaves 410s. This costs nothing in
+    # practice: HEK293's conjunction was already prefetch-only, since the ~225s in-TTL budget
+    # cleared neither gate.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 600.0, "CD34+_HSPC": 700.0, "K562": 700.0,
                                 "HUDEP-2": 450.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
@@ -485,6 +492,65 @@ class Miner(BaseMinerNeuron):
     # while the prepare is still running and the wait runs out. That build is ~1-5 s with the caches
     # warm; the margin is for doing it while the prepare still has the GPU and its worker pool.
     EMERGENCY_BUILD_S = 60.0
+
+    # --- seed-pinned submission on a LATE call ----------------------------------------------
+    #
+    # When a validator calls us AFTER the backend has stamped the round's real seeds, they stop
+    # being unknowable and the best possible submission is simply one pinned to them:
+    # `seed_depend.build_multi` makes every row satisfy the rule at every named seed, so each
+    # pinned seed scores `consistency_factor` exactly 1.0. Pinning 2 of the 3 gives a round
+    # consistency of `(1 + 1 + floor)/3` ~ 0.70, which `floor_price.py` measures as placing on
+    # **100% of fields on every cell** — far above anything the band ladder reaches.
+    #
+    # **This fires rarely and the honest expectation is "almost never".** Measured over 946 real
+    # calls, the validator arrives at a median of +30 min after task creation (p90 +52 min), while
+    # the seeds were still 0 at +56 min on the round this was written against and stamped by
+    # +145 min. Only 1.9% of calls land at >= +57 min and exactly one of 946 reached +90 min. The
+    # presigned URL lives ~300s from the call, so a call that arrives before the stamp cannot wait
+    # for it — the upload window is gone an hour before the seeds appear.
+    #
+    # It is wired up anyway because it is strictly additive: every gate below falls through to
+    # exactly the previous behaviour, and the `seed_state` log line it emits on EVERY call is what
+    # turns the timing question into data (see `seed_watch.py` for the out-of-process half).
+    SEED_PIN = True
+    # How many of the stamped seeds to pin, tried in this order until one builds. Pinning ALL
+    # THREE is the best arm and is **measured, not assumed** — on 59b6d75a (CD34+, 733/312/818) it
+    # cost exactly the same 101s as pinning two and returned 250 rows over 8/8 cells:
+    #
+    #   pin 3 -> cons 1.0000 / 1.0000 / 1.0000  = round 1.0000, round final ~347.4
+    #   pin 2 -> cons 1.0000 / 1.0000 / 0.1027  = round 0.7009, round final ~244.8
+    #
+    # +42% for no extra time. The third seed costs only candidate pool (397,490 -> 140,720, still
+    # ~560x the 250 rows needed), because `enumerate_candidates_multi` checks `seeds[0]` first and
+    # spends the later seeds on survivors only. The 2-seed arm is kept as a fallback for a contract
+    # whose pool does starve at three — `P(rule)**3` is a real risk on a thinner cell even though
+    # it did not bite here.
+    SEED_PIN_COUNTS = (3, 2)
+    # Which pair, rotated per hotkey so siblings do not all ship identical rows — the signature
+    # CLAUDE.md flags as the most visible one available if cross-miner duplicate detection appears.
+    # All pairs are worth the same (cons 0.70 either way), so this costs nothing.
+    SEED_PIN_ROTATE = True
+    # `SeedDependConfig.variants_per_site` is 12000, tuned for the PREFETCH path at a ~294s build,
+    # which does not fit what is left of a 300s TTL. 4000 does, and it is **measured, not guessed**:
+    # on 59b6d75a (CD34+, seeds 733/312/818) `build_multi` pinned 733 and 312 in **101s** inside a
+    # 239s budget and returned 250 rows over 8/8 cells from 397,490 candidates.
+    SEED_PIN_VARIANTS = 4000
+    # What that build is worth, scored through all five stages on the same contract:
+    #
+    #   seed 733 PINNED    consistency 1.0000
+    #   seed 312 PINNED    consistency 1.0000
+    #   seed 818 unpinned  consistency 0.1027
+    #   -> round consistency 0.7009, round final ~244.8 at weighted 384.9 x fidelity 0.9074
+    #
+    # Against CD34+'s rank-10 cutoff median of 99.5 — and that round's own field top of 202.7 —
+    # this is rank 1 by a wide margin, on a round where the band ladder's best case is one hit at
+    # cons ~0.40. The construction is not the uncertain part; whether a call ever arrives after the
+    # stamp is.
+    #
+    # Do not start a pin build without this much left after reserving the upload. Set from the
+    # measured 101s plus ~50s of slack for a cold cache: below it the attempt would burn the window
+    # and land on the emergency construction, strictly worse than shipping the prepared rows.
+    SEED_PIN_MIN_BUDGET_S = 150.0
     # A failed prepare is retried rather than written off: the round still has hours left, and the
     # usual causes (a backend blip, the GPU busy, a transient CUDA error) clear on their own.
     # Spaced and capped so a contract that genuinely cannot be built does not spin all round.
@@ -1270,6 +1336,131 @@ class Miner(BaseMinerNeuron):
         contract = (newest.get("content") or {}).get("contract") or {}
         return newest if self._is_unstamped(contract.get("seed")) else None
 
+    def _api_task_contract(self, task_id: str) -> dict | None:
+        """This task's contract from the PUBLIC feed, which is not the same object S3 serves.
+
+        The validator hands us a presigned `contract.json` on S3; `/api/v3/tasks` publishes its own
+        copy of the same task. CLAUDE.md records them as matching field for field with `seed` 0 on
+        both until the round closes — but that is the claim under test here, because the two are
+        written by different paths and nothing has measured which one carries the real seeds first.
+        The feed is the cheaper source to poll (public, unsigned, no per-task URL) and is what this
+        reads; `_seed_state` logs both so any lead either way shows up in the record.
+
+        Returns None on any failure — a miss here must never cost the round.
+        """
+        try:
+            response = requests.get(self.TASKS_URL, timeout=settings.TASK_REQUEST_TIMEOUT)
+            response.raise_for_status()
+            for item in (response.json().get("items") or []):
+                if (item.get("id") or item.get("task_id")) == task_id:
+                    return (item.get("content") or {}).get("contract") or None
+        except Exception as exc:                      # noqa: BLE001 — never fail the round on this
+            logger.warning(f"seed_state: task feed unavailable ({exc})")
+        return None
+
+    @staticmethod
+    def _seeds_of(contract: dict | None) -> list[int]:
+        """The stamped round seeds, or [] when the contract still carries the 0 placeholder."""
+        if not contract:
+            return []
+        raw = contract.get("seed")
+        if Miner._is_unstamped(raw):
+            return []
+        try:
+            return [int(p) for p in str(raw).split(",") if p.strip() != ""]
+        except ValueError:
+            return []
+
+    def _seed_sources(self, s3_contract: dict, api_contract: dict | None) -> list[tuple]:
+        """Every distinct stamped seed set worth pinning, as (label, seeds), best source first.
+
+        The two sources are NOT interchangeable and have been observed to disagree: on 2026-09-18
+        the feed reported `448,931,493` for task 11276911 and then `341,410,564` for the same
+        task_id and created_at fourteen minutes later, while `448,931,493` is what h7's S3 contract
+        carried. Stable across 8 polls 4s apart, so not per-request noise — something rewrote it.
+
+        Which one the validator actually scores with is unresolved (`seed_watch.py` is recording
+        it), so neither is trusted over the other: both are tried, and a build against the wrong
+        set costs only the band's small hit chance since it still scores the ordinary ~0.10 floor.
+        Order is API then S3 per operator instruction; identical sets collapse to one attempt.
+        """
+        out, seen = [], set()
+        for label, contract in (("api", api_contract), ("s3", s3_contract)):
+            seeds = self._seeds_of(contract)
+            key = tuple(sorted(seeds))
+            if seeds and key not in seen:
+                seen.add(key)
+                out.append((label, seeds))
+        return out
+
+    def _log_seed_state(self, tag: str, task_id: str, s3_contract: dict,
+                        api_contract: dict | None, deadline: float) -> list[int]:
+        """One line per call recording where the real seeds are, and how much TTL is left.
+
+        This is the measurement the seed-pin path is gated on, and it is emitted on EVERY call
+        whether or not the pin fires — the rare case is only interesting against the base rate.
+        Grep `seed_state` to recover the joint distribution of (S3 stamped, API stamped, TTL left),
+        which is what decides whether an in-TTL pinned build is ever reachable.
+        """
+        s3_seeds = self._seeds_of(s3_contract)
+        api_seeds = self._seeds_of(api_contract)
+        left = deadline - time.time()
+        logger.info(
+            f"{tag} seed_state s3={'STAMPED ' + ','.join(map(str, s3_seeds)) if s3_seeds else '0'} "
+            f"api={'STAMPED ' + ','.join(map(str, api_seeds)) if api_seeds else ('0' if api_contract else 'unavailable')} "
+            f"ttl_left={left:.0f}s agree={bool(s3_seeds) == bool(api_seeds)}"
+        )
+        return api_seeds or s3_seeds
+
+    def _seed_pin_rows(self, contract: dict, reference: dict, cell_types: dict,
+                       seeds: list[int], deadline: float, tag: str) -> list[dict] | None:
+        """A submission pinned to `SEED_PIN_COUNT` of the known seeds, or None to fall through.
+
+        Every gate returns None rather than raising, so this can only ever add a better submission —
+        never cost the one the miner would otherwise have sent.
+        """
+        if not self.SEED_PIN or not seeds:
+            return None
+        # Rotate WHICH seeds a reduced pin takes, so siblings falling back to the same count do not
+        # ship identical rows — the signature CLAUDE.md flags as the most visible one available.
+        # Irrelevant when every seed is pinned (one choice), which is the arm that normally wins.
+        start = 0
+        if self.SEED_PIN_ROTATE:
+            name = os.getenv("NIOME_INSTANCE") or ""
+            start = (sum(ord(c) for c in name) % len(seeds)) if name else 0
+
+        for count in self.SEED_PIN_COUNTS:
+            if count > len(seeds):
+                continue
+            # Re-read the clock per attempt: a declined arm has already spent its build time, and
+            # starting a second one that cannot finish is how this path would cost a round instead
+            # of adding to it.
+            budget = deadline - time.time() - self.UPLOAD_RESERVE_S
+            if budget < self.SEED_PIN_MIN_BUDGET_S:
+                logger.info(f"{tag} seed-pin stopping at {count}: {budget:.0f}s of build budget is "
+                            f"under the {self.SEED_PIN_MIN_BUDGET_S:.0f}s gate")
+                return None
+            pick = tuple(seeds[(start + i) % len(seeds)] for i in range(count))
+            logger.info(f"{tag} seed-pin ATTEMPT {count} of {len(seeds)} seeds {pick} "
+                        f"(budget {budget:.0f}s, variants {self.SEED_PIN_VARIANTS})")
+            try:
+                cfg = SD.SeedDependConfig(variants_per_site=self.SEED_PIN_VARIANTS)
+                rows, meta = SD.build_multi(contract, reference, cell_types, seeds=pick,
+                                            cfg=cfg, budget_s=budget)
+            except Exception as exc:                  # noqa: BLE001 — never fail the round on this
+                logger.warning(f"{tag} seed-pin at {count} raised ({exc}); trying the next arm")
+                continue
+            if rows:
+                logger.info(
+                    f"{tag} seed-pin BUILT {len(rows)} rows pinned to {pick} "
+                    f"({meta.get('elapsed_s')}s) — consistency 1.0 on {count} of {len(seeds)} "
+                    f"seeds, i.e. round consistency ~{(count + (len(seeds) - count) * 0.10) / len(seeds):.2f}"
+                )
+                return rows
+            logger.info(f"{tag} seed-pin at {count} declined ({meta.get('reason')})")
+        logger.info(f"{tag} seed-pin exhausted every arm; normal path")
+        return None
+
     @staticmethod
     def _is_unstamped(seed) -> bool:
         """Whether a contract seed is the broadcast placeholder rather than a scoring seed.
@@ -1344,6 +1535,20 @@ class Miner(BaseMinerNeuron):
         prepared (hours), prepared-but-still-running (wait for it), and in-TTL (what the miner did
         before the prefetch existed, and still the fallback whenever the other two miss).
         """
+        # Where the round's real seeds are already stamped, they stop being unknowable and the best
+        # submission is one pinned to them — see `SEED_PIN`. Checked FIRST because it dominates
+        # every rung below it when it is available (cons 1.0 on each pinned seed against a band
+        # that hits ~1-2% of the time), and because it must see the TTL before anything spends it.
+        # `_log_seed_state` runs on every call regardless, so the base rate is recorded even on the
+        # overwhelming majority of rounds where the seeds are still 0 and nothing is attempted.
+        api_contract = self._api_task_contract(task.id) if self.SEED_PIN else None
+        self._log_seed_state(tag, task.id, contract, api_contract, deadline)
+        for source, known_seeds in self._seed_sources(contract, api_contract):
+            pinned = await asyncio.to_thread(self._seed_pin_rows, contract, reference, cell_types,
+                                             known_seeds, deadline, f"{tag} [{source}]")
+            if pinned:
+                return pinned
+
         key = self._build_key(task.id, contract)
         prepared = self._prepared
         if prepared is not None and prepared.key == key:
@@ -1671,28 +1876,67 @@ class Miner(BaseMinerNeuron):
         # with every hotkey on the same joined window the sub-window OFFSET is the only thing that
         # separates two siblings' bands. None (a hotkey not in `joined_window.BAND_HK`) keeps the
         # config default, which is the single-hotkey value the replication was measured at.
-        conj_offset = JW.band_offset_frac(os.getenv("NIOME_INSTANCE"))
-        # A `BAND_HK` hotkey's CUT window is no longer `space` -- it is the full 900 from
-        # `conjunction_cut_seeds`, decoupled from the 300-seed region `space` still names. That
-        # region stays the source of the BAND instead: sliced explicitly via `band_candidates`
-        # (at this hotkey's usual offset) rather than left to `sub_window` to carve out of the
-        # (now much wider) cut window. Every hotkey outside `BAND_HK` is unaffected -- `wide_cut`
-        # is None and `conj_kw`/`conj_band_candidates` fall back to the plain `kw`/`None` below.
+        instance = os.getenv("NIOME_INSTANCE")
+        conj_offset = JW.band_offset_frac(instance)
+        # A band hotkey's CUT window is no longer `space` -- it is the full 900 from
+        # `conjunction_cut_seeds` -- and since 2026-09-18 its BAND space is not `space` either.
+        # `joined_window.band_space` decides both halves of that:
         #
-        # The cell type is part of that test since 2026-09-17: `conj_wall.py` measures the wide cut
-        # LOWERING HEK293's band wall 9 -> 8 (putting `band_k` 8 at the wall and making k=9
-        # unreachable) while leaving the erythroid cells at 12, so HEK293 is out of
-        # `WIDE_CUT_CELLS` and takes the 300-seed cut. The band it builds is identical either way.
+        #   h0-h5  the plan's three predicted classes, `space` itself  (300 seeds, stride 50)
+        #   h6-h9  the COMPLEMENT of `space` in 100-999                (600 seeds, stride 150)
+        #
+        # so the fleet's bands now cover the whole 900 rather than only the predicted third, and a
+        # round drawing outside the prediction is no longer a fleet-wide miss. The slice is handed
+        # over explicitly as `band_candidates` rather than left to `sub_window` to carve out of
+        # `cfg.seeds`, which is what makes the band space independent of the cut space at all --
+        # for h6-h9 the two are disjoint by construction.
+        #
+        # **Pair `conj_offset` only with what `band_space` returns for the SAME hotkey.** The
+        # fraction is against that hotkey's own group span (300 or 600), and `sub_window` turns it
+        # back into an index against whatever list it is given, so crossing the two puts the
+        # sub-window in the wrong place without erroring.
+        #
+        # Every hotkey outside both groups is unaffected: `band_space` returns None, so
+        # `conj_kw`/`conj_band_candidates` stay the plain `kw`/`None` and the band falls back to a
+        # slice of the cut window exactly as it did before any of this existed.
+        #
+        # The cell type gates the CUT only, and has since 2026-09-17: `conj_wall.py` measures the
+        # wide cut LOWERING HEK293's band wall 9 -> 8 (putting `band_k` 8 at the wall and making
+        # k=9 unreachable) while leaving the erythroid cells at 12, so HEK293 is out of
+        # `WIDE_CUT_CELLS` and keeps the 300-seed cut. Its BAND still follows the split above, so
+        # on HEK293 an h6-h9 band sits outside that hotkey's own cut space -- sound, because
+        # `hdr_compliance` pins a band seed without consulting `cfg.seeds`, but unmeasured. The
+        # wide cut and the explicit band candidates are set together on purpose: a 900-seed cut
+        # with no `band_candidates` would carve the band out of the 900 instead, which is neither
+        # arm and was never measured.
         conj_kw, conj_band_candidates = kw, None
-        wide_cut = (JW.conjunction_cut_seeds(os.getenv("NIOME_INSTANCE"), cell_type)
-                    if space is not None else None)
-        if wide_cut is not None:
+        if space is not None:
             cj_cfg = CJ.config_for(cell_type)
-            band_space = space if isinstance(space, list) else list(range(space[0], space[1] + 1))
-            if cj_cfg is not None:
+            predicted = space if isinstance(space, list) else list(range(space[0], space[1] + 1))
+            band_space = JW.band_space(instance, predicted)
+            if cj_cfg is not None and band_space:
                 conj_band_candidates = CJ.sub_window(band_space, cj_cfg.band_width,
-                                                      conj_offset or 0.0)
-                conj_kw = {"seed_list": wide_cut}
+                                                     conj_offset or 0.0)
+                # The cut span is a per-cell MODE since 2026-09-18: "wide" (the full 900, erythroid)
+                # or "union" (the predicted space plus THIS hotkey's band window -- 300 for h0-h5,
+                # 450 for h6-h9, HEK293). The union mode is why both arguments are passed: it is
+                # the narrowest span that still satisfies band ⊆ cut, and it needs to know where
+                # the band went. `conjunction_cut_seeds` raises rather than defaulting if a union
+                # cell is called without them.
+                cut = JW.conjunction_cut_seeds(instance, cell_type, predicted=predicted,
+                                               band_candidates=conj_band_candidates)
+                if cut is not None:
+                    conj_kw = {"seed_list": cut}
+                logger.info(
+                    "Build: band candidates %s-%s (%d seeds, %s space of %d, offset %s) | "
+                    "cut %d seeds (%s) | k=%d",
+                    min(conj_band_candidates), max(conj_band_candidates),
+                    len(conj_band_candidates),
+                    "predicted" if instance in JW.BAND_HK else "complement",
+                    len(band_space), JW.band_offset(instance),
+                    len(conj_kw.get("seed_list") or predicted),
+                    JW.CUT_MODE.get(cell_type, "band space"), cj_cfg.band_k,
+                )
 
         if conj_applies:
             try:

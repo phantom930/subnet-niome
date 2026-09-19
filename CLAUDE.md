@@ -830,6 +830,234 @@ or you will see nothing else.
 reaches ~24 GB and OOM-killed four research processes; the miners survived only because the kernel
 picked the larger victims.
 
+**2026-09-18: HEK293 is back IN `WIDE_CUT_CELLS` by operator request — all four cells now take the
+900-seed cut — and the paired measurement says the 2026-09-17 exclusion was right on the score terms
+and wrong about the risk.** Three fresh HEK293 contracts, both arms at the LIVE config (`band_k` 8,
+group 80, width 150, cell-aware), the wide arm run for both band groups, paired within contract:
+
+| contract | arm | cut | band | pool | **margin vs group 80** | clean | of | cas9 | build |
+|---|---|---|---|---|---|---|---|---|---|
+| 4f3cc5a5 | narrow | 300 | 8 | 210 | **2.62x** | 22 | 300 | 2825 | 258s |
+| 4f3cc5a5 | **wide** | 900 | 8 | 143 | **1.79x** | 17 | 900 | 3420 | **71s** |
+| 7bca65ce | narrow | 300 | 8 | 209 | **2.61x** | 25 | 300 | 1927 | 228s |
+| 7bca65ce | **wide** | 900 | 8 | 144 | **1.80x** | 19 | 900 | 2391 | **50s** |
+| 1bdd141b | narrow | 300 | 8 | 205 | **2.56x** | 22 | 300 | 4725 | 230s |
+| 1bdd141b | **wide** | 900 | 8 | 113 | **1.41x** | 18 | 900 | 5179 | **74s** |
+
+(The complement-group arm is within 5% of the predicted-group arm on every column — pool 124-139,
+clean 17-21 — so the band split does not interact with this. 6 of 6 wide builds reached band 8 =
+k with 8/8 cells.)
+
+**"`band_k` 8 sits AT the wall so there is no slack" was the wrong reading and is withdrawn.** The
+surviving pool at k=8 is **1.41-1.80x** the group; the wall sits at 8 because one further band seed
+multiplies that by P(HDR) ~ 0.38 to 0.54-0.68x, under 1. The narrow arm's 2.56-2.62x is **exactly
+one full step** (1/0.38 = 2.6), which is why its wall is 9 — the same arithmetic read from both
+ends, and it reproduces this file's live "pool 209 against group 80" reading. So the wide cut
+removes about half a step of depth, not a hair's breadth of safety: tipping k=8 into a decline needs
+the bank to lose 30-45%. The real cost of the wall is the one already priced — **k=9 unreachable,
+-17%** (0.000163 -> 0.000136) — and nothing else.
+
+**The clean set does run OPPOSITE to the erythroid cells, and it is now measured the UNBIASED
+way.** An earlier form of this entry compared `meta["clean"]` across arms (22-25 of 300 against 17-21
+of 900); that is biased by construction, because the count is taken within each arm's OWN cut space
+and the narrow arm never looks at the 600 seeds outside its own — where a seed can still be cut-clean
+by chance at ~`0.96**80`. [hek_cutspan.py](hek_cutspan.py) re-measures every arm with
+`widecut_price.evaluate`, which enumerates band and cut-clean from the SHIPPED ROWS over all 900 and
+prices each regime at its measured consistency. **The direction held and the magnitude grew**:
+cut-clean falls **24.0 -> 19.2** of 900 (-20%) on the wide cut, so HEK293's off-band floor really
+does get worse. On K562/CD34+ the same change WIDENS the clean set +30-40%, which is the entire — if
+tiny — case for the wide cut there. Mechanism is the `bank_keep` cap and it is the same one that
+moves the wall: HEK293's bank falls BELOW 300,000 over 900 seeds and the min-union loses freedom,
+while the erythroid banks stay pinned AT the cap and keep theirs.
+
+#### HEK293's cut span, all three options priced
+
+`hek_cutspan.py`, 4 HEK293 contracts, live config (k=8 / group 80 / width 150 / light 12 /
+cell-aware), each arm priced against the one field that played its contract. Three spans are
+available, and they differ only for `REST_HK`, whose band sits in the complement — for `BAND_HK` the
+band is already inside the predicted 300, so `union` IS `narrow` there:
+
+| arm | cut | **wall** | k=9 | clean/900 | margin vs group 80 | cas9 | bank | cold build | band ⊆ cut |
+|---|---|---|---|---|---|---|---|---|---|
+| A/narrow | 300 | **9** | yes | **24.0** | **2.71x** | 2680 | 300k (cap) | 217s | yes |
+| A/wide | 900 | **8** | **no** | 19.2 | 1.68x | 3172 | 167k | **127s** | yes |
+| B/narrow | 300 | **9** | yes | 19.8 | 2.15x | 2310 | 300k (cap) | 139s | **NO** |
+| **B/union** | **450** | **9** | **yes** | **23.0** | **2.70x** | 2781 | 300k (cap) | **365s** | yes |
+| B/wide | 900 | **8** | **no** | 19.2 | 1.69x | 3098 | 167k | **129s** | yes |
+
+**E[own-field share] cannot separate them, and that is the first result.** All five arms land in
+0.000143-0.000149 — a ±4% spread — and nothing wins more than 3 of 4 paired within contract
+(sign p = 0.625): A/narrow vs A/wide **1.036x** (3W/1L), B/union vs B/wide **1.025x** (2W/1L/1T),
+B/union vs B/narrow **1.031x** (3W/1L), B/narrow vs B/wide **0.995x** (0W/3L/1T). `union` is
+nominally ahead on all three of its comparisons, which is suggestive and is not a result at n=4.
+This resolves exactly as the K562/CD34+ wide-cut question did: **score does not decide it, the
+non-score terms do.**
+
+**The wall is what decides it, and it is unanimous 4/4 on every arm.** `narrow` and `union` both
+hold a FULL step of 1/P(HDR) ~ 2.6 and wall at **9**; `wide` holds ~0.65 of a step and walls at
+**8**. So the 900-seed cut is the ONLY one of the three that makes **k=9 unreachable** — and k=9 is
+the arm the band-depth table above prices as HEK293's best, **0.000163 against k=8's 0.000136,
++20%**. That is five times the ±4% the cut span itself is worth, and it points the other way from
+the shipped arm. (Caveat: that +20% was measured at the NARROW cut. This run establishes k=9 is
+FEASIBLE on narrow and union, not that it delivers the same gain at cut 450.)
+
+**What the wide cut does buy is build cost, and `union` is the expensive arm.** Cold build 127-139s
+wide against `union`'s 365s, because `union` pays a full 300,000-guide scan where the wide cut's
+bank collapses below the cap and finishes sooner. Worse, `union` needs TWO bank keys per (contract,
+cell) — a 300-seed one for h0-h5 and a 450-seed one for h6-h9 — against one for wide or narrow, so
+the fleet pays two cold scans per round instead of one. Against a prefetch-lead p10 of 395s a single
+365s cold build is marginal in the same way K562's 410s wide build is, and `bank_slot` means one
+hotkey pays it while the rest load warm (~140s).
+
+**2026-09-18 (shipped): HEK293 -> `union` cut + k=9, and the erythroid cells -> k=12.** Set by
+operator request on the two measurements above, and on one more taken before the fleet was restarted
+onto it, because `band_k` 12 AT the wide cut had never actually been built — `conj_wall.py` put the
+erythroid wall at 12, and "the wall is 12 therefore k=12 builds" is an inference, while every k=12
+valuation in the depth table was measured at the NARROW cut. A decline would have dropped three of
+four cells to all-HDR, which this file prices at 1.30-2.05x worse, so it was checked first:
+3 cells x 2 contracts x {h0, h7} x {k=11, k=12}, build-only, k=11 carried as the paired control.
+
+| cell | k=11 | k=12 | margin k=11 | **margin k=12** | clean k=11 | **clean k=12** |
+|---|---|---|---|---|---|---|
+| K562 | 4/4 | **4/4** | 2.06-2.12x | **1.16-1.22x** | 128-138 | **77-97** |
+| CD34+_HSPC | 4/4 | **4/4** | 2.05-2.16x | **1.16-1.23x** | 136-146 | **86-90** |
+| HUDEP-2 | 4/4 | **4/4** | 2.06-2.11x | **1.14-1.20x** | 132-143 | **87-90** |
+
+**24 of 24 built, 8/8 stage-5 cells on every one**, both band groups, 39-167s. Confirmed live on the
+first round after the restart (cc0458cc, CD34+_HSPC): 8 hotkeys, band 12 = k, clean 77-104 of 900,
+cells 8/8, 110-142s, zero declines.
+
+**Every deep arm in this config is now availability-MARGINAL, and that is the standing risk.** k=12
+holds **1.14-1.23x** the group against k=11's ~2.1x, and HEK293's k=9 holds 1.17-1.24x against k=8's
+2.70x. Both are AT their wall by construction. So a contract whose Cas12a bank comes in ~15-20%
+thinner than these declines outright where the previous config would have built — the failure mode
+is a fall-through to all-HDR, not a bad submission, but it is a real exposure that k=11/k=8 did not
+carry. **The single number to watch in the logs is `conjunction declined (band reached N of K)`.**
+
+**And CD34+_HSPC is knowingly one step past its own optimum.** The depth table measures it as the
+only cell with an INTERIOR maximum — k=11 at 0.000153 against k=12's 0.000145, -5% — while K562
+(0.000220) and HUDEP-2 (0.000303) are both still climbing at 12. It runs k=12 by operator request
+for a uniform erythroid config; the -5% is the price of that uniformity and is recorded here so it
+is not rediscovered as a regression.
+
+Gate change that went with it: `CONJUNCTION_MIN_BUDGET_S["HEK293"]` **380 -> 600**. The rung receives
+`budget - ALL_HDR_MIN_BUDGET_S`, so 380 left only 190s of build time at the boundary — enough for the
+900-seed cut (50-75s cold, its bank collapses below the `bank_keep` cap and scans fast) and NOT for
+`union`, whose bank sits AT the cap and whose narrow sibling measured 228-258s cold. Costs nothing in
+practice: HEK293's conjunction was already prefetch-only, the ~225s in-TTL budget clearing neither
+gate.
+
+**k=9 at cut 450 is now measured, and it WORKS — at about half the value the band-depth table
+records.** [hek_k9.py](hek_k9.py) sweeps k INSIDE each span rather than across spans, so the k-step
+is the only variable, with cut 300 carried as a control because the +20% above came from
+`band_hit.py` at the narrow cut on 12 different contracts under the biased-regime pricing. Same 4
+contracts, `widecut_price.evaluate` throughout, both k=8 arms rebuilt in-process so every pair is
+produced against identical banks:
+
+| arm | built | band | clean/900 | margin | cas9 | `w x fid` | build |
+|---|---|---|---|---|---|---|---|
+| cut300 / k8 | 4/4 | 8 | **24.0** | **2.71x** | 2680 | 263.6 | 131s |
+| cut300 / k9 | 4/4 | 9 | 13.0 | **1.22x** | 1762 | 261.7 | 121s |
+| cut450 / k8 | 4/4 | 8 | **23.0** | **2.70x** | 2781 | 265.1 | 133s |
+| cut450 / k9 | 4/4 | 9 | 13.8 | **1.24x** | 1667 | 261.9 | 124s |
+
+| span | k8 | k9 | step | record |
+|---|---|---|---|---|
+| cut 300 (control) | 0.000148 | 0.000167 | **1.122x** | **4W/0L** |
+| **cut 450** | 0.000149 | 0.000164 | **1.104x** | **4W/0L** |
+
+**Three results, in order of what they settle.**
+
+* **k=9 builds 4/4 at BOTH spans** — the availability question the wall probe left open. `band_k` 9
+  sits exactly AT the wall on these spans and `band_cell_aware` carries it, the same thing the depth
+  table records (k=9 +floor 12/12 where base declined 5 of 12). But the margin at k=9 is
+  **1.17-1.24x** against k=8's 2.70x, so k=9 is availability-MARGINAL in a way k=8 is not: a
+  contract whose bank comes in ~20% thinner declines outright. That is the risk k=8 does not carry
+  and it is the one real argument for staying at 8.
+* **The step is +10.4% at cut 450 and +12.2% at cut 300, not +20%** — and the CONTROL shrank the
+  same way, which is the whole reason it was run. So the halving is a property of the pricing method
+  and this contract set, NOT of cut 450. **Do not quote +20% for the k=8 -> k=9 step again**; quote
+  +10-12%, and note both spans are unanimous 4W/0L (p = 0.125 at n=4, the floor for that n).
+* **cut 450 keeps ~85% of the cut-300 step (10.4/12.2) and lands within 2% of it in absolute terms**
+  (0.000164 against 0.000167). So the middle option inherits essentially all of k=9's value; the
+  earlier finding that the three spans are a wash at k=8 extends to k=9.
+
+**What this is worth against the SHIPPED arm, and the caveat on it.** wide/k8 measures 0.000145 and
+union/k9 measures 0.000164, i.e. **1.131x** — but that chains two runs rather than pairing within
+one. The chain is supported rather than assumed: `cut450/k8` reproduces at **0.000149 in both runs,
+agreeing to 0.0%**, so the anchor is solid. Still, read 1.13x as two paired measurements joined at a
+verified anchor, not as one paired measurement.
+
+**The mechanism of the k-step, since it is not what the name suggests.** k=9 does not add value by
+adding a band seed alone — it TRADES, and the trade is nearly even here. Band 8 -> 9 (+12.5% spike
+frequency) costs the clean set **24.0 -> 13.0** of 900 (-46%) and the Cas9 pool 2680 -> 1762, while
+`weighted x fidelity` is FLAT (263.6 -> 261.7, 265.1 -> 261.9). So term 1 is untouched and the whole
++10-12% is the band gain net of a floor loss that eats most of it. That is the same shape as the
+2026-09-16 depth change on the erythroid cells (+50% band for -57% clean) and it is why the step is
++10% rather than the +12.5% the band count alone would suggest.
+
+**So the honest summary is that the shipped arm is the one option that is dominated, and the
+margin is now a number: ~13%.** `wide` gives up k=9 — measured at +10.4% on cut 450 — and a fifth of
+the floor, to buy build time HEK293's 380s gate does not need (it has 710s of `budget_s` on a
+prefetched round). `union` wins every score-adjacent term and costs two bank scans per
+(contract, cell) instead of one. `narrow` matches `union` on the wall and the floor for h0-h5 and is
+free, but leaves h6-h9's band outside their cut. The one thing arguing FOR the status quo is that
+k=9's margin is 1.17-1.24x against k=8's 2.70x, so that +10% carries real decline risk on a thin
+bank while k=8 at any span carries none. **HEK293 keeps the wide cut by operator request; this is
+the evidence against it, not a change.**
+
+**Read this as the evidence, not as the decision.** HEK293 keeps the wide cut by operator request.
+The cheaper route to the same band ⊆ cut consistency, if the floor loss is judged to matter, is to
+keep HEK293 narrow and widen its cut to the union of the predicted 300 and that hotkey's own
+150-seed band window (450 seeds) rather than all 900 — untested, and it is a third arm, not a
+revert.
+
+**2026-09-18: ten hotkeys, and the band space is the FULL 900 split into two groups.** Until now
+every band hotkey drew its sub-window from the plan's three predicted classes, so the other 600
+seeds held no band anywhere in the fleet — a round drawing outside the prediction could not spike on
+any hotkey. `joined_window` now carries two groups, each tiling its own half exactly once:
+
+| group | hotkeys | space | count x stride | width | overlap |
+|---|---|---|---|---|---|
+| `BAND_HK` | h0-h5 | the plan's three PREDICTED classes | 6 x 50 = 300 | 150 | 100 of 150 between neighbours |
+| `REST_HK` | h6-h9 | the COMPLEMENT of those in 100-999 | 4 x 150 = 600 | 150 | **none — the four partition the 600** |
+
+`count * stride == span` is the invariant, asserted at import: `band_offset_frac` is
+`(index * stride) % span`, so a count and stride that do not multiply to the span wrap the sequence
+onto itself and two hotkeys draw the identical band from the identical pool. Verified against the
+live plan on all four cells — the union of the ten candidate sets is **900 of 900**, group A's max
+pairwise overlap is 100 and group B's is **0**.
+
+**The asymmetry is deliberate and it is a hedge, not a bet.** h0-h5 stay concentrated where the
+prediction points, at the 3x overlap the replication was measured near; h6-h9 spread over twice the
+space at zero overlap, because this file measures the prediction as worthless (every `strategy_rank`
+strategy inside 0.93x-1.06x chance, |z| <= 1.1 over the 160-task cold walk-forward; SeedFormer
+learned to emit the uniform distribution). Under a uniform generator band position is free, so the
+600-seed half is worth exactly the seeds it holds.
+
+**The one real risk was the wall, and it is measured as absent.** The complement window is a place
+no band was ever built, and `choose_band` declines when the surviving pool falls under `group_size`.
+On HUDEP-2, six live builds on the same contract and the same shared bank:
+
+| | band | clean of 900 | cas9 pool | build |
+|---|---|---|---|---|
+| h1/h2/h3 predicted | **11 = k** | 130-142 | 750-844 | 114-129s |
+| h7/h8/h9 **complement** | **11 = k** | **141-142** | **750-869** | 126-133s |
+
+The complement reaches `band_k` 11 as easily as the predicted window and holds a marginally *larger*
+clean set, so the wall is a property of the bank and `P(rule)`, not of where the candidates sit —
+which is what "band position is free" predicts and is now checked rather than assumed.
+
+**Two things this leaves open.** The band space is decoupled from the CUT space, and on HEK293 —
+excluded from `WIDE_CUT_CELLS` on the `conj_wall.py` measurement — an h6-h9 band therefore sits
+entirely OUTSIDE that hotkey's own 300-seed cut window. That is sound rather than broken:
+`hdr_compliance` pins a band seed without consulting `cfg.seeds`, and a guide satisfying `hdr` on a
+seed necessarily cut on it, so all three of stage 4's targets still pin there. It is unverified on
+HEK293 specifically (the table above is HUDEP-2), and HEK293 runs `band_k` 8 against a narrow-cut
+wall of 9, so it has one step of slack to spend. Separately, the ALL-HDR rung below the conjunction
+still takes its band from the plan's 300 for every hotkey, so a round where the conjunction declines
+re-correlates h6-h9 with h0-h5.
+
 **2026-09-17: the fleet is six hotkeys (h0-h5), and this subsection's "eleven hotkeys" framing above
 is stale on headcount even though the mechanism it describes still applies.** Verified against the
 chain (netuid 55, block 9087088), not against `miner.sh`'s comments, which had drifted: h0-h3 hold
@@ -884,16 +1112,93 @@ branch: HEK293 builds band 8 on a 300-seed cut with a surviving pool of **209 ag
 (2.6x = 1/0.38, the step of slack restored)**; K562 builds band 11 on the 900-seed cut at 206
 against group 100, unchanged.
 
-**What this does NOT change is the band.** In the wide path it is `sub_window(band_space, width,
-offset)` handed over as `band_candidates`; in the narrow path it is `sub_window(joined, width,
-offset)` over that same 300-seed space. Both produce the identical band, so excluding a cell moves
-only which seeds the Cas12a min-union optimises over. The erythroid cells keep the wide cut by
-operator request — their wall is 12 either way, so the measurement gives no reason to move them.
+**What this does NOT change is the band CANDIDATE set.** In the wide path it is
+`sub_window(band_space, width, offset)` handed over as `band_candidates`; in the narrow path it is
+`sub_window(joined, width, offset)` over that same 300-seed space — the same 150 seeds either way.
+**An earlier form of this entry said the two arms "produce the identical band" and that is WRONG**:
+`choose_band` picks from the guides that survive the cut min-union, and those pools differ between
+arms, so the chosen band does too. Measured overlap is **0 or 1 of 11 on 8 of 8 contracts** — the
+bands are essentially disjoint. The erythroid cells keep the wide cut by operator request; their
+wall is 12 either way, so the wall measurement gives no reason to move them.
 
-**Still not measured: E[share] at the wide cut.** Every k-arm valuation in the band-depth table
-above was priced at the NARROW cut, so the *ranking* of k arms under the wide cut is inferred rather
-than measured. `band_hit.py` re-priced at the wide cut is the run that would close it, and it is
-full builds — hours on K562/CD34+.
+**E[share] at the wide cut is now measured, and it is a WASH — the 900-seed cut earns nothing at
+the live arm.** [widecut_price.py](widecut_price.py), wide against narrow at each cell's live config
+(k=11 / group 100 / width 150 / light 6 / cell-aware), 4 contracts per cell, paired within contract:
+
+| cell | n | narrow | wide | ratio | wide wins |
+|---|---|---|---|---|---|
+| K562 | 4 | 0.000224 | 0.000226 | **1.01x** | 2/4 (2 tie) |
+| CD34+_HSPC | 4 | 0.000209 | 0.000212 | **1.01x** | 2/4 |
+
+Pooled **+1.1%, 4W/2L/2T, sign p = 0.688**. Per-contract deltas +8/0/0/0/+12/+5/-4/-2 (x10^-6) on a
+base of 2.2x10^-4.
+
+**Priced by `hud_resolve.py`'s method, NOT `band_hit.py`'s, and that is not cosmetic.**
+`band_hit.py` derives its regimes from the config's seed space — it samples "dirty" as
+`SPACE - joined` and reads the clean count from `meta["clean"]`, which counts within the CUT space.
+At a 900-seed cut there is no "outside the cut space" and `meta["clean"]` counts over 900 rather
+than 300, so both regimes stop denoting the same thing across arms and the comparison is biased by
+construction. `widecut_price.evaluate` enumerates both sets from the SHIPPED ROWS over all 900
+(band = every seed where every row satisfies `hdr`, cut-clean = the same on `cut`) and scores each
+regime at its measured consistency — identical work for both arms whatever space built them.
+
+**The mechanism is the floor, and it is priced at ~zero exactly as `floor_price.py` predicts.** The
+wide cut does widen the cut-clean set **+30-40%** (86-104 off-band clean seeds narrow, 115-133
+wide), lifting the implied off-band floor from ~0.102 to ~0.110. Arm A's curve prices a move that
+size at ~+3%; the measurement returns +1%. `weighted x fidelity` is flat within 2% in both
+directions, so term 1 does not move either. **This independently reproduces the earlier
+"the 900-seed cut space is DOMINATED" note** — reached there from clean-count and band-union on one
+contract, reached here from own-field E[share] on eight.
+
+**What the disjoint bands actually demonstrate** is the stronger version of the claim the identity
+assertion was reaching for: the wide cut builds a COMPLETELY DIFFERENT band of the same size and it
+is worth the same. Under a uniform generator band position is free, so `P(hit)` depends on |B| and
+nothing else — which is why a wholly different band prices identically.
+
+**Cost is now measured too, and it is what should decide this.** [coldbuild.py](coldbuild.py) times
+a cold build (bank file removed first) and a warm one immediately after, 4 contracts x 2 cells x
+2 arms. Safe to run against a live fleet because it never touches the newest tasks (the ones the
+miners prefetch), skips any bank younger than 45 min, and gates on free memory; **8 of 8 banks came
+back byte-identical after deletion**, which verifies rather than assumes the "a bank is a pure
+function of its `bank_key`" property this file relies on elsewhere.
+
+| cell | arm | cold med | cold max | warm med | **bank scan med** |
+|---|---|---|---|---|---|
+| K562 | narrow | 199 | 201 | 51 | 144 |
+| K562 | **wide** | **410** | **446** | 56 | **358** |
+| CD34+_HSPC | narrow | 182 | 188 | 42 | 136 |
+| CD34+_HSPC | **wide** | **386** | **391** | 50 | **338** |
+
+**The wide cut roughly doubles the cold build — K562 2.06x (+211s), CD34+ 2.13x (+204s) — and the
+whole cost is the Cas12a bank scan** (2.48x on both, +202-214s). Warm builds are unaffected
+(1.09-1.16x, ~50s either way), which matters because `bank_slot` shares the bank: exactly one hotkey
+per (contract, cell) pays the scan and every sibling pays the warm number.
+
+**The single-contract reads that motivated the 700s gates were the tail, not the centre.**
+`conj_widecut_check.py` recorded CD34+_HSPC at 577s against a measured max of **391s** (1.48x too
+high) and K562 at 491s against a max of 446s. The distributions are tight — K562 wide 368-446,
+CD34+ wide 349-391 — so that entry's own "treat as a first read, not a distribution" was right.
+
+**And the gate was never the binding constraint; the prefetch LEAD is.** `_build` hands the rung
+`budget - ALL_HDR_MIN_BUDGET_S` and the prefetch path always starts at `PREPARE_BUDGET_S` = 900, so
+a 700s gate and a 450s gate both pass on essentially every prefetched round — the gate difference is
+close to inert. What decides whether the rung lands is whether that one cold build finishes before
+the validator calls, against a lead-time distribution whose **p10 is 395s**:
+
+| | cold | inside the p10 lead? |
+|---|---|---|
+| K562 narrow | 199s | **yes** |
+| K562 **wide** | 410s | **no** |
+| CD34+_HSPC narrow | 182s | yes |
+| CD34+_HSPC **wide** | 386s | marginal |
+
+So on roughly the bottom decile of lead times the wide cut costs the erythroid conjunction
+FLEET-WIDE — every hotkey waits on the shared bank, it is not ready, and all of them fall through to
+all-HDR. **Priced against the +1.1% at p = 0.688 the score half measures, that is a bad trade, and
+the recommendation is to drop the wide cut on the erythroid cells as well** (empty
+`WIDE_CUT_CELLS`), which also lets `CONJUNCTION_MIN_BUDGET_S` fall back from 700s to ~450/430s — at
+max cold 201s/188s those leave 260s/240s of `budget_s`, a 29%/28% margin. **Not done: the erythroid
+cells keep the wide cut by operator request, and this is the evidence against it, not a change.**
 
 One cold build per cell at the new config (`conj_widecut_check.py`, one contract each — a first
 read, not a distribution): **HEK293 47s, HUDEP-2 62s, K562 491s, CD34+_HSPC 577s.** Build time does
@@ -1753,6 +2058,40 @@ then searches guide variants for one whose deterministic stage-3 draw satisfies 
 construction (`CONSTRUCTIONS`) — that conformance is what drives `consistency_factor`
 to 1.0, and it is all-or-nothing: one stray row collapses stage 4's R². Sequence, k-mer index and PAM
 enumeration are process-global caches, warmed on a prewarm thread at miner startup.
+
+**`Context.seed` returned the contract's seed field RAW while annotated `-> int`, and that broke the
+ladder's safety net on every stamped contract — the second real defect this file records.** Fixed
+2026-09-18. `contract["seed"]` is a comma-joined string in the 3-seed regime, so
+`random.Random(ctx.seed ^ 0x5EED)` in `_generate` (and `stage3.simulate`, and
+`stage4_in_memory(fold_seed=...)`) raised `TypeError: unsupported operand type(s) for ^: 'str' and
+'int'` the moment the ORDINARY CONSTRUCTION ran against a contract whose seeds were already
+stamped. The miner catches that and logs `Failed to submit task ...`, so the hotkey ships
+**nothing** — a clean zero, not a floor score.
+
+**Measured live on task 11276911** (CD34+, seeds 448/931/493): h7 was called ~2h in, its all-HDR
+declined on budget, it fell through every rung to the ordinary construction and submitted nothing —
+and its previous successful upload was six days earlier, so it had never scored since coming up.
+
+**Why it stayed hidden for so long is the part worth remembering.** Every rung ABOVE the ordinary
+construction parses the seed list itself, so none of them touch this property. And the one path that
+routinely reaches the last rung — `_build(allow_hedges=False)`, the emergency in-TTL build — normally
+runs against the BROADCAST copy of the contract, where `seed` is the integer `0` and `0 ^ 0x5EED` is
+perfectly fine. That is exactly why **h0 and h6 survived the identical emergency path on the identical
+round that killed h7**: their logs read `Contract carries no seed`, h7's read
+`contract carries seed 448,931,493`. A bug in the last-resort rung, reachable only when the seeds are
+already stamped, is close to invisible until a hotkey is called late enough.
+
+The fix parses through the validator's own `_parse_seeds` rather than a local copy (same rule that
+has this file import the validator's stage functions) and takes the FIRST seed, which is the
+documented single-seed behaviour — stages 3-5 re-run per seed and average, so a build tuned to one
+seed captures its share of the mean. **On an unstamped contract it returns 0 exactly as before**, so
+nothing that already worked changes; the fix strictly converts a crash into a build. `seed_raw`
+keeps the original value for records. Verified across all four seed forms (`0`, `"122"`,
+`"448,931,493"`, `""`), on the XOR itself, and by building 250 valid rows on a stamped CD34+
+contract where the same call previously raised.
+
+Note `generation.py` carries the same latent bug at `int(self.contract.get("seed") or 0)` — it would
+raise `ValueError` on the comma-joined form — but nothing imports that module any more.
 
 genExp.py is both the miner's engine and its research tool: `python genExp.py` builds and scores one
 task, `--all-tasks` sweeps the backend's whole history, and [submission.py](submission.py) writes the

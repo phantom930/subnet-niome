@@ -1,0 +1,39 @@
+{
+  "challenge": {
+    "active_mutations": [
+      "HBB:c.28T>A",
+      "NC_000011.10:g.5226136A>T"
+    ],
+    "cell_type": "CD34+_HSPC",
+    "mutation_regions": {
+      "HBB:c.28T>A": null,
+      "NC_000011.10:g.5226136A>T": null
+    },
+    "mutation_weights": {
+      "HBB:c.28T>A": 1.2,
+      "NC_000011.10:g.5226136A>T": 0.65
+    },
+    "rules": {
+      "base_padding": 400,
+      "cas_systems": [
+        "Cas9",
+        "Cas12a"
+      ],
+      "max_experiments": 250,
+      "max_mismatches": 3,
+      "proximity_gate": false
+    },
+    "seed": "287,486,998",
+    "version": "v1"
+  },
+  "chromosome": "11",
+  "gene_region": {
+    "end": 5227064,
+    "start": 5225464
+  },
+  "mutation_map": {
+    "HBB:c.28T>A": 5226994,
+    "NC_000011.10:g.5226136A>T": 5226136
+  },
+  "window_id": "HBB_v1"
+}

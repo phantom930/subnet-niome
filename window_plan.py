@@ -711,7 +711,9 @@ def main():
                   + (f", {len([n for n in assign if n in JOINED_FULL_HK])} FULL"
                      + (f" at width {JOINED_FULL_WIDTH}" if JOINED_FULL_WIDTH
                         else " (whole joined space)")
-                     + f", band sub-window {JW.BAND_SUB_WIDTH} at stride {JW.BAND_STRIDE}"
+                     + f", band sub-window {JW.BAND_SUB_WIDTH}"
+                     + f" (predicted x{len(JW.BAND_HK)} stride {JW.BAND_STRIDE}"
+                     + f" + complement x{len(JW.REST_HK)} stride {JW.REST_STRIDE})"
                      if any(n in JOINED_FULL_HK for n in assign) else "")
                   + f", span {covered} of 900"
                   + (f"  | all-cut {'/'.join(sorted(hedged))}" if hedged else ""))
@@ -720,9 +722,15 @@ def main():
                 return (0, JOINED_FULL_HK.index(n)) if n in JOINED_FULL_HK else (1, JOINED_HK.index(n))
             for name in sorted(assign, key=_ord):
                 # The band offset is what separates two FULL hotkeys on one window, so print it
-                # here: without it the four rows below look like four identical assignments.
-                off = JW.band_offset_frac(name)
-                tag = "" if off is None else f"   band offset {int(round(off * JW.BAND_SPAN))}"
+                # here: without it the rows below look like identical assignments. It is an offset
+                # into the hotkey's OWN band space, which since 2026-09-18 is the predicted 300 for
+                # `BAND_HK` and the complementary 600 for `REST_HK` -- so print the space with it,
+                # or a group B offset reads as though it indexed the predicted window.
+                off = JW.band_offset(name)
+                layout = JW.band_layout(name)
+                tag = "" if layout is None else (
+                    f"   band offset {off} of {layout[2]}"
+                    f" ({'predicted' if layout[3] else 'complement'})")
                 print(f"    {'FULL  ' if name in JOINED_FULL_HK else 'joined'} {name:<15} "
                       + ",".join(f"{a}-{b}" for a, b in assign[name]) + tag)
             continue

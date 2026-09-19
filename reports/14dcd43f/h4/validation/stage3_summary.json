@@ -1,0 +1,33 @@
+{
+  "n": 250,
+  "cut_rate": 0.948,
+  "mean_indel_length": 1.98,
+  "mean_energy": 0.5379696958465671,
+  "outcomes": {
+    "HDR": 99,
+    "BLUNT_NHEJ": 70,
+    "no_cut": 13,
+    "MH_NHEJ": 68
+  },
+  "mutation_weight_breakdown": {
+    "HBB:c.92G>C": {
+      "mutation_weight": 1.76,
+      "n": 191,
+      "cut_rate": 0.9581151832460733,
+      "mean_energy": 0.5426956405726251,
+      "mean_indel_length": 2.005235602094241
+    },
+    "NC_000011.10:g.5225769G>A": {
+      "mutation_weight": 0.65,
+      "n": 59,
+      "cut_rate": 0.9152542372881356,
+      "mean_energy": 0.5226704510554302,
+      "mean_indel_length": 1.8983050847457628
+    }
+  },
+  "weight_correlations": {
+    "weight_vs_cut": 0.08197069024729679,
+    "weight_vs_energy": 0.37287038893567936,
+    "weight_vs_indel_length": 0.014338570234228609
+  }
+}

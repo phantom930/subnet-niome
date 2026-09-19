@@ -1,0 +1,72 @@
+{
+  "source": "data/round_plan.log",
+  "note": "Tail-only plan logs retain K562 windows but fleet offset assignments apply across cells. Actual CD34 windows come from per-miner build logs.",
+  "blocks": [
+    {
+      "header": "===== 2026-09-18T14:17:01+00:00 =====",
+      "lines": [
+        "===== 2026-09-18T14:17:01+00:00 =====",
+        "[live ] Traceback (most recent call last):",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 510, in <module>",
+        "[live ]     main()",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 394, in main",
+        "[live ]     per = per_hotkey_block(entry, t, scored)",
+        "[live ]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 186, in per_hotkey_block",
+        "[live ]     if window_[0] <= x <= window_[1]],",
+        "[live ]        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "[live ] TypeError: '<=' not supported between instances of 'list' and 'int'",
+        "[model] guard: no new stamped round (newest 2026-09-18T12:51:08); skipping refresh",
+        "[walk ]   skipping 1 task(s) with fewer than 8 earlier samples (oldest: 2026-08-27T18:54:20)",
+        "[walk ] walk_record: up to date (199 tasks, newest 2026-09-18T12:51:08)",
+        "[plan ]     FULL   niome_hotkey5   100-399   band offset 250",
+        "[plan ]     FULL   niome_hotkey6   100-399   band offset 25",
+        "[plan ]     FULL   niome_hotkey7   100-399   band offset 75",
+        "[plan ]   K562        rank1 900-999 (40%)  | beta +0.30  JOINED auto_rank (auto_rank picked cold_hand (ranks 1/1/1 over 10/20/30, avg 1.00; model included)) -> 600-699,800-899,900-999  x8 hotkeys, 8 FULL (whole joined space), band sub-window 150, base stride 50, span 300 of 900",
+        "[plan ]     FULL   niome_hotkey    600-699,800-999   band offset 0",
+        "[plan ]     FULL   niome_hotkey1   600-699,800-999   band offset 50",
+        "[plan ]     FULL   niome_hotkey2   600-699,800-999   band offset 100",
+        "[plan ]     FULL   niome_hotkey3   600-699,800-999   band offset 150",
+        "[plan ]     FULL   niome_hotkey4   600-699,800-999   band offset 200",
+        "[plan ]     FULL   niome_hotkey5   600-699,800-999   band offset 250",
+        "[plan ]     FULL   niome_hotkey6   600-699,800-999   band offset 25",
+        "[plan ]     FULL   niome_hotkey7   600-699,800-999   band offset 75",
+        "[plan ] ",
+        "[plan ] wrote data/window_plan.json, valid until 2026-09-18T20:17"
+      ]
+    },
+    {
+      "header": "===== 2026-09-18T15:17:01+00:00 =====",
+      "lines": [
+        "===== 2026-09-18T15:17:01+00:00 =====",
+        "[live ] Traceback (most recent call last):",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 510, in <module>",
+        "[live ]     main()",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 394, in main",
+        "[live ]     per = per_hotkey_block(entry, t, scored)",
+        "[live ]           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "[live ]   File \"/root/workspace/subnet-niome/seed_window_model.py\", line 186, in per_hotkey_block",
+        "[live ]     if window_[0] <= x <= window_[1]],",
+        "[live ]        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "[live ] TypeError: '<=' not supported between instances of 'list' and 'int'",
+        "[model] guard: no new stamped round (newest 2026-09-18T12:51:08); skipping refresh",
+        "[walk ]   skipping 1 task(s) with fewer than 8 earlier samples (oldest: 2026-08-27T18:54:20)",
+        "[walk ] walk_record: up to date (199 tasks, newest 2026-09-18T12:51:08)",
+        "[plan ]     FULL   niome_hotkey9   100-399   band offset 270",
+        "[plan ]   K562        rank1 900-999 (40%)  | beta +0.30  JOINED auto_rank (auto_rank picked cold_hand (ranks 1/1/1 over 10/20/30, avg 1.00; model included)) -> 600-699,800-899,900-999  x10 hotkeys, 10 FULL (whole joined space), band sub-window 150, base stride 30, span 300 of 900",
+        "[plan ]     FULL   niome_hotkey    600-699,800-999   band offset 0",
+        "[plan ]     FULL   niome_hotkey1   600-699,800-999   band offset 30",
+        "[plan ]     FULL   niome_hotkey2   600-699,800-999   band offset 60",
+        "[plan ]     FULL   niome_hotkey3   600-699,800-999   band offset 90",
+        "[plan ]     FULL   niome_hotkey4   600-699,800-999   band offset 120",
+        "[plan ]     FULL   niome_hotkey5   600-699,800-999   band offset 150",
+        "[plan ]     FULL   niome_hotkey6   600-699,800-999   band offset 180",
+        "[plan ]     FULL   niome_hotkey7   600-699,800-999   band offset 210",
+        "[plan ]     FULL   niome_hotkey8   600-699,800-999   band offset 240",
+        "[plan ]     FULL   niome_hotkey9   600-699,800-999   band offset 270",
+        "[plan ] ",
+        "[plan ] wrote data/window_plan.json, valid until 2026-09-18T21:17"
+      ]
+    }
+  ]
+}

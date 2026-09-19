@@ -1,0 +1,237 @@
+{
+  "stage": "5 \u2014 distribution fidelity",
+  "seed_dependent": false,
+  "formula": "geometric mean of six ratios, clipped at 1e-9; final_score = total_weighted_score * consistency_factor * fidelity_factor",
+  "pipeline_output": {},
+  "terms": {
+    "mutation_coverage_entropy_ratio": {
+      "value": 0.8206501291977117,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9675936443574927,
+      "log_share": 0.4502479082467597,
+      "factor_if_perfect": 0.9605747817398935,
+      "final_score_if_perfect": 24.95166979417674,
+      "cost_now": 0.8085926852244981
+    },
+    "cas_system_coverage_entropy_ratio": {
+      "value": 0.8861256474645222,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9800522222867056,
+      "log_share": 0.27539129984100286,
+      "factor_if_perfect": 0.9483638040970693,
+      "final_score_if_perfect": 24.63448024496127,
+      "cost_now": 0.4914031360090296
+    },
+    "strand_coverage_entropy_ratio": {
+      "value": 1.0,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 1.0,
+      "log_share": -0.0,
+      "factor_if_perfect": 0.9294460537416067,
+      "final_score_if_perfect": 24.14307710895224,
+      "cost_now": 0.0
+    },
+    "joint_coverage_entropy_ratio": {
+      "value": 0.902230435625078,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9829986292616987,
+      "log_share": 0.23436341220704085,
+      "factor_if_perfect": 0.9455212103802081,
+      "final_score_if_perfect": 24.560641683788916,
+      "cost_now": 0.41756457483667403
+    },
+    "kmer_diversity_entropy_ratio": {
+      "value": 0.9825944451907705,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 0.9970778091958709,
+      "log_share": 0.03999737970519665,
+      "factor_if_perfect": 0.9321700324382827,
+      "final_score_if_perfect": 24.213834553617527,
+      "cost_now": 0.07075744466528669
+    },
+    "distinct_guide_ratio": {
+      "value": 1.0,
+      "clipped_at_1e-9": false,
+      "contribution_to_geometric_mean": 1.0,
+      "log_share": -0.0,
+      "factor_if_perfect": 0.9294460537416067,
+      "final_score_if_perfect": 24.14307710895224,
+      "cost_now": 0.0
+    }
+  },
+  "distribution_fidelity_score": 0.9294460537416067,
+  "distribution_fidelity_factor": 0.9294460537416067,
+  "delta_vs_pipeline": 0.9294460537416067,
+  "coverage": {
+    "mutation": {
+      "support": [
+        "HBB:c.28T>A",
+        "NC_000011.10:g.5226136A>T"
+      ],
+      "support_size": 2,
+      "counts": {
+        "HBB:c.28T>A": 186,
+        "NC_000011.10:g.5226136A>T": 64
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 0.8206501291977117,
+      "entropy_max": 1.0,
+      "ratio": 0.8206501291977117
+    },
+    "cas_system": {
+      "support": [
+        "Cas9",
+        "Cas12a"
+      ],
+      "support_size": 2,
+      "counts": {
+        "Cas9": 174,
+        "Cas12a": 76
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 0.8861256474645222,
+      "entropy_max": 1.0,
+      "ratio": 0.8861256474645222
+    },
+    "strand": {
+      "support": [
+        "+",
+        "-"
+      ],
+      "support_size": 2,
+      "counts": {
+        "+": 125,
+        "-": 125
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 2,
+      "empty_cells": [],
+      "entropy": 1.0,
+      "entropy_max": 1.0,
+      "ratio": 1.0
+    },
+    "joint": {
+      "support": [
+        [
+          "HBB:c.28T>A",
+          "Cas9",
+          "+"
+        ],
+        [
+          "HBB:c.28T>A",
+          "Cas9",
+          "-"
+        ],
+        [
+          "HBB:c.28T>A",
+          "Cas12a",
+          "+"
+        ],
+        [
+          "HBB:c.28T>A",
+          "Cas12a",
+          "-"
+        ],
+        [
+          "NC_000011.10:g.5226136A>T",
+          "Cas9",
+          "+"
+        ],
+        [
+          "NC_000011.10:g.5226136A>T",
+          "Cas9",
+          "-"
+        ],
+        [
+          "NC_000011.10:g.5226136A>T",
+          "Cas12a",
+          "+"
+        ],
+        [
+          "NC_000011.10:g.5226136A>T",
+          "Cas12a",
+          "-"
+        ]
+      ],
+      "support_size": 8,
+      "counts": {
+        "HBB:c.28T>A | Cas9 | +": 65,
+        "HBB:c.28T>A | Cas9 | -": 65,
+        "HBB:c.28T>A | Cas12a | +": 28,
+        "HBB:c.28T>A | Cas12a | -": 28,
+        "NC_000011.10:g.5226136A>T | Cas9 | +": 22,
+        "NC_000011.10:g.5226136A>T | Cas9 | -": 22,
+        "NC_000011.10:g.5226136A>T | Cas12a | +": 10,
+        "NC_000011.10:g.5226136A>T | Cas12a | -": 10
+      },
+      "observed_outside_support": {},
+      "occupied_cells": 8,
+      "empty_cells": [],
+      "entropy": 2.706691306875234,
+      "entropy_max": 3.0,
+      "ratio": 0.902230435625078
+    }
+  },
+  "kmer_diversity": {
+    "k": 12,
+    "total_kmers": 2616,
+    "distinct_kmers": 2384,
+    "entropy": 11.155539006169647,
+    "entropy_max": 11.353146825498083,
+    "ratio": 0.9825944451907705,
+    "most_repeated": [
+      [
+        "ATTTGTACTGAT",
+        5
+      ],
+      [
+        "TTTGTACTGATG",
+        5
+      ],
+      [
+        "ATTTGCTCATGC",
+        5
+      ],
+      [
+        "TTTGCTCATGCA",
+        5
+      ],
+      [
+        "TTGCTCATGCAT",
+        5
+      ],
+      [
+        "TGCTCATGCATG",
+        5
+      ],
+      [
+        "CCTTAGGCTGCT",
+        4
+      ],
+      [
+        "CTTAGGCTGCTG",
+        4
+      ],
+      [
+        "TTAGGCTGCTGG",
+        4
+      ],
+      [
+        "TAGGCTGCTGGT",
+        4
+      ]
+    ]
+  },
+  "distinct_guides": {
+    "guides": 250,
+    "distinct": 250,
+    "ratio": 1.0,
+    "duplicated_guides": {}
+  },
+  "cas_specific_shift_diagnostic": {},
+  "note": "the cas_specific_shift diagnostic is reported by the validator but not scored; an empty joint cell is scored, and costs the whole product its sixth root"
+}

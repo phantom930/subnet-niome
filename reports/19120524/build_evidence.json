@@ -1,0 +1,374 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-18 17:30:29,442 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,512 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,512 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,752 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,496 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,496 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:30,236 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 137/900 | cas9 pool 781 | rows 250 cells 8/8 | 494.3s",
+      "2026-09-18 17:42:30,244 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 496s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:01,444 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:01,509 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:01,509 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:49:49,814 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 137/900 | cas9 pool 781 | rows 250 cells 8/8 | 167.9s",
+      "2026-09-18 17:49:49,822 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 168s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T16:40:19.896698+00:00",
+      "at": "2026-09-18T17:47:01.509980+00:00",
+      "all_hdr_built": true,
+      "band": "[159, 128, 110, 249, 145, 161, 182, 119, 235, 245, 176]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-18 17:30:29,040 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,152 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,153 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,365 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,302 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,303 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:45,180 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 807 | rows 250 cells 8/8 | 509.4s",
+      "2026-09-18 17:42:45,186 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 512s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:03,213 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:03,289 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:03,290 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:10,801 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 807 | rows 250 cells 8/8 | 187.0s",
+      "2026-09-18 17:50:10,807 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 188s, waiting for a validator to ask for it",
+      "2026-09-18 18:04:56,862 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 18:04:57,901 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 188s) \u2014 no build needed",
+      "2026-09-18 18:04:58,079 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 1.2s (283s of the URL's TTL to spare)",
+      "2026-09-18 18:05:29,474 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey1/result/2026-09-18T18:05:29",
+      "2026-09-18 18:47:27,972 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:28,046 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:28,046 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:28,047 | INFO | __main__ | Build: band candidates 150-299 (150 seeds, predicted space of 300, offset 50) | cut 900 seeds",
+      "2026-09-18 18:49:36,682 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 142/900 | cas9 pool 844 | rows 250 cells 8/8 | 128.2s",
+      "2026-09-18 18:49:36,689 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 129s, waiting for a validator to ask for it",
+      "2026-09-18 20:13:04,184 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey1/result/2026-09-18T18:05:29 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey1/result/2026-09-18T18:05:29/validation.log",
+      "2026-09-18 20:13:33,108 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey1/result/2026-09-18T18:05:29 in 29s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 29.0620 = weighted 285.7109 x consistency 0.1063 x fidelity 0.9569"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:28.046803+00:00",
+      "all_hdr_built": true,
+      "band": "[261, 256, 281, 253, 251, 266, 198, 249, 214, 297, 158]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-18 17:30:29,490 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,581 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,582 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,251 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,271 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,273 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:37,513 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 131/900 | cas9 pool 780 | rows 250 cells 8/8 | 501.2s",
+      "2026-09-18 17:42:37,533 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 504s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:05,247 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:05,316 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:05,316 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:49:56,653 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 131/900 | cas9 pool 780 | rows 250 cells 8/8 | 170.9s",
+      "2026-09-18 17:49:56,661 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 171s, waiting for a validator to ask for it",
+      "2026-09-18 17:58:08,128 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 17:58:27,683 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 171s) \u2014 no build needed",
+      "2026-09-18 17:58:27,880 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 19.8s (264s of the URL's TTL to spare)",
+      "2026-09-18 17:59:01,046 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey2/result/2026-09-18T17:59:01",
+      "2026-09-18 18:47:29,434 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:29,507 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:29,507 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:29,509 | INFO | __main__ | Build: band candidates 200-349 (150 seeds, predicted space of 300, offset 100) | cut 900 seeds",
+      "2026-09-18 18:49:24,350 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 130/900 | cas9 pool 767 | rows 250 cells 8/8 | 114.4s",
+      "2026-09-18 18:49:24,358 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 115s, waiting for a validator to ask for it",
+      "2026-09-18 20:34:55,785 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey2/result/2026-09-18T17:59:01 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey2/result/2026-09-18T17:59:01/validation.log",
+      "2026-09-18 20:35:24,900 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey2/result/2026-09-18T17:59:01 in 29s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 30.0521 = weighted 298.4480 x consistency 0.1073 x fidelity 0.9385"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:29.508292+00:00",
+      "all_hdr_built": true,
+      "band": "[261, 256, 300, 251, 281, 318, 272, 210, 307, 347, 283]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-18 17:30:28,820 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:28,894 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:28,895 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,827 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,508 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,509 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:42,230 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 139/900 | cas9 pool 769 | rows 250 cells 8/8 | 506.3s",
+      "2026-09-18 17:42:42,238 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 508s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:06,161 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:06,232 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:06,233 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:02,938 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 139/900 | cas9 pool 769 | rows 250 cells 8/8 | 176.1s",
+      "2026-09-18 17:50:02,947 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 177s, waiting for a validator to ask for it",
+      "2026-09-18 17:50:20,172 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 17:50:23,256 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 177s) \u2014 no build needed",
+      "2026-09-18 17:50:23,425 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 3.3s (282s of the URL's TTL to spare)",
+      "2026-09-18 17:50:52,657 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey3/result/2026-09-18T17:50:52",
+      "2026-09-18 18:47:31,292 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:31,376 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:31,377 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:31,378 | INFO | __main__ | Build: band candidates 250-399 (150 seeds, predicted space of 300, offset 150) | cut 900 seeds",
+      "2026-09-18 18:49:32,551 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 136/900 | cas9 pool 750 | rows 250 cells 8/8 | 120.7s",
+      "2026-09-18 18:49:32,557 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 121s, waiting for a validator to ask for it",
+      "2026-09-18 20:45:55,348 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey3/result/2026-09-18T17:50:52 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey3/result/2026-09-18T17:50:52/validation.log",
+      "2026-09-18 20:46:24,372 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey3/result/2026-09-18T17:50:52 in 29s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 26.4382 = weighted 285.0018 x consistency 0.0968 x fidelity 0.9581"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:31.377348+00:00",
+      "all_hdr_built": true,
+      "band": "[261, 256, 300, 251, 281, 318, 272, 381, 296, 295, 271]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-18 17:30:29,653 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,731 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,731 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,886 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,528 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,529 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:42,603 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 729 | rows 250 cells 8/8 | 506.6s",
+      "2026-09-18 17:42:42,609 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 509s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:07,502 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:07,581 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:07,581 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:03,943 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 729 | rows 250 cells 8/8 | 175.7s",
+      "2026-09-18 17:50:03,952 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 176s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T16:40:19.896698+00:00",
+      "at": "2026-09-18T17:47:07.582156+00:00",
+      "all_hdr_built": true,
+      "band": "[261, 256, 300, 251, 281, 318, 272, 307, 242, 236, 359]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-18 17:30:29,345 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,437 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,438 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,693 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,330 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,331 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:44,854 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 136/900 | cas9 pool 750 | rows 250 cells 8/8 | 509.1s",
+      "2026-09-18 17:42:44,860 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 511s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:09,391 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:09,478 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:09,478 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:14,712 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 136/900 | cas9 pool 750 | rows 250 cells 8/8 | 184.7s",
+      "2026-09-18 17:50:14,718 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 185s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T16:40:19.896698+00:00",
+      "at": "2026-09-18T17:47:09.482105+00:00",
+      "all_hdr_built": true,
+      "band": "[261, 256, 300, 251, 281, 318, 272, 381, 296, 295, 271]"
+    }
+  },
+  "h6": {
+    "log_path": "/root/.pm2/logs/miner-h6-error.log",
+    "events": [
+      "2026-09-18 17:30:29,976 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:30,046 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:30,047 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:14,077 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,536 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,537 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:41,626 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 135/900 | cas9 pool 826 | rows 250 cells 8/8 | 505.5s",
+      "2026-09-18 17:42:41,633 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 508s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:11,138 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:11,267 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:11,267 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:16,638 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 135/900 | cas9 pool 826 | rows 250 cells 8/8 | 184.9s",
+      "2026-09-18 17:50:16,644 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 186s, waiting for a validator to ask for it"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T16:40:19.896698+00:00",
+      "at": "2026-09-18T17:47:11.268115+00:00",
+      "all_hdr_built": true,
+      "band": "[282, 373, 125, 339, 380, 110, 314, 124, 320, 113, 335]"
+    }
+  },
+  "h7": {
+    "log_path": "/root/.pm2/logs/miner-h7-error.log",
+    "events": [
+      "2026-09-18 17:30:29,108 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,183 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,184 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,623 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,321 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,322 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:40,264 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 140/900 | cas9 pool 769 | rows 250 cells 8/8 | 504.5s",
+      "2026-09-18 17:42:40,270 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 507s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:12,369 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:12,461 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:12,462 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:16,938 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 140/900 | cas9 pool 769 | rows 250 cells 8/8 | 184.0s",
+      "2026-09-18 17:50:16,944 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 185s, waiting for a validator to ask for it",
+      "2026-09-18 18:23:33,982 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 18:23:34,708 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 185s) \u2014 no build needed",
+      "2026-09-18 18:23:34,855 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 0.9s (283s of the URL's TTL to spare)",
+      "2026-09-18 18:24:08,525 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey7/result/2026-09-18T18:24:08",
+      "2026-09-18 18:47:33,195 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:33,269 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:33,269 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:33,274 | INFO | __main__ | Build: band candidates 550-699 (150 seeds, complement space of 600, offset 150) | cut 900 seeds",
+      "2026-09-18 18:49:43,429 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 869 | rows 250 cells 8/8 | 129.7s",
+      "2026-09-18 18:49:43,437 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 130s, waiting for a validator to ask for it",
+      "2026-09-18 20:47:55,305 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey7/result/2026-09-18T18:24:08 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey7/result/2026-09-18T18:24:08/validation.log",
+      "2026-09-18 20:48:23,918 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey7/result/2026-09-18T18:24:08 in 29s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 27.8773 = weighted 301.5554 x consistency 0.1001 x fidelity 0.9237"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:33.270294+00:00",
+      "all_hdr_built": true,
+      "band": "[627, 551, 602, 664, 631, 567, 674, 577, 601, 629, 576]"
+    }
+  },
+  "h8": {
+    "log_path": "/root/.pm2/logs/miner-h8-error.log",
+    "events": [
+      "2026-09-18 17:30:29,232 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,354 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,354 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,298 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,287 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,287 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:36,768 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 139/900 | cas9 pool 793 | rows 250 cells 8/8 | 501.0s",
+      "2026-09-18 17:42:36,775 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 503s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:13,560 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:13,694 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:13,694 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:16,827 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 139/900 | cas9 pool 793 | rows 250 cells 8/8 | 182.6s",
+      "2026-09-18 17:50:16,832 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 183s, waiting for a validator to ask for it",
+      "2026-09-18 18:20:23,401 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 18:20:23,964 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 183s) \u2014 no build needed",
+      "2026-09-18 18:20:24,166 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 0.8s (289s of the URL's TTL to spare)",
+      "2026-09-18 18:20:57,434 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey8/result/2026-09-18T18:20:57",
+      "2026-09-18 18:47:34,394 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:34,467 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:34,467 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:34,471 | INFO | __main__ | Build: band candidates 700-849 (150 seeds, complement space of 600, offset 300) | cut 900 seeds",
+      "2026-09-18 18:49:47,621 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 142/900 | cas9 pool 855 | rows 250 cells 8/8 | 132.7s",
+      "2026-09-18 18:49:47,627 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 133s, waiting for a validator to ask for it",
+      "2026-09-18 20:17:08,035 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey8/result/2026-09-18T18:20:57 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey8/result/2026-09-18T18:20:57/validation.log",
+      "2026-09-18 20:17:58,883 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey8/result/2026-09-18T18:20:57 in 51s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 41.0028 = weighted 301.3260 x consistency 0.1453 x fidelity 0.9367"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:34.468238+00:00",
+      "all_hdr_built": true,
+      "band": "[849, 760, 737, 819, 738, 829, 787, 803, 848, 758, 750]"
+    }
+  },
+  "h9": {
+    "log_path": "/root/.pm2/logs/miner-h9-error.log",
+    "events": [
+      "2026-09-18 17:30:29,566 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:30:29,644 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:30:29,644 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:34:13,411 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:34:14,312 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:34:14,313 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:42:24,542 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 133/900 | cas9 pool 806 | rows 250 cells 8/8 | 488.8s",
+      "2026-09-18 17:42:24,549 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 491s, waiting for a validator to ask for it",
+      "2026-09-18 17:47:15,089 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 17:47:15,301 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 17:47:15,302 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T16:40)",
+      "2026-09-18 17:50:16,302 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 133/900 | cas9 pool 806 | rows 250 cells 8/8 | 180.5s",
+      "2026-09-18 17:50:16,311 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 181s, waiting for a validator to ask for it",
+      "2026-09-18 18:02:01,362 | INFO | __main__ | Received genomics task 19120524-b0f1-4061-b99b-92e4599e98d3 from 5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd",
+      "2026-09-18 18:02:02,104 | INFO | __main__ | [19120524-b0f1-4061-b99b-92e4599e98d3] using the prepared submission (250 rows in 181s) \u2014 no build needed",
+      "2026-09-18 18:02:02,266 | INFO | __main__ | Submitted 250 rows for task 19120524-b0f1-4061-b99b-92e4599e98d3 in 0.9s (284s of the URL's TTL to spare)",
+      "2026-09-18 18:02:35,152 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 19120524-b0f1-4061-b99b-92e4599e98d3 -> data/inst/niome_hotkey9/result/2026-09-18T18:02:35",
+      "2026-09-18 18:47:35,974 | INFO | __main__ | Prefetch: preparing task 19120524-b0f1-4061-b99b-92e4599e98d3 (created 2026-09-18T17:30:15.846726) | cell_type=HUDEP-2 mutations=2 budget=900s",
+      "2026-09-18 18:47:36,071 | INFO | __main__ | Build: loading chr11 (cached after the first call)",
+      "2026-09-18 18:47:36,072 | INFO | __main__ | Build: window 100-399 from the round plan (generated 2026-09-18T18:17)",
+      "2026-09-18 18:47:36,078 | INFO | __main__ | Build: band candidates 850-999 (150 seeds, complement space of 600, offset 450) | cut 900 seeds",
+      "2026-09-18 18:49:42,174 | INFO | __main__ | Build: conjunction (HUDEP-2) | band 11 k=11 group 100 clean 141/900 | cas9 pool 750 | rows 250 cells 8/8 | 125.7s",
+      "2026-09-18 18:49:42,180 | INFO | __main__ | Prefetch: task 19120524-b0f1-4061-b99b-92e4599e98d3 ready \u2014 250 rows in 126s, waiting for a validator to ask for it",
+      "2026-09-18 20:37:50,790 | INFO | __main__ | post-upload: scoring data/inst/niome_hotkey9/result/2026-09-18T18:02:35 with calc.py against task 19120524-b0f1-4061-b99b-92e4599e98d3; output -> data/inst/niome_hotkey9/result/2026-09-18T18:02:35/validation.log",
+      "2026-09-18 20:38:19,156 | INFO | __main__ | post-upload: scored data/inst/niome_hotkey9/result/2026-09-18T18:02:35 in 28s | task 19120524-b0f1-4061-b99b-92e4599e98d3 seed 236 | 250/250 rows valid | final_score 29.5008 = weighted 302.6870 x consistency 0.1047 x fidelity 0.9310"
+    ],
+    "current_window_record": {
+      "cell": "HUDEP-2",
+      "window": [
+        100,
+        399
+      ],
+      "source": "plan",
+      "plan_generated_at": "2026-09-18T18:17:18.015644+00:00",
+      "at": "2026-09-18T18:47:36.072826+00:00",
+      "all_hdr_built": true,
+      "band": "[893, 863, 959, 916, 850, 933, 905, 982, 932, 963, 880]"
+    }
+  }
+}

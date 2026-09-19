@@ -1,0 +1,13 @@
+{
+  "uid": 0,
+  "breakdown": {
+    "n_valid_experiments": 250,
+    "total_weighted_score": 350.923018059078,
+    "consistency_score": 9.651161399478122,
+    "consistency_factor": 0.09651161399478121,
+    "distribution_fidelity_score": 0.9082316717079492,
+    "distribution_fidelity_factor": 0.9082316717079492
+  },
+  "final_score": 30.760123641035964,
+  "log": ""
+}

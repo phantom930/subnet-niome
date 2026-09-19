@@ -1,0 +1,149 @@
+{
+  "submission": "/root/workspace/subnet-niome/data/inst/niome_hotkey4/result/2026-09-18T20:40:21/submission.json",
+  "folder": "/root/workspace/subnet-niome/data/inst/niome_hotkey4/result/2026-09-18T20:40:21",
+  "task_id": "14dcd43f-6f42-4d7b-8349-475662dd7a85",
+  "task_created_at": "2026-09-18T19:53:29.058938",
+  "task_matched_by": "file /root/workspace/subnet-niome/reports/14dcd43f/task.json",
+  "contract_pairing": {
+    "verified": true,
+    "differences": {},
+    "archived_seed": 0,
+    "task_seed": "124,479,237",
+    "compared_against": "/root/workspace/subnet-niome/data/inst/niome_hotkey4/result/2026-09-18T20:40:21/contract.json"
+  },
+  "real_seed": "124,479,237",
+  "scored_seed": 124,
+  "scored_seeds": [
+    124,
+    479,
+    237
+  ],
+  "per_seed_final_score": {
+    "124": 31.582131397941364,
+    "479": 24.426686066228466,
+    "237": 36.570289342788165
+  },
+  "final_score_is_mean_of": 3,
+  "compare_seed": null,
+  "cell_type": "HEK293",
+  "accessibility": 0.35,
+  "construction": "hdr",
+  "rows": {
+    "submitted": 250,
+    "scored": 250,
+    "dropped_by_truncation": 0,
+    "valid": 250,
+    "invalid": 0,
+    "rejection_reasons": {}
+  },
+  "stages": {
+    "stage12": {
+      "total_weighted_score": 345.7428328643974,
+      "mean_structural_score": 0.9195315491232814,
+      "offtarget_factor_counts": {
+        "1.0": 250
+      }
+    },
+    "stage3": {
+      "outcomes": {
+        "no_cut": 13,
+        "MH_NHEJ": 50,
+        "BLUNT_NHEJ": 82,
+        "HDR": 105
+      },
+      "cut_rate": 0.948,
+      "expected_no_cut": 17.19136368690448,
+      "conforming_rows": 110.66666666666667,
+      "replay_matches_pipeline": true
+    },
+    "stage4": {
+      "avg_r2": -0.2359672348434825,
+      "avg_nmae": 0.6676074009535169,
+      "consistency_score": 9.971777971394493,
+      "consistency_factor": 0.09971777971394494,
+      "per_target": {
+        "is_cut": {
+          "r2_mean": -0.2586547345873366,
+          "r2_std": 0.37166860439900407,
+          "mae_mean": 0.08298706917447003,
+          "mae_std": 0.03983847417552052,
+          "normalized_mae": 0.37377012564876905,
+          "residual_std_mean": 0.22746322333334917
+        },
+        "is_hdr": {
+          "r2_mean": -0.25234166125967167,
+          "r2_std": 0.14853092955484543,
+          "mae_mean": 0.4548037911923464,
+          "mae_std": 0.02641803929751811,
+          "normalized_mae": 0.9214789829072522,
+          "residual_std_mean": 0.5271257805323353
+        },
+        "indel_length": {
+          "r2_mean": -0.19690530868343928,
+          "r2_std": 0.0805193217705452,
+          "mae_mean": 2.0447094640428363,
+          "mae_std": 0.19998092469160128,
+          "normalized_mae": 0.7075730943045293,
+          "residual_std_mean": 3.0614383937467746
+        }
+      }
+    },
+    "stage5": {
+      "distribution_fidelity_factor": 0.9160425561196262,
+      "terms": {
+        "mutation_coverage_entropy_ratio": 0.7883249003933805,
+        "cas_system_coverage_entropy_ratio": 0.9043814577244937,
+        "strand_coverage_entropy_ratio": 0.9895875212220556,
+        "joint_coverage_entropy_ratio": 0.856447116975199,
+        "kmer_diversity_entropy_ratio": 0.9778725237964156,
+        "distinct_guide_ratio": 1.0
+      },
+      "empty_joint_cells": []
+    }
+  },
+  "score": {
+    "total_weighted_score": 345.7428328643975,
+    "consistency_score": 9.743677379219756,
+    "consistency_factor": 0.09743677379219756,
+    "distribution_fidelity_score": 0.9160425561196263,
+    "distribution_fidelity_factor": 0.9160425561196263,
+    "final_score": 30.859702268986
+  },
+  "benchmark_submission": {
+    "uid": 0,
+    "breakdown": {
+      "n_valid_experiments": 250,
+      "total_weighted_score": 345.7428328643974,
+      "consistency_score": 7.912972210166566,
+      "consistency_factor": 0.07912972210166566,
+      "distribution_fidelity_score": 0.9160425561196262,
+      "distribution_fidelity_factor": 0.9160425561196262
+    },
+    "final_score": 25.061581676471157,
+    "log": ""
+  },
+  "replica_delta": 5.798120592514842,
+  "at_compare_seed": null,
+  "artifacts": {
+    "stage12_detail.json": "per-row stage 1 verdict and stage 2 arithmetic",
+    "stage3_detail.json": "per-row RNG replay of the simulation",
+    "stage4_detail.json": "per-target, per-fold consistency detail",
+    "stage5_detail.json": "distribution fidelity, term by term",
+    "stage{3,4,5}_detail.seed<N>.json": "the same, per round seed (3 of them); the flat files above are the first seed",
+    "validation.json": "headline numbers and the task pairing",
+    "validation.txt": "the printed five-stage report",
+    "validation/": "the validator's own inputs and outputs"
+  },
+  "redirected_paths": {
+    "CONTRACT_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/contract.json",
+    "HBB_REFERENCE_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/hbb_reference.json",
+    "MINER_SUBMISSION_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/submission.json",
+    "LAST_UPLOAD_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/last_upload.json",
+    "VALID_EXPERIMENTS_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/valid_experiments.json",
+    "INVALID_EXPERIMENTS_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/invalid_experiments.json",
+    "STAGE3_DATASET": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/stage3_dataset.json",
+    "STAGE3_SUMMARY_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/stage3_summary.json",
+    "FINAL_REWARD_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/final_reward.json",
+    "DISTRIBUTION_FIDELITY_PATH": "/root/workspace/subnet-niome/reports/14dcd43f/h4/validation/distribution_fidelity_summary.json"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-17 17:19:26,095 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:26,182 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:21,255 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2391 | rows 250 cells 8/8 | 234.8s",
+      "2026-09-17 17:23:21,259 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 235s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:01,729 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:01,805 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:16,417 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 23/300 | cas9 pool 2037 | rows 250 cells 8/8 | 133.8s",
+      "2026-09-17 18:56:16,424 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 135s, waiting for a validator to ask for it",
+      "2026-09-17 17:24:38,635 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 235s) \u2014 no build needed",
+      "2026-09-17 17:24:38,794 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 0.4s (284s of the URL's TTL to spare)",
+      "2026-09-17 17:25:08,895 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey/result/2026-09-17T17:25:08"
+    ]
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-17 17:19:25,780 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:25,877 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:04,414 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 16/900 | cas9 pool 1693 | rows 250 cells 8/8 | 218.3s",
+      "2026-09-17 17:23:04,422 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 219s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:03,700 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:03,774 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:17,132 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 22/300 | cas9 pool 2177 | rows 250 cells 8/8 | 133.0s",
+      "2026-09-17 18:56:17,136 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 133s, waiting for a validator to ask for it",
+      "2026-09-17 17:33:32,319 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 219s) \u2014 no build needed",
+      "2026-09-17 17:33:32,493 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 0.5s (284s of the URL's TTL to spare)",
+      "2026-09-17 17:34:01,782 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey1/result/2026-09-17T17:34:01"
+    ]
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-17 17:19:25,922 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:26,015 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:04,876 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 18/900 | cas9 pool 1547 | rows 250 cells 8/8 | 218.7s",
+      "2026-09-17 17:23:04,882 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 219s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:07,498 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:07,568 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:17,714 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 21/300 | cas9 pool 2194 | rows 250 cells 8/8 | 129.8s",
+      "2026-09-17 18:56:17,719 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 130s, waiting for a validator to ask for it",
+      "2026-09-17 17:28:43,082 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 219s) \u2014 no build needed",
+      "2026-09-17 17:28:43,220 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 3.2s (286s of the URL's TTL to spare)",
+      "2026-09-17 17:29:12,156 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey2/result/2026-09-17T17:29:12"
+    ]
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-17 17:19:26,343 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:26,420 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:04,003 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 18/900 | cas9 pool 1578 | rows 250 cells 8/8 | 217.4s",
+      "2026-09-17 17:23:04,009 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 218s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:07,603 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:07,672 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:18,475 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 20/300 | cas9 pool 2376 | rows 250 cells 8/8 | 130.4s",
+      "2026-09-17 18:56:18,479 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 131s, waiting for a validator to ask for it",
+      "2026-09-17 17:28:24,828 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 218s) \u2014 no build needed",
+      "2026-09-17 17:28:24,982 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 0.4s (284s of the URL's TTL to spare)",
+      "2026-09-17 17:29:10,602 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey3/result/2026-09-17T17:29:10"
+    ]
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-17 17:19:26,135 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:26,251 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:04,514 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 17/900 | cas9 pool 1567 | rows 250 cells 8/8 | 218.0s",
+      "2026-09-17 17:23:04,520 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 218s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:08,759 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:08,860 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:16,976 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 20/300 | cas9 pool 2306 | rows 250 cells 8/8 | 127.7s",
+      "2026-09-17 18:56:16,981 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 128s, waiting for a validator to ask for it",
+      "2026-09-17 17:55:56,635 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 218s) \u2014 no build needed",
+      "2026-09-17 17:55:56,806 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 1.2s (283s of the URL's TTL to spare)",
+      "2026-09-17 17:56:27,243 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey4/result/2026-09-17T17:56:27"
+    ]
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-17 17:19:25,742 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 17:19:25,846 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T17:17)",
+      "2026-09-17 17:23:21,353 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 19/900 | cas9 pool 2376 | rows 250 cells 8/8 | 235.0s",
+      "2026-09-17 17:23:21,360 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 236s, waiting for a validator to ask for it",
+      "2026-09-17 18:54:10,142 | INFO | __main__ | Prefetch: preparing task 7bca65ce-693d-4ad9-bf60-6297014bed83 (created 2026-09-17T17:19:11.656625) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-17 18:54:10,220 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-17T18:17)",
+      "2026-09-17 18:56:14,029 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 24/300 | cas9 pool 2024 | rows 250 cells 8/8 | 123.4s",
+      "2026-09-17 18:56:14,033 | INFO | __main__ | Prefetch: task 7bca65ce-693d-4ad9-bf60-6297014bed83 ready \u2014 250 rows in 124s, waiting for a validator to ask for it",
+      "2026-09-17 17:23:59,078 | INFO | __main__ | [7bca65ce-693d-4ad9-bf60-6297014bed83] using the prepared submission (250 rows in 236s) \u2014 no build needed",
+      "2026-09-17 17:23:59,424 | INFO | __main__ | Submitted 250 rows for task 7bca65ce-693d-4ad9-bf60-6297014bed83 in 0.7s (284s of the URL's TTL to spare)",
+      "2026-09-17 17:24:31,537 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 7bca65ce-693d-4ad9-bf60-6297014bed83 -> data/inst/niome_hotkey5/result/2026-09-17T17:24:31"
+    ]
+  }
+}

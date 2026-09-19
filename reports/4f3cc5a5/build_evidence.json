@@ -1,0 +1,147 @@
+{
+  "h0": {
+    "log_path": "/root/.pm2/logs/miner-h0-error.log",
+    "events": [
+      "2026-09-18 00:35:35,946 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:36,230 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:14,663 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 23/300 | cas9 pool 2642 | rows 250 cells 8/8 | 158.0s",
+      "2026-09-18 00:38:14,669 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 159s, waiting for a validator to ask for it",
+      "2026-09-18 01:33:31,207 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 159s) \u2014 no build needed",
+      "2026-09-18 01:33:31,356 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 0.4s (284s of the URL's TTL to spare)",
+      "2026-09-18 01:34:00,790 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey/result/2026-09-18T01:34:00"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:36.230801+00:00",
+      "all_hdr_built": true,
+      "band": "[313, 213, 347, 314, 328, 311, 333, 317]"
+    }
+  },
+  "h1": {
+    "log_path": "/root/.pm2/logs/miner-h1-error.log",
+    "events": [
+      "2026-09-18 00:35:34,277 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:34,403 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:12,217 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 25/300 | cas9 pool 2429 | rows 250 cells 8/8 | 157.4s",
+      "2026-09-18 00:38:12,222 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 158s, waiting for a validator to ask for it",
+      "2026-09-18 01:34:28,047 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 158s) \u2014 no build needed",
+      "2026-09-18 01:34:28,216 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 0.5s (284s of the URL's TTL to spare)",
+      "2026-09-18 01:34:58,704 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey1/result/2026-09-18T01:34:58"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:34.403816+00:00",
+      "all_hdr_built": true,
+      "band": "[313, 398, 255, 279, 327, 261, 351, 263]"
+    }
+  },
+  "h2": {
+    "log_path": "/root/.pm2/logs/miner-h2-error.log",
+    "events": [
+      "2026-09-18 00:35:35,304 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:35,375 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:18,181 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 20/300 | cas9 pool 2980 | rows 250 cells 8/8 | 162.4s",
+      "2026-09-18 00:38:18,186 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 163s, waiting for a validator to ask for it",
+      "2026-09-18 01:09:09,960 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 163s) \u2014 no build needed",
+      "2026-09-18 01:09:10,117 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 0.6s (289s of the URL's TTL to spare)",
+      "2026-09-18 01:09:41,122 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey2/result/2026-09-18T01:09:41"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:35.376200+00:00",
+      "all_hdr_built": true,
+      "band": "[313, 398, 900, 309, 386, 314, 374, 370]"
+    }
+  },
+  "h3": {
+    "log_path": "/root/.pm2/logs/miner-h3-error.log",
+    "events": [
+      "2026-09-18 00:35:35,669 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:35,824 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:13,608 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 24/300 | cas9 pool 2589 | rows 250 cells 8/8 | 157.4s",
+      "2026-09-18 00:38:13,614 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 158s, waiting for a validator to ask for it",
+      "2026-09-18 00:37:03,614 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] prepared build is still running (88s in); waiting up to 178s for it",
+      "2026-09-18 00:38:13,614 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 158s) \u2014 no build needed",
+      "2026-09-18 00:38:13,766 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 70.6s (213s of the URL's TTL to spare)",
+      "2026-09-18 00:38:42,645 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey3/result/2026-09-18T00:38:42"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:35.824991+00:00",
+      "all_hdr_built": true,
+      "band": "[958, 983, 963, 363, 911, 980, 362, 392]"
+    }
+  },
+  "h4": {
+    "log_path": "/root/.pm2/logs/miner-h4-error.log",
+    "events": [
+      "2026-09-18 00:35:35,076 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:35,155 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:18,549 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 18/300 | cas9 pool 3350 | rows 250 cells 8/8 | 163.0s",
+      "2026-09-18 00:38:18,553 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 163s, waiting for a validator to ask for it",
+      "2026-09-18 00:57:35,485 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 163s) \u2014 no build needed",
+      "2026-09-18 00:57:35,681 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 2.4s (281s of the URL's TTL to spare)",
+      "2026-09-18 00:58:07,665 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey4/result/2026-09-18T00:58:07"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:35.156094+00:00",
+      "all_hdr_built": true,
+      "band": "[958, 219, 237, 942, 982, 934, 212, 939]"
+    }
+  },
+  "h5": {
+    "log_path": "/root/.pm2/logs/miner-h5-error.log",
+    "events": [
+      "2026-09-18 00:35:34,654 | INFO | __main__ | Prefetch: preparing task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 (created 2026-09-18T00:35:26.785386) | cell_type=HEK293 mutations=2 budget=900s",
+      "2026-09-18 00:35:34,735 | INFO | __main__ | Build: window 200-399,900-999 from the round plan (generated 2026-09-18T00:17)",
+      "2026-09-18 00:38:16,524 | INFO | __main__ | Build: conjunction (HEK293) | band 8 k=8 group 80 clean 21/300 | cas9 pool 2848 | rows 250 cells 8/8 | 161.4s",
+      "2026-09-18 00:38:16,530 | INFO | __main__ | Prefetch: task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 ready \u2014 250 rows in 162s, waiting for a validator to ask for it",
+      "2026-09-18 01:11:52,325 | INFO | __main__ | [4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697] using the prepared submission (250 rows in 162s) \u2014 no build needed",
+      "2026-09-18 01:11:52,467 | INFO | __main__ | Submitted 250 rows for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 in 0.5s (284s of the URL's TTL to spare)",
+      "2026-09-18 01:12:21,999 | INFO | __main__ | post-upload: archived submission.json, last_upload.json, contract.json, hbb_reference.json for task 4f3cc5a5-cbb5-4a1e-86c4-2c88d2e51697 -> data/inst/niome_hotkey5/result/2026-09-18T01:12:21"
+    ],
+    "window_record": {
+      "cell": "HEK293",
+      "window": [
+        200,
+        999
+      ],
+      "source": "plan_joined",
+      "plan_generated_at": "2026-09-18T00:17:11.775278+00:00",
+      "at": "2026-09-18T00:35:34.735623+00:00",
+      "all_hdr_built": true,
+      "band": "[958, 219, 237, 257, 265, 213, 993, 959]"
+    }
+  }
+}

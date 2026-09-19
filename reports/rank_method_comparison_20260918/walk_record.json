@@ -1,0 +1,1980 @@
+{
+  "generated_at": "2026-09-14T12:31:27.133913+00:00",
+  "source": "seed_model.backtest --n 160 --cold (width 100)",
+  "protocol": "one-step-ahead walk-forward: each task is predicted by a model refit on strictly earlier rounds only, warm-started from the previous step",
+  "width": 100,
+  "note": "One-step-ahead walk-forward predictions of the SeedFormer model, kept so that strategy_rank.py can rank `model` against the torch-free baselines without importing torch. Append-only: each new task needs one refit, which is what seed_model/walk_update.py does.",
+  "tasks": [
+    {
+      "created_at": "2026-08-27T21:18:42",
+      "cell_type": "CD34+_HSPC",
+      "round": 2,
+      "predicted_windows": [
+        "800-899",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-08-27T23:42:49",
+      "cell_type": "HEK293",
+      "round": 3,
+      "predicted_windows": [
+        "800-899",
+        "600-699",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T02:06:52",
+      "cell_type": "HUDEP-2",
+      "round": 2,
+      "predicted_windows": [
+        "400-499",
+        "600-699",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T04:30:49",
+      "cell_type": "HEK293",
+      "round": 4,
+      "predicted_windows": [
+        "200-299",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T06:54:50",
+      "cell_type": "CD34+_HSPC",
+      "round": 3,
+      "predicted_windows": [
+        "800-899",
+        "900-999",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T09:18:52",
+      "cell_type": "HEK293",
+      "round": 5,
+      "predicted_windows": [
+        "800-899",
+        "200-299",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T11:42:49",
+      "cell_type": "CD34+_HSPC",
+      "round": 4,
+      "predicted_windows": [
+        "800-899",
+        "300-399",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T14:06:43",
+      "cell_type": "CD34+_HSPC",
+      "round": 5,
+      "predicted_windows": [
+        "500-599",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T16:30:46",
+      "cell_type": "HUDEP-2",
+      "round": 3,
+      "predicted_windows": [
+        "700-799",
+        "800-899",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T18:54:44",
+      "cell_type": "CD34+_HSPC",
+      "round": 6,
+      "predicted_windows": [
+        "500-599",
+        "800-899",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T21:18:55",
+      "cell_type": "K562",
+      "round": 2,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-08-28T23:42:45",
+      "cell_type": "HUDEP-2",
+      "round": 4,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T02:06:53",
+      "cell_type": "K562",
+      "round": 3,
+      "predicted_windows": [
+        "800-899",
+        "300-399",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T04:30:55",
+      "cell_type": "HEK293",
+      "round": 6,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T06:54:43",
+      "cell_type": "HUDEP-2",
+      "round": 5,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T09:18:43",
+      "cell_type": "CD34+_HSPC",
+      "round": 7,
+      "predicted_windows": [
+        "500-599",
+        "800-899",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T11:42:54",
+      "cell_type": "HUDEP-2",
+      "round": 6,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T14:06:54",
+      "cell_type": "HUDEP-2",
+      "round": 7,
+      "predicted_windows": [
+        "700-799",
+        "800-899",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T16:30:43",
+      "cell_type": "K562",
+      "round": 4,
+      "predicted_windows": [
+        "500-599",
+        "700-799",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T18:55:17",
+      "cell_type": "HEK293",
+      "round": 7,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T21:19:02",
+      "cell_type": "HEK293",
+      "round": 8,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-29T23:43:02",
+      "cell_type": "CD34+_HSPC",
+      "round": 8,
+      "predicted_windows": [
+        "500-599",
+        "800-899",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T02:06:45",
+      "cell_type": "HEK293",
+      "round": 9,
+      "predicted_windows": [
+        "600-699",
+        "700-799",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T04:30:42",
+      "cell_type": "CD34+_HSPC",
+      "round": 9,
+      "predicted_windows": [
+        "800-899",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T06:54:45",
+      "cell_type": "K562",
+      "round": 5,
+      "predicted_windows": [
+        "600-699",
+        "100-199",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T09:18:53",
+      "cell_type": "HUDEP-2",
+      "round": 8,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T11:42:52",
+      "cell_type": "HUDEP-2",
+      "round": 9,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T14:06:44",
+      "cell_type": "CD34+_HSPC",
+      "round": 10,
+      "predicted_windows": [
+        "800-899",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T16:30:43",
+      "cell_type": "HUDEP-2",
+      "round": 10,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T18:54:45",
+      "cell_type": "K562",
+      "round": 6,
+      "predicted_windows": [
+        "800-899",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T21:18:53",
+      "cell_type": "CD34+_HSPC",
+      "round": 11,
+      "predicted_windows": [
+        "800-899",
+        "900-999",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-08-30T23:42:42",
+      "cell_type": "HEK293",
+      "round": 10,
+      "predicted_windows": [
+        "600-699",
+        "900-999",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T02:06:44",
+      "cell_type": "CD34+_HSPC",
+      "round": 12,
+      "predicted_windows": [
+        "800-899",
+        "600-699",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T04:30:43",
+      "cell_type": "HUDEP-2",
+      "round": 11,
+      "predicted_windows": [
+        "600-699",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T06:54:53",
+      "cell_type": "HUDEP-2",
+      "round": 12,
+      "predicted_windows": [
+        "600-699",
+        "700-799",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T09:18:53",
+      "cell_type": "HEK293",
+      "round": 11,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T11:42:58",
+      "cell_type": "HUDEP-2",
+      "round": 13,
+      "predicted_windows": [
+        "600-699",
+        "700-799",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T14:06:52",
+      "cell_type": "CD34+_HSPC",
+      "round": 13,
+      "predicted_windows": [
+        "600-699",
+        "800-899",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T16:30:43",
+      "cell_type": "HEK293",
+      "round": 12,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T18:54:45",
+      "cell_type": "HEK293",
+      "round": 13,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T21:18:45",
+      "cell_type": "K562",
+      "round": 7,
+      "predicted_windows": [
+        "300-399",
+        "500-599",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-08-31T23:42:43",
+      "cell_type": "CD34+_HSPC",
+      "round": 14,
+      "predicted_windows": [
+        "400-499",
+        "800-899",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T02:06:44",
+      "cell_type": "HEK293",
+      "round": 14,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T04:30:53",
+      "cell_type": "CD34+_HSPC",
+      "round": 15,
+      "predicted_windows": [
+        "900-999",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T06:54:45",
+      "cell_type": "HEK293",
+      "round": 15,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T09:18:44",
+      "cell_type": "HEK293",
+      "round": 16,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T11:42:44",
+      "cell_type": "HEK293",
+      "round": 17,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T14:06:48",
+      "cell_type": "K562",
+      "round": 8,
+      "predicted_windows": [
+        "300-399",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T16:30:56",
+      "cell_type": "K562",
+      "round": 9,
+      "predicted_windows": [
+        "300-399",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-01T18:54:56",
+      "cell_type": "K562",
+      "round": 10,
+      "predicted_windows": [
+        "300-399",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-02T14:06:56",
+      "cell_type": "CD34+_HSPC",
+      "round": 16,
+      "predicted_windows": [
+        "900-999",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-02T21:19:11",
+      "cell_type": "HUDEP-2",
+      "round": 14,
+      "predicted_windows": [
+        "700-799",
+        "500-599",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-02T23:43:10",
+      "cell_type": "HUDEP-2",
+      "round": 15,
+      "predicted_windows": [
+        "700-799",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T02:07:12",
+      "cell_type": "HUDEP-2",
+      "round": 16,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T04:31:35",
+      "cell_type": "HEK293",
+      "round": 18,
+      "predicted_windows": [
+        "600-699",
+        "400-499",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T06:55:13",
+      "cell_type": "CD34+_HSPC",
+      "round": 17,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T09:19:13",
+      "cell_type": "HUDEP-2",
+      "round": 17,
+      "predicted_windows": [
+        "700-799",
+        "400-499",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T11:43:12",
+      "cell_type": "CD34+_HSPC",
+      "round": 18,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T14:07:12",
+      "cell_type": "HEK293",
+      "round": 19,
+      "predicted_windows": [
+        "900-999",
+        "600-699",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T16:31:10",
+      "cell_type": "K562",
+      "round": 11,
+      "predicted_windows": [
+        "300-399",
+        "500-599",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T18:55:10",
+      "cell_type": "CD34+_HSPC",
+      "round": 19,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T21:19:11",
+      "cell_type": "CD34+_HSPC",
+      "round": 20,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-03T23:43:24",
+      "cell_type": "HEK293",
+      "round": 20,
+      "predicted_windows": [
+        "900-999",
+        "400-499",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T02:08:26",
+      "cell_type": "CD34+_HSPC",
+      "round": 21,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T04:31:23",
+      "cell_type": "CD34+_HSPC",
+      "round": 22,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T06:55:23",
+      "cell_type": "HUDEP-2",
+      "round": 18,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T09:19:22",
+      "cell_type": "CD34+_HSPC",
+      "round": 23,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T11:43:20",
+      "cell_type": "K562",
+      "round": 12,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T14:07:23",
+      "cell_type": "K562",
+      "round": 13,
+      "predicted_windows": [
+        "700-799",
+        "600-699",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T16:31:20",
+      "cell_type": "K562",
+      "round": 14,
+      "predicted_windows": [
+        "300-399",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T18:56:17",
+      "cell_type": "HUDEP-2",
+      "round": 19,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T21:19:20",
+      "cell_type": "HUDEP-2",
+      "round": 20,
+      "predicted_windows": [
+        "700-799",
+        "400-499",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-04T23:43:57",
+      "cell_type": "HEK293",
+      "round": 21,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T02:08:10",
+      "cell_type": "CD34+_HSPC",
+      "round": 24,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T06:56:33",
+      "cell_type": "HEK293",
+      "round": 22,
+      "predicted_windows": [
+        "100-199",
+        "500-599",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T09:21:14",
+      "cell_type": "K562",
+      "round": 15,
+      "predicted_windows": [
+        "200-299",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T11:44:48",
+      "cell_type": "HUDEP-2",
+      "round": 21,
+      "predicted_windows": [
+        "100-199",
+        "300-399",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T15:29:09",
+      "cell_type": "HUDEP-2",
+      "round": 22,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T16:33:15",
+      "cell_type": "HUDEP-2",
+      "round": 23,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T18:57:39",
+      "cell_type": "HEK293",
+      "round": 23,
+      "predicted_windows": [
+        "100-199",
+        "800-899",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T21:22:45",
+      "cell_type": "HEK293",
+      "round": 24,
+      "predicted_windows": [
+        "800-899",
+        "100-199",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-05T23:46:56",
+      "cell_type": "HEK293",
+      "round": 25,
+      "predicted_windows": [
+        "100-199",
+        "500-599",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T02:11:23",
+      "cell_type": "HUDEP-2",
+      "round": 24,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T04:35:44",
+      "cell_type": "HEK293",
+      "round": 26,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T07:01:14",
+      "cell_type": "CD34+_HSPC",
+      "round": 25,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T09:24:34",
+      "cell_type": "HUDEP-2",
+      "round": 25,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T11:49:09",
+      "cell_type": "HUDEP-2",
+      "round": 26,
+      "predicted_windows": [
+        "300-399",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T14:13:20",
+      "cell_type": "HUDEP-2",
+      "round": 27,
+      "predicted_windows": [
+        "300-399",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T19:02:32",
+      "cell_type": "HEK293",
+      "round": 27,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T21:27:30",
+      "cell_type": "HEK293",
+      "round": 28,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-06T23:51:15",
+      "cell_type": "CD34+_HSPC",
+      "round": 26,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-07T02:16:29",
+      "cell_type": "CD34+_HSPC",
+      "round": 27,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-07T04:39:37",
+      "cell_type": "CD34+_HSPC",
+      "round": 28,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-07T07:03:36",
+      "cell_type": "K562",
+      "round": 16,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-07T09:28:08",
+      "cell_type": "HEK293",
+      "round": 29,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-07T11:52:57",
+      "cell_type": "K562",
+      "round": 17,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T02:30:32",
+      "cell_type": "K562",
+      "round": 18,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T04:42:15",
+      "cell_type": "K562",
+      "round": 19,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T07:06:13",
+      "cell_type": "HEK293",
+      "round": 30,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T09:30:21",
+      "cell_type": "HUDEP-2",
+      "round": 28,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T11:54:12",
+      "cell_type": "K562",
+      "round": 20,
+      "predicted_windows": [
+        "300-399",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T14:18:18",
+      "cell_type": "HEK293",
+      "round": 31,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T16:42:31",
+      "cell_type": "K562",
+      "round": 21,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T19:06:32",
+      "cell_type": "CD34+_HSPC",
+      "round": 29,
+      "predicted_windows": [
+        "400-499",
+        "600-699",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T21:30:45",
+      "cell_type": "HEK293",
+      "round": 32,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-08T23:55:09",
+      "cell_type": "K562",
+      "round": 22,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T02:18:56",
+      "cell_type": "HUDEP-2",
+      "round": 29,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T04:42:56",
+      "cell_type": "CD34+_HSPC",
+      "round": 30,
+      "predicted_windows": [
+        "400-499",
+        "600-699",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T07:07:09",
+      "cell_type": "HUDEP-2",
+      "round": 30,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T09:30:55",
+      "cell_type": "K562",
+      "round": 23,
+      "predicted_windows": [
+        "300-399",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T11:56:32",
+      "cell_type": "CD34+_HSPC",
+      "round": 31,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T14:20:45",
+      "cell_type": "HEK293",
+      "round": 33,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T16:44:07",
+      "cell_type": "K562",
+      "round": 24,
+      "predicted_windows": [
+        "700-799",
+        "300-399",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T19:08:34",
+      "cell_type": "HUDEP-2",
+      "round": 31,
+      "predicted_windows": [
+        "400-499",
+        "200-299",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T21:32:45",
+      "cell_type": "CD34+_HSPC",
+      "round": 32,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-09T23:56:33",
+      "cell_type": "CD34+_HSPC",
+      "round": 33,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T02:20:57",
+      "cell_type": "K562",
+      "round": 25,
+      "predicted_windows": [
+        "200-299",
+        "400-499",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T04:45:09",
+      "cell_type": "CD34+_HSPC",
+      "round": 34,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T07:09:23",
+      "cell_type": "K562",
+      "round": 26,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T09:33:22",
+      "cell_type": "HUDEP-2",
+      "round": 32,
+      "predicted_windows": [
+        "200-299",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T11:57:38",
+      "cell_type": "HEK293",
+      "round": 34,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T14:22:25",
+      "cell_type": "CD34+_HSPC",
+      "round": 35,
+      "predicted_windows": [
+        "400-499",
+        "600-699",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T16:46:24",
+      "cell_type": "HUDEP-2",
+      "round": 33,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T19:10:49",
+      "cell_type": "K562",
+      "round": 27,
+      "predicted_windows": [
+        "200-299",
+        "500-599",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T21:35:23",
+      "cell_type": "K562",
+      "round": 28,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-10T23:59:12",
+      "cell_type": "HEK293",
+      "round": 35,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T02:23:16",
+      "cell_type": "HUDEP-2",
+      "round": 34,
+      "predicted_windows": [
+        "200-299",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T04:47:46",
+      "cell_type": "CD34+_HSPC",
+      "round": 36,
+      "predicted_windows": [
+        "400-499",
+        "600-699",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T07:12:25",
+      "cell_type": "CD34+_HSPC",
+      "round": 37,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T09:36:36",
+      "cell_type": "HEK293",
+      "round": 36,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T12:00:45",
+      "cell_type": "CD34+_HSPC",
+      "round": 38,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T14:25:04",
+      "cell_type": "K562",
+      "round": 29,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T16:49:11",
+      "cell_type": "K562",
+      "round": 30,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T19:13:14",
+      "cell_type": "K562",
+      "round": 31,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-11T21:38:05",
+      "cell_type": "HUDEP-2",
+      "round": 35,
+      "predicted_windows": [
+        "900-999",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T00:02:36",
+      "cell_type": "HEK293",
+      "round": 37,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T02:26:39",
+      "cell_type": "K562",
+      "round": 32,
+      "predicted_windows": [
+        "700-799",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T04:50:37",
+      "cell_type": "HEK293",
+      "round": 38,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T07:15:10",
+      "cell_type": "CD34+_HSPC",
+      "round": 39,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T09:39:24",
+      "cell_type": "CD34+_HSPC",
+      "round": 40,
+      "predicted_windows": [
+        "500-599",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T12:04:00",
+      "cell_type": "CD34+_HSPC",
+      "round": 41,
+      "predicted_windows": [
+        "500-599",
+        "400-499",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T14:28:36",
+      "cell_type": "CD34+_HSPC",
+      "round": 42,
+      "predicted_windows": [
+        "400-499",
+        "500-599",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T16:53:24",
+      "cell_type": "K562",
+      "round": 33,
+      "predicted_windows": [
+        "700-799",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T19:17:42",
+      "cell_type": "CD34+_HSPC",
+      "round": 43,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-12T21:41:47",
+      "cell_type": "HEK293",
+      "round": 39,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T00:06:40",
+      "cell_type": "K562",
+      "round": 34,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T02:30:50",
+      "cell_type": "HUDEP-2",
+      "round": 36,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T04:54:59",
+      "cell_type": "HUDEP-2",
+      "round": 37,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T07:19:14",
+      "cell_type": "K562",
+      "round": 35,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T09:43:11",
+      "cell_type": "HUDEP-2",
+      "round": 38,
+      "predicted_windows": [
+        "400-499",
+        "900-999",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T12:07:25",
+      "cell_type": "K562",
+      "round": 36,
+      "predicted_windows": [
+        "700-799",
+        "900-999",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T14:31:46",
+      "cell_type": "HUDEP-2",
+      "round": 39,
+      "predicted_windows": [
+        "900-999",
+        "500-599",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T16:56:01",
+      "cell_type": "HEK293",
+      "round": 40,
+      "predicted_windows": [
+        "100-199",
+        "400-499",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T19:20:12",
+      "cell_type": "CD34+_HSPC",
+      "round": 44,
+      "predicted_windows": [
+        "400-499",
+        "700-799",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-13T21:44:35",
+      "cell_type": "HEK293",
+      "round": 41,
+      "predicted_windows": [
+        "400-499",
+        "100-199",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T00:08:50",
+      "cell_type": "K562",
+      "round": 37,
+      "predicted_windows": [
+        "900-999",
+        "700-799",
+        "800-899"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T02:33:06",
+      "cell_type": "CD34+_HSPC",
+      "round": 45,
+      "predicted_windows": [
+        "700-799",
+        "400-499",
+        "500-599"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T05:20:00",
+      "cell_type": "K562",
+      "round": 38,
+      "predicted_windows": [
+        "900-999",
+        "800-899",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T07:21:33",
+      "cell_type": "HEK293",
+      "round": 42,
+      "predicted_windows": [
+        "400-499",
+        "500-599",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T09:46:08",
+      "cell_type": "HUDEP-2",
+      "round": 40,
+      "predicted_windows": [
+        "500-599",
+        "100-199",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T12:10:17",
+      "cell_type": "HUDEP-2",
+      "round": 41,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T14:34:37",
+      "cell_type": "K562",
+      "round": 39,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T16:59:02",
+      "cell_type": "K562",
+      "round": 40,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T19:23:47",
+      "cell_type": "HUDEP-2",
+      "round": 42,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-14T21:48:36",
+      "cell_type": "HEK293",
+      "round": 43,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T00:12:53",
+      "cell_type": "HEK293",
+      "round": 44,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T02:37:37",
+      "cell_type": "HUDEP-2",
+      "round": 43,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "600-699"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T05:02:25",
+      "cell_type": "CD34+_HSPC",
+      "round": 46,
+      "predicted_windows": [
+        "900-999",
+        "600-699",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T07:26:58",
+      "cell_type": "HEK293",
+      "round": 45,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T09:53:01",
+      "cell_type": "K562",
+      "round": 41,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T12:16:40",
+      "cell_type": "HEK293",
+      "round": 46,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T14:41:50",
+      "cell_type": "HUDEP-2",
+      "round": 44,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T17:06:52",
+      "cell_type": "CD34+_HSPC",
+      "round": 47,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T19:30:12",
+      "cell_type": "HEK293",
+      "round": 47,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-15T21:56:24",
+      "cell_type": "CD34+_HSPC",
+      "round": 48,
+      "predicted_windows": [
+        "900-999",
+        "100-199",
+        "700-799"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T00:19:35",
+      "cell_type": "HUDEP-2",
+      "round": 45,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T02:44:00",
+      "cell_type": "HEK293",
+      "round": 48,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "900-999"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T05:08:58",
+      "cell_type": "HUDEP-2",
+      "round": 46,
+      "predicted_windows": [
+        "100-199",
+        "900-999",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T07:33:37",
+      "cell_type": "K562",
+      "round": 42,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T09:58:03",
+      "cell_type": "CD34+_HSPC",
+      "round": 49,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T12:22:34",
+      "cell_type": "CD34+_HSPC",
+      "round": 50,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T14:47:53",
+      "cell_type": "HUDEP-2",
+      "round": 47,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T17:12:16",
+      "cell_type": "K562",
+      "round": 43,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "400-499"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T19:37:02",
+      "cell_type": "HUDEP-2",
+      "round": 48,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-16T22:01:28",
+      "cell_type": "HUDEP-2",
+      "round": 49,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T00:26:18",
+      "cell_type": "HEK293",
+      "round": 49,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T02:51:24",
+      "cell_type": "HEK293",
+      "round": 50,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T05:15:18",
+      "cell_type": "HUDEP-2",
+      "round": 50,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T07:40:25",
+      "cell_type": "K562",
+      "round": 44,
+      "predicted_windows": [
+        "700-799",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T10:04:50",
+      "cell_type": "K562",
+      "round": 45,
+      "predicted_windows": [
+        "700-799",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T12:29:37",
+      "cell_type": "K562",
+      "round": 46,
+      "predicted_windows": [
+        "700-799",
+        "100-199",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T14:54:13",
+      "cell_type": "HEK293",
+      "round": 51,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T17:19:11",
+      "cell_type": "HEK293",
+      "round": 52,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T19:44:49",
+      "cell_type": "K562",
+      "round": 47,
+      "predicted_windows": [
+        "700-799",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T22:08:27",
+      "cell_type": "CD34+_HSPC",
+      "round": 51,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T00:35:26",
+      "cell_type": "HEK293",
+      "round": 53,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T03:03:14",
+      "cell_type": "CD34+_HSPC",
+      "round": 52,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    }
+  ],
+  "updated_at": "2026-09-18T04:35:17.556682+00:00"
+}

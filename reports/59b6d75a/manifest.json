@@ -1,0 +1,48 @@
+{
+  "task_id": "59b6d75a-824b-4021-bd7a-3360b43ef0e4",
+  "fetched_at": "2026-09-18T05:44:43.145985+00:00",
+  "hotkeys": {
+    "h0": {
+      "archive": "data/inst/niome_hotkey/result/2026-09-18T03:17:33",
+      "validation_dir": "data/inst/niome_hotkey/result/2026-09-18T03:17:33",
+      "existing_validation": true,
+      "submitted": true
+    },
+    "h1": {
+      "archive": "data/inst/niome_hotkey1/result/2026-09-18T03:11:11",
+      "validation_dir": "reports/59b6d75a/h1",
+      "existing_validation": false,
+      "submitted": true
+    },
+    "h2": {
+      "archive": "data/inst/niome_hotkey2/result/2026-09-18T03:52:42",
+      "validation_dir": "reports/59b6d75a/h2",
+      "existing_validation": false,
+      "submitted": true
+    },
+    "h3": {
+      "archive": "data/inst/niome_hotkey3/result/2026-09-18T03:57:20",
+      "validation_dir": "reports/59b6d75a/h3",
+      "existing_validation": false,
+      "submitted": true
+    },
+    "h4": {
+      "archive": "data/inst/niome_hotkey4/result/2026-09-18T03:11:06",
+      "validation_dir": "reports/59b6d75a/h4",
+      "existing_validation": false,
+      "submitted": true
+    },
+    "h5": {
+      "archive": "data/inst/niome_hotkey5/result/2026-09-18T03:40:53",
+      "validation_dir": "data/inst/niome_hotkey5/result/2026-09-18T03:40:53",
+      "existing_validation": true,
+      "submitted": true
+    },
+    "h6": {
+      "archive": "data/inst/niome_hotkey6/result/2026-09-18T03:54:07",
+      "validation_dir": "data/inst/niome_hotkey6/result/2026-09-18T03:54:07",
+      "existing_validation": true,
+      "submitted": true
+    }
+  }
+}

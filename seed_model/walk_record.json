@@ -1934,7 +1934,117 @@
         "700-799",
         "200-299"
       ]
+    },
+    {
+      "created_at": "2026-09-17T19:44:49",
+      "cell_type": "K562",
+      "round": 47,
+      "predicted_windows": [
+        "700-799",
+        "100-199",
+        "300-399"
+      ]
+    },
+    {
+      "created_at": "2026-09-17T22:08:27",
+      "cell_type": "CD34+_HSPC",
+      "round": 51,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T00:35:26",
+      "cell_type": "HEK293",
+      "round": 53,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T03:03:14",
+      "cell_type": "CD34+_HSPC",
+      "round": 52,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T05:25:14",
+      "cell_type": "CD34+_HSPC",
+      "round": 53,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T12:51:08",
+      "cell_type": "HUDEP-2",
+      "round": 51,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T15:04:31",
+      "cell_type": "CD34+_HSPC",
+      "round": 54,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T17:30:15",
+      "cell_type": "HUDEP-2",
+      "round": 52,
+      "predicted_windows": [
+        "200-299",
+        "700-799",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T19:53:29",
+      "cell_type": "HEK293",
+      "round": 54,
+      "predicted_windows": [
+        "100-199",
+        "700-799",
+        "200-299"
+      ]
+    },
+    {
+      "created_at": "2026-09-18T22:19:29",
+      "cell_type": "CD34+_HSPC",
+      "round": 55,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
+    },
+    {
+      "created_at": "2026-09-19T00:44:02",
+      "cell_type": "CD34+_HSPC",
+      "round": 56,
+      "predicted_windows": [
+        "700-799",
+        "200-299",
+        "100-199"
+      ]
     }
   ],
-  "updated_at": "2026-09-17T18:56:17.904628+00:00"
+  "updated_at": "2026-09-19T02:21:17.488229+00:00"
 }
