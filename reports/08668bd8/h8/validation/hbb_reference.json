@@ -1,0 +1,39 @@
+{
+  "challenge": {
+    "active_mutations": [
+      "HBB:c.394C>A",
+      "NC_000011.10:g.5226616C>A"
+    ],
+    "cell_type": "CD34+_HSPC",
+    "mutation_regions": {
+      "HBB:c.394C>A": "exon3",
+      "NC_000011.10:g.5226616C>A": null
+    },
+    "mutation_weights": {
+      "HBB:c.394C>A": 1.155,
+      "NC_000011.10:g.5226616C>A": 0.65
+    },
+    "rules": {
+      "base_padding": 400,
+      "cas_systems": [
+        "Cas9",
+        "Cas12a"
+      ],
+      "max_experiments": 250,
+      "max_mismatches": 3,
+      "proximity_gate": false
+    },
+    "seed": "709,369,545",
+    "version": "v1"
+  },
+  "chromosome": "11",
+  "gene_region": {
+    "end": 5227064,
+    "start": 5225464
+  },
+  "mutation_map": {
+    "HBB:c.394C>A": 5225648,
+    "NC_000011.10:g.5226616C>A": 5226616
+  },
+  "window_id": "HBB_v1"
+}

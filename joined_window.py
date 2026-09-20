@@ -142,38 +142,57 @@ FULL_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_h
 # correlated is still unmeasured; `widecut_price.py` found bands essentially disjoint (0-1 of 11)
 # when the POOLS differed, but within a group here the pool is identical per cell and only the
 # window moves. `band_overlap.py` is the tool, and h6-h9 are now the control arm for it.
-BAND_SUB_WIDTH = 150
+BAND_SUB_WIDTH = 300
 
-# Group A -- the plan's three predicted width-100 classes.
-BAND_HK: list[str] = ["niome_hotkey", "niome_hotkey1", "niome_hotkey2", "niome_hotkey3",
-                      "niome_hotkey4", "niome_hotkey5"]
-BAND_STRIDE = 50
-# The joined space group A's offsets are expressed against: 3 classes x 100 seeds. The offset is
-# carried as a FRACTION so it stays proportional if a plan ever yields a space of another size.
-BAND_SPAN = 300
+# **2026-09-20: seven hotkeys, width 300 at stride 100, spanning the WHOLE 100-999.** h1/h2/h3 were
+# deregistered from netuid 55 overnight (21:11-22:02 on 09-19, verified against the chain at block
+# 9106585, not against the logs) and h10 has been gone for longer, so the fleet is h0 plus h4-h9.
+# Their pm2 apps are STOPPED rather than deleted.
+#
+# The layout that replaces the 10 x 30 tiling is not a rotation inside the plan's predicted classes
+# at all -- the band space is the full 900 and each hotkey takes a 300-seed CONTIGUOUS window, the
+# windows stepping 100 seeds apart:
+#
+#     h0 100-399   h4 200-499   h5 300-599   h6 400-699   h7 500-799   h8 600-899   h9 700-999
+#
+# **The invariant is different from every previous layout here and that matters.** The old one was
+# `count * stride == span`, which is what a CIRCULAR tiling of non-overlapping slices needs. This
+# one is deliberately overlapping and must NOT wrap, so the condition is
+# `(count - 1) * stride + width == span` -- 6 x 100 + 300 = 900 exactly. Get it wrong in the other
+# direction and the last window runs off the end and `sub_window` wraps it back to seed 100, which
+# would silently re-correlate h9 with h0.
+#
+# Coverage is the full 900 by construction, but it is NOT uniform, and that is inherent to fitting
+# seven width-300 windows onto 900 seeds rather than a defect: seeds 100-199 sit in h0's window
+# alone and 900-999 in h9's alone, while everything from 300-799 sits in three windows. So the
+# edges carry a third of the band mass of the middle. The alternative -- disjoint width-128 windows
+# -- would tile evenly but 900/7 is not an integer and the narrower window is a different arm.
+BAND_HK: list[str] = ["niome_hotkey", "niome_hotkey4", "niome_hotkey5", "niome_hotkey6",
+                      "niome_hotkey7", "niome_hotkey8", "niome_hotkey9"]
+BAND_STRIDE = 100
+# The band space is now the FULL 100-999, not the plan's three predicted classes. `band_offset_frac`
+# is expressed against this, so the fractions run 0, 1/9, ... 6/9 and land the windows exactly where
+# the comment above says.
+BAND_SPAN = 900
 
-# Group B -- the 600 seeds of 100-999 the plan did NOT predict, i.e. the complement of group A's
-# space. Four hotkeys at stride 150 and width 150 partition it, so no two of them share a candidate
-# seed. `REST_SPAN` is 900 - BAND_SPAN by construction; it is written out rather than computed so a
-# plan that yields a differently-sized space fails the assertion below instead of silently
-# rescaling one group and not the other.
-REST_HK: list[str] = ["niome_hotkey6", "niome_hotkey7", "niome_hotkey8", "niome_hotkey9"]
-REST_STRIDE = 150
-REST_SPAN = 600
+# Group B -- empty since 2026-09-19. The complement tier is meaningless now that group A's own band
+# space IS the whole 900; there is no complement left to cover.
+REST_HK: list[str] = []
+REST_STRIDE = 100
+REST_SPAN = 0
 
-# The whole seed space a round can draw from. Both the band split above and the wide cut window
-# below are expressed against this one list so they cannot drift apart.
+# The whole seed space a round can draw from. The band split above and the wide cut window below are
+# both expressed against this one list so they cannot drift apart.
 FULL_SPACE = list(range(100, 1000))
 
-# Per-hotkey offset overrides, for a headcount that does NOT divide its group's span by the stride.
-# EMPTY, and it should stay empty: both groups tile exactly (6 x 50 = 300, 4 x 150 = 600), and an
-# override on an even tiling pulls one hotkey off it rather than fixing anything. Re-populate only
-# if a count and stride stop multiplying to the span, and prefer moving the STRIDE.
+# Per-hotkey offset overrides. EMPTY and should stay so: the sequence below already places seven
+# windows across 900 with no wrap, and an override would pull one off that.
 BAND_OFFSET_OVERRIDES: dict[str, int] = {}
 
-assert len(BAND_HK) * BAND_STRIDE == BAND_SPAN, "group A does not tile its span exactly"
+assert (len(BAND_HK) - 1) * BAND_STRIDE + BAND_SUB_WIDTH == BAND_SPAN, \
+    "group A's windows do not span 100-999 exactly (overlapping, non-wrapping tiling)"
 assert len(REST_HK) * REST_STRIDE == REST_SPAN, "group B does not tile its span exactly"
-assert BAND_SPAN + REST_SPAN == len(FULL_SPACE), "the two band groups do not cover 100-999"
+assert BAND_SPAN <= len(FULL_SPACE), "the band span claims more than 100-999"
 assert not (set(BAND_HK) & set(REST_HK)), "a hotkey cannot be in both band groups"
 
 
@@ -196,7 +215,15 @@ def band_offset(instance):
     if layout is None:
         return None
     hotkeys, stride, span, _ = layout
-    return BAND_OFFSET_OVERRIDES.get(instance, hotkeys.index(instance) * stride) % span
+    off = BAND_OFFSET_OVERRIDES.get(instance, hotkeys.index(instance) * stride)
+    # No modulo. Since 2026-09-20 the windows are PLACED across 100-999 rather than rotated inside
+    # a smaller space, so an offset past `span - width` would wrap `sub_window` back to the front
+    # and collide with the first hotkey instead of erroring. The import-time assertion above is what
+    # guarantees it cannot happen; this raises rather than wrapping if it ever does.
+    if off + BAND_SUB_WIDTH > span:
+        raise ValueError(f"band offset {off} + width {BAND_SUB_WIDTH} runs past the {span}-seed "
+                         f"band space for {instance}; the layout no longer tiles")
+    return off
 
 
 def band_offset_frac(instance):
@@ -230,15 +257,17 @@ def band_space(instance, predicted):
     classes moves both groups together and the fleet still covers 100-999 exactly once per group.
     """
     layout = band_layout(instance)
-    if layout is None or not predicted:
+    if layout is None:
         return None
-    pred = sorted({int(s) for s in predicted})
+    # 2026-09-20: the band space is the FULL 100-999 for every band hotkey. `predicted` is accepted
+    # and ignored -- the plan's three classes no longer steer the band at all, only the all-HDR rung
+    # below the conjunction still reads them. Kept in the signature so callers do not have to know
+    # which layout is live.
     if layout[3]:
-        return pred
+        return list(FULL_SPACE)
+    pred = sorted({int(s) for s in (predicted or [])})
     rest = [s for s in FULL_SPACE if s not in set(pred)]
-    # A plan covering the whole space would leave group B nothing to build on. Fall back to the
-    # predicted space rather than hand `sub_window` an empty list — a correlated band beats no band.
-    return rest or pred
+    return rest or list(FULL_SPACE)
 
 
 # 2026-09-17: the CUT window for band hotkeys, decoupled from the band space above. Every
@@ -322,11 +351,36 @@ def band_space(instance, predicted):
 # What `union` costs: TWO bank keys per (contract, cell) instead of one, since h0-h5 min-union over
 # 300 seeds and h6-h9 over 450. `bank_slot` means one hotkey pays each scan and the rest load warm,
 # but it is two cold scans per round rather than one.
+# **2026-09-20: every cell is on "union" — the erythroid cells drop the 900-seed cut.** Set by
+# operator request, and it is the change this file has recommended since 2026-09-17 rather than a
+# new direction. With the band space now the full 900 and each hotkey holding a 300-seed contiguous
+# window, "union" resolves to that window, so the cut and the band coincide on all four cells.
+#
+# What the wide cut was measured to be worth on erythroid, and why dropping it is not a loss:
+#   * `widecut_price.py`, 4 contracts x 2 cells paired within contract: **+1.1%, 4W/2L/2T,
+#     sign p = 0.688** — a wash on own-field E[share].
+#   * `coldbuild.py`: the wide cut roughly DOUBLES the cold build (K562 199s -> 410s, CD34+
+#     182s -> 386s), and essentially all of it is the Cas12a bank scan (2.48x).
+#   * The prefetch LEAD is the binding constraint, not the gate: at a p10 lead of 395s a 410s cold
+#     build misses the window on about the bottom decile of rounds — and because `bank_slot` shares
+#     one bank per (contract, cell), when it misses EVERY erythroid hotkey falls through to all-HDR
+#     together.
+# So this trades ~1% of score, inside noise, for halving the build and removing a fleet-wide
+# correlated failure mode.
+#
+# The one real cost is the floor, and it points the other way from HEK293: the wide cut WIDENS the
+# erythroid cut-clean set +30-40% (86-104 off-band clean seeds narrow against 115-133 wide), where
+# on HEK293 it NARROWS it. That widening is exactly what `floor_price.py` arm A prices at ~+3% and
+# `widecut_price.py` measured at +1%, so it is already counted above — do not subtract it twice.
+#
+# The wall does not move: `conj_wall.py` measured the erythroid band-formation wall at **12 on both
+# the narrow and the wide cut**, unanimous 4/4 per cell, so `band_k` 11 stays one full step below it
+# either way and the narrow arm's surviving-pool margin is the healthier of the two.
 CUT_MODE: dict[str, str] = {
     "HEK293": "union",
-    "CD34+_HSPC": "wide",
-    "K562": "wide",
-    "HUDEP-2": "wide",
+    "CD34+_HSPC": "union",
+    "K562": "union",
+    "HUDEP-2": "union",
 }
 
 # Kept as a derived view so callers that predate `CUT_MODE` keep working. Note a cell on "union" is
@@ -357,11 +411,16 @@ def conjunction_cut_seeds(instance, cell, predicted=None, band_candidates=None):
     if mode == "wide":
         return list(FULL_SPACE)
     if mode == "union":
-        if predicted is None or band_candidates is None:
-            raise TypeError(
-                f"cut mode 'union' on {cell} needs both `predicted` and `band_candidates`; "
-                f"got predicted={predicted is not None} band_candidates={band_candidates is not None}")
-        return sorted(set(int(s) for s in predicted) | set(int(s) for s in band_candidates))
+        if band_candidates is None:
+            raise TypeError(f"cut mode 'union' on {cell} needs `band_candidates`")
+        # The narrowest span satisfying band ⊆ cut, which is what "union" has always MEANT. Until
+        # 2026-09-20 the band came out of the plan's predicted classes, so that span was
+        # `predicted ∪ band` (300 seeds for a predicted-group hotkey, 450 for a complement one).
+        # The band space is now the full 900 and the plan no longer steers it, so the predicted term
+        # is vestigial and dropping it leaves the band's own 300-seed window. That is not a new arm:
+        # it is exactly `hek_cutspan.py`'s A/narrow, the best-measured HEK293 option on every
+        # score-adjacent term (wall 9 so k=9 stays reachable, clean 24.0/900, margin 2.71x).
+        return sorted(set(int(s) for s in band_candidates))
     return None
 
 # The width a FULL_HK hotkey takes out of the joined space. `None` (or anything >= the joined span)

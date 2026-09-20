@@ -189,3 +189,28 @@ task-*.json
 # file nothing reads back. seed_model/state.json is the durable record of the walk-forward score;
 # a fresh clone regenerates the weights with `python -m seed_model.train --refresh` in ~65 s.
 seed_model/**/*.pt
+
+# Written by seed_watch.py — one JSON record per poll, appended forever while the watcher runs
+# (30s x 3 tasks x 24h is ~2 MB/day, and it was already 1.1 MB when this rule was added). It is a
+# measurement LOG, not an input: nothing reads it back, and what it establishes gets summarised into
+# CLAUDE.md by hand. Tracking an append-only file means a whole new blob in every commit for content
+# no clone needs. The script itself stays tracked — it is the reproducible part.
+seed_watch.jsonl
+
+# Research-harness output. The repo root is where ~40 offline harnesses drop their result JSON
+# (`conj_*.json`, `win20_*.json`, `sd_sweep_*.json`, `validate_*.json`, ...) and 341 of them had
+# accumulated as tracked files totalling 37 MB — `scores_fresh.json` alone is 30 MB. None is an
+# input to anything: each is one run's numbers, and what those numbers ESTABLISH is written up in
+# CLAUDE.md by hand, which is the durable record. Re-running the harness regenerates the file.
+#
+# Anchored with a leading slash so it covers ONLY the repo root: reports/, seed_model/, .claude/
+# and niome_subnet/ keep their own JSON. Written as ignore-all-then-negate rather than 341 literal
+# names so a NEW harness's output is ignored by default — being tracked by default is exactly how
+# this pile built up. Add a `!` line for anything that is genuinely an input.
+/*.json
+# ...except these five, which are read AS INPUTS or are durable records, not outputs:
+!/task.json             # a tracked fixture — see the `task-*.json` rule above, which spares it too
+!/sd_task_listing.json  # /api/v3/tasks cache, read by ~25 harnesses via sd_task.fetch(cache=...)
+!/sd_task_scores.json   # /api/v3/miners/scores cache, read by ~15 harnesses the same way
+!/seed_window_log.json  # the accruing shadow log of window predictions, read by window_plan.py
+!/hotkey_coldkey.json   # coldkey grouping, read as input by mingap.py / mingap_cells.py

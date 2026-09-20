@@ -1,0 +1,86 @@
+{
+  "task_id": "08668bd8-9461-41b1-b1e4-083dec3c9f18",
+  "fetched_at": "2026-09-19T03:34:55.678958+00:00",
+  "hotkeys": {
+    "h0": {
+      "hotkey": "5HT66iVw1UPgQa73toQ3PhNKQ6FvL2z1NWk2dC1EdnX5wYHW",
+      "archive": "data/inst/niome_hotkey/result/2026-09-19T01:01:00",
+      "validation_dir": "data/inst/niome_hotkey/result/2026-09-19T01:01:00",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h1": {
+      "hotkey": "5GFE8UJcTjEW7QsdHvQDUxbPsVKLfNzTcwGUPbf6Nc5o1hvb",
+      "archive": "data/inst/niome_hotkey1/result/2026-09-19T01:01:35",
+      "validation_dir": "data/inst/niome_hotkey1/result/2026-09-19T01:01:35",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h2": {
+      "hotkey": "5FP4o2SSosZbCB71TzMQC2WPxTsKQUEzghWvkcc4B4PEbUeU",
+      "archive": "data/inst/niome_hotkey2/result/2026-09-19T01:14:19",
+      "validation_dir": "data/inst/niome_hotkey2/result/2026-09-19T01:14:19",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h3": {
+      "hotkey": "5Fjzzbaf6q1fQfiprNKZtv8Twxm4J8C94aev4egCFYyrTXdf",
+      "archive": "data/inst/niome_hotkey3/result/2026-09-19T01:24:45",
+      "validation_dir": "data/inst/niome_hotkey3/result/2026-09-19T01:24:45",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h4": {
+      "hotkey": "5GBWGSM6ZTk1hzrf3cgrAc9vmkA7p1x8oEVz6QLk6wACsuC2",
+      "archive": "data/inst/niome_hotkey4/result/2026-09-19T00:49:59",
+      "validation_dir": "data/inst/niome_hotkey4/result/2026-09-19T00:49:59",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "ordinary_fallback"
+    },
+    "h5": {
+      "hotkey": "5GNz6g47q45YN471GpfdSrMSeJrzynbCgBBic759nsjLaPNn",
+      "archive": "data/inst/niome_hotkey5/result/2026-09-19T01:18:03",
+      "validation_dir": "data/inst/niome_hotkey5/result/2026-09-19T01:18:03",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h6": {
+      "hotkey": "5H5v45M2i6cFtS3Di4abh2zjWrPmuJZzNPoAYtVAXVFa6sp3",
+      "archive": "data/inst/niome_hotkey6/result/2026-09-19T01:31:31",
+      "validation_dir": "data/inst/niome_hotkey6/result/2026-09-19T01:31:31",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h7": {
+      "hotkey": "5CS8FdHr8Ddv14QHr75E5K7e9xv3wre9m66ywRHZMR8zhntN",
+      "archive": "data/inst/niome_hotkey7/result/2026-09-19T01:26:07",
+      "validation_dir": "data/inst/niome_hotkey7/result/2026-09-19T01:26:07",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h8": {
+      "hotkey": "5Cr9gJ3ukDDdxnhpyRM58gdMz7Sjuw8u58iiuYphVz1ZUGD2",
+      "archive": "data/inst/niome_hotkey8/result/2026-09-19T01:07:50",
+      "validation_dir": "reports/08668bd8/h8",
+      "existing_validation": false,
+      "submitted": true,
+      "construction": "conjunction"
+    },
+    "h9": {
+      "hotkey": "5Ge6UdGJE7BabD3bv8L9AR79rW47K3XQetcTHgaLD9NF2Vf5",
+      "archive": "data/inst/niome_hotkey9/result/2026-09-19T01:13:36",
+      "validation_dir": "data/inst/niome_hotkey9/result/2026-09-19T01:13:36",
+      "existing_validation": true,
+      "submitted": true,
+      "construction": "conjunction"
+    }
+  }
+}

@@ -275,7 +275,32 @@ JOINED_FULL_WIDTH = JW.FULL_SUB_WIDTH
 # generator and the generator is measured uniform, so choosing differently costs nothing. What it
 # buys is that the choice comes from this cell type's own recent record instead of one global
 # constant, and that record accrues either way. Do not read a selection as evidence of an edge.
-JOINED_SOURCE = "auto_rank"
+#   "uniform"      the flat 1/9 distribution over the nine width-100 classes, fed through the same
+#                  `top3_from_probs` every other strategy uses. SHIPPED 2026-09-19 by operator
+#                  request, replacing "auto_rank".
+#
+# **`uniform` is DETERMINISTIC, not random, and it resolves to 100-399 on every cell and every
+# round.** `baseline_uniform` returns 1/9 nine times and `top3_from_probs` is a STABLE argsort, so
+# with every class tied the first three indices win: classes 0/1/2. That is the same stable-sort
+# tie-break artefact CLAUDE.md documents for `fit_beta` returning 0.00 -- worth stating plainly,
+# because "uniform" reads like "a fresh random triple each round" and it is the opposite: a fixed
+# window, forever, until this constant changes.
+#
+# **That costs nothing and it is the whole reason this is safe.** Band position is free under a
+# uniform generator and the generator is measured uniform (seed min-gap median 94 observed against
+# 93 simulated), so P(hit) depends on the SIZE of the band and not on where it sits. A permanently
+# fixed 100-399 is worth exactly what a freshly-chosen triple is worth. What it removes is the
+# selection machinery on top: no winner's-curse pick over six correlated estimates that this file
+# and `strategy_rank.py` both document as inseparable (every strategy within 0.93x-1.06x of chance,
+# |z| <= 1.1 over the 160-task cold walk-forward).
+#
+# What it also removes is CHURN, and that is a real operational gain rather than a wash. Under
+# `auto_rank`/`repeat_last` the predicted classes moved between rounds, so a round could be scored
+# against a plan that no longer matched what shipped -- `round_plan.sh` logs exactly that as
+# "n hotkey(s) built a window the plan did not assign ... the plan was rewritten mid-round". With a
+# constant triple the plan is the same file every hour and that failure mode is gone. The fleet's
+# band layout becomes fully static: h0-h5 tile 100-399, h6-h9 tile 400-999.
+JOINED_SOURCE = "uniform"
 SEED_MODEL_PREDICTION = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      "seed_model", "next_prediction.json")
 
@@ -334,6 +359,34 @@ def _auto_rank_windows(cell, rows):
         return strategy_rank.select(rows, cell)
     except Exception as exc:
         return None, f"strategy_rank failed ({exc})"
+
+
+def _uniform_windows(cell, rows):
+    """The three classes a flat distribution bets on -> (windows, note), or None to fall back.
+
+    Delegates to `strategy_rank.next_windows(..., "uniform")` rather than hardcoding [0, 1, 2], so
+    this stays the SAME object the rank table scores and the walk-forward measured. If
+    `baseline_uniform` or the `top3_from_probs` tie-break ever changes, the shipped window follows
+    instead of silently diverging from the thing that was priced.
+
+    The import is lazy and guarded for the reason `_auto_rank_windows` gives: this runs from an
+    hourly cron the miner depends on for its window, so an unimportable `seed_model.data` must
+    degrade rather than kill the run. The one difference is the LAST resort -- `next_windows`
+    requires history for the cell in order to build features, which `uniform` does not actually use
+    (it ignores its arguments and returns 1/9), so a cell with no history still gets the correct
+    answer here instead of silently falling through to `rank_freq`, which is a different scheme.
+    """
+    try:
+        import strategy_rank
+        wins, note = strategy_rank.next_windows(rows, cell, "uniform")
+        if wins is not None:
+            return wins, note
+        fell = note
+    except Exception as exc:
+        fell = f"strategy_rank unusable ({exc})"
+    # History-free fallback. `uniform` is a constant function of nothing, so there is always a
+    # right answer; refusing to give it would hand the round to a scheme the operator did not pick.
+    return sorted(range(3)), f"flat 1/9, computed without history ({fell})"
 
 
 def _repeat_last_windows(cell, rows):
@@ -574,6 +627,7 @@ def main():
             src = "rank_freq"
             picker = {"seed_model": _seed_model_windows,
                       "repeat_last": _repeat_last_windows,
+                      "uniform": _uniform_windows,
                       "auto_rank": _auto_rank_windows}.get(JOINED_SOURCE)
             if picker:
                 got, note = picker(cell, rows)
@@ -690,6 +744,7 @@ def main():
             src = "rank_freq"
             picker = {"seed_model": _seed_model_windows,
                       "repeat_last": _repeat_last_windows,
+                      "uniform": _uniform_windows,
                       "auto_rank": _auto_rank_windows}.get(JOINED_SOURCE)
             if picker:
                 got, note = picker(cell, rows)

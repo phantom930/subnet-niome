@@ -237,13 +237,13 @@ logger = logging.getLogger(__name__)
 #     numbers were measured at, so none of this old wall data actually applies here — re-measure with
 #     the wide-cut bank before reading either direction as established.
 CELL_CONFIG: dict[str, dict] = {
-    "HEK293": {"band_k": 9, "group_size": 80, "band_width": 150, "light_cell_rows": 12,
+    "HEK293": {"band_k": 8, "group_size": 80, "band_width": 300, "light_cell_rows": 12,
                "band_cell_aware": True},
-    "CD34+_HSPC": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "CD34+_HSPC": {"band_k": 11, "group_size": 100, "band_width": 300, "light_cell_rows": 6,
                    "band_cell_aware": True},
-    "K562": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "K562": {"band_k": 11, "group_size": 100, "band_width": 300, "light_cell_rows": 6,
              "band_cell_aware": True},
-    "HUDEP-2": {"band_k": 12, "group_size": 100, "band_width": 150, "light_cell_rows": 6,
+    "HUDEP-2": {"band_k": 11, "group_size": 100, "band_width": 300, "light_cell_rows": 6,
                 "band_cell_aware": True},
 }
 

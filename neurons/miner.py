@@ -441,7 +441,16 @@ class Miner(BaseMinerNeuron):
     # whose narrow-span sibling measured 228-258s cold. 600 leaves 410s. This costs nothing in
     # practice: HEK293's conjunction was already prefetch-only, since the ~225s in-TTL budget
     # cleared neither gate.
-    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 600.0, "CD34+_HSPC": 700.0, "K562": 700.0,
+    # K562 and CD34+_HSPC dropped 700 -> 450 on 2026-09-20, with the erythroid cells coming
+    # off the 900-seed cut. The 700s gates were set when their cold build was 386-410s on the
+    # wide cut; on the narrow one `coldbuild.py` measures 199s/182s (max 201/188). The rung
+    # receives `budget - ALL_HDR_MIN_BUDGET_S`, so 450 leaves 260s against a 201s max cold
+    # build -- a 29% margin. Leaving them at 700 was not harmless: the gate passes either way
+    # on a fully prefetched round (budget 900), so its ONLY effect is to block the rung on a
+    # partially prefetched one -- exactly the rounds a now-2x-faster build could finish.
+    # HEK293 stays at 600: its own cut is a 300-seed window whose bank sits AT the
+    # `bank_keep` cap and measured 228-258s cold, so 410s of build budget is the right margin.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 600.0, "CD34+_HSPC": 450.0, "K562": 450.0,
                                 "HUDEP-2": 450.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is

@@ -681,7 +681,29 @@ predicted 9. Do not price a joined window off the contiguous sweep.
 
 **Where the three joined classes come from.** `JOINED_SOURCE` picks the scheme, falling back to
 `_rank_freq_windows` (the cumulative-rank-frequency one) whenever the chosen picker returns nothing.
-**It is on `"auto_rank"`, not `"seed_model"` — this entry said `"seed_model"` and was stale.** The
+**2026-09-19: it is on `"uniform"`.** Set by operator request, replacing `"auto_rank"`. The
+`uniform` strategy is `baseline_uniform` -- a flat 1/9 over the nine width-100 classes -- fed
+through the same `top3_from_probs` every other strategy uses, and **it is DETERMINISTIC, not
+random**: `top3_from_probs` is a STABLE argsort, so with all nine classes tied the first three
+indices win and every cell gets classes 0/1/2, i.e. **100-399, every round, forever**. That is the
+same stable-sort tie-break artefact this file records for `fit_beta` returning 0.00, and it is
+worth saying out loud because "uniform" reads like "a fresh random triple each round" and it is the
+exact opposite.
+
+**It costs nothing, which is the point.** Band position is free under a uniform generator and the
+generator is measured uniform, so `P(hit)` depends on the band's SIZE and not on where it sits -- a
+permanently fixed 100-399 is worth what a freshly-drawn triple is worth. What it drops is the
+selection layer that this file and `strategy_rank.py` both document as inseparable noise (every
+strategy within 0.93x-1.06x of chance, |z| <= 1.1 over the 160-task cold walk-forward; the model's
+paired difference against `uniform` is +0.006 seeds, p = 0.497). And it removes the CHURN, which is
+a real operational gain rather than a wash: the predicted classes no longer move between rounds, so
+`round_plan.sh`'s "n hotkey(s) built a window the plan did not assign ... the plan was rewritten
+mid-round" can no longer happen. The fleet's band layout is now fully static — h0-h5 tile 100-399
+at stride 50, h6-h9 tile 400-999 at stride 150, union 900/900 on all four cells.
+
+**The paragraph below describes the superseded `auto_rank` setting** and is kept because the
+reasoning is what justifies the switch. It was on `"auto_rank"`, not `"seed_model"` — an earlier
+form of this entry said `"seed_model"` and was stale. The
 three pickers are `"seed_model"` (`predicted_classes` from
 [seed_model/next_prediction.json](seed_model/next_prediction.json), a 152k-param SeedFormer
 transformer, one finetuned checkpoint per cell type), `"repeat_last"`, and `"auto_rank"`.
@@ -1011,6 +1033,70 @@ The cheaper route to the same band ⊆ cut consistency, if the floor loss is jud
 keep HEK293 narrow and widen its cut to the union of the predicted 300 and that hotkey's own
 150-seed band window (450 seeds) rather than all 900 — untested, and it is a third arm, not a
 revert.
+
+**2026-09-19: sub-window 30 at stride 30 — ten DISJOINT candidate windows, and `REST_HK` is
+empty.** Set by operator request, with `band_k` back to 11 (erythroid) / 8 (HEK293), group 100/80
+and `light_cell_rows` 6/12 unchanged. `BAND_SUB_WIDTH` 150 -> 30 and `BAND_STRIDE` 50/150 -> 30, so
+10 x 30 = 300 tiles the predicted window exactly once with **no overlap at all**. Every previous
+layout staggered overlapping windows and got ~86% distinct bands; this one makes disjointness a
+property of the tiling rather than a hope. The complement tier goes empty as a consequence — all ten
+hotkeys are needed to tile 300 at width 30 — so the fleet's bands sit inside 100-399 again and a
+round drawing outside the prediction has no hotkey on it. Under a uniform generator that costs
+nothing on `P(hit)`, which depends on |B| and not position.
+
+**Measured over the latest 10 tasks** ([width30_test.py](width30_test.py)), `w150` carried as the
+control at the same k, stride, hotkeys and the same prepare, so only the width differs. Cheap
+because `choose_band` and `cas9_cell_probe` restrict to their `candidates` by column lookup, so one
+`hdr_compliance` pass over the whole 300 is valid for every sub-window of it:
+
+| | **w30 (shipped)** | w150 (control) |
+|---|---|---|
+| hotkey-builds | **100/100** | 100/100 |
+| tasks with all ten building | **10/10** | 10/10 |
+| band reached | always = k | always = k |
+| pool margin vs group | **1.63-2.24x** | 1.99-2.64x |
+| **mean band union** | **104/900** | **70/900** |
+| `P(band hit)` per round | **30.8%** | 21.6% |
+| tasks with a real seed hit | 5/10 | 4/10 |
+
+**Three results.**
+
+* **Availability is a non-issue and the width sweep's warning does not transfer.** k=11 forms from
+  30 candidates on 100 of 100 hotkey-builds. The falsified-table row "narrowing the window ... the
+  pool FALLS (1691 at width 10 vs 9290 at width 100)" measures the **Cas9** pool; the quantity that
+  gates `choose_band` is the surviving **Cas12a** pool, and it only loses ~19% of its margin here.
+  At 1.63x minimum this config is markedly LESS availability-marginal than the k=12 arm it replaces
+  (1.14-1.23x).
+* **Union is exactly 10 x k on every task** — 110 erythroid, 80 HEK293 — against the control's
+  72-79 and 46-50, i.e. **~35% of the control's band seats are duplicated across siblings**. So at
+  equal k and equal headcount the narrow tiling covers **1.49x more seed space**, worth **+43% on
+  band-hit frequency**. The union figures are deterministic and hold 10/10; the observed hit counts
+  (5 vs 4, paired 2W/1L/7T) are consistent but are not themselves significant at n=10.
+* **The FLOOR is now measured too, and it costs almost nothing.** [floor30.py](floor30.py),
+  CD34+_HSPC, 3 contracts x 2 hotkeys (h0 at 100-129 and h5 at 250-279, opposite ends of the
+  predicted space so a per-slice artefact would show as a disagreement) x 2 arms, full builds priced
+  by `widecut_price.evaluate`. Per-hotkey E[share] is the right unit because k is unchanged between
+  arms, so `P(band hit)` cancels and what remains is the clean set and term 1:
+
+  | | **w30** | w150 |
+  |---|---|---|
+  | clean set /900 | **129.0** | 139.2 |
+  | `w x fid` | 209.2 | 208.1 |
+  | pool margin | 1.87x | 2.12x |
+  | per-hotkey E[own] | **0.000120** | 0.000121 |
+
+  **The clean set thins 7.3% and the value moves 0.9%** (0.991x, 0W/3L/3T, 6/6 built). A clean seed
+  is worth ~0.15-0.20 against a dirty ~0.10, so relocating 10 seeds of 900 between those regimes is
+  worth nearly nothing — `floor_price.py` arm A says exactly this, and 3 of 6 pairs came out as
+  EXACT ties on the step curve. Read the clean-set arithmetic (deterministic, 6/6) as the result;
+  the 0.991x itself is not distinguishable from 1.0 at n=6.
+
+  **Fleet: 0.991x per hotkey x 1.486x coverage = 1.473x**, and that is CONSERVATIVE. The
+  multiplication treats coverage as a clean multiplier, but at w150 one drawn seed can be hit by
+  several hotkeys at once — they take adjacent ranks and collect the TAIL of `SCORE_DISTRIBUTION`
+  rather than separate near-top placements. Disjoint bands make every w30 hit a solo placement, and
+  that asymmetry is not in the 1.486x. Measured on CD34+_HSPC only; HEK293's margin is healthier
+  (2.23x against 1.87x) so the same conclusion is expected but unverified there.
 
 **2026-09-18: ten hotkeys, and the band space is the FULL 900 split into two groups.** Until now
 every band hotkey drew its sub-window from the plan's three predicted classes, so the other 600

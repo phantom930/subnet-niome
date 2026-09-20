@@ -1,0 +1,288 @@
+
+====================================================================================================
+  submission.json — task 08668bd8-9461-41b1-b1e4-083dec3c9f18 — seed 709   (stage-3 / stage-4 seed = 709)
+====================================================================================================
+
+  STAGE 1 — structural gate
+    submitted                  250
+    passed                     250
+    rejected                   0
+    reasons                    none
+    unique experiment_ids      250 / 250
+    unique designs             250 / 250
+
+  STAGE 2 — structural score
+    accessibility              0.87
+    guide lengths              {20: 125, 23: 125}
+    gc                         min=0.4000     mean=0.4929     median=0.5000     max=0.6000
+    gc_score                   min=0.8000     mean=0.9236     median=0.9565     max=1.0000
+    distance_to_mutation       min=0.0000     mean=85.3480    median=19.0000    max=373.0000
+    dist_score                 min=0.3936     mean=0.8360     median=0.9536     max=1.0000
+    consistency                min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    offtarget_factor           {1.0: 250}
+    structural_score           min=0.6476     mean=0.8908     median=0.9282     max=0.9991
+    weighted_score             min=0.4209     mean=0.9349     median=1.0627     max=1.1528
+    TOTAL_WEIGHTED_SCORE       233.721638
+
+  STAGE 3 — simulated outcomes
+    outcomes                   {'MH_NHEJ': 47, 'HDR': 130, 'no_cut': 4, 'BLUNT_NHEJ': 69}
+    cut_rate                   0.9840
+    cut_p                      min=0.9600     mean=0.9780     median=0.9900     max=0.9900
+    cas mix                    {'Cas12a': 100, 'Cas9': 150}
+      cut_p Cas12a             min=0.9600  mean=0.9600  max=0.9600  (ceiling 0.96)
+      cut_p Cas9               min=0.9900  mean=0.9900  max=0.9900  (ceiling 0.99)
+    expected no_cut rows       5.50  (sum of 1 - cut_p, any seed)
+    below the cut_p floor      0
+    energy                     min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    mh = True                  126
+    mh x outcome               {'mh=False|BLUNT_NHEJ': 41, 'mh=False|HDR': 63, 'mh=False|MH_NHEJ': 18, 'mh=False|no_cut': 2, 'mh=True|BLUNT_NHEJ': 28, 'mh=True|HDR': 67, 'mh=True|MH_NHEJ': 29, 'mh=True|no_cut': 2}
+    indel_length               min=0.0000     mean=1.6320     median=0.0000     max=21.0000
+    indel histogram            {0: 134, 1: 48, 2: 22, 3: 13, 4: 6, 5: 4, 6: 3, 7: 3, 8: 3, 9: 2, 10: 2, 11: 2, 12: 3, 13: 3, 14: 1, 21: 1}
+    construction conformance   130 / 250 (52.0%)
+      HBB:c.394C>A             n=194  w=1.155 cut=0.990 energy=1.000 indel=1.680
+      NC_000011.10:g.5226616   n=56   w=0.65  cut=0.964 energy=1.000 indel=1.464
+
+  STAGE 4 — consistency (RandomForest under KFold)
+    rows joined on id          250
+      is_cut                   r2=-0.015217   nmae=0.294604
+      is_hdr                   r2=-0.120072   nmae=0.939161
+      indel_length             r2=-0.269052   nmae=0.689674
+    avg_r2                     -0.134780
+    avg_nmae                   0.641146
+    consistency_score          10.765609
+    CONSISTENCY_FACTOR         0.107656
+
+  STAGE 5 — distribution fidelity
+      mutation_coverage        0.767404
+      cas_system_coverage      0.970951
+      strand_coverage          0.998846
+      joint_coverage           0.864730
+      kmer_diversity           0.988465
+      distinct_guide           1.000000
+    counts                     {'mutation_counts': {'NC_000011.10:g.5226616C>A': 56, 'HBB:c.394C>A': 194}, 'cas_system_counts': {'Cas12a': 100, 'Cas9': 150}, 'strand_counts': {'-': 130, '+': 120}}
+    JSD (not scored)           0.008001
+    Wasserstein (not scored)   0.390000
+    DISTRIBUTION_FIDELITY      0.927385
+
+  FINAL
+    final_score                23.334458  =  233.7216 x 0.107656 x 0.927385
+
+
+====================================================================================================
+  submission.json — task 08668bd8-9461-41b1-b1e4-083dec3c9f18 — seed 369   (stage-3 / stage-4 seed = 369)
+====================================================================================================
+
+  STAGE 1 — structural gate
+    submitted                  250
+    passed                     250
+    rejected                   0
+    reasons                    none
+    unique experiment_ids      250 / 250
+    unique designs             250 / 250
+
+  STAGE 2 — structural score
+    accessibility              0.87
+    guide lengths              {20: 125, 23: 125}
+    gc                         min=0.4000     mean=0.4929     median=0.5000     max=0.6000
+    gc_score                   min=0.8000     mean=0.9236     median=0.9565     max=1.0000
+    distance_to_mutation       min=0.0000     mean=85.3480    median=19.0000    max=373.0000
+    dist_score                 min=0.3936     mean=0.8360     median=0.9536     max=1.0000
+    consistency                min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    offtarget_factor           {1.0: 250}
+    structural_score           min=0.6476     mean=0.8908     median=0.9282     max=0.9991
+    weighted_score             min=0.4209     mean=0.9349     median=1.0627     max=1.1528
+    TOTAL_WEIGHTED_SCORE       233.721638
+
+  STAGE 3 — simulated outcomes
+    outcomes                   {'HDR': 135, 'BLUNT_NHEJ': 69, 'MH_NHEJ': 42, 'no_cut': 4}
+    cut_rate                   0.9840
+    cut_p                      min=0.9600     mean=0.9780     median=0.9900     max=0.9900
+    cas mix                    {'Cas12a': 100, 'Cas9': 150}
+      cut_p Cas12a             min=0.9600  mean=0.9600  max=0.9600  (ceiling 0.96)
+      cut_p Cas9               min=0.9900  mean=0.9900  max=0.9900  (ceiling 0.99)
+    expected no_cut rows       5.50  (sum of 1 - cut_p, any seed)
+    below the cut_p floor      0
+    energy                     min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    mh = True                  136
+    mh x outcome               {'mh=False|BLUNT_NHEJ': 40, 'mh=False|HDR': 61, 'mh=False|MH_NHEJ': 11, 'mh=False|no_cut': 2, 'mh=True|BLUNT_NHEJ': 29, 'mh=True|HDR': 74, 'mh=True|MH_NHEJ': 31, 'mh=True|no_cut': 2}
+    indel_length               min=0.0000     mean=1.6000     median=0.0000     max=22.0000
+    indel histogram            {0: 139, 1: 50, 2: 14, 3: 10, 4: 7, 5: 3, 6: 5, 7: 7, 8: 3, 9: 3, 10: 2, 11: 1, 12: 1, 13: 2, 14: 2, 22: 1}
+    construction conformance   135 / 250 (54.0%)
+      HBB:c.394C>A             n=194  w=1.155 cut=0.985 energy=1.000 indel=1.515
+      NC_000011.10:g.5226616   n=56   w=0.65  cut=0.982 energy=1.000 indel=1.893
+
+  STAGE 4 — consistency (RandomForest under KFold)
+    rows joined on id          250
+      is_cut                   r2=-0.021526   nmae=0.274728
+      is_hdr                   r2=-0.349717   nmae=1.014214
+      indel_length             r2=-0.417391   nmae=0.701468
+    avg_r2                     -0.262878
+    avg_nmae                   0.663470
+    consistency_score          10.095906
+    CONSISTENCY_FACTOR         0.100959
+
+  STAGE 5 — distribution fidelity
+      mutation_coverage        0.767404
+      cas_system_coverage      0.970951
+      strand_coverage          0.998846
+      joint_coverage           0.864730
+      kmer_diversity           0.988465
+      distinct_guide           1.000000
+    counts                     {'mutation_counts': {'NC_000011.10:g.5226616C>A': 56, 'HBB:c.394C>A': 194}, 'cas_system_counts': {'Cas12a': 100, 'Cas9': 150}, 'strand_counts': {'-': 130, '+': 120}}
+    JSD (not scored)           0.008740
+    Wasserstein (not scored)   0.550000
+    DISTRIBUTION_FIDELITY      0.927385
+
+  FINAL
+    final_score                21.882876  =  233.7216 x 0.100959 x 0.927385
+
+
+====================================================================================================
+  submission.json — task 08668bd8-9461-41b1-b1e4-083dec3c9f18 — seed 545   (stage-3 / stage-4 seed = 545)
+====================================================================================================
+
+  STAGE 1 — structural gate
+    submitted                  250
+    passed                     250
+    rejected                   0
+    reasons                    none
+    unique experiment_ids      250 / 250
+    unique designs             250 / 250
+
+  STAGE 2 — structural score
+    accessibility              0.87
+    guide lengths              {20: 125, 23: 125}
+    gc                         min=0.4000     mean=0.4929     median=0.5000     max=0.6000
+    gc_score                   min=0.8000     mean=0.9236     median=0.9565     max=1.0000
+    distance_to_mutation       min=0.0000     mean=85.3480    median=19.0000    max=373.0000
+    dist_score                 min=0.3936     mean=0.8360     median=0.9536     max=1.0000
+    consistency                min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    offtarget_factor           {1.0: 250}
+    structural_score           min=0.6476     mean=0.8908     median=0.9282     max=0.9991
+    weighted_score             min=0.4209     mean=0.9349     median=1.0627     max=1.1528
+    TOTAL_WEIGHTED_SCORE       233.721638
+
+  STAGE 3 — simulated outcomes
+    outcomes                   {'HDR': 135, 'BLUNT_NHEJ': 78, 'MH_NHEJ': 32, 'no_cut': 5}
+    cut_rate                   0.9800
+    cut_p                      min=0.9600     mean=0.9780     median=0.9900     max=0.9900
+    cas mix                    {'Cas12a': 100, 'Cas9': 150}
+      cut_p Cas12a             min=0.9600  mean=0.9600  max=0.9600  (ceiling 0.96)
+      cut_p Cas9               min=0.9900  mean=0.9900  max=0.9900  (ceiling 0.99)
+    expected no_cut rows       5.50  (sum of 1 - cut_p, any seed)
+    below the cut_p floor      0
+    energy                     min=1.0000     mean=1.0000     median=1.0000     max=1.0000
+    mh = True                  131
+    mh x outcome               {'mh=False|BLUNT_NHEJ': 34, 'mh=False|HDR': 69, 'mh=False|MH_NHEJ': 11, 'mh=False|no_cut': 5, 'mh=True|BLUNT_NHEJ': 44, 'mh=True|HDR': 66, 'mh=True|MH_NHEJ': 21}
+    indel_length               min=0.0000     mean=1.2240     median=0.0000     max=12.0000
+    indel histogram            {0: 140, 1: 61, 2: 13, 3: 7, 4: 7, 5: 4, 6: 4, 7: 4, 8: 4, 10: 2, 11: 2, 12: 2}
+    construction conformance   135 / 250 (54.0%)
+      HBB:c.394C>A             n=194  w=1.155 cut=0.990 energy=1.000 indel=1.072
+      NC_000011.10:g.5226616   n=56   w=0.65  cut=0.946 energy=1.000 indel=1.750
+
+  STAGE 4 — consistency (RandomForest under KFold)
+    rows joined on id          250
+      is_cut                   r2=-0.188302   nmae=0.229479
+      is_hdr                   r2=-0.302090   nmae=0.973317
+      indel_length             r2=-0.331465   nmae=0.661345
+    avg_r2                     -0.273952
+    avg_nmae                   0.621380
+    consistency_score          11.358597
+    CONSISTENCY_FACTOR         0.113586
+
+  STAGE 5 — distribution fidelity
+      mutation_coverage        0.767404
+      cas_system_coverage      0.970951
+      strand_coverage          0.998846
+      joint_coverage           0.864730
+      kmer_diversity           0.988465
+      distinct_guide           1.000000
+    counts                     {'mutation_counts': {'NC_000011.10:g.5226616C>A': 56, 'HBB:c.394C>A': 194}, 'cas_system_counts': {'Cas12a': 100, 'Cas9': 150}, 'strand_counts': {'-': 130, '+': 120}}
+    JSD (not scored)           0.021034
+    Wasserstein (not scored)   0.580000
+    DISTRIBUTION_FIDELITY      0.927385
+
+  FINAL
+    final_score                24.619759  =  233.7216 x 0.113586 x 0.927385
+
+  MEAN OVER 3 ROUND SEEDS [709, 369, 545] — this is what the validator scores
+  ----------------------------------------------------------------------------
+  total_weighted_score                233.7216   per-seed 233.7216 .. 233.7216
+  consistency_factor                    0.1074   per-seed 0.1010 .. 0.1136
+  distribution_fidelity_factor          0.9274   per-seed 0.9274 .. 0.9274
+  final_score                          23.2790   per-seed 21.8829 .. 24.6198
+
+
+====================================================================================================
+  STAGE 4 DETAIL — RandomForest under KFold (fold seed 709)
+====================================================================================================
+    rows joined 250   features gc, distance, gc_score, dist_score, consistency, energy, mh
+    constant feature columns   ['consistency', 'energy']   (a constant column carries no signal for the forest)
+
+    is_cut   unique=2  y_std=0.125475
+      r2   mean=-0.015217  std=0.018643
+      mae  mean=0.036965  std=0.012258  nmae=0.294604  residual_std=0.142009
+      fold   n_test     r2          mae      residual_std   pred_mean
+        1        50   -0.037248   0.036425   0.196202     0.998983
+        2        50   +0.000000   0.054106   0.116389     0.949933
+        3        50   -0.038835   0.038248   0.196842     0.996700
+        4        50   +0.000000   0.015865   0.073905     0.985180
+        5        50   +0.000000   0.040183   0.126705     0.959438
+      importances  dist_score=0.385  distance=0.366  mh=0.125  gc=0.097  gc_score=0.027  consistency=0.000  energy=0.000
+
+    is_hdr   unique=2  y_std=0.499600
+      r2   mean=-0.120072  std=0.105413
+      mae  mean=0.469205  std=0.025518  nmae=0.939161  residual_std=0.526769
+      fold   n_test     r2          mae      residual_std   pred_mean
+        1        50   -0.161903   0.496123   0.540676     0.527536
+        2        50   -0.213232   0.477752   0.541082     0.488894
+        3        50   -0.231058   0.492751   0.558257     0.543650
+        4        50   +0.038693   0.430686   0.488672     0.528737
+        5        50   -0.032860   0.448711   0.505155     0.569152
+      importances  distance=0.293  dist_score=0.286  gc=0.190  mh=0.120  gc_score=0.111  consistency=0.000  energy=0.000
+
+    indel_length   unique=16  y_std=3.104928
+      r2   mean=-0.269052  std=0.492460
+      mae  mean=2.141388  std=0.184822  nmae=0.689674  residual_std=3.193420
+      fold   n_test     r2          mae      residual_std   pred_mean
+        1        50   -1.215988   2.268436   2.720509     2.278997
+        2        50   -0.191648   1.944830   3.165228     1.500064
+        3        50   +0.121582   1.974121   3.196248     1.517111
+        4        50   -0.175617   2.086557   3.194453     1.570302
+        5        50   +0.116409   2.432997   3.690661     1.917174
+      importances  distance=0.283  dist_score=0.281  gc=0.184  mh=0.137  gc_score=0.115  consistency=0.000  energy=0.000
+
+    avg_r2 -0.134780   avg_nmae 0.641146
+    consistency_score 10.765609  = 0.7*max(avg_r2,0)*100 (0.0000) + 0.3*(1-avg_nmae)*100 (10.7656)
+    CONSISTENCY_FACTOR 0.107656
+
+====================================================================================================
+  STAGE 5 DETAIL — distribution fidelity, term by term
+====================================================================================================
+
+    term                              value    ^(1/6)    factor if 1.0   final if 1.0   cost now
+    mutation_coverage              0.767404  0.956836        0.969221        24.3871     1.0527
+    cas_system_coverage            0.970951  0.995099        0.931953        23.4494     0.1149
+    strand_coverage                0.998846  0.999807        0.927564        23.3390     0.0045
+    joint_coverage                 0.864730  0.976068        0.950124        23.9066     0.5721
+    kmer_diversity                 0.988465  0.998068        0.929180        23.3796     0.0452
+    distinct_guide                 1.000000  1.000000        0.927385        23.3345     0.0000
+
+    DISTRIBUTION_FIDELITY 0.927385   (validator: None)
+
+    mutation coverage — 2/2 cells occupied, H=0.767404 / 1.000000 = 0.767404
+      counts {'HBB:c.394C>A': 194, 'NC_000011.10:g.5226616C>A': 56}
+
+    cas_system coverage — 2/2 cells occupied, H=0.970951 / 1.000000 = 0.970951
+      counts {'Cas9': 150, 'Cas12a': 100}
+
+    strand coverage — 2/2 cells occupied, H=0.998846 / 1.000000 = 0.998846
+      counts {'+': 120, '-': 130}
+
+    joint coverage — 8/8 cells occupied, H=2.594189 / 3.000000 = 0.864730
+      counts {'HBB:c.394C>A | Cas9 | +': 69, 'HBB:c.394C>A | Cas9 | -': 69, 'HBB:c.394C>A | Cas12a | +': 30, 'HBB:c.394C>A | Cas12a | -': 26, 'NC_000011.10:g.5226616C>A | Cas9 | +': 6, 'NC_000011.10:g.5226616C>A | Cas9 | -': 6, 'NC_000011.10:g.5226616C>A | Cas12a | +': 15, 'NC_000011.10:g.5226616C>A | Cas12a | -': 29}
+
+    kmer diversity — 2471 distinct of 2625 12-mers, H=11.227081 / 11.358102 = 0.988465
+      most repeated [['CCTATCAGAAAG', 7], ['ATCAGAAAGTGG', 5], ['GCCTATCAGAAA', 5], ['AATTCACCCCAC', 4], ['TGCCTATCAGAA', 4]]
+    distinct guides — 250 of 250 = 1.000000
+
