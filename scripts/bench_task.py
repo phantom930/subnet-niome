@@ -62,8 +62,9 @@ DEFAULT_SEED_COUNT = 3
 
 # The closed-round history, and the only task endpoint that needs no hotkey signature: /current is
 # what the validator signs for, and it answers "Missing required headers" to an unsigned GET. Both
-# of these are plain public reads — nothing identifying is sent.
-TASK_HISTORY_URL = f"{settings.BASE_URL}/api/v3/tasks"
+# of these are plain public reads — nothing identifying is sent. Shared with the miner, which reads
+# the same endpoint to keep its drawn-seed ledger current.
+TASK_HISTORY_URL = settings.TASK_HISTORY_URL
 
 # Every stage constant that names a file under data/, and the basename it keeps inside the work
 # directory. The stages do `from ...settings import CONTRACT_PATH`, so the name is bound in each
@@ -254,10 +255,18 @@ def refresh_snapshot(replace: bool = False) -> None:
         "tasks": tasks,
     })
     write_json(CELL_TYPE_SNAPSHOT, cell_types)
+    # The ledger the miner's seed draw avoids. Updated from the merged snapshot rather than from
+    # `fetched`, so a re-fetch after the ledger was deleted rebuilds it from the whole history
+    # this repo has ever seen instead of from the backend's current window.
+    ledger = design.record_drawn_seeds(tasks)
 
     print()
     print(f"  {TASK_SNAPSHOT.relative_to(PROJECT_ROOT)}: {len(tasks)} tasks "
           f"(+{added} new, {restamped} newly stamped, {len(unstamped)} still unstamped)")
+    if ledger:
+        print(f"  {settings.MINER_DRAWN_SEEDS_PATH}: {ledger['tasks_recorded']} rounds since "
+              f"{ledger.get('since') or 'the first recorded task'}, "
+              f"{ledger['undrawn']} seed(s) the backend has never stamped")
     table = ", ".join(
         f"{name} {body.get('accessibility')}" for name, body in sorted(cell_types.items())
     )

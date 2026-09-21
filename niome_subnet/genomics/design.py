@@ -213,6 +213,7 @@ import random
 import time
 
 from collections import Counter, defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -527,7 +528,9 @@ def plan_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int]
     1. the seeds listed in ``seeds.json`` when it is ``"enabled": true`` — an operator who lists
        seeds is asserting something the build cannot work out for itself, so they go first and are
        never given up in favour of a random draw;
-    2. random seeds from ``SEED_SUPPORT`` to make up the count.
+    2. ``draw_seeds`` to make up the count — a random draw, but over the seeds the backend has
+       never been recorded stamping rather than over all of ``SEED_SUPPORT``. A listed seed is
+       never dropped for having been stamped before: the operator's claim outranks the ledger.
 
     ``"enabled": false`` means "ignore the listed seeds", not "do not pin": the round still bets,
     just on its own draws. ``"seed_count": 0`` is the off switch, and so is
@@ -555,8 +558,7 @@ def plan_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int]
             seeds_path or settings.MINER_SEEDS_PATH, len(chosen), count,
         )
     elif len(chosen) < count:
-        remaining = [seed for seed in SEED_SUPPORT if seed not in set(chosen)]
-        chosen += random.sample(remaining, count - len(chosen))
+        chosen += draw_seeds(count - len(chosen), exclude=chosen)
 
     source = "file+drawn" if (enabled and listed) else "drawn"
     logger.info(
@@ -608,14 +610,180 @@ def record_generated_seeds(
         logger.warning(f"Could not record the generated seeds in {path} ({error})")
 
 
-def draw_seeds(count: int = 1) -> list[int]:
-    """``count`` seeds drawn from ``SEED_SUPPORT`` — a guess at what the backend will stamp.
+def read_drawn_counts(path: str | None = None) -> dict[int, int]:
+    """How often the backend has stamped each seed, from the ledger ``record_drawn_seeds`` keeps.
 
-    Right with probability ``count/900`` per seed. What a wrong guess costs is measured in
+    ``{seed: times_stamped}``, and ``{}`` for a file that is absent or unreadable — which is a
+    working state, not an error: ``draw_seeds`` then treats every seed as unstamped and draws from
+    the whole support, exactly as it did before the ledger existed. Read fresh on every call so the
+    file can be rebuilt or hand-edited without restarting a long-lived miner.
+    """
+    path = path or settings.MINER_DRAWN_SEEDS_PATH
+    if not Path(path).exists():
+        return {}
+    try:
+        with open(path) as ledger_file:
+            document = json.load(ledger_file)
+        raw = document.get("counts", {}) if isinstance(document, dict) else document
+        # A bare list of seeds is accepted too — it is the natural thing to hand-write, and says
+        # "these have been used" without claiming to know how often.
+        if isinstance(raw, list):
+            return {int(seed): 1 for seed in raw}
+        return {int(seed): int(times) for seed, times in raw.items()}
+    except Exception as error:
+        logger.warning(
+            f"Could not read the drawn-seed ledger {path} ({error}); drawing from the whole support"
+        )
+        return {}
+
+
+def stamped_seeds(tasks: Iterable[dict], since: str | None = None) -> tuple[Counter, list[str], str]:
+    """Count the seeds stamped across ``tasks``, as the backend's task history returns them.
+
+    Returns ``(counts, counted_task_ids, latest_created_at)``. A task is counted only once it
+    carries a seed: ``seed: 0`` is the placeholder for a round the backend has not stamped yet,
+    and counting it would put 0 in the ledger and teach the draw nothing. The ids returned are
+    exactly the rounds that contributed, so the caller marking them as folded in cannot disagree
+    with the counts — a task skipped by ``since`` must not be recorded as counted, or widening
+    ``since`` later would silently find nothing to add.
+
+    ``since`` keeps the ledger inside one generator regime. The round went from one seed to three
+    on 2026-08-27T06:54, and the draw before that reached far outside [100, 1000] (seeds up to
+    9885 on 2026-08-03/04), so seeds stamped by the old generator are not evidence about what the
+    current one has used up. Widen it to "" to treat the whole recorded history as used.
+    """
+    counts: Counter = Counter()
+    counted: list[str] = []
+    latest = ""
+    for task in tasks:
+        created_at = str(task.get("created_at") or "")
+        if since and created_at < since:
+            continue
+        contract = (task.get("content") or {}).get("contract") or {}
+        seeds = parse_seeds(contract)
+        if not seeds or not task.get("id"):
+            continue
+        counts.update(seeds)
+        counted.append(str(task["id"]))
+        latest = max(latest, created_at)
+    return counts, counted, latest
+
+
+def record_drawn_seeds(tasks: Iterable[dict], path: str | None = None) -> dict:
+    """Merge the seeds stamped across ``tasks`` into the ledger, and return what it now holds.
+
+    Merge rather than replace: the history endpoint serves a rolling window, so a round that has
+    aged out of it must not age out of the ledger — a seed the backend used in August is still a
+    seed it has used. That makes the ledger the one piece of miner state that is cumulative, and
+    the reason it is a file rather than a fetch: an hour of history is not the question it answers.
+
+    Merging by *count* would double-count every round still in the window on the next refresh, so
+    the union is taken per task id — ``task_ids`` records which rounds are already folded in. A
+    round that was still unstamped when it was last seen never entered that set, so it is folded
+    in by whichever refresh first sees its seed.
+
+    Best-effort throughout, like ``record_generated_seeds``: a ledger that cannot be written costs
+    the draw its avoidance, and nothing else.
+    """
+    path = path or settings.MINER_DRAWN_SEEDS_PATH
+    try:
+        document = {}
+        if Path(path).exists():
+            with open(path) as ledger_file:
+                loaded = json.load(ledger_file)
+            if isinstance(loaded, dict):
+                document = loaded
+
+        since = document.get("since") or None
+        known_ids = set(document.get("task_ids") or [])
+        fresh = [task for task in tasks if task.get("id") not in known_ids]
+        counts, counted, latest = stamped_seeds(fresh, since)
+
+        merged = Counter({int(seed): int(times)
+                          for seed, times in (document.get("counts") or {}).items()})
+        merged.update(counts)
+        document["counts"] = {str(seed): merged[seed] for seed in sorted(merged)}
+        document["task_ids"] = sorted(known_ids | set(counted))
+        document["tasks_recorded"] = len(document["task_ids"])
+        document["latest_task_at"] = max(str(document.get("latest_task_at") or ""), latest)
+        document["undrawn"] = sum(1 for seed in SEED_SUPPORT if seed not in merged)
+        document["updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+        temporary_path = f"{path}.tmp"
+        Path(temporary_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(temporary_path, "w") as output_file:
+            json.dump(document, output_file, indent=2)
+            output_file.write("\n")
+        Path(temporary_path).replace(path)
+        if counted:
+            logger.info(
+                "Drawn-seed ledger: +%d round(s), %d seed(s) of %d-%d still unstamped",
+                len(counted), document["undrawn"], SEED_SUPPORT[0], SEED_SUPPORT[-1],
+            )
+        return document
+    except Exception as error:
+        logger.warning(f"Could not update the drawn-seed ledger {path} ({error})")
+        return {}
+
+
+def draw_seeds(count: int = 1, exclude: Iterable[int] = (), counts_path: str | None = None,
+               counts: dict[int, int] | None = None) -> list[int]:
+    """``count`` seeds to bet on, drawn **from the seeds the backend has never stamped**.
+
+    Right with probability ``count/901`` per seed. What a wrong guess costs is measured in
     ``Miner._resolve_seeds``: less than it sounds, because a submission pinned to the wrong seed
     still has its ``total_weighted_score`` and coverage intact.
+
+    The draw is still random, but its pool is not the whole support: candidates are grouped by how
+    often ``drawn_seeds.json`` has seen the backend stamp them, and the never-stamped group is
+    sampled first. Measured over the 231 three-seed rounds to 2026-09-21 (693 draws over the 901
+    values of [100, 1000]), that group holds 413 seeds; the rest split 325 stamped once, 126 twice,
+    32 three times, 5 four times.
+
+    **What this is worth.** Under the draw the backend actually appears to make, nothing: that
+    occurrence histogram fits Poisson(693/901) with chi2 0.34 over k=0..4, the three seeds within a
+    round are distinct but rounds are independent of each other (1 consecutive-round overlap
+    against 2.3 expected, 0 repeated triples), so every candidate is equally likely and restricting
+    the pool neither gains nor loses. It is a free option on the alternative: *if* the backend ever
+    draws without replacement, or de-prioritises what it has already used, the never-stamped group
+    is where the seed has to come from and an unrestricted draw would be spending ~54% of its
+    tickets on values that cannot win. Costless under the null, positive under the alternative —
+    which is the whole argument for it, and it is not evidence of a bias that has been measured.
+
+    The tiers matter because the never-stamped group shrinks: ~1.6 new seeds are stamped per round,
+    so it empties in roughly a month of mining. Falling through to the least-stamped tier keeps the
+    policy meaningful after that instead of silently reverting to a uniform draw, and keeps this
+    function total — it always returns ``count`` seeds while the support can supply them.
     """
-    return random.sample(SEED_SUPPORT, min(count, len(SEED_SUPPORT)))
+    if counts is None:
+        counts = read_drawn_counts(counts_path)
+    excluded = set(exclude)
+
+    by_times_drawn: dict[int, list[int]] = defaultdict(list)
+    for seed in SEED_SUPPORT:
+        if seed not in excluded:
+            by_times_drawn[counts.get(seed, 0)].append(seed)
+
+    chosen: list[int] = []
+    warned = False
+    for times_drawn in sorted(by_times_drawn):
+        if len(chosen) >= count:
+            break
+        tier = by_times_drawn[times_drawn]
+        if times_drawn and not warned:
+            # Once per draw, whether the unstamped pool ran out mid-round or was empty to begin
+            # with. Worth a warning either way: it is the point at which the ledger stops being
+            # able to tell the draw anything, not a failure — every candidate is equally likely,
+            # so the seeds this returns are worth exactly what the unstamped ones were.
+            logger.warning(
+                "Only %d seed(s) in %s-%s are still unstamped, short of the %d this round bets "
+                "on, so the draw falls through to the ones stamped %d time(s).",
+                len(by_times_drawn.get(0, ())), SEED_SUPPORT[0], SEED_SUPPORT[-1],
+                count, times_drawn,
+            )
+            warned = True
+        chosen += random.sample(tier, min(count - len(chosen), len(tier)))
+    return chosen
 
 
 def resolve_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int], str]:

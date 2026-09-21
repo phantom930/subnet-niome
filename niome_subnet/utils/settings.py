@@ -32,6 +32,10 @@ MINER_SCORE_URL = f"{BASE_URL}/api/v3/miners/scores"
 MINER_SUBMISSION_URL = f"{BASE_URL}/api/v3/miners/submissions"
 TASK_URL = f"{BASE_URL}/api/v3/tasks/current"
 CELL_TYPES_URL = f"{BASE_URL}/api/v3/data/cell-types?format=json"
+# Closed rounds, with the seed the backend stamped on each after it closed. The only task endpoint
+# that needs no hotkey signature — /current is what a validator signs for and answers "Missing
+# required headers" to an unsigned GET. A plain public read: nothing identifying is sent.
+TASK_HISTORY_URL = f"{BASE_URL}/api/v3/tasks"
 
 
 # ---- Data -----
@@ -76,6 +80,16 @@ MINER_GENOME_PATH = os.getenv("NIOME_GENOME_PATH", CHR11_PATH)
 # Absent, unreadable or empty means no seeds were supplied, and the miner draws its own — see
 # Miner._resolve_seeds, which is also where the odds of that are written down.
 MINER_SEEDS_PATH = os.getenv("NIOME_MINER_SEEDS_PATH", f"{MINER_DIR}/seeds.json")
+
+# How often each seed has already been stamped on a closed round — the occurrence ledger the
+# miner's own draws avoid, so a drawn seed is one the backend has never used. Maintained from
+# TASK_HISTORY_URL by design.record_drawn_seeds (and by `bench_task.py --fetch`), read by
+# design.draw_seeds. Deleting it costs nothing but the avoidance: the draw falls back to the whole
+# support. See design.draw_seeds for what the avoidance is and is not worth.
+MINER_DRAWN_SEEDS_PATH = os.getenv("NIOME_DRAWN_SEEDS_PATH", f"{MINER_DIR}/drawn_seeds.json")
+# The refresh is off the upload's critical path (it runs after the PUT) and skipped if the ledger
+# was updated less than this ago. At ~10 rounds a day, an hour of staleness is ~1.5 seeds.
+DRAWN_SEEDS_MAX_AGE = 3600  # seconds
 
 
 # ---- Timeout Values -----

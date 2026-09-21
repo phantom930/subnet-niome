@@ -290,7 +290,32 @@ a validator pays.
 | row generation and local scoring | `niome_subnet/genomics/design.py` |
 | offline benchmark harness | `scripts/bench_task.py` |
 | miner artifacts | `miner_data/` — override with `NIOME_MINER_DIR` |
+| seeds to bet on | `miner_data/seeds.json` — hand-edited; read fresh every round |
+| seeds already stamped | `miner_data/drawn_seeds.json` — written by the miner; the pool the bet avoids |
 | reference genome | shared read-only, `data/chr11.fa` — override with `NIOME_GENOME_PATH` |
+
+### The seed bet, and where its two files fit
+
+The contract is broadcast with `seed: 0` and stamped after the round closes, so a miner that wants
+`consistency_factor` 1.0 has to *guess* the seed and pin every row's outcome to it
+(`design.pinned_outcome_build`). `design.plan_seeds` assembles that guess: the cell type's count
+(8 on HEK293, 11 on the others), the seeds listed in `seeds.json` first, then `design.draw_seeds`
+for the rest.
+
+`draw_seeds` draws only from seeds the backend has **never** been recorded stamping —
+`drawn_seeds.json` is the occurrence ledger that says which those are, refreshed from
+`GET /api/v3/tasks` after each upload and merged by task id so nothing is counted twice or ages
+out. Of the 901 values in [100, 1000], 413 were still unstamped on 2026-09-21.
+
+This does not improve the odds and is not meant to. Measured over the 231 three-seed rounds since
+2026-08-27, the 693 stamped seeds fit an independent uniform draw closely (occurrence histogram
+413/325/126/32/5 against Poisson(693/901)'s 417.5/321.1/123.5/31.7/6.1, χ² 0.34; the three seeds in
+a round are distinct, but rounds are independent — one consecutive-round overlap against 2.3
+expected, no triple ever repeated). Every candidate is therefore equally likely and restricting the
+pool costs nothing; it pays only if the backend ever stops reusing seeds, in which case an
+unrestricted draw would have been spending ~54 % of its tickets on values that cannot win. Delete
+the ledger to draw from the whole support again, or set `"seed_count": 0` in `seeds.json` to stop
+betting at all.
 
 The miner writes nothing into `data/`. That directory belongs to the validation pipeline: every stage
 there communicates through fixed filenames, and `truncate_submission` rewrites `data/submission.json`

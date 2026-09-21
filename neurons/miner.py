@@ -28,6 +28,7 @@ import traceback
 
 from dataclasses import replace
 from datetime import datetime, timezone
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 # Add project root to Python path. This must happen before the niome_subnet imports, because running
@@ -233,6 +234,11 @@ class Miner(BaseMinerNeuron):
                 f"Submitted {len(rows)} rows for task {task.id} in {time.time() - started:.1f}s "
                 f"({deadline - time.time():.0f}s of the URL's TTL to spare)"
             )
+            # Last, and after the line above: this is the only fetch in the round the submission
+            # does not depend on, and the next round is the first that can use what it learns.
+            # Spending TTL on it — or delaying the round's own log line behind a slow endpoint —
+            # would be paying for the wrong task's bet.
+            await asyncio.to_thread(self._refresh_drawn_seeds)
         except Exception as error:
             # Nothing downstream reports a miner failure, so this log line is the only evidence
             # the round was lost.
@@ -251,7 +257,7 @@ class Miner(BaseMinerNeuron):
         """Stamp the round seeds the design should build against onto ``contract``.
 
         The plan itself is ``design.plan_seeds`` — the cell type's count, the operator's listed
-        seeds first, random draws for the rest. It lives in ``design`` rather than here so that
+        seeds first, ``design.draw_seeds`` for the rest. It lives in ``design`` rather than here so that
         everything which builds gets the same plan and writes the same ``last_generated`` record;
         a planner attached to this neuron is skipped by every harness that drives ``build``
         directly, which is exactly how it came to look like it was doing nothing.
@@ -266,8 +272,11 @@ class Miner(BaseMinerNeuron):
         all three of stage 4's targets constant columns and ``consistency_factor`` exactly 1.0.
 
         **A drawn seed is a bet, not information.** The backend stamps the real seed after the
-        broadcast, so a draw is right with probability 1/900, and on the 899 misses the rows are
-        pinned to outcomes under a seed nobody scores. What that costs is the question, and it is
+        broadcast, so a draw is right with probability 1/901, and on the 900 misses the rows are
+        pinned to outcomes under a seed nobody scores. Drawing only from seeds the backend has
+        never stamped (``design.draw_seeds``, ``miner_data/drawn_seeds.json``) narrows *which*
+        tickets are bought, not how many win: the 693 draws to 2026-09-21 fit an independent
+        uniform draw too well to read anything else into them. What that costs is the question, and it is
         much less than it sounds — measured end to end through ``benchmark_submission``, one task
         per cell type, each scored under the seeds its round actually closed under:
 
@@ -490,6 +499,44 @@ class Miner(BaseMinerNeuron):
         self._persist(settings.MINER_CONTRACT_PATH, contract)
         self._persist(settings.MINER_HBB_REFERENCE_PATH, reference)
         return contract, reference
+
+    def _refresh_drawn_seeds(self) -> None:
+        """Fold the rounds that have closed since the last refresh into the drawn-seed ledger.
+
+        ``design.draw_seeds`` bets only on seeds the backend has never stamped, which is a claim
+        about history that goes stale: roughly 1.6 seeds a round leave the unstamped pool. This is
+        what keeps it current, and it is the reason the pool can be trusted a month from now.
+
+        Three things keep it cheap and harmless. It is rate-limited by the ledger's own mtime
+        (``DRAWN_SEEDS_MAX_AGE``), so the several validators broadcasting one task do not refetch.
+        It reads only the first page, which the backend serves newest-first at 20 rounds a page —
+        about two days at ~10 rounds a day, so the refresh can fail repeatedly and still miss
+        nothing once it succeeds, and ``record_drawn_seeds`` merges by task id so the overlap is
+        not double-counted. And every failure is swallowed: a ledger that could not be refreshed
+        is a slightly stale pool, which is worth nothing less than a fresh one under the measured
+        draw.
+        """
+        path = Path(settings.MINER_DRAWN_SEEDS_PATH)
+        try:
+            if path.exists() and time.time() - path.stat().st_mtime < settings.DRAWN_SEEDS_MAX_AGE:
+                return
+            response = requests.get(settings.TASK_HISTORY_URL, params={"page": 1},
+                                    timeout=settings.TASK_REQUEST_TIMEOUT)
+            response.raise_for_status()
+            payload = response.json()
+            tasks = payload.get("items") if isinstance(payload, dict) else payload
+            if not isinstance(tasks, list):
+                logger.warning(
+                    f"{settings.TASK_HISTORY_URL} returned no 'items' list, so the drawn-seed "
+                    f"ledger was left as it is; the seed draw still avoids what it already knows"
+                )
+                return
+            design.record_drawn_seeds(tasks)
+        except Exception as error:
+            logger.warning(
+                f"Could not refresh the drawn-seed ledger ({error}); the next round's draw uses "
+                f"the copy in {path}"
+            )
 
     def _fetch_cell_types(self) -> dict:
         """The accessibility table, read unsigned from the backend.
