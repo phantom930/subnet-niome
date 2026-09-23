@@ -97,6 +97,36 @@
         </span>
       </div>
 
+      @if (occurrence(); as ledger) {
+        @if (ledger.available) {
+          <div class="seed-legend text-muted">
+            <span class="legend-title">Seed shading — times the backend has stamped it</span>
+            <ul class="legend-items">
+              @for (step of legend; track step.level) {
+                <li>
+                  <span
+                    class="seed-chip legend-swatch"
+                    [class]="'occ-' + step.level"
+                    aria-hidden="true"
+                  ></span>
+                  {{ step.label }}
+                </li>
+              }
+            </ul>
+            <span class="legend-note">
+              {{ ledger.tasks_recorded | number }} rounds counted since
+              {{ ledger.since | slice: 0 : 10 }}; {{ ledger.undrawn | number }} of the 901 seeds in
+              100–1000 never stamped. Colour repeats the &times;N label, so it is never the only
+              cue.
+            </span>
+          </div>
+        } @else {
+          <p-message severity="secondary" icon="pi pi-info-circle" class="rules-note">
+            {{ occurrenceNote() }}
+          </p-message>
+        }
+      }
+
       @if (loading()) {
         <p-skeleton width="100%" height="20rem" />
       } @else {
@@ -126,7 +156,9 @@
                 Cell type <p-sort-icon field="cellType" />
               </th>
               <th>Active mutations</th>
-              <th pSortableColumn="seed" style="width: 12rem">Seed <p-sort-icon field="seed" /></th>
+              <th pSortableColumn="seedSort" style="width: 14rem">
+                Seeds <p-sort-icon field="seedSort" />
+              </th>
               <th style="width: 6rem"><span class="sr-only">Actions</span></th>
             </tr>
           </ng-template>
@@ -156,10 +188,18 @@
                 </ul>
               </td>
               <td class="seed-cell">
-                @if (row.seed !== null) {
-                  <code class="mono" [title]="'as sent: ' + row.seedRaw">
-                    {{ row.seed | number }}
-                  </code>
+                @if (row.chips.length) {
+                  <ul class="seed-list" [title]="'as sent: ' + row.seedRaw">
+                    @for (chip of row.chips; track $index) {
+                      <li class="seed-chip mono" [class]="'occ-' + chip.level" [title]="chip.title">
+                        {{ chip.seed }}
+                        @if (chip.count !== null && chip.count > 1) {
+                          <span class="occ-count" aria-hidden="true">&times;{{ chip.count }}</span>
+                          <span class="sr-only">stamped {{ chip.count }} times</span>
+                        }
+                      </li>
+                    }
+                  </ul>
                 } @else {
                   <p-tag value="unstamped" severity="warn" />
                 }

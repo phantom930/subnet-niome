@@ -77,6 +77,148 @@ td .mono {
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- Seed occurrence ----
+   An ordinal ramp over one hue: how often the backend has stamped this seed.
+   Amber rather than the emerald primary so a shaded seed never reads as an
+   interactive element, and three steps rather than four because "stamped
+   once" is two thirds of all seeds and is the baseline the others stand out
+   from — shading it too would tint the whole column.
+
+   Steps are Tailwind amber, the family Aura's own palettes come from, and the
+   pairs below were checked rather than eyeballed: ink-on-fill clears 4.5:1 at
+   every level in both themes (lowest 4.51:1, dark 4x+), adjacent fills are
+   >= 8.5 apart in OKLab dE, and lightness is monotone — descending on light,
+   ascending on dark, which is the anchor flip a ramp needs when the surface
+   inverts. The x2/x3/x4 label carries the same value, so the colour is a
+   second cue and never the only one. */
+.seed-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seed-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+  /* Transparent by default so an unshaded chip still occupies the same box
+     and the row does not reflow as the ledger arrives. */
+  border: 1px solid transparent;
+  color: var(--p-text-muted-color);
+}
+
+.occ-count {
+  font-size: 0.6875rem;
+  opacity: 0.75;
+}
+
+/* Level 0 is "not counted" — before the ledger's window, or no ledger at all.
+   A dotted outline says the absence is known rather than nothing to report. */
+.seed-chip.occ-0 {
+  border-color: var(--p-surface-300);
+  border-style: dotted;
+}
+
+/* Stamped once is two thirds of all seeds: the baseline, so a neutral surface
+   tint rather than the first amber step. The ramp starts where the reading
+   starts — at the first repeat. Theme tokens, so a re-brand carries it. */
+.seed-chip.occ-1 {
+  background: var(--p-surface-100);
+}
+
+.seed-chip.occ-2,
+.seed-chip.occ-3,
+.seed-chip.occ-4 {
+  color: #451a03;
+}
+
+.seed-chip.occ-2 {
+  background: #fef3c7;
+}
+
+.seed-chip.occ-3 {
+  background: #fcd34d;
+}
+
+.seed-chip.occ-4 {
+  background: #f59e0b;
+}
+
+:host-context(html.app-dark) {
+  .seed-chip.occ-0 {
+    border-color: var(--p-surface-700);
+  }
+
+  .seed-chip.occ-1 {
+    background: var(--p-surface-800);
+  }
+
+  .seed-chip.occ-2,
+  .seed-chip.occ-3,
+  .seed-chip.occ-4 {
+    color: #fef3c7;
+  }
+
+  .seed-chip.occ-2 {
+    background: #451a03;
+  }
+
+  .seed-chip.occ-3 {
+    background: #92400e;
+  }
+
+  .seed-chip.occ-4 {
+    background: #b45309;
+  }
+}
+
+.seed-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.legend-title {
+  font-weight: 600;
+}
+
+.legend-items {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend-items li {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* The swatch is the fill alone, sized to a real chip so the legend and the
+   column read as the same object. Empty rather than filled with placeholder
+   digits, which would inherit each level's ink and fight the swatch. */
+.legend-swatch {
+  width: 2.2rem;
+  height: 1.05rem;
+}
+
+.legend-note {
+  flex-basis: 100%;
+}
+
 .empty-cell {
   padding: 2rem 1rem;
   text-align: center;

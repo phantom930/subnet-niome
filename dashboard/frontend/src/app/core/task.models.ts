@@ -19,9 +19,10 @@ export interface TaskContract {
   /**
    * Stamped after the round closes; 0 means never stamped.
    *
-   * Mixed type in practice: the backend sends most seeds as raw numbers and
-   * some as comma-grouped strings, and the grouping is not always correct
-   * (one snapshot value reads '328,371,1000'). TaskService normalizes it.
+   * A round carries *several* seeds and the backend joins them with commas
+   * ('263,486,269'), so this is a list, not digit grouping — a round has had
+   * three seeds since 2026-08-27 and one before that. A single-seed round
+   * arrives as a raw number. TaskService parses both into `TaskRow.seeds`.
    */
   seed: string | number;
   version: string;
@@ -62,9 +63,11 @@ export interface TaskRow {
   createdAt: Date;
   cellType: string;
   mutations: MutationEntry[];
-  /** Normalized numeric seed, or null when the task was never stamped. */
-  seed: number | null;
-  /** Seed exactly as the backend sent it, kept because its grouping can differ. */
+  /** The round's stamped seeds, in the order recorded. Empty when unstamped. */
+  seeds: number[];
+  /** Sort key for the seed column: the round's first seed, null when unstamped. */
+  seedSort: number | null;
+  /** The seed field exactly as the backend sent it, for the 'as sent' tooltip. */
   seedRaw: string | null;
   version: string;
   /**
@@ -75,6 +78,33 @@ export interface TaskRow {
    * response already carried.
    */
   raw: RawTask;
+}
+
+/**
+ * How often the backend has stamped each seed — GET /api/seed-occurrence,
+ * served straight from miner_data/drawn_seeds.json.
+ *
+ * The same ledger design.draw_seeds bets against, so what the Tasks page
+ * colours by is what the miner acts on rather than a second count beside it.
+ */
+export interface SeedOccurrence {
+  /** False when the ledger is missing; the page then shows seeds uncoloured. */
+  available: boolean;
+  /** Seed (as a string key) to the number of rounds that stamped it. */
+  counts: Record<string, number>;
+  /** Why it is unavailable, when it is. */
+  reason?: string;
+  /**
+   * Rounds before this were never counted, so their seeds have no occurrence
+   * rather than an occurrence of zero. The ledger starts at the 3-seed
+   * cutover because the generator before it drew from a different range.
+   */
+  since?: string | null;
+  tasks_recorded?: number;
+  latest_task_at?: string | null;
+  /** Seeds in [100,1000] the backend has never stamped. */
+  undrawn?: number;
+  updated_at?: string | null;
 }
 
 /**

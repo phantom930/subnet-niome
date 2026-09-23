@@ -273,8 +273,8 @@ class Miner(BaseMinerNeuron):
 
         **A drawn seed is a bet, not information.** The backend stamps the real seed after the
         broadcast, so a draw is right with probability 1/901, and on the 900 misses the rows are
-        pinned to outcomes under a seed nobody scores. Drawing only from seeds the backend has
-        never stamped (``design.draw_seeds``, ``miner_data/drawn_seeds.json``) narrows *which*
+        pinned to outcomes under a seed nobody scores. Drawing from the seeds the backend has
+        stamped most often (``design.draw_seeds``, ``miner_data/drawn_seeds.json``) narrows *which*
         tickets are bought, not how many win: the 693 draws to 2026-09-21 fit an independent
         uniform draw too well to read anything else into them. What that costs is the question, and it is
         much less than it sounds — measured end to end through ``benchmark_submission``, one task
@@ -503,9 +503,10 @@ class Miner(BaseMinerNeuron):
     def _refresh_drawn_seeds(self) -> None:
         """Fold the rounds that have closed since the last refresh into the drawn-seed ledger.
 
-        ``design.draw_seeds`` bets only on seeds the backend has never stamped, which is a claim
-        about history that goes stale: roughly 1.6 seeds a round leave the unstamped pool. This is
-        what keeps it current, and it is the reason the pool can be trusted a month from now.
+        ``design.draw_seeds`` bets on the seeds the backend has stamped most often, which is a
+        claim about history that goes stale: every round restamps three seeds and promotes them a
+        tier. This is what keeps the ranking current — without it the bet would freeze on whatever
+        the ledger held the day it was last written.
 
         Three things keep it cheap and harmless. It is rate-limited by the ledger's own mtime
         (``DRAWN_SEEDS_MAX_AGE``), so the several validators broadcasting one task do not refetch.
@@ -513,8 +514,8 @@ class Miner(BaseMinerNeuron):
         about two days at ~10 rounds a day, so the refresh can fail repeatedly and still miss
         nothing once it succeeds, and ``record_drawn_seeds`` merges by task id so the overlap is
         not double-counted. And every failure is swallowed: a ledger that could not be refreshed
-        is a slightly stale pool, which is worth nothing less than a fresh one under the measured
-        draw.
+        is a slightly stale ranking, which is worth nothing less than a fresh one under the
+        measured draw.
         """
         path = Path(settings.MINER_DRAWN_SEEDS_PATH)
         try:

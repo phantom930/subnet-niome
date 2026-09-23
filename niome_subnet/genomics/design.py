@@ -529,8 +529,8 @@ def plan_seeds(contract: dict, seeds_path: str | None = None) -> tuple[list[int]
        seeds is asserting something the build cannot work out for itself, so they go first and are
        never given up in favour of a random draw;
     2. ``draw_seeds`` to make up the count — a random draw, but over the seeds the backend has
-       never been recorded stamping rather than over all of ``SEED_SUPPORT``. A listed seed is
-       never dropped for having been stamped before: the operator's claim outranks the ledger.
+       been recorded stamping most often rather than over all of ``SEED_SUPPORT``. A listed seed
+       keeps its place whatever the ledger says about it: the operator's claim outranks frequency.
 
     ``"enabled": false`` means "ignore the listed seeds", not "do not pin": the round still bets,
     just on its own draws. ``"seed_count": 0`` is the off switch, and so is
@@ -728,32 +728,42 @@ def record_drawn_seeds(tasks: Iterable[dict], path: str | None = None) -> dict:
 
 def draw_seeds(count: int = 1, exclude: Iterable[int] = (), counts_path: str | None = None,
                counts: dict[int, int] | None = None) -> list[int]:
-    """``count`` seeds to bet on, drawn **from the seeds the backend has never stamped**.
+    """``count`` seeds to bet on, drawn **from the seeds the backend has stamped most often**.
 
     Right with probability ``count/901`` per seed. What a wrong guess costs is measured in
     ``Miner._resolve_seeds``: less than it sounds, because a submission pinned to the wrong seed
     still has its ``total_weighted_score`` and coverage intact.
 
-    The draw is still random, but its pool is not the whole support: candidates are grouped by how
-    often ``drawn_seeds.json`` has seen the backend stamp them, and the never-stamped group is
-    sampled first. Measured over the 231 three-seed rounds to 2026-09-21 (693 draws over the 901
-    values of [100, 1000]), that group holds 413 seeds; the rest split 325 stamped once, 126 twice,
-    32 three times, 5 four times.
+    The draw is random within a tier, but its pool is not the whole support: candidates are grouped
+    by how often ``drawn_seeds.json`` has seen the backend stamp them, and the **most**-stamped
+    group is sampled first, working down. Measured over the 232 three-seed rounds to 2026-09-21
+    (696 draws over the 901 values of [100, 1000]), the tiers ran 1 seed stamped five times, 4 four
+    times, 33 three times, 126 twice, 324 once and 413 never — so a round wanting 8-11 seeds is
+    filled from the 5x/4x/3x tiers and the top of the 2x one.
 
     **What this is worth.** Under the draw the backend actually appears to make, nothing: that
-    occurrence histogram fits Poisson(693/901) with chi2 0.34 over k=0..4, the three seeds within a
-    round are distinct but rounds are independent of each other (1 consecutive-round overlap
-    against 2.3 expected, 0 repeated triples), so every candidate is equally likely and restricting
-    the pool neither gains nor loses. It is a free option on the alternative: *if* the backend ever
-    draws without replacement, or de-prioritises what it has already used, the never-stamped group
-    is where the seed has to come from and an unrestricted draw would be spending ~54% of its
-    tickets on values that cannot win. Costless under the null, positive under the alternative —
-    which is the whole argument for it, and it is not evidence of a bias that has been measured.
+    occurrence histogram fits Poisson closely (chi2 0.34 over k=0..4 on the 231-round measurement),
+    the three seeds within a round are distinct but rounds are independent of each other (1
+    consecutive-round overlap against 2.3 expected, 0 repeated triples), so every candidate is
+    equally likely and which subset is bet on changes neither the mean nor the per-round hit rate.
+    It is a free option on the alternative: *if* the backend's draw is in fact weighted — a bag it
+    refills, a hash with hot spots, anything that makes a seed it has used likely to come up again
+    — then frequency is the signal and this rides it, while a draw spread over the whole support
+    would dilute the same tickets across values that rarely come up.
 
-    The tiers matter because the never-stamped group shrinks: ~1.6 new seeds are stamped per round,
-    so it empties in roughly a month of mining. Falling through to the least-stamped tier keeps the
-    policy meaningful after that instead of silently reverting to a uniform draw, and keeps this
-    function total — it always returns ``count`` seeds while the support can supply them.
+    Two consequences worth knowing, since neither is a defect to be fixed:
+
+    * the bet is **stable across rounds**. The top tiers barely move (a round shifts ~1.6 seeds),
+      so consecutive rounds bet on nearly the same set. Per-round odds are unchanged, but hits
+      cluster instead of spreading — which suits a rank-based payout, where one big round is worth
+      more than the same score smeared thin.
+    * the tiers **feed themselves**: a seed stamped again climbs, so today's top tier tends to
+      stay the top tier. That is the intended behaviour of "prefer what has occurred", not
+      evidence that the preference is working.
+
+    Falling through tier by tier keeps the function total — it always returns ``count`` seeds while
+    the support can supply them — and the last resort is the never-stamped group, which is where
+    the previous policy started.
     """
     if counts is None:
         counts = read_drawn_counts(counts_path)
@@ -766,20 +776,21 @@ def draw_seeds(count: int = 1, exclude: Iterable[int] = (), counts_path: str | N
 
     chosen: list[int] = []
     warned = False
-    for times_drawn in sorted(by_times_drawn):
+    # Most-stamped first. ``random.sample`` still shuffles within a tier, which is what breaks the
+    # tie on the boundary tier — the one the round runs out of seeds partway through.
+    for times_drawn in sorted(by_times_drawn, reverse=True):
         if len(chosen) >= count:
             break
         tier = by_times_drawn[times_drawn]
-        if times_drawn and not warned:
-            # Once per draw, whether the unstamped pool ran out mid-round or was empty to begin
-            # with. Worth a warning either way: it is the point at which the ledger stops being
-            # able to tell the draw anything, not a failure — every candidate is equally likely,
-            # so the seeds this returns are worth exactly what the unstamped ones were.
+        if not times_drawn and not warned:
+            # Reaching the never-stamped tier means the ledger had fewer stamped seeds than the
+            # round bets on — an empty or near-empty ledger, since a full one holds ~490. Not a
+            # failure: every candidate is equally likely, so these are worth what the rest were.
             logger.warning(
-                "Only %d seed(s) in %s-%s are still unstamped, short of the %d this round bets "
-                "on, so the draw falls through to the ones stamped %d time(s).",
-                len(by_times_drawn.get(0, ())), SEED_SUPPORT[0], SEED_SUPPORT[-1],
-                count, times_drawn,
+                "Only %d seed(s) in %s-%s have ever been stamped, short of the %d this round bets "
+                "on, so the draw falls through to seeds the backend has never used.",
+                sum(len(seeds) for times, seeds in by_times_drawn.items() if times),
+                SEED_SUPPORT[0], SEED_SUPPORT[-1], count,
             )
             warned = True
         chosen += random.sample(tier, min(count - len(chosen), len(tier)))

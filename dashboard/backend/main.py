@@ -92,6 +92,17 @@ def get_cell_types() -> dict[str, Any]:
     return store.read_cell_types()
 
 
+@app.get("/api/seed-occurrence")
+def get_seed_occurrence() -> dict[str, Any]:
+    """How often each seed has been stamped, for the Tasks page's colouring.
+
+    Never 404s: a missing ledger answers ``available: false`` with a reason,
+    because the page has to render its seeds either way and a failed colour
+    layer must not look like a failed task load.
+    """
+    return store.read_seed_occurrence()
+
+
 @app.post("/api/tasks/refresh")
 async def refresh_tasks(body: RefreshBody = Body(default_factory=RefreshBody)) -> dict[str, Any]:
     """Run the harness's --fetch, then report what it changed."""

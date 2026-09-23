@@ -1,12 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 
 import {
   CellType,
   MutationEntry,
   RawTask,
   RefreshResult,
+  SeedOccurrence,
   SnapshotMeta,
   TaskRow,
   TaskRules,
@@ -19,15 +20,30 @@ export interface TaskData {
 }
 
 /**
- * Turns the backend's mixed-type seed into a number, or null when the round
- * never closed. Seeds arrive both as raw numbers and as comma-grouped strings,
- * so the commas come out before parsing. Zero means unstamped.
+ * The round's stamped seeds, or [] when it never closed.
+ *
+ * The comma separates seeds; it is not digit grouping. A round has carried
+ * three seeds since 2026-08-27 and one before that, and the backend joins them
+ * ('263,486,269'), so stripping the commas and parsing one number turned three
+ * seeds into 263486269 — which the number pipe then re-rendered with the same
+ * commas, hiding the mistake on every round whose seeds were all three digits.
+ * A seed of 1000 is what exposed it: '328,371,1000' surfaced as 3,283,711,000.
+ *
+ * Zero is the 'not stamped yet' placeholder rather than a seed, so it drops
+ * out, and an unparseable field yields [] rather than a partial round.
  */
-function normalizeSeed(seed: string | number | null | undefined): number | null {
-  if (seed === null || seed === undefined || seed === '') return null;
-  const value = typeof seed === 'number' ? seed : Number(String(seed).replace(/,/g, ''));
-  if (!Number.isFinite(value) || value === 0) return null;
-  return value;
+function parseSeeds(seed: string | number | null | undefined): number[] {
+  if (seed === null || seed === undefined || seed === '') return [];
+  const parts = String(seed).split(',');
+  const seeds: number[] = [];
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const value = Number(trimmed);
+    if (!Number.isFinite(value)) return [];
+    if (value !== 0) seeds.push(value);
+  }
+  return seeds;
 }
 
 /**
@@ -56,6 +72,23 @@ export class TaskService {
       .pipe(catchError((error) => throwError(() => new Error(describeError(error)))));
   }
 
+  /**
+   * How often each seed has been stamped, for the Tasks page's colouring.
+   *
+   * Failure is reported as an unavailable ledger rather than thrown: the
+   * colouring is a layer over the table, and losing it must not take the
+   * table's own load down with it.
+   */
+  loadSeedOccurrence(): Observable<SeedOccurrence> {
+    return this.http
+      .get<SeedOccurrence>('/api/seed-occurrence')
+      .pipe(
+        catchError((error) =>
+          of({ available: false, counts: {}, reason: describeError(error) } as SeedOccurrence),
+        ),
+      );
+  }
+
   /** Pull the upstream task history and merge it into the stored snapshot. */
   refresh(replace = false): Observable<RefreshResult> {
     return this.http
@@ -70,7 +103,7 @@ export class TaskService {
         source: snapshot.source,
         fetchedAt: new Date(snapshot.fetched_at),
         count: snapshot.count ?? rows.length,
-        unstamped: snapshot.unstamped ?? rows.filter((r) => r.seed === null).length,
+        unstamped: snapshot.unstamped ?? rows.filter((r) => r.seeds.length === 0).length,
         sharedRules: this.findSharedRules(snapshot.tasks),
       },
       rows,
@@ -85,7 +118,7 @@ export class TaskService {
       weight: contract.mutation_weights?.[name] ?? null,
     }));
 
-    const seed = normalizeSeed(contract.seed);
+    const seeds = parseSeeds(contract.seed);
 
     return {
       id: task.id,
@@ -93,8 +126,9 @@ export class TaskService {
       createdAt: new Date(task.created_at),
       cellType: contract.cell_type,
       mutations,
-      seed,
-      seedRaw: seed === null ? null : String(contract.seed),
+      seeds,
+      seedSort: seeds.length ? seeds[0] : null,
+      seedRaw: seeds.length ? String(contract.seed) : null,
       version: contract.version,
       raw: task,
     };

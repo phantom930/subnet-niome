@@ -29,6 +29,7 @@ not running, the Tasks page says so rather than showing an empty table.
 | GET    | `/api/health`            | Status, snapshot counts, resolved paths |
 | GET    | `/api/tasks`             | The whole snapshot, newest first        |
 | GET    | `/api/cell-types`        | The accessibility table                 |
+| GET    | `/api/seed-occurrence`   | How often each seed has been stamped    |
 | POST   | `/api/tasks/refresh`     | Runs `--fetch`, reports what changed    |
 | POST   | `/api/benchmarks`        | Queues a benchmark, returns its job     |
 | GET    | `/api/benchmarks`        | The most recent jobs                    |
@@ -38,6 +39,14 @@ not running, the Tasks page says so rather than showing an empty table.
 `--replace`, discarding the local snapshot instead of merging into it. It
 answers 409 if the harness is busy, 502 if it fails, and 504 if it outruns
 `DASHBOARD_FETCH_TIMEOUT` (120s default).
+
+`GET /api/seed-occurrence` serves `miner_data/drawn_seeds.json`, the ledger the
+same `--fetch` run writes and that `design.draw_seeds` bets against — so the
+Tasks page shades a seed by the count the miner itself acts on. It never 404s:
+a missing ledger answers `{"available": false, "reason": ...}` and the page
+renders its seeds uncoloured, because a failed colour layer must not look like
+a failed task load. `since` is the ledger's cutover; rounds older than it were
+never counted, so their seeds carry no occurrence rather than zero.
 
 ## Benchmarks are jobs, not requests
 

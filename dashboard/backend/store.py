@@ -17,22 +17,34 @@ class SnapshotMissing(RuntimeError):
     """No snapshot yet. A refresh creates one."""
 
 
-def normalize_seed(seed: Any) -> int | None:
-    """The stamped seed as a number, or None when the round never closed.
+def parse_seeds(seed: Any) -> list[int]:
+    """The round's stamped seeds, or [] when it never closed.
 
-    The upstream sends this field as both a number and a comma-grouped string,
-    and the grouping is not always correct, so commas come out before parsing.
-    Zero is the 'not stamped yet' placeholder rather than a seed of zero.
+    The comma in this field separates seeds; it is not digit grouping. A round
+    has carried three seeds since 2026-08-27 and one before that, and the
+    backend joins them into a single string ('263,486,269'), so stripping the
+    commas and parsing one number turns three seeds into the nine-digit
+    263486269. That reading is why a seed of 1000 used to surface as
+    '3,283,711,000'.
+
+    Zero is the 'not stamped yet' placeholder rather than a seed of zero, so it
+    is dropped — which also makes an all-zero field parse to [], the same
+    answer an unstamped round gives.
     """
     if seed is None or seed == "":
-        return None
-    try:
-        value = seed if isinstance(seed, (int, float)) else float(str(seed).replace(",", ""))
-    except (TypeError, ValueError):
-        return None
-    if value == 0:
-        return None
-    return int(value)
+        return []
+    seeds = []
+    for part in str(seed).split(","):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            value = int(float(part))
+        except (TypeError, ValueError):
+            return []
+        if value:
+            seeds.append(value)
+    return seeds
 
 
 def read() -> dict[str, Any]:
@@ -57,19 +69,55 @@ def read_cell_types() -> dict[str, Any]:
         return {}
 
 
-def seeds_by_id() -> dict[str, int | None]:
-    """Each task's normalized seed, for diffing across a refresh.
+def read_seed_occurrence() -> dict[str, Any]:
+    """The drawn-seed ledger: how often each seed has been stamped.
 
-    Normalized rather than raw, because the same seed arrives as 100000 and as
-    '100,000' on different tasks. Comparing raw values would report restamps
-    that never happened.
+    Served rather than recomputed from the snapshot so the Tasks page colours
+    by the same counts ``design.draw_seeds`` bets against. The two are written
+    by one --fetch run, so a second count here could only drift from it.
+
+    ``available`` is false when the ledger is missing or unreadable, and the
+    page then shows seeds without occurrence colouring rather than colouring
+    them all as though they were unique. ``since`` is the cutoff the ledger was
+    built with: rounds older than it were never counted, so their seeds have no
+    occurrence rather than an occurrence of zero — a distinction the page has
+    to make or a whole era of tasks reads as never-stamped.
+    """
+    if not config.DRAWN_SEEDS_PATH.exists():
+        return {"available": False, "counts": {}, "reason": f"no ledger at {config.DRAWN_SEEDS_PATH}"}
+    try:
+        with open(config.DRAWN_SEEDS_PATH) as ledger_file:
+            document = json.load(ledger_file)
+    except (OSError, ValueError) as error:
+        return {"available": False, "counts": {}, "reason": f"cannot read the ledger: {error}"}
+
+    counts = document.get("counts") or {}
+    if not isinstance(counts, dict):
+        return {"available": False, "counts": {}, "reason": "the ledger's counts are not an object"}
+
+    return {
+        "available": True,
+        "counts": {str(seed): int(times) for seed, times in counts.items()},
+        "since": document.get("since") or None,
+        "tasks_recorded": document.get("tasks_recorded"),
+        "latest_task_at": document.get("latest_task_at"),
+        "undrawn": document.get("undrawn"),
+        "updated_at": document.get("updated_at"),
+    }
+
+
+def seeds_by_id() -> dict[str, tuple[int, ...]]:
+    """Each task's stamped seeds, for diffing across a refresh.
+
+    Parsed rather than raw so a round whose three seeds arrive in a different
+    string form is not reported as restamped when nothing about it changed.
     """
     try:
         snapshot = read()
     except (SnapshotMissing, ValueError):
         return {}
     return {
-        task["id"]: normalize_seed(task.get("content", {}).get("contract", {}).get("seed"))
+        task["id"]: tuple(parse_seeds(task.get("content", {}).get("contract", {}).get("seed")))
         for task in snapshot.get("tasks", [])
         if "id" in task
     }
@@ -92,7 +140,7 @@ def summary() -> dict[str, Any]:
             sum(
                 1
                 for task in tasks
-                if normalize_seed(task.get("content", {}).get("contract", {}).get("seed")) is None
+                if not parse_seeds(task.get("content", {}).get("contract", {}).get("seed"))
             ),
         ),
         "fetched_at": snapshot.get("fetched_at"),
@@ -100,7 +148,7 @@ def summary() -> dict[str, Any]:
     }
 
 
-def describe_change(before: dict[str, int | None]) -> dict[str, Any]:
+def describe_change(before: dict[str, tuple[int, ...]]) -> dict[str, Any]:
     """What changed between a snapshot read earlier and the one on disk now.
 
     Computed from the files rather than parsed out of the harness's stdout, so

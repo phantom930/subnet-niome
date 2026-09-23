@@ -25,6 +25,14 @@ CELL_TYPES_PATH = Path(
     os.getenv("DASHBOARD_CELL_TYPES_PATH", REPO_ROOT / "testing" / "cell_types.json")
 )
 
+# How often the backend has stamped each seed. Updated by the same --fetch run,
+# and by the live miner after each upload, so the occurrence the Tasks page
+# colours by is the one design.draw_seeds actually bets against rather than a
+# second count that could drift from it.
+DRAWN_SEEDS_PATH = Path(
+    os.getenv("DASHBOARD_DRAWN_SEEDS_PATH", REPO_ROOT / "miner_data" / "drawn_seeds.json")
+)
+
 BENCH_SCRIPT = Path(os.getenv("DASHBOARD_BENCH_SCRIPT", REPO_ROOT / "scripts" / "bench_task.py"))
 
 # The harness needs its own dependencies, so the repo venv rather than
