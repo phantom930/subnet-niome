@@ -33,7 +33,7 @@ from niome_subnet.api import (
 )
 from niome_subnet.genomics.validation import benchmark_submission
 from niome_subnet.protocol import GenomicsTaskSynapse
-from niome_subnet.utils import get_miner_uids
+from niome_subnet.utils import get_miner_uids, generate_seeds
 
 logger = logging.getLogger(__name__)
 
@@ -121,6 +121,10 @@ async def run_validation(self):
         fetch_task(self)
         cell_types = fetch_cell_types(self)
 
+        # Derived once per round: every submission is benchmarked on the same seeds.
+        seeds = generate_seeds(self.block, self.subtensor)
+        logger.info(f"Benchmarking this round on seeds {seeds}")
+
         miner_uids = get_miner_uids(self)
         scores = []
 
@@ -138,7 +142,7 @@ async def run_validation(self):
                     f"niome/{uid}.json",
                     config.MINER_SUBMISSION_PATH,
                 )
-                miner_score = benchmark_submission(cell_types, uid)
+                miner_score = benchmark_submission(cell_types, uid, seeds)
                 scores.append(miner_score)
                 self.save_state()
 
@@ -154,11 +158,11 @@ async def run_validation(self):
         logger.info(f"Scores: {valid_scores}")
 
         self.set_weights(scores, self.task_id)
-        top_uids = [
-            s.uid for s in sorted(scores, key=lambda s: s.final_score, reverse=True)[:config.FINAL_SUBMISSION_COUNT]
+        valid_uids = [
+            s.uid for s in sorted(valid_scores, key=lambda s: s.final_score, reverse=True)
         ]
-        if len(top_uids) > 0:
-            upload_final_submissions_to_server(self, top_uids)
+        if len(valid_uids) > 0:
+            upload_final_submissions_to_server(self, valid_uids)
         logger.info("Finished validation.")
     except Exception as e:
         logger.error(f"Error during validation: {e}")

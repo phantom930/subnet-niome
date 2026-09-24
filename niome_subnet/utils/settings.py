@@ -29,7 +29,7 @@ SCORE_DISTRIBUTION = [0.3, 0.2, 0.2, 0.15, 0.05, 0.03, 0.025, 0.02, 0.015, 0.01]
 # ---- Backend Request -----
 BASE_URL = "https://niome-api.genomes.io"
 MINER_SCORE_URL = f"{BASE_URL}/api/v3/miners/scores"
-MINER_SUBMISSION_URL = f"{BASE_URL}/api/v3/miners/submissions"
+MINER_SUBMISSION_URL = f"{BASE_URL}/api/v3/miners/submission-url"
 TASK_URL = f"{BASE_URL}/api/v3/tasks/current"
 CELL_TYPES_URL = f"{BASE_URL}/api/v3/data/cell-types?format=json"
 # Closed rounds, with the seed the backend stamped on each after it closed. The only task endpoint
@@ -110,7 +110,17 @@ OWNER_HOTKEY = "5DJ5fT174AY8GzbYHnamYQCJd4cTcj2Zf7ogUvBhry1KfYVd"
 
 BASE_BLOCK_NUMBER = 8843300
 INTERVAL_BLOCKS = 720
-VALIDATION_BLOCK = 600
+SEED_BLOCK = 430
+VALIDATION_BLOCK = 450
 WEIGHT_SET_BLOCK = 700
 
+# ---- Round seeds -----
+# How many seeds a submission is benchmarked on, and the value range each is drawn from.
+# One seed per block hash, taken from the SEED_COUNT blocks ending just before
+# VALIDATION_BLOCK -- see niome_subnet.validator.forward.generate_seeds.
+SEED_COUNT = 3
+SEED_RANGE = (0, 1000)
+SEED_READ_ATTEMPTS = 5
+SEED_FINALITY_TIMEOUT = 180  # seconds; FINALITY_LAG blocks is ~48s on mainnet
+BLOCK_HASH_BYTES = 32
 FINAL_SUBMISSION_COUNT = 5
