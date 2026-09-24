@@ -1,0 +1,41 @@
+=== 10 test hotkeys | sub window 270 stride 90 (circular, 3x overlap) | cut 900 wide | 10 loops EACH | 10 tasks ===
+    h0  100-369  270 seeds
+    h1  190-459  270 seeds
+    h2  280-549  270 seeds
+    h3  370-639  270 seeds
+    h4  460-729  270 seeds
+    h5  550-819  270 seeds
+    h6  640-909  270 seeds
+    h7  730-999  270 seeds
+    h8  100-999  270 seeds  (wraps)
+    h9  100-999  270 seeds  (wraps)
+
+  09b7b842 HEK293      seeds [423, 999, 189]  k=8 group=80  bank 167655  prep 59s
+    h0 win 100-369 inwin [189] cov 80/270 loops 10  found {189: 6}
+    h1 win 190-459 inwin [423] cov 80/270 loops 10  found {}
+    h2 win 280-549 inwin [423] cov 80/270 loops 10  found {}
+    h3 win 370-639 inwin [423] cov 80/270 loops 10  found {}
+    h4 win 460-729 inwin [] cov 80/270 loops 10  found {}
+    h5 win 550-819 inwin [] cov 80/270 loops 10  found {}
+    h6 win 640-909 inwin [] cov 80/270 loops 10  found {}
+    h7 win 730-999 inwin [999] cov 80/270 loops 10  found {}
+    h8 win 100-999 inwin [999, 189] cov 80/270 loops 10  found {}
+    h9 win 100-999 inwin [999, 189] cov 80/270 loops 10  found {999: 5}
+      h0 L6  band 8  clean   22/900 ( 2.4%)  band hits 1 [189]  clean hits 0 []  -> cons 0.3880 (25s)
+      h9 L5  band 8  clean   19/900 ( 2.1%)  band hits 1 [999]  clean hits 0 []  -> cons 0.3880 (25s)
+  5d0358b6 HUDEP-2     seeds [997, 113, 747]  k=11 group=100  bank 300000  prep 100s
+    h0 win 100-369 inwin [113] cov 110/270 loops 10  found {}
+    h1 win 190-459 inwin [] cov 110/270 loops 10  found {}
+    h2 win 280-549 inwin [] cov 110/270 loops 10  found {}
+    h3 win 370-639 inwin [] cov 110/270 loops 10  found {}
+    h4 win 460-729 inwin [] cov 110/270 loops 10  found {}
+    h5 win 550-819 inwin [747] cov 110/270 loops 10  found {}
+    h6 win 640-909 inwin [747] cov 110/270 loops 10  found {747: 6}
+    h7 win 730-999 inwin [997, 747] cov 110/270 loops 10  found {}
+    h8 win 100-999 inwin [997, 113] cov 110/270 loops 10  found {997: 6}
+    h9 win 100-999 inwin [997, 113] cov 110/270 loops 10  found {}
+      h6 L6  band 11  clean  130/900 (14.4%)  band hits 1 [747]  clean hits 0 []  -> cons 0.4027 (24s)
+      h8 L6  band 11  clean  144/900 (16.0%)  band hits 1 [997]  clean hits 0 []  -> cons 0.4027 (24s)
+  2af71117 K562        seeds [401, 403, 249]  k=11 group=100  bank 300000  prep 96s
+    h0 win 100-369 inwin [249] cov 110/270 loops 10  found {249: 1}
+    h1 win 190-459 inwin [401, 403, 249] cov 110/270 loops 10  found {403: 5}

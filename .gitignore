@@ -203,14 +203,63 @@ seed_watch.jsonl
 # input to anything: each is one run's numbers, and what those numbers ESTABLISH is written up in
 # CLAUDE.md by hand, which is the durable record. Re-running the harness regenerates the file.
 #
-# Anchored with a leading slash so it covers ONLY the repo root: reports/, seed_model/, .claude/
-# and niome_subnet/ keep their own JSON. Written as ignore-all-then-negate rather than 341 literal
-# names so a NEW harness's output is ignored by default — being tracked by default is exactly how
-# this pile built up. Add a `!` line for anything that is genuinely an input.
-/*.json
-# ...except these five, which are read AS INPUTS or are durable records, not outputs:
-!/task.json             # a tracked fixture — see the `task-*.json` rule above, which spares it too
-!/sd_task_listing.json  # /api/v3/tasks cache, read by ~25 harnesses via sd_task.fetch(cache=...)
-!/sd_task_scores.json   # /api/v3/miners/scores cache, read by ~15 harnesses the same way
-!/seed_window_log.json  # the accruing shadow log of window predictions, read by window_plan.py
-!/hotkey_coldkey.json   # coldkey grouping, read as input by mingap.py / mingap_cells.py
+# **2026-09-21: UNANCHORED by operator request — `*.json` now matches at every depth**, not just
+# the repo root. What that buys is `reports/`: 925 untracked JSON had accumulated there (one
+# `reports/<task>/<hotkey>/stage*_detail.seed*.json` set per scored round) and every new round added
+# more. What it does NOT do is untrack the 780 `*.json` already in the index — 741 of them in
+# `reports/` — because gitignore only applies to UNTRACKED paths. So `reports/` is now half tracked
+# and half ignored; `git rm -r --cached reports/` is the other half of that job if the old ones
+# should go too.
+#
+# The negations below matter more than they did when this rule was anchored. Unanchored, `*.json`
+# reaches `seed_model/`, `.claude/` and `.vscode/`, and `seed_model/` holds real INPUTS —
+# `seeds.json` is read by 9 .py files, `walk_record.json` by 7 (it is the only source for the
+# `model` strategy's per-task history, which cannot be recomputed without torch), and
+# `next_prediction.json` by 5. Without the negation a new seed_model input would be ignored by
+# default, which is the mirror image of the accumulation problem this rule was written for.
+# Add a `!` line for anything that is genuinely an input.
+*.json
+# ...except these, which are read AS INPUTS or are durable records, not outputs.
+#
+# **Comments go on their OWN line here.** gitignore has no trailing-comment syntax: a `#` after a
+# pattern is part of the pattern, so `!/task.json   # a fixture` is the literal pattern
+# `/task.json   # a fixture` and matches nothing. The five negations below carried trailing
+# comments from the day they were written and were therefore ALL dead — they appeared to work only
+# because every one of those files is tracked, and gitignore never applies to a tracked path. Check
+# a negation with `git check-ignore -v --no-index <path>`; without `--no-index` git skips tracked
+# paths and reports "not ignored" whatever the patterns say, which is exactly what hid this.
+
+# a tracked fixture — see the `task-*.json` rule above, which spares it too
+!/task.json
+# /api/v3/tasks cache, read by ~25 harnesses via sd_task.fetch(cache=...)
+!/sd_task_listing.json
+# /api/v3/miners/scores cache, read by ~15 harnesses the same way
+!/sd_task_scores.json
+# the accruing shadow log of window predictions, read by window_plan.py
+!/seed_window_log.json
+# coldkey grouping, read as input by mingap.py / mingap_cells.py
+!/hotkey_coldkey.json
+# seed_model inputs: seeds.json (9 .py), walk_record.json (7), next_prediction.json (5)
+!seed_model/*.json
+# project settings
+!.claude/*.json
+# package SOURCE — a JSON shipped inside the package is data, not harness output
+!niome_subnet/**/*.json
+# NO `!.vscode/*.json`: extensions.json is already tracked so gitignore cannot touch it, and a
+# negation here would sit AFTER the deliberate `.vscode/settings.json` rule above and undo it.
+
+# The same rule for the other two formats the report harnesses emit, added 2026-09-21 by operator
+# request. `reports/<task>/<hotkey>/validation.txt` is calc.py's printed five-stage report and
+# `reports/<task>/summary.csv` is render_report.py's table — one set per scored round, so they grow
+# at the same rate as the JSON above and for the same reason.
+#
+# **No negations, and that is checked rather than assumed**: every .csv in the repo is opened `"w"`
+# by a `render_report.py` and never read back, nothing in *.sh or *.toml references either
+# extension, and there is no requirements.txt (see the Commands section of CLAUDE.md — the docs
+# that mention one are wrong). If that changes, add a `!` line on its OWN line — see the note above
+# about trailing comments silently killing a negation.
+*.csv
+*.txt
+# The one defensive negation: there is no requirements.txt today (uv + pyproject.toml), but it is
+# the classic file a blanket `*.txt` swallows, and a silently-ignored one breaks a fresh clone.
+!requirements.txt

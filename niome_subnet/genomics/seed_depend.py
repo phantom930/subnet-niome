@@ -60,6 +60,16 @@ RULES = {
     "mh": lambda rec: ((rec["mh"] and rec["outcome"] == "HDR")
                        or (not rec["mh"] and rec["outcome"] == "BLUNT_NHEJ"
                            and rec["indel_length"] == 1)),
+    # Admits HDR or BLUNT_NHEJ, rejecting only MH_NHEJ -- pins is_cut alone (CLAUDE.md,
+    # "not_mhnhej" as the conjunction's band rule, dead on HEK293/K562: band value never exceeds
+    # the ordinary cut-clean value because neither is_hdr nor indel_length goes constant). Kept
+    # here for `energy_hdr_*` research: `stage3.repair_mode`'s hdr_w = hdr_base + 0.35*energy
+    # against a FIXED blunt_w = 0.35 means P(HDR | not_mhnhej) is a genuine, deterministic
+    # function of energy (0.41-0.48 at energy=0 up to 0.63-0.66 at energy=1) -- not a coin flip --
+    # and `energy` is one of stage4's seven input features, so the question worth asking is
+    # whether that dependence is strong/varied enough for the RandomForest to exploit it into a
+    # positive is_hdr R2, not whether the dependence exists (it provably does).
+    "not_mhnhej": lambda rec: rec["outcome"] in ("HDR", "BLUNT_NHEJ"),
 }
 
 

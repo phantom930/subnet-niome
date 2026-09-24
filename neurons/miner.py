@@ -393,6 +393,10 @@ class Miner(BaseMinerNeuron):
     # the table and its three caveats). HUDEP-2 is deliberately absent: it measured 0.89x and 0/6
     # on fresh contracts, so it keeps all-HDR. `conjunction.config_for` returns None for it too,
     # so the exclusion holds even if this tuple is widened by mistake.
+    # 2026-09-23: back ON by operator request. The seven live hotkeys run conjunction+floor on
+    # seven width-15 windows over 200-299 with a 200-seed cut -- the arm `conj_tile.py` measured
+    # at 7 of 7 reachable seeds caught, 42/42 builds, clean 69.5/200. all-HDR stays the rung below
+    # it, on the SAME windows (`joined_window.HDR_HK` is `LOOP_HK`).
     CONJUNCTION = True
     # 2026-09-15: HUDEP-2 ADDED by operator request. It had been excluded on a 0.89x 12-contract
     # replication (0 of 6 on the fresh half), and `conjunction.CELL_CONFIG` now carries an entry for
@@ -441,17 +445,23 @@ class Miner(BaseMinerNeuron):
     # whose narrow-span sibling measured 228-258s cold. 600 leaves 410s. This costs nothing in
     # practice: HEK293's conjunction was already prefetch-only, since the ~225s in-TTL budget
     # cleared neither gate.
-    # K562 and CD34+_HSPC dropped 700 -> 450 on 2026-09-20, with the erythroid cells coming
-    # off the 900-seed cut. The 700s gates were set when their cold build was 386-410s on the
-    # wide cut; on the narrow one `coldbuild.py` measures 199s/182s (max 201/188). The rung
-    # receives `budget - ALL_HDR_MIN_BUDGET_S`, so 450 leaves 260s against a 201s max cold
-    # build -- a 29% margin. Leaving them at 700 was not harmless: the gate passes either way
-    # on a fully prefetched round (budget 900), so its ONLY effect is to block the rung on a
-    # partially prefetched one -- exactly the rounds a now-2x-faster build could finish.
-    # HEK293 stays at 600: its own cut is a 300-seed window whose bank sits AT the
-    # `bank_keep` cap and measured 228-258s cold, so 410s of build budget is the right margin.
-    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 600.0, "CD34+_HSPC": 450.0, "K562": 450.0,
-                                "HUDEP-2": 450.0}
+    # **These were dropped to 450 on 2026-09-20 and put back the same day.** The 450 was argued
+    # from `coldbuild.py`'s ~200s narrow cold build, and that is a SINGLE-SCAN number. The
+    # all-union layout it was paired with gives every hotkey its own bank, so seven scans run
+    # at once and each build took 566-580s measured live. The rung receives
+    # `budget - ALL_HDR_MIN_BUDGET_S`, so 450 left 260s against a 578s build: the gate would
+    # ADMIT a build it could not finish and burn the window doing it. Reverting the erythroid
+    # cells to the shared 900-seed cut restores 1 cold ~410s build plus warm siblings, which
+    # is what 700 was sized for (710s of budget_s against a 410s cold build).
+    # HUDEP-2 stays at 450: its wide cold build measured 62s.
+    # 2026-09-21: HUDEP-2 450 -> 700, because it moved to the NARROW cut with CD34+_HSPC and the
+    # narrow cold build is the expensive one -- its bank fills to the 300,000 `bank_keep` cap
+    # instead of collapsing below it. Measured cold on CD34+_HSPC narrow at 497s with the fleet
+    # live (against 413s for K562 wide), so the gate wants build + ALL_HDR_MIN_BUDGET_S ~ 690.
+    # At 450 a budget in the 450-690 band would start a build the rung cannot finish and burn the
+    # window; in practice budget is ~900 (prefetch) or ~225 (in-TTL), so this is belt-and-braces.
+    CONJUNCTION_MIN_BUDGET_S = {"HEK293": 600.0, "CD34+_HSPC": 700.0, "K562": 700.0,
+                                "HUDEP-2": 700.0}
     # Per-hotkey clean-band window, the decorrelation lever. all-HDR's clean band is Cas9-capped at
     # ~15 seeds and lands wherever this window is placed; a coldkey's payout is
     # 1-(1-union/900)^3, so the win comes from making sibling hotkeys' bands DISJOINT. Measured: 3
@@ -734,6 +744,25 @@ class Miner(BaseMinerNeuron):
         instance = os.getenv("NIOME_INSTANCE")
         if not instance:
             return pin("env_pin_no_instance")
+        # 2026-09-22: the four live hotkeys take a FIXED all-HDR band space, AHEAD of the plan.
+        # `round_plan.sh` rewrites `window_plan.json` hourly, and a band space that moves between
+        # rounds re-correlates the siblings the layout exists to separate -- the same reasoning
+        # that fixed `SHARED_CLASSES` rather than following the plan. A hotkey outside
+        # `joined_window.HDR_HK` gets None and falls through to the plan exactly as before, so
+        # this narrows the behaviour for four hotkeys and changes nothing for any other.
+        try:
+            fixed = JW.hdr_window_for(instance, cell_type)
+        except Exception as exc:
+            logger.warning(f"fixed all-HDR layout unusable ({exc}); falling back to the plan")
+            fixed = None
+        if fixed:
+            label = ",".join(f"{lo}-{hi}" for lo, hi in fixed)
+            logger.info(f"Build: window {label} from the fixed all-HDR layout")
+            self._record_window(task_id, cell_type, (fixed[0][0], fixed[-1][1]),
+                                "hdr_fixed_layout", None)
+            if len(fixed) == 1:
+                return fixed[0][0], fixed[0][1]
+            return sorted({s for lo, hi in fixed for s in range(lo, hi + 1)})
         try:
             with open(self.WINDOW_PLAN_PATH) as handle:
                 plan = json.load(handle)
@@ -1859,7 +1888,13 @@ class Miner(BaseMinerNeuron):
         # HUDEP-2, and any failure anywhere, still gets the build it had before this rung existed.
         all_cut_only = self._all_cut_only(cell_type)
         conj_min = self.CONJUNCTION_MIN_BUDGET_S.get(cell_type, 0.0)
+        # 2026-09-23: a hotkey in `joined_window.HDR_ONLY_HK` skips the conjunction rung and takes
+        # all-HDR as its top rung, so the fleet can run two constructions at once. Resolved here
+        # rather than at the rung because `band_applies` below has to see it too -- otherwise the
+        # round would record a conjunction window it never intended to build.
+        hdr_only = JW.is_hdr_only(os.getenv("NIOME_INSTANCE"), cell_type)
         conj_applies = (allow_hedges and self.CONJUNCTION and not all_cut_only
+                        and not hdr_only
                         and cell_type in self.CONJUNCTION_CELL_TYPES
                         and budget >= conj_min)
         band_applies = conj_applies or (
@@ -1886,7 +1921,7 @@ class Miner(BaseMinerNeuron):
         # separates two siblings' bands. None (a hotkey not in `joined_window.BAND_HK`) keeps the
         # config default, which is the single-hotkey value the replication was measured at.
         instance = os.getenv("NIOME_INSTANCE")
-        conj_offset = JW.band_offset_frac(instance)
+        conj_offset = JW.band_offset_frac(instance, cell_type)
         # A band hotkey's CUT window is no longer `space` -- it is the full 900 from
         # `conjunction_cut_seeds` -- and since 2026-09-18 its BAND space is not `space` either.
         # `joined_window.band_space` decides both halves of that:
@@ -1918,13 +1953,26 @@ class Miner(BaseMinerNeuron):
         # wide cut and the explicit band candidates are set together on purpose: a 900-seed cut
         # with no `band_candidates` would carve the band out of the 900 instead, which is neither
         # arm and was never measured.
+        # 2026-09-21: the fleet separates on the LOOP AXIS, not on the sub-window offset. All ten
+        # hotkeys share one window and one cut; hotkey i plays loop i+1 and excludes every seed
+        # loops 1..i banded, so the ten bands are disjoint by construction and the union is exactly
+        # `10 * band_k`. `conj_offset` above is 0 for every hotkey now and is kept only so a hotkey
+        # outside `LOOP_HK` still gets the config default.
+        conj_loop = JW.band_loop(instance, cell_type)
         conj_kw, conj_band_candidates = kw, None
         if space is not None:
             cj_cfg = CJ.config_for(cell_type)
             predicted = space if isinstance(space, list) else list(range(space[0], space[1] + 1))
-            band_space = JW.band_space(instance, predicted)
+            band_space = JW.band_space(instance, predicted, cell_type)
             if cj_cfg is not None and band_space:
-                conj_band_candidates = CJ.sub_window(band_space, cj_cfg.band_width,
+                # `band_width` is per CELL and cannot separate two hotkeys on different tiers:
+                # group A takes 300 of a 900-seed space, group C 100 of the predicted 300. At width
+                # 300 on a 300-seed space all three of group C would search the identical candidate
+                # set and build the IDENTICAL band -- conjunction.py names that as "the correlation
+                # that sank all-cut at fleet level". `band_sub_width` returns None outside a band
+                # group, which keeps the cell's own value for everything else.
+                conj_width = JW.band_sub_width(instance, cell_type) or cj_cfg.band_width
+                conj_band_candidates = CJ.sub_window(band_space, conj_width,
                                                      conj_offset or 0.0)
                 # The cut span is a per-cell MODE since 2026-09-18: "wide" (the full 900, erythroid)
                 # or "union" (the predicted space plus THIS hotkey's band window -- 300 for h0-h5,
@@ -1937,12 +1985,9 @@ class Miner(BaseMinerNeuron):
                 if cut is not None:
                     conj_kw = {"seed_list": cut}
                 logger.info(
-                    "Build: band candidates %s-%s (%d seeds, %s space of %d, offset %s) | "
+                    "Build: band candidates %d seeds (shared window, loop %s of %d) | "
                     "cut %d seeds (%s) | k=%d",
-                    min(conj_band_candidates), max(conj_band_candidates),
-                    len(conj_band_candidates),
-                    "predicted" if instance in JW.BAND_HK else "complement",
-                    len(band_space), JW.band_offset(instance),
+                    len(conj_band_candidates), conj_loop, len(JW.conj_hk(cell_type)),
                     len(conj_kw.get("seed_list") or predicted),
                     JW.CUT_MODE.get(cell_type, "band space"), cj_cfg.band_k,
                 )
@@ -1957,7 +2002,8 @@ class Miner(BaseMinerNeuron):
                             contract, reference, cell_types,
                             budget_s=max(0.0, budget - self.ALL_HDR_MIN_BUDGET_S),
                             band_offset_frac=None if conj_band_candidates else conj_offset,
-                            band_candidates=conj_band_candidates, **conj_kw)
+                            band_candidates=conj_band_candidates,
+                            band_loop=conj_loop, **conj_kw)
                     else:
                         conj_rows, conj_meta = None, {
                             "reason": "another build holds the hedge slot"}

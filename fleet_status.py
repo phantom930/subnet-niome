@@ -6,7 +6,7 @@ Reads each hotkey's pm2 error log (INFO lines land on stderr) and, for the newes
 reports whether the prefetch had rows ready before the validator called, how long the build took,
 what path served the upload, and any all-HDR failure / OOM / retry. Run it any time after a round.
 
-  python fleet_status.py            # newest task per hotkey
+  python fleet_status.py            # the task the fleet most recently worked on
   python fleet_status.py <task8hex> # a specific task id prefix
 """
 import re, sys, glob
@@ -37,13 +37,14 @@ PATS = {
 }
 
 want = sys.argv[1] if len(sys.argv) > 1 else None
-rows = []
+seen_all = []
 for logf in sorted(glob.glob(f"{LOGDIR}/miner-h*-error.log"),
                    key=lambda p: int(re.search(r"miner-h(\d+)-", p).group(1))):
     h = re.search(r"(miner-h\d+)-", logf).group(1)
-    ev = defaultdict(dict); tasks_seen = []
+    ev = defaultdict(dict); tasks_seen = []; last_ts = None
     for line in open(logf, errors="ignore"):
         t = ts(line)
+        if t: last_ts = t
         for kind, pat in PATS.items():
             m = pat.search(line)
             if not m: continue
@@ -58,17 +59,57 @@ for logf in sorted(glob.glob(f"{LOGDIR}/miner-h*-error.log"),
             elif kind in ("used_prep","waiting","in_ttl","unusable","emergency","hdr_ok","hdr_fail","hdr_decl"):
                 # attach to the most recent task seen
                 if tasks_seen: ev[tasks_seen[-1]].setdefault(kind, (t, m.groups()))
-    if not tasks_seen: rows.append((h, None, {})); continue
-    tid = tasks_seen[-1] if not want else next((x for x in tasks_seen if x.startswith(want)), tasks_seen[-1])
-    rows.append((h, tid, ev[tid] | ({"_oom": ev["_oom"]} if "_oom" in ev else {})))
+    if not tasks_seen: seen_all.append((h, None, {}, None)); continue
+    own = tasks_seen[-1]
+    seen_all.append((h, own, ev, last_ts))
 
-tid_common = next((t for _,t,_ in rows if t), None)
-print(f"Fleet status — task {tid_common[:8] if tid_common else '?'}\n")
+# --- scope every row to ONE task -----------------------------------------------------------
+# **This is the defect that made a dead hotkey read as healthy.** Each hotkey's row used to be
+# scoped to `tasks_seen[-1]` -- its OWN newest task -- while the header printed the FIRST row's
+# task as though it covered the table. A hotkey that is stopped or deregistered keeps its last
+# successful round in the log forever, so it kept reporting "250rows" under the current round's
+# header, and the tally counted it as a submission. Observed 2026-09-21: h4 showed 250 rows for
+# task 512919ff, which never appears in its log at all -- its real last task was 3917ba07, the
+# round before it was stopped, and its final line is `Wallet ... is not registered`.
+#
+# That is the same trap CLAUDE.md records for the window plan ("a stopped hotkey needs excluding
+# from the allocation for exactly the same reason a deregistered one does; the plan file will not
+# tell you"), reappearing in the status tool. Coverage read off either overstates the fleet by
+# however many are down.
+#
+# The fleet-wide target is now the task the MOST hotkeys saw most recently, and a hotkey that
+# never saw it is reported as such rather than silently falling back to its own stale round.
+if want:
+    target = next((t for _, t, _, _ in seen_all if t and t.startswith(want)), None)
+else:
+    freshest = {}
+    for _, t, ev_, _ in seen_all:
+        if not t: continue
+        when = max((v[0] for v in ev_[t].values() if v and v[0]), default=None)
+        if when and (t not in freshest or when > freshest[t]): freshest[t] = when
+    target = max(freshest, key=freshest.get) if freshest else None
+
+rows = []
+for h, own, ev_, last_ts in seen_all:
+    if target and ev_.get(target):
+        rows.append((h, target, ev_[target] | ({"_oom": ev_["_oom"]} if "_oom" in ev_ else {})))
+    else:
+        rows.append((h, None, {"_stale": (own, last_ts)}))
+
+print(f"Fleet status — task {target[:8] if target else '?'}\n")
 print(f"  {'hk':<4}{'prefetch':>10}{'build':>7}{'validator':>11}{'served':>13}{'submit':>8}  notes")
 tally = defaultdict(int)
 for h, tid, ev in rows:
     if tid is None:
-        print(f"  {h[-2:]:<4}{'—':>10}   no task in log"); continue
+        st = ev.get("_stale") or (None, None)
+        if st[0]:
+            age = f", last log {st[1]:%H:%M}" if st[1] else ""
+            print(f"  {h[-2:]:<4}{'—':>10}{'':>7}{'':>11}{'':>13}{'':>8}  "
+                  f"DID NOT SEE THIS TASK (newest it saw: {st[0][:8]}{age})")
+            tally["absent"] += 1
+        else:
+            print(f"  {h[-2:]:<4}{'—':>10}   no task in log")
+        continue
     ready = ev.get("ready"); prep = ev.get("prepare"); pf_fail = ev.get("pf_fail")
     recv = ev.get("received"); sub = ev.get("submitted")
     build = f"{ready[1][2]}s" if ready else ("FAIL" if pf_fail else "—")
@@ -100,6 +141,9 @@ for h, tid, ev in rows:
     if "_oom" in ev: tally["oom"] += 1
     if sub: tally["submitted"] += 1
 n = sum(1 for _,t,_ in rows if t)
-print(f"\n  TALLY over {n} hotkeys: {tally['ready']} prefetch-ready | "
+print(f"\n  TALLY over {n} hotkeys ON THIS TASK: {tally['ready']} prefetch-ready | "
       f"{tally['via_prefetch']} served from prefetch | {tally['via_fallback']} fell to fallback | "
       f"{tally['oom']} OOM | {tally['submitted']} submitted")
+if tally["absent"]:
+    print(f"  {tally['absent']} hotkey(s) never saw this task and are EXCLUDED from the tally — "
+          f"stopped, deregistered or dead. Do not read the fleet size off the row count.")

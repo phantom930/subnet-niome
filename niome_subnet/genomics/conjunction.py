@@ -264,6 +264,28 @@ class ConjunctionConfig(AllCutConfig):
     # empty = shipped behaviour. See `class_blocks`.
     band_candidates: tuple[int, ...] = ()
     band_quota: tuple[tuple[int, int, int], ...] = ()
+    # --- the LOOP AXIS, 2026-09-21 -------------------------------------------------------------
+    # Which iteration of the re-banding chain this hotkey plays. 1 is the shipped behaviour (band
+    # the candidates outright). At L > 1 the build first REPRODUCES loops 1..L-1 -- the same
+    # `choose_band` calls on the same compliance matrix -- and excludes every seed those bands
+    # took, so loop L's band is disjoint from all of them by construction.
+    #
+    # This replaces the sub-window OFFSET as the fleet's decorrelation mechanism. Offsets made
+    # bands *probably* different (overlapping candidate windows, 0-1 of 11 shared in practice);
+    # the loop axis makes them *provably* different, and it lets every hotkey share ONE window and
+    # therefore ONE cut -- hence one `bank_key` and one cold Cas12a scan per (contract, cell),
+    # which is what the 2026-09-20 seven-bank revert says the per-hotkey-window layout cannot have.
+    #
+    # It is deterministic: `choose_band` is a pure function of (`ok`, k, candidates, group,
+    # `cell_ok`, quota), and every hotkey on this cell computes the identical `ok` from the
+    # identical bank. So hotkey L derives loops 1..L-1 without talking to anyone.
+    #
+    # Cost is L-1 extra `choose_band` calls, each a greedy over the already-computed compliance
+    # matrix -- no extra bank scan, no extra GPU work. The measured loop-axis chains ran the full
+    # 10 in seconds after the one prepare.
+    #
+    # `bank_key` excludes every band parameter, so this does NOT fragment the bank.
+    band_loop: int = 1
     # Let `choose_band` see the Cas9 side before it fixes the band. OFF by default: the band it
     # picks differs from the measured one, so every tuned (k, group, width) row above was measured
     # without it. See `cas9_cell_probe` for what it is for and what it costs.
@@ -662,6 +684,33 @@ def build_submission(contract: dict, reference: dict, cell_types: dict,
         p_row = float(np.mean(frac)) if frac else None
         meta["probe_p_row"] = p_row
     bstats: dict = {}
+    # The loop axis: reproduce loops 1..band_loop-1 and ban every seed they banded, so this
+    # hotkey's band is disjoint from every earlier loop's. `band_loop` 1 skips the whole block and
+    # is byte-identical to the pre-2026-09-21 path.
+    banned: set[int] = set()
+    meta["band_loop"] = cfg.band_loop
+    for prior in range(1, max(1, int(cfg.band_loop))):
+        left = [s for s in candidates if s not in banned]
+        if len(left) < cfg.band_k:
+            # The chain ran out of candidates before reaching this hotkey's loop. Every hotkey at
+            # or past this loop would collapse onto the same remainder, so record it and band what
+            # is left rather than declining -- a band shared with a sibling still scores, and
+            # falling through to all-HDR is measured as 1.30-2.05x worse.
+            meta["band_loop_short"] = prior
+            break
+        pband, palive = choose_band(ok, cfg.band_k, left, cfg.group_size, cell_ok, {},
+                                    cfg.band_quota)
+        if len(pband) < cfg.band_k or len(palive) < cfg.group_size:
+            meta["band_loop_short"] = prior
+            break
+        banned.update(int(x) for x in pband)
+    if banned:
+        meta["band_excluded"] = len(banned)
+        candidates = [s for s in candidates if s not in banned]
+        if len(candidates) < cfg.band_k:
+            meta["reason"] = (f"loop {cfg.band_loop}: {len(candidates)} candidates left after "
+                              f"excluding {len(banned)} seeds banded by earlier loops")
+            return None, meta
     band, alive = choose_band(ok, cfg.band_k, candidates, cfg.group_size, cell_ok, bstats,
                               cfg.band_quota)
     meta.update(bstats)
@@ -733,7 +782,8 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
                    seed_list=None,
                    hdr_range: tuple[int, int] | None = None,
                    band_offset_frac: float | None = None,
-                   band_candidates=None) -> tuple[list[dict] | None, dict]:
+                   band_candidates=None,
+                   band_loop: int | None = None) -> tuple[list[dict] | None, dict]:
     """Build for whichever cell type this contract names, or decline where it is unmeasured.
 
     Takes the SAME seed space the all-HDR rung would have been given, so the two rungs play one
@@ -745,6 +795,10 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     sub-window of ``seed_list``/``hdr_range`` -- for a hotkey whose cut window and band region are
     no longer the same space (`joined_window.conjunction_cut_seeds`). It takes precedence over
     ``band_offset_frac``, which only matters when the band is still a slice of the cut window.
+
+    ``band_loop`` is this hotkey's position on the re-banding chain (`ConjunctionConfig.band_loop`).
+    It is the fleet's decorrelation mechanism as of 2026-09-21, replacing the sub-window offset:
+    every hotkey shares one window and one cut, and loop L excludes the bands of loops 1..L-1.
     """
     cell = contract.get("cell_type")
     cfg = config_for(cell)
@@ -756,9 +810,16 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
         seeds = list(range(hdr_range[0], hdr_range[1] + 1))
     else:
         return None, {"reason": "the conjunction needs a seed space; none was given"}
-    if len(seeds) < cfg.band_width:
+    if band_candidates is None and len(seeds) < cfg.band_width:
         # A window narrower than the band sub-window is not the measured arm: the band would be
         # drawn from the whole space, which is HEK293's configuration and nobody else's.
+        #
+        # **Only when the band is CARVED from the seed space.** `build_submission` reads
+        # `band_width` exactly once -- `sub_window(joined, cfg.band_width, ...)` -- and skips it
+        # entirely when `cfg.band_candidates` is set, so with explicit candidates this guard
+        # rejects a build whose band width it does not control. 2026-09-23: it declined all seven
+        # live hotkeys on a 200-seed cut against a `band_width` of 300 left over from the
+        # 300-seed shared-window layout, and the whole fleet fell through to all-HDR.
         return None, {"reason": f"seed space {len(seeds)} narrower than band width "
                                 f"{cfg.band_width}"}
     # `cas12a_max_fail` is calibrated against the 900-seed window all-cut banks over, so it has to
@@ -775,4 +836,6 @@ def build_for_cell(contract: dict, reference: dict, cell_types: dict,
     if band_candidates is not None:
         cfg = dataclasses.replace(
             cfg, band_candidates=tuple(sorted(set(int(x) for x in band_candidates))))
+    if band_loop is not None:
+        cfg = dataclasses.replace(cfg, band_loop=max(1, int(band_loop)))
     return build_submission(contract, reference, cell_types, cfg=cfg, budget_s=budget_s)

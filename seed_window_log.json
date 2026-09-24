@@ -12990,9 +12990,9 @@
     "8457e626-a711-474c-880e-f823b26656d5"
    ],
    "applied": {
-    "applied_at": "2026-09-20T05:17:23.290598+00:00",
+    "applied_at": "2026-09-24T15:17:11.606650+00:00",
     "predicted_window": "900-999",
-    "predicted_p_hit": 0.3772,
+    "predicted_p_hit": 0.3487,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "900-999",
@@ -13478,9 +13478,9 @@
     "33c266d5-50d4-4675-a586-1ca47d0737eb"
    ],
    "applied": {
-    "applied_at": "2026-09-20T05:17:23.290598+00:00",
+    "applied_at": "2026-09-24T15:17:11.606650+00:00",
     "predicted_window": "800-899",
-    "predicted_p_hit": 0.3207,
+    "predicted_p_hit": 0.3442,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "800-899",
@@ -13649,12 +13649,12 @@
     "56506921-7886-4584-ba21-c82f76b011ad"
    ],
    "applied": {
-    "applied_at": "2026-09-20T05:17:23.290598+00:00",
-    "predicted_window": "600-699",
+    "applied_at": "2026-09-24T15:17:11.606650+00:00",
+    "predicted_window": "700-799",
     "predicted_p_hit": 0.3107,
     "band_width": 0,
     "conc_rank": 1,
-    "rank1_window": "600-699",
+    "rank1_window": "700-799",
     "spread_width": 100,
     "n_concentrated": 0,
     "played": true,
@@ -13819,9 +13819,9 @@
     "920e1837-75a5-4133-9d8a-a54a8cd2bfe7"
    ],
    "applied": {
-    "applied_at": "2026-09-20T05:17:23.290598+00:00",
+    "applied_at": "2026-09-24T15:17:11.606650+00:00",
     "predicted_window": "900-999",
-    "predicted_p_hit": 0.3333,
+    "predicted_p_hit": 0.3402,
     "band_width": 0,
     "conc_rank": 1,
     "rank1_window": "900-999",
